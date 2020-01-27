@@ -1,0 +1,6 @@
+app_name: orders.web.ch.gov.uk
+group: web
+weight: 900
+routes:
+  1: /orders.*
+  2: /basket.*

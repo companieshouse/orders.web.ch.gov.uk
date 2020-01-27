@@ -39,11 +39,6 @@ You are going to need a few things to begin. Firstly, NodeJS. There are a few wa
 - [Homebrew](https://formulae.brew.sh/formula/node)
 
 Node version manager allows you to install multiple versions side by side on the host machine.
-
-Once you have that installed, you will need to install the dependencies (locally) and [GulpJS](https://gulpjs.com) (globally). This task runner is used to compile the [Sass](https://sass-lang.com) used in the GovUK Frontend.
-
-    npm i
-    npm install gulp-cli -g
     
 ### Running the server
 
@@ -54,14 +49,6 @@ There are two ways to run the server in development. You run it in normal mode;
 Or, automatically reload the server once you make changes to source code;
 
     npm start:watch
-
-### Static assets
-
-Sass is used to compile the css from GovUK Frontend. The `static` gulp task will build the necessary files and output them to the [dist](./dist) folder.
-
-    gulp static
-    
-During development, static assets are served from this folder using the url prefix `/static`.
 
 ### Compiling the application
 

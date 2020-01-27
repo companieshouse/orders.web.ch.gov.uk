@@ -26,14 +26,10 @@ app.set("views", viewPath);
 app.set("view engine", "html");
 
 // add global variables to all templates
+env.addGlobal("CDN_URL", process.env.CDN_HOST);
 env.addGlobal("PIWIK_URL", "https://example.com");
 env.addGlobal("PIWIK_SITE_ID", "123");
 
-// serve static assets in development. this will not execute in production.
-if (process.env.NODE_ENV === "development") {
-  app.use("/static", express.static("dist/static"));
-  env.addGlobal("CSS_URL", "/static/app.css");
-}
 // apply our default router to /
 app.use("/", router);
 
