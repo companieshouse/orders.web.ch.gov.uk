@@ -24,8 +24,10 @@ else
     echo "Downloading environment from: ${CONFIG_URL}/${ENVIRONMENT}/${APP_NAME}"
     wget -O "${APP_DIR}/private_env" "${CONFIG_URL}/${ENVIRONMENT}/private_env"
     wget -O "${APP_DIR}/global_env" "${CONFIG_URL}/${ENVIRONMENT}/global_env"
+    wget -O "${APP_DIR}/app_env" "${CONFIG_URL}/${ENVIRONMENT}/${APP_NAME}/env"
     source "${APP_DIR}/private_env"
     source "${APP_DIR}/global_env"
+    source "${APP_DIR}/app_env"
 
     NODE_ENV=production node ${APP_DIR}/bin/www.js -- $PORT
 fi
