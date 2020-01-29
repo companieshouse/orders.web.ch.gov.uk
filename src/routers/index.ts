@@ -1,9 +1,12 @@
-import {Router} from "express";
-import {homeHandler} from "../handlers";
+import {Router, Response, NextFunction, Request} from "express";
 
-// a router is a collection of routes that can have their own middleware chain. It is helpful to create routers for
-// a collection of related routes for better organisation and specific logic.
-const router = Router();
-router.get("/orders", homeHandler);
+const renderTemplate = (template: string) => (req: Request, res: Response, next: NextFunction) => {
+    return res.render(template, { templateName: template });
+};
+
+const router: Router = Router();
+
+router.get("/orders", renderTemplate("blank"));
+router.get("/basket**", renderTemplate("blank"));
 
 export default router;
