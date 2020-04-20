@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Check your order details
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/company/" + companyNumber + "/more"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<h1>HELLO</h1>
+{% endblock %}

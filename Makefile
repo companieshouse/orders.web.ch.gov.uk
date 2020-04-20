@@ -15,6 +15,10 @@ clean:
 npm-install:
 	npm i
 
+.PHONY: gulp-install
+gulp-install:
+	npm install gulp-cli -g
+
 .PHONY: init
 init: npm-install
 

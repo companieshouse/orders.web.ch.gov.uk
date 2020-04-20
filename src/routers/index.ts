@@ -6,7 +6,7 @@ const renderTemplate = (template: string) => (req: Request, res: Response, next:
 
 const router: Router = Router();
 
-router.get("/orders", renderTemplate("blank"));
+router.get("/orders", renderTemplate("order-complete"));
 router.get("/basket**", renderTemplate("blank"));
 
 export default router;
