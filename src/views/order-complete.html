@@ -1,16 +1,132 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  Check your order details
+  Certificate ordered confirmation
 {% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
-    text: "Back",
-    href: "/company/" + companyNumber + "/more"
+    text: "Return to company overview",
+    href: "/"
   }) }}
 {% endblock %}
 
 {% block content %}
-<h1>HELLO</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: "Certificate ordered",
+        html: "Your order reference number<br><strong>3161-204-251-249-0359</strong>"
+      }) }}
+
+      <h1 class="govuk-heading-m">What happens next</h1>
+      <p class="govuk-body">We'll prepare the certificate and dispatch it within 4 working days.</p>
+
+      <h2 class="govuk-heading-m">Your order details</h2>
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Company name",
+              classes: 'govuk-!-width-one-half'
+            },
+              value: {
+              text: "Stationary LTD",
+              classes: 'govuk-!-width-one-half'
+              }
+            },
+          {
+             key: {
+              text: "Company number"
+              },
+              value: {
+              text: "027389177"
+              }
+          },
+          {
+            key: {
+              text: "Certificate type",
+              classes: 'govuk-!-width-one-half'
+            },
+            value: {
+              text: "Incorporation",
+              classes: 'govuk-!-width-one-half'
+            }
+          },
+          {
+            key: {
+              text: "Included on certificate"
+            },
+            value: {
+              html: "Statement of good standing<br> Registered office address<br> Directors<br>Secretaries<br> Company objects"
+            }
+          },
+          {
+            key: {
+              text: "Delivery method"
+            },
+            value: {
+               text: "Standard delivery (dispatched within 4 working days)"
+            }
+          },
+          {
+            key: {
+              text: "Delivery details"
+            },
+            value: {
+               html: "Mr Jamies Hanson </br> 48 Tonna Road </br> Barry </br> CF45 8YG"
+            }
+          }
+        ]
+      }) }}
+
+      <h2 class="govuk-heading-m">Your payment details</h2>
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Amount paid",
+              classes: 'govuk-!-width-one-half'
+            },
+            value: {
+              text: "£15",
+              classes: 'govuk-!-width-one-half'
+            }
+          },
+          {
+            key: {
+              text: "Payment reference"
+            },
+            value: {
+              text: "RS5VSN6DRE"
+            }
+          },
+          {
+            key: {
+              text: "Date and time of payment"
+            },
+            value: {
+              html: "11 March 2020 – 10:56:14"
+            }
+          }
+        ]
+      }) }}
+
+      <h2 class="govuk-heading-m">How to contact us</h2>
+      <p class="govuk-body">Email <a href="mailto:enquiries@companieshouse.gov.uk" class="govuk-link">enquiries@companieshouse.gov.uk</a> if you have questions about your order.</p>
+      <p>Include your order reference number when you contact us. </p>
+
+      <h2 class="govuk-heading-m">What do you want to do next?</h2>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>
+          <a href="" class="govuk-link">print this page for your records</a>
+        </li>
+        <li>
+          <a href="start" class="govuk-link">return to company overview</a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
 {% endblock %}
