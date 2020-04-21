@@ -1,3 +1,5 @@
+jest.mock('ioredis');
+
 import app from "../../app";
 import * as request from "supertest";
 
