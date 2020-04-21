@@ -2,6 +2,7 @@ import * as express from "express";
 import * as nunjucks from "nunjucks";
 import * as path from "path";
 import router from "./routers";
+import {PIWIK_SITE_ID, PIWIK_URL} from "./config/config";
 
 const app = express();
 
@@ -27,8 +28,20 @@ app.set("view engine", "html");
 
 // add global variables to all templates
 env.addGlobal("CDN_URL", process.env.CDN_HOST);
-env.addGlobal("PIWIK_URL", "https://example.com");
-env.addGlobal("PIWIK_SITE_ID", "123");
+env.addGlobal("PIWIK_URL", PIWIK_URL);
+env.addGlobal("PIWIK_SITE_ID", PIWIK_SITE_ID);
+
+// serve static assets in development.
+// this will execute in production for now, but we will host these else where in the future.
+if (process.env.NODE_ENV !== "production") {
+  app.use("/orders/static", express.static("dist/static"));
+  env.addGlobal("CSS_URL", "/orders/static/app.css");
+  env.addGlobal("FOOTER", "/orders/static/footer.css");
+} else {
+  app.use("/orders/static", express.static("static"));
+  env.addGlobal("CSS_URL", "/orders/static/app.css");
+  env.addGlobal("FOOTER", "/orders/static/footer.css");
+}
 
 // apply our default router to /
 app.use("/", router);
