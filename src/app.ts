@@ -1,11 +1,13 @@
 import * as express from "express";
 import * as nunjucks from "nunjucks";
 import * as path from "path";
-import router from "./routers";
-import {PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, CACHE_SERVER} from "./config/config";
 import * as cookieParser from "cookie-parser";
 import * as Redis from "ioredis";
-import {SessionStore, SessionMiddleware} from "ch-node-session-handler";
+import {SessionStore, SessionMiddleware, CookieConfig} from "ch-node-session-handler";
+
+import authMiddleware from "./middleware/auth.middleware";
+import router from "./routers";
+import {PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, CACHE_SERVER} from "./config/config";
 
 const app = express();
 
@@ -28,12 +30,11 @@ const env = nunjucks.configure([
   express: app,
 });
 
+const cookieConfig: CookieConfig = { cookieName: "__SID", cookieSecret: COOKIE_SECRET};
 const sessionStore = new SessionStore(new Redis(`redis://${CACHE_SERVER}`));
-const middleware = SessionMiddleware(
-  { cookieName: "__SID", cookieSecret: COOKIE_SECRET},
-  sessionStore);
 
-app.use(middleware);
+app.use(SessionMiddleware(cookieConfig, sessionStore));
+app.use(authMiddleware);
 
 app.set("views", viewPath);
 app.set("view engine", "html");
