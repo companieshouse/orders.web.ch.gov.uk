@@ -6,6 +6,7 @@ import * as ioredis from "ioredis";
 import * as SessionStoreClass from "ch-node-session-handler/lib/session/store/SessionStore";
 import { wrapEither } from "ch-node-session-handler/lib/utils/EitherAsyncUtils";
 import { Either } from "purify-ts";
+import { Encoding } from "ch-node-session-handler/lib/encoding/Encoding";
 
 const SIGNED_IN_ID = "4ZhJ6pAmB5NAJbjy/6fU1DWMqqrk";
 const SIGNED_IN_SIGNATURE = "Ak4CCqkfPTY7VN6f9Lo5jHCUYpM";
@@ -41,18 +42,8 @@ const signedInSession = {
 
 describe("index", () => {
   beforeEach(done => {
-    class SessionStoreMock {
-      constructor() { }
-      load() {
-        return wrapEither(Either.of(signedInSession));
-      }
-    }
-
-    sandbox.stub(SessionStoreClass, 'SessionStore').callsFake(() => {
-      return new SessionStoreMock();
-    });
-
     sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
+    sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(Encoding.encode(signedInSession)));
 
     testApp = require("../../app").default;
     done();
