@@ -4,13 +4,15 @@ import * as path from "path";
 import * as cookieParser from "cookie-parser";
 import * as Redis from "ioredis";
 import { SessionStore, SessionMiddleware, CookieConfig } from "ch-node-session-handler";
+import { createLogger, createLoggerMiddleware } from "ch-structured-logging";
 
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
-import { PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, CACHE_SERVER } from "./config/config";
+import { PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, CACHE_SERVER, APPLICATION_NAME } from "./config/config";
 
 const app = express();
 
+app.use(createLoggerMiddleware(APPLICATION_NAME));
 app.use(cookieParser());
 
 // set some app variables from the environment
