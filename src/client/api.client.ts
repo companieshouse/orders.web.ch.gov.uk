@@ -8,9 +8,7 @@ export const checkoutBasket = async (oAuth: string): Promise<Checkout> => {
     const api = createApiClient(undefined, oAuth, API_URL);
     const checkoutResource: Resource<Checkout> = await api.basket.checkoutBasket();
     if (checkoutResource.httpStatusCode !== 200 && checkoutResource.httpStatusCode !== 202) {
-        throw {
-          status: checkoutResource.httpStatusCode,
-        };
+        throw new Error("Error Checking out basket");
     }
     return checkoutResource.resource as Checkout;
 };
