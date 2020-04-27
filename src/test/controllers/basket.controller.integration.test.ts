@@ -33,7 +33,7 @@ describe("basket.controller", () => {
                 if (err) return done(err);
                 chai.expect(resp.status).to.equal(200);
                 chai.expect(resp.text).to.equal("");
-                // chai.expect(checkoutBasketStub).to.be.calledOnce;
+                chai.expect(checkoutBasketStub).to.have.been.called;
                 done();
             });
     });

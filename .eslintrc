@@ -7,6 +7,14 @@
     },
     "extends": ["standard"],
     "parser": "@typescript-eslint/parser",
+    "overrides": [
+         {
+            "files": ["*.test.ts"],
+            "rules": {
+                "no-unused-expressions": "off"
+            }
+        }
+    ],
     "rules": {
         "indent": ["error", 4],
         "no-unused-vars": "off",
@@ -14,8 +22,7 @@
         "semi": ["error", "always"]
     },
     "plugins": [
-        "@typescript-eslint",
-        "chai-friendly"
+        "@typescript-eslint"
     ],
     "env": {
         "node": true,
