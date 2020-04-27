@@ -1,11 +1,9 @@
 //import app from "../../app";
 const chai = require('chai');
-const chaiHttp = require('chai-http');
+//import * as chai from "chai";
+//const chaiHttp = require('chai-http');
 import * as sinon from "sinon";
 import * as ioredis from "ioredis";
-import * as SessionStoreClass from "ch-node-session-handler/lib/session/store/SessionStore";
-import { wrapEither } from "ch-node-session-handler/lib/utils/EitherAsyncUtils";
-import { Either } from "purify-ts";
 import { Encoding } from "ch-node-session-handler/lib/encoding/Encoding";
 
 const SIGNED_IN_ID = "4ZhJ6pAmB5NAJbjy/6fU1DWMqqrk";
@@ -15,7 +13,7 @@ const SIGNED_IN_COOKIE = SIGNED_IN_ID + SIGNED_IN_SIGNATURE;
 let sandbox = sinon.createSandbox();
 let testApp = null;
 
-chai.use(chaiHttp);
+//chai.use(chaiHttp);
 
 const signedInSession = {
   ".client.signature": SIGNED_IN_SIGNATURE,
@@ -53,30 +51,30 @@ describe("index", () => {
     sandbox.restore();
   });
 
-  
-    it("renders a blank page for orders", (done) => {
-      chai.request(testApp)
-        .get("/orders")
-        .set('Cookie', [`__SID=${SIGNED_IN_COOKIE}`])
-        .end((err, resp) => {
-          if (err) return done(err);
-          chai.expect(resp.status).to.equal(200);
-          chai.expect(resp.text).to.equal("");
-          done();
-        });
-    });
 
-    it("renders the order complete page", (done) => {
-      chai.request(testApp)
-        .get("/orders/order-id/order-complete")
-        .set('Cookie', [`__SID=${SIGNED_IN_COOKIE}`])
-        .end((err, resp) => {
-          if (err) return done(err);
-          chai.expect(resp.status).to.equal(200);
-          chai.expect(resp.text).to.contain("Certificate ordered");
-          done();
-        });
-    });
-  
-    
+  it("renders a blank page for orders", (done) => {
+    chai.request(testApp)
+      .get("/orders")
+      .set('Cookie', [`__SID=${SIGNED_IN_COOKIE}`])
+      .end((err, resp) => {
+        if (err) return done(err);
+        chai.expect(resp.status).to.equal(200);
+        chai.expect(resp.text).to.equal("");
+        done();
+      });
+  });
+
+  it("renders the order complete page", (done) => {
+    chai.request(testApp)
+      .get("/orders/order-id/order-complete")
+      .set('Cookie', [`__SID=${SIGNED_IN_COOKIE}`])
+      .end((err, resp) => {
+        if (err) return done(err);
+        chai.expect(resp.status).to.equal(200);
+        chai.expect(resp.text).to.contain("Certificate ordered");
+        done();
+      });
+  });
+
+
 });  
