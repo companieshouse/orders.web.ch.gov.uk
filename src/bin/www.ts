@@ -7,11 +7,6 @@
 import * as http from "http";
 import * as yargs from "yargs";
 import app from "../app";
-import { createLogger } from "ch-structured-logging";
-
-import { APPLICATION_NAME } from "../config/config";
-
-const logger = createLogger(APPLICATION_NAME);
 
 /**
  * Get port from environment and store in Express.
@@ -70,10 +65,10 @@ function onError (error) {
     // handle specific listen errors with friendly messages
     switch (error.code) {
     case "EACCES":
-        logger.error(bind + " requires elevated privileges");
+        console.error(bind + " requires elevated privileges");
         process.exit(1);
     case "EADDRINUSE":
-        logger.error(bind + " is already in use");
+        console.error(bind + " is already in use");
         process.exit(1);
     default:
         throw error;
@@ -89,5 +84,5 @@ function onListening () {
     const bind = typeof addr === "string"
         ? "pipe " + addr
         : "port " + addr!.port;
-    logger.info("Listening on " + bind);
+    console.info("Listening on " + bind);
 }
