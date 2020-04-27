@@ -19,8 +19,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         const resp = await checkoutBasket(accessToken);
 
-        return res.render(BLANK, { templateName: BLANK });
+        res.render(BLANK, { templateName: BLANK });
     } catch (err) {
-        return next(err);
+        next(err);
     }
 };
