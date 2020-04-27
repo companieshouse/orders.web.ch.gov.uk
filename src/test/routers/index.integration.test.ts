@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import * as sinon from "sinon";
 import * as ioredis from "ioredis";
-import {SIGNED_IN_COOKIE, signedInSession} from "../mocks/redis.mocks";
+import {SIGNED_IN_COOKIE, signedInSession} from "../__mocks__/redis.mocks";
 
 let sandbox = sinon.createSandbox();
 let testApp = null;
