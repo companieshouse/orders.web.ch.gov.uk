@@ -4,7 +4,7 @@ import * as path from "path";
 import * as cookieParser from "cookie-parser";
 import * as Redis from "ioredis";
 import { SessionStore, SessionMiddleware, CookieConfig } from "ch-node-session-handler";
-import { createLogger, createLoggerMiddleware } from "ch-structured-logging";
+import { createLoggerMiddleware } from "ch-structured-logging";
 
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
