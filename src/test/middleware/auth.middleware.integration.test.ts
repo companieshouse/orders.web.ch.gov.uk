@@ -1,6 +1,6 @@
-import * as chai from "chai";
-import * as sinon from "sinon";
-import * as ioredis from "ioredis";
+import chai from "chai";
+import sinon from "sinon";
+import ioredis from "ioredis";
 
 import { SIGNED_OUT_COOKIE, signedOutSession } from "../__mocks__/redis.mocks";
 import { ORDERS, ORDER_COMPLETE, BASKET } from "../../model/page.urls";

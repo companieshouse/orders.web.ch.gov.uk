@@ -1,9 +1,10 @@
-import * as express from "express";
-import * as nunjucks from "nunjucks";
-import * as path from "path";
-import * as cookieParser from "cookie-parser";
-import * as Redis from "ioredis";
+import express from "express";
+import nunjucks from "nunjucks";
+import path from "path";
+import cookieParser from "cookie-parser";
+import Redis from "ioredis";
 import { SessionStore, SessionMiddleware, CookieConfig } from "ch-node-session-handler";
+import { createLoggerMiddleware } from "ch-structured-logging";
 
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
@@ -33,6 +34,7 @@ const env = nunjucks.configure([
 const cookieConfig: CookieConfig = { cookieName: "__SID", cookieSecret: COOKIE_SECRET };
 const sessionStore = new SessionStore(new Redis(`redis://${CACHE_SERVER}`));
 
+app.use(createLoggerMiddleware(APPLICATION_NAME));
 app.use(SessionMiddleware(cookieConfig, sessionStore));
 app.use(authMiddleware);
 

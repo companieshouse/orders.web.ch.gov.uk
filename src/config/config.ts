@@ -9,14 +9,16 @@ const getEnvironmentValue = (key: string, defaultValue?: any): string => {
     return value || defaultValue as string;
 };
 
-export const PIWIK_URL = getEnvironmentValue("PIWIK_URL");
+export const PIWIK_URL = getEnvironmentValue("PIWIK_URL", "test");
 
-export const PIWIK_SITE_ID = getEnvironmentValue("PIWIK_SITE_ID");
+export const PIWIK_SITE_ID = getEnvironmentValue("PIWIK_SITE_ID", "test");
 
 export const COOKIE_SECRET = getEnvironmentValue("COOKIE_SECRET");
 
 export const CACHE_SERVER = getEnvironmentValue("CACHE_SERVER");
 
 export const API_URL = getEnvironmentValue("API_URL");
+
+export const CHS_URL = getEnvironmentValue("CHS_URL");
 
 export const APPLICATION_NAME = "orders.web.ch.gov.uk";
