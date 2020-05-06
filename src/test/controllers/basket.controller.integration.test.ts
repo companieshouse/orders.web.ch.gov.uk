@@ -15,14 +15,14 @@ let testApp = null;
 let checkoutBasketStub;
 let createPaymentStub;
 
-const MOCK_PAYMENT_URL = "http://example.co/";
+const MOCK_PAYMENT_URL = "http://example.co";
 
 describe("basket.controller", () => {
     beforeEach(done => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
 
-        nock(MOCK_PAYMENT_URL).get("/").reply(200, {});
+        nock(MOCK_PAYMENT_URL).get("/?summary=false").reply(200, {});
 
         testApp = require("../../app").default;
         done();
@@ -33,7 +33,7 @@ describe("basket.controller", () => {
         sandbox.restore();
     });
 
-    it("redirects to payment page", (done) => {
+    it("redirects to payment page with summary as false", (done) => {
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,
             headers: {
@@ -54,7 +54,7 @@ describe("basket.controller", () => {
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
             .end((err, resp) => {
                 if (err) return done(err);
-                chai.expect(resp).to.redirectTo(MOCK_PAYMENT_URL);
+                chai.expect(resp).to.redirectTo(MOCK_PAYMENT_URL + "/?summary=false");
                 chai.expect(checkoutBasketStub).to.have.been.called;
                 chai.expect(createPaymentStub).to.have.been.called;
                 done();
