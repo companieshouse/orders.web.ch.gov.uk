@@ -4,3 +4,4 @@ weight: 900
 routes:
   1: /orders.*
   2: /basket.*
+  3: /orders-assets.*

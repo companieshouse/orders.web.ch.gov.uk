@@ -12,10 +12,9 @@ export default (req: Request, res: Response, next: NextFunction) => {
         logger.debug(`${req.url}: Session object is missing!`);
     }
     const signedIn = req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1;
-    const userId = req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.UserProfile]?.id;
 
     if (!signedIn) {
-        logger.info(`userId=${userId}, Not signed in... Redirecting to: /signin?return_to=/basket`);
+        logger.info(`Not signed in... Redirecting to: /signin?return_to=/basket`);
         return res.redirect(`/signin?return_to=/basket`);
     }
 
