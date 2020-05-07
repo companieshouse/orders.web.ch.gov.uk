@@ -13,14 +13,13 @@ const logger = createLogger(APPLICATION_NAME);
 export const checkoutBasket = async (oAuth: string): Promise<ApiResponse<Checkout>> => {
     const api = createApiClient(undefined, oAuth, API_URL);
     const checkoutResult:ApiResult<ApiResponse<Checkout>> = await api.basket.checkoutBasket();
-
     if (checkoutResult.isFailure()) {
-        const checkoutResource = checkoutResult.value;
-        logger.error(`${checkoutResource?.httpStatusCode} - ${JSON.stringify(checkoutResource?.errors)}`);
-        if (checkoutResource.httpStatusCode === 409 ||
-            checkoutResource.httpStatusCode === 401 ||
-            checkoutResource.httpStatusCode === 400) {
-            throw new Error(JSON.stringify(checkoutResource?.errors) || "Unknown Error");
+        const errorResponse = checkoutResult.value;
+        logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);
+        if (errorResponse.httpStatusCode === 409 ||
+            errorResponse.httpStatusCode === 401 ||
+            errorResponse.httpStatusCode === 400) {
+            throw new Error(JSON.stringify(errorResponse?.errors) || "Unknown Error");
         } else {
             throw new Error("Unknown Error");
         }
@@ -43,10 +42,10 @@ export const createPayment = async (oAuth: string, paymentUrl: string, checkoutI
     const paymentResult = await api.payment.createPaymentWithFullUrl(createPaymentRequest);
 
     if (paymentResult.isFailure()) {
-        const paymentResource = paymentResult.value;
-        logger.error(`${paymentResource?.httpStatusCode} - ${JSON.stringify(paymentResource?.errors)}`);
-        if (paymentResource.httpStatusCode === 401 || paymentResource.httpStatusCode === 429) {
-            throw new Error(JSON.stringify(paymentResource?.errors) || "Unknown Error");
+        const errorResponse = paymentResult.value;
+        logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);
+        if (errorResponse.httpStatusCode === 401 || errorResponse.httpStatusCode === 429) {
+            throw new Error(JSON.stringify(errorResponse?.errors) || "Unknown Error");
         } else {
             throw new Error("Unknown Error");
         }

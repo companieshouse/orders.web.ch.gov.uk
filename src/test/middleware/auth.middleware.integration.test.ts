@@ -30,8 +30,7 @@ describe("auth.middleware", () => {
                 .set("Cookie", [`__SID=${SIGNED_OUT_COOKIE}`])
                 .end((err, resp) => {
                     if (err) return done(err);
-                    chai.expect(resp.status).to.equal(302);
-                    chai.expect(resp.header.location).to.contain("/signin");
+                    chai.expect(resp.redirects[0]).to.include("/signin");
                     done();
                 });
         });

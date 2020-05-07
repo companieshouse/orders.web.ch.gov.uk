@@ -8,7 +8,6 @@ import { Payment } from "ch-sdk-node/dist/services/payment";
 
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
-import { CHS_URL } from "../../config/config";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
