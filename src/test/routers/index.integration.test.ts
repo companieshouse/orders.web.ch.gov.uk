@@ -16,7 +16,8 @@ describe("index", () => {
         done();
     });
 
-    afterEach(function () {
+    afterEach(() => {
+        sandbox.reset();
         sandbox.restore();
     });
 

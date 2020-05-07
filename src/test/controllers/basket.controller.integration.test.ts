@@ -27,7 +27,7 @@ describe("basket.controller", () => {
         done();
     });
 
-    afterEach(function () {
+    afterEach(() => {
         sandbox.reset();
         sandbox.restore();
     });

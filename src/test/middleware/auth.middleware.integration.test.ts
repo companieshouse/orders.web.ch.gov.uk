@@ -19,7 +19,8 @@ describe("auth.middleware", () => {
         done();
     });
 
-    afterEach(function () {
+    afterEach(() => {
+        sandbox.reset();
         sandbox.restore();
     });
 

@@ -1,9 +1,11 @@
 import chai from "chai";
 import sinonChai from "sinon-chai";
+import chaiAsPromised from "chai-as-promised";
 import chaiHttp = require("chai-http");
 
 chai.use(chaiHttp);
 chai.use(sinonChai);
+chai.use(chaiAsPromised);
 
 // global.expect = chai.expect;
 // (global as any)['expect'] = chai.expect;
