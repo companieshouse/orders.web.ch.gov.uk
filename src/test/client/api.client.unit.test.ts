@@ -3,7 +3,7 @@ import chai from "chai";
 import BasketService from "ch-sdk-node/dist/services/order/basket/service";
 import PaymentService from "ch-sdk-node/dist/services/payment/service";
 import { Checkout } from "ch-sdk-node/dist/services/order/basket";
-import { ApiResponse, ApiErrorResponse, ApiError } from "ch-sdk-node/dist/services/resource";
+import { ApiResponse, ApiErrorResponse } from "ch-sdk-node/dist/services/resource";
 import { success, failure } from "ch-sdk-node/dist/services/result";
 import { Payment } from "ch-sdk-node/dist/services/payment";
 
