@@ -1,6 +1,8 @@
 app_name: orders.web.ch.gov.uk
 group: web
 weight: 900
+# When we move static files to the CDN remove route 3
 routes:
   1: /orders.*
   2: /basket.*
+  3: /orders-assets.*

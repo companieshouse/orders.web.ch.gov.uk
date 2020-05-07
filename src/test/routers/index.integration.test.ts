@@ -1,6 +1,6 @@
-import * as chai from "chai";
-import * as sinon from "sinon";
-import * as ioredis from "ioredis";
+import chai from "chai";
+import sinon from "sinon";
+import ioredis from "ioredis";
 
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 
@@ -16,7 +16,8 @@ describe("index", () => {
         done();
     });
 
-    afterEach(function () {
+    afterEach(() => {
+        sandbox.reset();
         sandbox.restore();
     });
 
@@ -34,7 +35,7 @@ describe("index", () => {
 
     it("renders the order complete page", (done) => {
         chai.request(testApp)
-            .get("/orders/order-id/order-complete")
+            .get("/orders/order-id/confirmation")
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
             .end((err, resp) => {
                 if (err) return done(err);
