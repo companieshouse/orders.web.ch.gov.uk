@@ -16,12 +16,24 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: "Certificate ordered",
-        html: "Your order reference number<br><strong>3161-204-251-249-0359</strong>"
+        html: "Your order reference number<br><strong>" + orderDetails.referenceNumber + "</strong>"
       }) }}
 
       <h1 class="govuk-heading-m">What happens next</h1>
       <p class="govuk-body">We'll prepare the certificate and dispatch it within 4 working days.</p>
+      {{ govukInsetText({
+        html: "<p class='govuk-body govuk-!-font-weight-bold'>You will not be sent an email confirmation of this order.</p> 
 
+        <ul class='govuk-list'>
+        <li>
+          <img src='/orders-assets/static/images/print-icon.png'  alt='print icon'/>
+          <a class='govuk-link' href='javascript:window.print()'>
+            Print your order confirmation
+          </a> 
+        </li>
+      </ul>"
+
+      }) }}
       <h2 class="govuk-heading-m">Your order details</h2>
 
       {{ govukSummaryList({
@@ -32,7 +44,7 @@
               classes: 'govuk-!-width-one-half'
             },
               value: {
-              text: "Stationary LTD",
+              text: itemDetails.companyName,
               classes: 'govuk-!-width-one-half'
               }
             },
@@ -41,7 +53,7 @@
               text: "Company number"
               },
               value: {
-              text: "027389177"
+              text: itemDetails.companyNumber
               }
           },
           {
@@ -50,7 +62,7 @@
               classes: 'govuk-!-width-one-half'
             },
             value: {
-              text: "Incorporation",
+              text: certificateDetails.certificateType,
               classes: 'govuk-!-width-one-half'
             }
           },
@@ -59,7 +71,7 @@
               text: "Included on certificate"
             },
             value: {
-              html: "Statement of good standing<br> Registered office address<br> Directors<br>Secretaries<br> Company objects"
+              html: certificateDetails.includedOnCertificate
             }
           },
           {
@@ -67,7 +79,7 @@
               text: "Delivery method"
             },
             value: {
-               text: "Standard delivery (dispatched within 4 working days)"
+               text: deliveryDetails.deliveryMethod
             }
           },
           {
@@ -75,7 +87,7 @@
               text: "Delivery details"
             },
             value: {
-               html: "Mr Jamies Hanson </br> 48 Tonna Road </br> Barry </br> CF45 8YG"
+               html: deliveryDetails.address
             }
           }
         ]
@@ -90,7 +102,7 @@
               classes: 'govuk-!-width-one-half'
             },
             value: {
-              text: "£15",
+              text: paymentDetails.amount,
               classes: 'govuk-!-width-one-half'
             }
           },
@@ -99,7 +111,7 @@
               text: "Payment reference"
             },
             value: {
-              text: "RS5VSN6DRE"
+              text: paymentDetails.paymentReference
             }
           },
           {
@@ -107,7 +119,7 @@
               text: "Date and time of payment"
             },
             value: {
-              html: "11 March 2020 – 10:56:14"
+              html: paymentDetails.orderedAt
             }
           }
         ]
@@ -116,17 +128,6 @@
       <h2 class="govuk-heading-m">How to contact us</h2>
       <p class="govuk-body">Email <a href="mailto:enquiries@companieshouse.gov.uk" class="govuk-link">enquiries@companieshouse.gov.uk</a> if you have questions about your order.</p>
       <p class="govuk-body">Include your order reference number when you contact us. </p>
-
-      <h2 class="govuk-heading-m">What do you want to do next?</h2>
-      <ul class="govuk-list govuk-list--bullet">
-        <li id="print-page-link">
-          <a href="javascript:window.print()" class="govuk-link">print this page for your records</a>
-        </li>
-        <li>
-          <a href="start" class="govuk-link">return to company overview</a>
-        </li>
-      </ul>
-
     </div>
   </div>
 {% endblock %}
