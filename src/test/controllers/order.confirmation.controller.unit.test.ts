@@ -10,9 +10,9 @@ import {
 
 describe("order.confirmation.controller.unit", () => {
     describe("mapCertificateType", () => {
-        it("maps incorporation-with-all-name-changes to Incorporation with all name changes", () => {
+        it("maps incorporation-with-all-name-changes to Incorporation with all company name changes", () => {
             const result = mapCertificateType("incorporation-with-all-name-changes");
-            chai.expect(result).to.equal("Incorporation with all name changes");
+            chai.expect(result).to.equal("Incorporation with all company name changes");
         });
     });
 

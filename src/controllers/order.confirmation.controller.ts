@@ -56,6 +56,9 @@ export const mapCertificateType = (cerificateType: string): string | null => {
     if (!cerificateType) {
         return null;
     }
+    if (cerificateType === "incorporation-with-all-name-changes") {
+        return "Incorporation with all company name changes";
+    }
     const cleanedCertificateType = cerificateType.replace(/-/g, " ");
     return cleanedCertificateType.charAt(0).toUpperCase() + cleanedCertificateType.slice(1);
 };
