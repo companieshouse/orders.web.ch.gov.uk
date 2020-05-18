@@ -7,7 +7,7 @@ import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 const sandbox = sinon.createSandbox();
 let testApp = null;
 
-describe("index", () => {
+describe("index.integration", () => {
     beforeEach(done => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
@@ -29,18 +29,6 @@ describe("index", () => {
                 if (err) return done(err);
                 chai.expect(resp.status).to.equal(200);
                 chai.expect(resp.text).to.equal("");
-                done();
-            });
-    });
-
-    it("renders the order complete page", (done) => {
-        chai.request(testApp)
-            .get("/orders/order-id/confirmation")
-            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
-            .end((err, resp) => {
-                if (err) return done(err);
-                chai.expect(resp.status).to.equal(200);
-                chai.expect(resp.text).to.contain("Certificate ordered");
                 done();
             });
     });

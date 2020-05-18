@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { Session } from "ch-node-session-handler";
 import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
 import { Order } from "ch-sdk-node/dist/services/order/order";
@@ -25,9 +26,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             companyNumber: item?.companyNumber
         };
         const certificateDetails = {
-            // TODO parse incorporation-with-all-name-changes to Incorporation with all name changes
-            certificateType: item?.itemOptions?.certificateType,
-            // TODO check this renders with br
+            certificateType: mapCertificateType(item?.itemOptions?.certificateType),
             includedOnCertificate: mapIncludedOnCertificate(item?.itemOptions)
         };
         const deliveryDetails = {
@@ -53,7 +52,15 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-const mapDate = (dateString: string): string => {
+export const mapCertificateType = (cerificateType: string): string | null => {
+    if (!cerificateType) {
+        return null;
+    }
+    const cleanedCertificateType = cerificateType.replace(/-/g, " ");
+    return cleanedCertificateType.charAt(0).toUpperCase() + cleanedCertificateType.slice(1);
+};
+
+export const mapDate = (dateString: string): string => {
     const d = new Date(dateString);
     const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(d);
     const month = new Intl.DateTimeFormat("en", { month: "short" }).format(d);
@@ -61,22 +68,26 @@ const mapDate = (dateString: string): string => {
 
     const hour = new Intl.DateTimeFormat("en", { hour: "2-digit", hour12: false }).format(d);
     const minute = new Intl.DateTimeFormat("en", { minute: "2-digit" }).format(d);
-    let second = new Intl.DateTimeFormat("en", { second: "numeric" }).format(d);
-    const secondInt = parseInt(second, 10);
-    if (secondInt < 10) {
-        second = "0" + second;
-    }
+    const second = new Intl.DateTimeFormat("en", { second: "numeric" }).format(d);
 
-    return `${day} ${month} ${year} - ${hour}:${minute}:${second}`;
+    const cleanedMinute = mapTimeLessThan10(minute);
+    const cleanedSecond = mapTimeLessThan10(second);
+
+    return `${day} ${month} ${year} - ${hour}:${cleanedMinute}:${cleanedSecond}`;
 };
 
-const mapAddress = (deliveryDetails): string | null => {
-    const addressArray: string[] = [];
-    if (deliveryDetails?.forename) {
-        addressArray.push(deliveryDetails?.forename);
+const mapTimeLessThan10 = (time: string): string => {
+    const timeInt = parseInt(time, 10);
+    if (timeInt < 10) {
+        return "0" + time;
     }
-    if (deliveryDetails?.surname) {
-        addressArray.push(deliveryDetails?.surname);
+    return time;
+};
+
+export const mapAddress = (deliveryDetails): string | null => {
+    const addressArray: string[] = [];
+    if (deliveryDetails?.forename && deliveryDetails?.surname) {
+        addressArray.push(deliveryDetails?.forename + " " + deliveryDetails?.surname);
     }
     if (deliveryDetails?.addressLine1) {
         addressArray.push(deliveryDetails?.addressLine1);
@@ -93,7 +104,7 @@ const mapAddress = (deliveryDetails): string | null => {
     return addressArray.length === 0 ? null : addressArray.reduce((accum, value) => accum + "<br/>" + value);
 };
 
-const mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
+export const mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
     if (itemOptions?.deliveryTimescale === "standard") {
         return "Standard delivery (dispatched within 4 working days)";
     }
@@ -103,22 +114,22 @@ const mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
     return null;
 };
 
-const mapIncludedOnCertificate = (itemOptions: Record<string, any>): string | null => {
+export const mapIncludedOnCertificate = (itemOptions: Record<string, any>): string | null => {
     const includedOnCertificate: string[] = [];
-    if (itemOptions?.directorDetails?.includeBasicInformation === true) {
-        includedOnCertificate.push("Directors");
-    }
-    if (itemOptions?.includeCompanyObjectsInformation === true) {
-        includedOnCertificate.push("Company objects");
-    }
     if (itemOptions?.includeGoodStandingInformation === true) {
         includedOnCertificate.push("Statement of good standing");
     }
     if (itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType?.length !== 0) {
         includedOnCertificate.push("Registered office address");
     }
+    if (itemOptions?.directorDetails?.includeBasicInformation === true) {
+        includedOnCertificate.push("Directors");
+    }
     if (itemOptions?.secretaryDetails?.includeBasicInformation === true) {
         includedOnCertificate.push("Secretaries");
+    }
+    if (itemOptions?.includeCompanyObjectsInformation === true) {
+        includedOnCertificate.push("Company objects");
     }
     return includedOnCertificate.length === 0 ? null : includedOnCertificate.reduce((accum, value) => accum + "<br/>" + value);
 };

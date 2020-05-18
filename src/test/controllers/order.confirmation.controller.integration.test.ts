@@ -81,7 +81,7 @@ const mockOrderResponse: Order = {
     reference: ORDER_ID
 };
 
-describe("order.confirmation.controller", () => {
+describe("order.confirmation.controller.integration", () => {
     beforeEach(done => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
@@ -95,7 +95,7 @@ describe("order.confirmation.controller", () => {
         sandbox.restore();
     });
 
-    it.only("renders get order page on successful get order call", (done) => {
+    it("renders get order page on successful get order call", (done) => {
         getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockOrderResponse));
 
         chai.request(testApp)
@@ -108,14 +108,26 @@ describe("order.confirmation.controller", () => {
                 chai.expect(resp.status).to.equal(200);
                 chai.expect($("#companyNameValue").text()).to.equal(mockOrderResponse.items[0].companyName);
                 chai.expect($("#companyNumberValue").text()).to.equal(mockOrderResponse.items[0].companyNumber);
-                chai.expect($("#certificateTypeValue").text()).to.equal("incorporation-with-all-name-changes");
+                chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all name changes");
                 chai.expect($("#includedOnCertificateValue").html()).to.equal("Statement of good standing<br>Registered office address");
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (dispatched within 4 working days)");
-                chai.expect($("#deliveryAddressValue").html()).to.equal("forename<br>surname<br>address line 1<br>locality<br>postal code<br>region");
+                chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>locality<br>postal code<br>region");
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockOrderResponse.paymentReference);
                 chai.expect($("#paymentTimeValue").text()).to.equal("15 May 2020 - 09:41:05");
                 chai.expect(getOrderStub).to.have.been.called;
+                done();
+            });
+    });
+
+    it("renders an error page if get order fails", (done) => {
+        getOrderStub = sandbox.stub(apiClient, "checkoutBasket").throws(new Error("ERROR"));
+        chai.request(testApp)
+            .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.status).to.equal(500);
                 done();
             });
     });
