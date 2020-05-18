@@ -13,7 +13,7 @@ let getOrderStub;
 
 const ORDER_ID = "123abc";
 const mockOrderResponse: Order = {
-    orderedAt: "2020-05-15T08:41:05.798Z",
+    orderedAt: "2019-12-16T09:16:17.791Z",
     orderedBy: {
         id: "123456",
         email: "email@examlpe.come"
@@ -114,7 +114,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>locality<br>postal code<br>region");
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockOrderResponse.paymentReference);
-                chai.expect($("#paymentTimeValue").text()).to.equal("15 May 2020 - 09:41:05");
+                chai.expect($("#paymentTimeValue").text()).to.equal("16 Dec 2019 - 09:16:17");
                 chai.expect(getOrderStub).to.have.been.called;
                 done();
             });
