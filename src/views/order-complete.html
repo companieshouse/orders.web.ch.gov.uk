@@ -43,18 +43,19 @@
               text: "Company name",
               classes: 'govuk-!-width-one-half'
             },
-              value: {
-              text: itemDetails.companyName,
-              classes: 'govuk-!-width-one-half'
-              }
-            },
+            value: {
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='companyNameValue'>" + itemDetails.companyName + "</p>"
+            }
+          },
           {
-             key: {
+            key: {
               text: "Company number"
-              },
-              value: {
-              text: itemDetails.companyNumber
-              }
+            },
+            value: {
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='companyNumberValue'>" + itemDetails.companyNumber + "</p>"
+            }
           },
           {
             key: {
@@ -62,8 +63,9 @@
               classes: 'govuk-!-width-one-half'
             },
             value: {
-              text: certificateDetails.certificateType,
-              classes: 'govuk-!-width-one-half'
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='certificateTypeValue'>" + certificateDetails.certificateType + "</p>"
+              
             }
           },
           {
@@ -71,7 +73,8 @@
               text: "Included on certificate"
             },
             value: {
-              html: certificateDetails.includedOnCertificate
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='includedOnCertificateValue'>" + certificateDetails.includedOnCertificate + "</p>"
             }
           },
           {
@@ -79,7 +82,8 @@
               text: "Delivery method"
             },
             value: {
-               text: deliveryDetails.deliveryMethod
+               classes: 'govuk-!-width-one-half',
+               html: "<p id='deliveryMethodValue'>" + deliveryDetails.deliveryMethod + "</p>"
             }
           },
           {
@@ -87,7 +91,8 @@
               text: "Delivery details"
             },
             value: {
-               html: deliveryDetails.address
+               classes: 'govuk-!-width-one-half',
+               html: "<p id='deliveryAddressValue'>" + deliveryDetails.address + "</p>"
             }
           }
         ]
@@ -102,8 +107,8 @@
               classes: 'govuk-!-width-one-half'
             },
             value: {
-              text: paymentDetails.amount,
-              classes: 'govuk-!-width-one-half'
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='paymentAmountValue'>" + paymentDetails.amount + "</p>"
             }
           },
           {
@@ -111,7 +116,8 @@
               text: "Payment reference"
             },
             value: {
-              text: paymentDetails.paymentReference
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='paymentReferenceValue'>" + paymentDetails.paymentReference + "</p>"
             }
           },
           {
@@ -119,7 +125,8 @@
               text: "Date and time of payment"
             },
             value: {
-              html: paymentDetails.orderedAt
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='paymentTimeValue'>" + paymentDetails.orderedAt + "</p>"
             }
           }
         ]

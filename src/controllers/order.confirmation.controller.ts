@@ -25,7 +25,9 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             companyNumber: item?.companyNumber
         };
         const certificateDetails = {
+            // TODO parse incorporation-with-all-name-changes to Incorporation with all name changes
             certificateType: item?.itemOptions?.certificateType,
+            // TODO check this renders with br
             includedOnCertificate: mapIncludedOnCertificate(item?.itemOptions)
         };
         const deliveryDetails = {
@@ -59,16 +61,36 @@ const mapDate = (dateString: string): string => {
 
     const hour = new Intl.DateTimeFormat("en", { hour: "2-digit", hour12: false }).format(d);
     const minute = new Intl.DateTimeFormat("en", { minute: "2-digit" }).format(d);
-    const second = new Intl.DateTimeFormat("en", { second: "2-digit" }).format(d);
+    let second = new Intl.DateTimeFormat("en", { second: "numeric" }).format(d);
+    const secondInt = parseInt(second, 10);
+    if (secondInt < 10) {
+        second = "0" + second;
+    }
 
     return `${day} ${month} ${year} - ${hour}:${minute}:${second}`;
 };
 
-const mapAddress = (deliveryDetails): string => {
-    const addressString = deliveryDetails.forename + " " + deliveryDetails.surname + "</br>" +
-        deliveryDetails.addressLine1 + "</br>" + deliveryDetails.locality + "</br>" +
-        deliveryDetails.postalCode || deliveryDetails.region;
-    return addressString;
+const mapAddress = (deliveryDetails): string | null => {
+    const addressArray: string[] = [];
+    if (deliveryDetails?.forename) {
+        addressArray.push(deliveryDetails?.forename);
+    }
+    if (deliveryDetails?.surname) {
+        addressArray.push(deliveryDetails?.surname);
+    }
+    if (deliveryDetails?.addressLine1) {
+        addressArray.push(deliveryDetails?.addressLine1);
+    }
+    if (deliveryDetails?.locality) {
+        addressArray.push(deliveryDetails?.locality);
+    }
+    if (deliveryDetails?.postalCode) {
+        addressArray.push(deliveryDetails?.postalCode);
+    }
+    if (deliveryDetails?.region) {
+        addressArray.push(deliveryDetails?.region);
+    }
+    return addressArray.length === 0 ? null : addressArray.reduce((accum, value) => accum + "<br/>" + value);
 };
 
 const mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
@@ -81,7 +103,7 @@ const mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
     return null;
 };
 
-const mapIncludedOnCertificate = (itemOptions: Record<string, any>): string => {
+const mapIncludedOnCertificate = (itemOptions: Record<string, any>): string | null => {
     const includedOnCertificate: string[] = [];
     if (itemOptions?.directorDetails?.includeBasicInformation === true) {
         includedOnCertificate.push("Directors");
@@ -98,5 +120,5 @@ const mapIncludedOnCertificate = (itemOptions: Record<string, any>): string => {
     if (itemOptions?.secretaryDetails?.includeBasicInformation === true) {
         includedOnCertificate.push("Secretaries");
     }
-    return includedOnCertificate.reduce((accum, value) => accum + "<br>" + value);
+    return includedOnCertificate.length === 0 ? null : includedOnCertificate.reduce((accum, value) => accum + "<br/>" + value);
 };
