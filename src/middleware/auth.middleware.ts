@@ -15,7 +15,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
     if (!signedIn) {
         logger.info(`Not signed in... Redirecting to: /signin?return_to=/basket`);
-        return res.redirect(`/signin?return_to=/basket`);
+        return res.redirect(`/signin?return_to=${req.originalUrl}`);
     }
 
     next();

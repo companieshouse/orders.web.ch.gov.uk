@@ -16,7 +16,7 @@ let createPaymentStub;
 
 const MOCK_PAYMENT_URL = "http://example.co";
 
-describe("basket.controller", () => {
+describe("basket.controller.integration", () => {
     beforeEach(done => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));

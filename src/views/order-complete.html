@@ -16,12 +16,24 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: "Certificate ordered",
-        html: "Your order reference number<br><strong>3161-204-251-249-0359</strong>"
+        html: "Your order reference number<br><strong>" + orderDetails.referenceNumber + "</strong>"
       }) }}
 
       <h1 class="govuk-heading-m">What happens next</h1>
       <p class="govuk-body">We'll prepare the certificate and dispatch it within 4 working days.</p>
+      {{ govukInsetText({
+        html: "<p class='govuk-body govuk-!-font-weight-bold'>You will not be sent an email confirmation of this order.</p> 
 
+        <ul class='govuk-list'>
+        <li>
+          <img src='/orders-assets/static/images/print-icon.png'  alt='print icon'/>
+          <a class='govuk-link' href='javascript:window.print()'>
+            Print your order confirmation
+          </a> 
+        </li>
+      </ul>"
+
+      }) }}
       <h2 class="govuk-heading-m">Your order details</h2>
 
       {{ govukSummaryList({
@@ -31,18 +43,19 @@
               text: "Company name",
               classes: 'govuk-!-width-one-half'
             },
-              value: {
-              text: "Stationary LTD",
-              classes: 'govuk-!-width-one-half'
-              }
-            },
+            value: {
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='companyNameValue'>" + itemDetails.companyName + "</p>"
+            }
+          },
           {
-             key: {
+            key: {
               text: "Company number"
-              },
-              value: {
-              text: "027389177"
-              }
+            },
+            value: {
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='companyNumberValue'>" + itemDetails.companyNumber + "</p>"
+            }
           },
           {
             key: {
@@ -50,8 +63,9 @@
               classes: 'govuk-!-width-one-half'
             },
             value: {
-              text: "Incorporation",
-              classes: 'govuk-!-width-one-half'
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='certificateTypeValue'>" + certificateDetails.certificateType + "</p>"
+              
             }
           },
           {
@@ -59,7 +73,8 @@
               text: "Included on certificate"
             },
             value: {
-              html: "Statement of good standing<br> Registered office address<br> Directors<br>Secretaries<br> Company objects"
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='includedOnCertificateValue'>" + certificateDetails.includedOnCertificate + "</p>"
             }
           },
           {
@@ -67,7 +82,8 @@
               text: "Delivery method"
             },
             value: {
-               text: "Standard delivery (dispatched within 4 working days)"
+               classes: 'govuk-!-width-one-half',
+               html: "<p id='deliveryMethodValue'>" + deliveryDetails.deliveryMethod + "</p>"
             }
           },
           {
@@ -75,7 +91,8 @@
               text: "Delivery details"
             },
             value: {
-               html: "Mr Jamies Hanson </br> 48 Tonna Road </br> Barry </br> CF45 8YG"
+               classes: 'govuk-!-width-one-half',
+               html: "<p id='deliveryAddressValue'>" + deliveryDetails.address + "</p>"
             }
           }
         ]
@@ -90,8 +107,8 @@
               classes: 'govuk-!-width-one-half'
             },
             value: {
-              text: "£15",
-              classes: 'govuk-!-width-one-half'
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='paymentAmountValue'>" + paymentDetails.amount + "</p>"
             }
           },
           {
@@ -99,7 +116,8 @@
               text: "Payment reference"
             },
             value: {
-              text: "RS5VSN6DRE"
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='paymentReferenceValue'>" + paymentDetails.paymentReference + "</p>"
             }
           },
           {
@@ -107,7 +125,8 @@
               text: "Date and time of payment"
             },
             value: {
-              html: "11 March 2020 – 10:56:14"
+              classes: 'govuk-!-width-one-half',
+              html: "<p id='paymentTimeValue'>" + paymentDetails.orderedAt + "</p>"
             }
           }
         ]
@@ -116,17 +135,6 @@
       <h2 class="govuk-heading-m">How to contact us</h2>
       <p class="govuk-body">Email <a href="mailto:enquiries@companieshouse.gov.uk" class="govuk-link">enquiries@companieshouse.gov.uk</a> if you have questions about your order.</p>
       <p class="govuk-body">Include your order reference number when you contact us. </p>
-
-      <h2 class="govuk-heading-m">What do you want to do next?</h2>
-      <ul class="govuk-list govuk-list--bullet">
-        <li id="print-page-link">
-          <a href="javascript:window.print()" class="govuk-link">print this page for your records</a>
-        </li>
-        <li>
-          <a href="start" class="govuk-link">return to company overview</a>
-        </li>
-      </ul>
-
     </div>
   </div>
 {% endblock %}

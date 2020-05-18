@@ -10,7 +10,7 @@ const tests = [ORDERS, ORDER_COMPLETE, BASKET];
 const sandbox = sinon.createSandbox();
 let testApp = null;
 
-describe("auth.middleware", () => {
+describe("auth.middleware.integration", () => {
     beforeEach(done => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedOutSession));
