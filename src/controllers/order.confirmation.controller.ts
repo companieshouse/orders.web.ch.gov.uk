@@ -95,6 +95,9 @@ export const mapAddress = (deliveryDetails): string | null => {
     if (deliveryDetails?.addressLine1) {
         addressArray.push(deliveryDetails?.addressLine1);
     }
+    if (deliveryDetails?.addressLine2) {
+        addressArray.push(deliveryDetails?.addressLine2);
+    }
     if (deliveryDetails?.locality) {
         addressArray.push(deliveryDetails?.locality);
     }
@@ -103,6 +106,9 @@ export const mapAddress = (deliveryDetails): string | null => {
     }
     if (deliveryDetails?.region) {
         addressArray.push(deliveryDetails?.region);
+    }
+    if (deliveryDetails?.country) {
+        addressArray.push(deliveryDetails?.country);
     }
     return addressArray.length === 0 ? null : addressArray.reduce((accum, value) => accum + "<br/>" + value);
 };
