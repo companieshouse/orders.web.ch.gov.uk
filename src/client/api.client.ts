@@ -75,8 +75,7 @@ const retryGetOrder = async (oAuth: string, orderId: string, retriesLeft: number
                 throw new Error(JSON.stringify(errorResponse?.errors) || "Unknown Error");
             }
         }
-        if (errorResponse.httpStatusCode === 401 ||
-            errorResponse.httpStatusCode === 404) {
+        if (errorResponse.httpStatusCode === 401) {
             throw new Error(JSON.stringify(errorResponse?.errors) || "Unknown Error");
         } else {
             throw new Error("Unknown Error");
