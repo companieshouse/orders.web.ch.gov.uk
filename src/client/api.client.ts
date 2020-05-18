@@ -56,11 +56,25 @@ export const createPayment = async (oAuth: string, paymentUrl: string, checkoutI
 };
 
 export const getOrder = async (oAuth: string, orderId: string): Promise<Order> => {
+    return retryGetOrder(oAuth, orderId);
+};
+
+/*
+The order does not get created straight away which is why there is a retry method if the order is not found
+*/
+const retryGetOrder = async (oAuth: string, orderId: string, retriesLeft: number = 3, interval: number = 1000): Promise<Order> => {
     const api = createApiClient(undefined, oAuth, API_URL);
     const orderResult:ApiResult<Order> = await api.order.getOrder(orderId);
     if (orderResult.isFailure()) {
         const errorResponse = orderResult.value;
-        logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);
+        if (errorResponse.httpStatusCode === 404) {
+            if (retriesLeft) {
+                await new Promise(resolve => setTimeout(resolve, interval));
+                return retryGetOrder(oAuth, orderId, retriesLeft - 1, interval);
+            } else {
+                throw new Error(JSON.stringify(errorResponse?.errors) || "Unknown Error");
+            }
+        }
         if (errorResponse.httpStatusCode === 401 ||
             errorResponse.httpStatusCode === 404) {
             throw new Error(JSON.stringify(errorResponse?.errors) || "Unknown Error");
@@ -69,5 +83,5 @@ export const getOrder = async (oAuth: string, orderId: string): Promise<Order> =
         }
     } else {
         return orderResult.value;
-    }
+    };
 };
