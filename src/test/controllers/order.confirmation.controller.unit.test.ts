@@ -92,6 +92,7 @@ describe("order.confirmation.controller.unit", () => {
             const result = mapIncludedOnCertificate(itemOptions);
             chai.expect(result).to.equal("Statement of good standing<br/>Registered office address<br/>Directors<br/>Secretaries<br/>Company objects");
         });
+
         it("map some included on certificate correctly", () => {
             const itemOptions = {
                 directorDetails: {
