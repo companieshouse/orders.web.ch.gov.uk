@@ -26,11 +26,11 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         if (status === "cancelled" || status === "failed") {
             const basket = await getBasket(accessToken);
             const item = basket?.items?.[0];
-            // if (item?.kind === "item#certificate") {
-            const redirectUrl = item?.itemUri + "/check-details";
-            logger.info(`Redirecting to ${redirectUrl}`);
-            return res.redirect(redirectUrl);
-            // }
+            if (item?.kind === "item#certificate") {
+                const redirectUrl = item?.itemUri + "/check-details";
+                logger.info(`Redirecting to ${redirectUrl}`);
+                return res.redirect(redirectUrl);
+            }
         }
 
         const order: Order = await getOrder(accessToken, orderId);

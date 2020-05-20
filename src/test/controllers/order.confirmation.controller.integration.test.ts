@@ -114,7 +114,7 @@ const mockBasketResponse: Basket = {
         }],
         itemOptions: { key: {} },
         itemUri: "/orderable/certificates/" + CERTIFICATE_ID,
-        kind: "kind",
+        kind: "item#certificate",
         links: { self: "/orderable/certificates/" + CERTIFICATE_ID },
         postageCost: "postage cost",
         postalDelivery: true,
@@ -179,7 +179,7 @@ describe("order.confirmation.controller.integration", () => {
             });
     });
 
-    it("redirects to check details in certs web if status is cancelled", (done) => {
+    it("redirects to check details in certs web if status is cancelled and item type is certificate", (done) => {
         getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(mockBasketResponse));
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled`)
@@ -191,7 +191,7 @@ describe("order.confirmation.controller.integration", () => {
             });
     });
 
-    it("redirects to check details in certs web if status is failed", (done) => {
+    it("redirects to check details in certs web if status is failed and item type is certificate", (done) => {
         getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(mockBasketResponse));
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=failed`)
