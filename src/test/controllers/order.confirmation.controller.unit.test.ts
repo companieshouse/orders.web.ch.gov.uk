@@ -47,7 +47,7 @@ describe("order.confirmation.controller.unit", () => {
                 poBox: "po box"
             };
             const result = mapAddress(deliveryDetails);
-            chai.expect(result).to.equal("forename surname<br/>address line 1<br/>address line 2<br/>locality<br/>postal code<br/>region<br/>country");
+            chai.expect(result).to.equal("forename surname<br/>address line 1<br/>address line 2<br/>locality<br/>region<br/>postal code<br/>country");
         });
         it("maps full delivery details correctly", () => {
             const deliveryDetails = {
@@ -58,7 +58,7 @@ describe("order.confirmation.controller.unit", () => {
                 surname: "surname"
             };
             const result = mapAddress(deliveryDetails);
-            chai.expect(result).to.equal("forename surname<br/>address line 1<br/>postal code<br/>region");
+            chai.expect(result).to.equal("forename surname<br/>address line 1<br/>region<br/>postal code");
         });
     });
 
