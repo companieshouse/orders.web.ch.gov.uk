@@ -39,7 +39,13 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             orderedAt: mapDate(order?.orderedAt)
         };
 
+        let serviceUrl = "/";
+        if (item?.kind === "item#certificate") {
+            serviceUrl = `/company/${item?.companyNumber}/orderable/certificates`;
+        }
+
         res.render(ORDER_COMPLETE, {
+            serviceUrl,
             orderDetails,
             itemDetails,
             certificateDetails,
@@ -101,11 +107,11 @@ export const mapAddress = (deliveryDetails): string | null => {
     if (deliveryDetails?.locality) {
         addressArray.push(deliveryDetails?.locality);
     }
-    if (deliveryDetails?.postalCode) {
-        addressArray.push(deliveryDetails?.postalCode);
-    }
     if (deliveryDetails?.region) {
         addressArray.push(deliveryDetails?.region);
+    }
+    if (deliveryDetails?.postalCode) {
+        addressArray.push(deliveryDetails?.postalCode);
     }
     if (deliveryDetails?.country) {
         addressArray.push(deliveryDetails?.country);
