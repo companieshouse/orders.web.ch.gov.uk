@@ -1,15 +1,25 @@
 import { createApiClient } from "ch-sdk-node";
-import { Checkout } from "ch-sdk-node/dist/services/order/basket";
+import { Checkout, Basket } from "ch-sdk-node/dist/services/order/basket";
 import { Order } from "ch-sdk-node/dist/services/order/order";
 import { CreatePaymentRequest, Payment } from "ch-sdk-node/dist/services/payment";
-import { ApiResponse, ApiResult } from "ch-sdk-node/dist/services/resource";
+import Resource, { ApiResponse, ApiResult } from "ch-sdk-node/dist/services/resource";
 import { createLogger } from "ch-structured-logging";
 import { v4 as uuidv4 } from "uuid";
+import createError from "http-errors";
 
 import { API_URL, APPLICATION_NAME, CHS_URL } from "../config/config";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
 
 const logger = createLogger(APPLICATION_NAME);
+
+export const getBasket = async (oAuth: string): Promise<Basket> => {
+    const api = createApiClient(undefined, oAuth, API_URL);
+    const basketResource: Resource<Basket> = await api.basket.getBasket();
+    if (basketResource.httpStatusCode !== 200 && basketResource.httpStatusCode !== 201) {
+        throw createError(basketResource.httpStatusCode, basketResource.httpStatusCode.toString());
+    }
+    return basketResource.resource as Basket;
+};
 
 export const checkoutBasket = async (oAuth: string): Promise<ApiResponse<Checkout>> => {
     const api = createApiClient(undefined, oAuth, API_URL);
@@ -20,9 +30,9 @@ export const checkoutBasket = async (oAuth: string): Promise<ApiResponse<Checkou
         if (errorResponse.httpStatusCode === 409 ||
             errorResponse.httpStatusCode === 401 ||
             errorResponse.httpStatusCode === 400) {
-            throw new Error(JSON.stringify(errorResponse?.errors) || "Unknown Error");
+            throw createError(errorResponse.httpStatusCode, JSON.stringify(errorResponse?.errors) || "Unknown Error");
         } else {
-            throw new Error("Unknown Error");
+            throw createError("Unknown Error");
         }
     } else {
         return checkoutResult.value;
@@ -46,9 +56,9 @@ export const createPayment = async (oAuth: string, paymentUrl: string, checkoutI
         const errorResponse = paymentResult.value;
         logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);
         if (errorResponse.httpStatusCode === 401 || errorResponse.httpStatusCode === 429) {
-            throw new Error(JSON.stringify(errorResponse?.errors) || "Unknown Error");
+            throw createError(errorResponse.httpStatusCode, JSON.stringify(errorResponse?.errors) || "Unknown Error");
         } else {
-            throw new Error("Unknown Error");
+            throw createError("Unknown Error");
         }
     } else {
         return paymentResult.value;
@@ -68,16 +78,18 @@ const retryGetOrder = async (oAuth: string, orderId: string, retriesLeft: number
     if (orderResult.isFailure()) {
         const errorResponse = orderResult.value;
         if (errorResponse.httpStatusCode === 404) {
-            if (retriesLeft) {
+            if (retriesLeft >= 0) {
+                logger.info(`failed to get order, order_id=${orderId}, retries=${retriesLeft}`);
                 await new Promise(resolve => setTimeout(resolve, interval));
                 return retryGetOrder(oAuth, orderId, retriesLeft - 1, interval);
             } else {
-                throw new Error(JSON.stringify(errorResponse?.errors) || "Unknown Error");
+                throw createError(404, JSON.stringify(errorResponse?.errors) || "Unknown Error");
             }
         } else if (errorResponse.httpStatusCode === 401) {
-            throw new Error(JSON.stringify(errorResponse?.errors) || "Unknown Error");
+            // throw 401 error as 404, so user does not know it exists
+            throw createError(404, JSON.stringify(errorResponse?.errors) || "Unknown Error");
         } else {
-            throw new Error("Unknown Error");
+            throw createError("Unknown Error");
         }
     } else {
         return orderResult.value;

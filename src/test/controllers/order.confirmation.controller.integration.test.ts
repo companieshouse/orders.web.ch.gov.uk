@@ -2,6 +2,7 @@ import chai from "chai";
 import sinon from "sinon";
 import ioredis from "ioredis";
 import { Order } from "ch-sdk-node/dist/services/order/order";
+import { Basket } from "ch-sdk-node/dist/services/order/basket";
 import cheerio from "cheerio";
 
 import * as apiClient from "../../client/api.client";
@@ -10,8 +11,10 @@ import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 const sandbox = sinon.createSandbox();
 let testApp = null;
 let getOrderStub;
+let getBasketStub;
 
 const ORDER_ID = "123abc";
+const CERTIFICATE_ID = "CHS00000000000000000";
 const mockOrderResponse: Order = {
     orderedAt: "2019-12-16T09:16:17.791Z",
     orderedBy: {
@@ -35,7 +38,7 @@ const mockOrderResponse: Order = {
         poBox: "po box"
     },
     items: [{
-        id: "CHS00000000000000000",
+        id: CERTIFICATE_ID,
         companyName: "Company Name",
         companyNumber: "00000000",
         description: "certificate for company 00000000",
@@ -64,11 +67,11 @@ const mockOrderResponse: Order = {
         etag: "abcdefg123456",
         kind: "item#certificate",
         links: {
-            self: "/orderable/certificates/CHS00000000000000000"
+            self: "/orderable/certificates/" + CERTIFICATE_ID
         },
         postalDelivery: true,
         quantity: 1,
-        itemUri: "/orderable/certificates/CHS00000000000000000",
+        itemUri: "/orderable/certificates/" + CERTIFICATE_ID,
         status: "unknown",
         postageCost: "0",
         totalItemCost: "15",
@@ -79,6 +82,50 @@ const mockOrderResponse: Order = {
     kind: "order",
     totalOrderCost: "15",
     reference: ORDER_ID
+};
+
+const mockBasketResponse: Basket = {
+    deliveryDetails: {
+        addressLine1: "117 kings road",
+        addressLine2: "canton",
+        country: "wales",
+        forename: "John",
+        locality: "Cardiff",
+        poBox: "po box",
+        postalCode: "CF5 3NB",
+        region: "Glamorgan",
+        surname: "Smith"
+    },
+    etag: "etag",
+    items: [{
+        companyName: "company name",
+        companyNumber: "00000000",
+        customerReference: "reference",
+        description: "description",
+        descriptionIdentifier: "description identifier",
+        descriptionValues: { key: "value" },
+        etag: "etag",
+        id: CERTIFICATE_ID,
+        itemCosts: [{
+            calculatedCost: "calculated cost",
+            discountApplied: "discount applies",
+            itemCost: "item cost",
+            productType: "product type"
+        }],
+        itemOptions: { key: {} },
+        itemUri: "/orderable/certificates/" + CERTIFICATE_ID,
+        kind: "item#certificate",
+        links: { self: "/orderable/certificates/" + CERTIFICATE_ID },
+        postageCost: "postage cost",
+        postalDelivery: true,
+        quantity: 1,
+        totalItemCost: "total item cost"
+    }],
+    kind: "kind",
+    links: {
+        self: "self"
+    },
+    totalBasketCost: "5"
 };
 
 describe("order.confirmation.controller.integration", () => {
@@ -128,6 +175,30 @@ describe("order.confirmation.controller.integration", () => {
             .end((err, resp) => {
                 if (err) return done(err);
                 chai.expect(resp.status).to.equal(500);
+                done();
+            });
+    });
+
+    it("redirects to check details in certs web if status is cancelled and item type is certificate", (done) => {
+        getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(mockBasketResponse));
+        chai.request(testApp)
+            .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled`)
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.redirects[0]).to.include(`/orderable/certificates/${CERTIFICATE_ID}/check-details`);
+                done();
+            });
+    });
+
+    it("redirects to check details in certs web if status is failed and item type is certificate", (done) => {
+        getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(mockBasketResponse));
+        chai.request(testApp)
+            .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=failed`)
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.redirects[0]).to.include(`/orderable/certificates/${CERTIFICATE_ID}/check-details`);
                 done();
             });
     });

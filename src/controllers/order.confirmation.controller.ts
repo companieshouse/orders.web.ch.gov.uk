@@ -3,17 +3,38 @@ import { Session } from "ch-node-session-handler";
 import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
 import { Order } from "ch-sdk-node/dist/services/order/order";
+import { createLogger } from "ch-structured-logging";
+import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
 
-import { getOrder } from "../client/api.client";
+import { getOrder, getBasket } from "../client/api.client";
 import { ORDER_COMPLETE } from "../model/template.paths";
+import { APPLICATION_NAME } from "../config/config";
+
+const logger = createLogger(APPLICATION_NAME);
 
 export const render = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const orderId = req.params.orderId;
+        const status = req.query.status;
+        const ref = req.query.ref;
+
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
+        const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
+
+        logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, user_id=${userId}`);
+        if (status === "cancelled" || status === "failed") {
+            const basket = await getBasket(accessToken);
+            const item = basket?.items?.[0];
+            if (item?.kind === "item#certificate") {
+                const redirectUrl = item?.itemUri + "/check-details";
+                logger.info(`Redirecting to ${redirectUrl}`);
+                return res.redirect(redirectUrl);
+            }
+        }
 
         const order: Order = await getOrder(accessToken, orderId);
+        logger.info(`Order retrieved order_id=${order.reference}, user_id=${userId}`);
 
         const orderDetails = {
             referenceNumber: order.reference
