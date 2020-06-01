@@ -37,7 +37,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         logger.info(`Order retrieved order_id=${order.reference}, user_id=${userId}`);
 
         const orderDetails = {
-            referenceNumber: order.reference
+            referenceNumber: order.reference,
+            referenceNumberAriaLabel: order.reference.replace(/-/g, " hyphen ")
         };
 
         const item = order.items[0];
