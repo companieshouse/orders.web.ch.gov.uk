@@ -13,7 +13,8 @@ let testApp = null;
 let getOrderStub;
 let getBasketStub;
 
-const ORDER_ID = "123abc";
+const ORDER_ID = "ORD-123-456";
+const ORDER_ID_ARIA_LABEL = "ORD hyphen 123 hyphen 456";
 const CERTIFICATE_ID = "CHS00000000000000000";
 const mockOrderResponse: Order = {
     orderedAt: "2019-12-16T09:16:17.791Z",
@@ -153,6 +154,8 @@ describe("order.confirmation.controller.integration", () => {
                 const $ = cheerio.load(resp.text);
 
                 chai.expect(resp.status).to.equal(200);
+                chai.expect($("#orderReference").text()).to.equal(mockOrderResponse.reference);
+                chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
                 chai.expect($("#companyNameValue").text()).to.equal(mockOrderResponse.items[0].companyName);
                 chai.expect($("#companyNumberValue").text()).to.equal(mockOrderResponse.items[0].companyNumber);
                 chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
