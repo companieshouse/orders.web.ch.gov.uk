@@ -18,6 +18,7 @@ export const getBasket = async (oAuth: string): Promise<Basket> => {
     if (basketResource.httpStatusCode !== 200 && basketResource.httpStatusCode !== 201) {
         throw createError(basketResource.httpStatusCode, basketResource.httpStatusCode.toString());
     }
+    logger.info(`Get basket, status_code=${basketResource.httpStatusCode}`);
     return basketResource.resource as Basket;
 };
 
@@ -35,6 +36,7 @@ export const checkoutBasket = async (oAuth: string): Promise<ApiResponse<Checkou
             throw createError("Unknown Error");
         }
     } else {
+        logger.info(`Checkout basket, status_code=${checkoutResult.value.httpStatusCode}`);
         return checkoutResult.value;
     }
 };
@@ -61,6 +63,7 @@ export const createPayment = async (oAuth: string, paymentUrl: string, checkoutI
             throw createError("Unknown Error");
         }
     } else {
+        logger.info(`Create payment, status_code=${paymentResult.value.httpStatusCode}`);
         return paymentResult.value;
     }
 };
