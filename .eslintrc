@@ -19,7 +19,7 @@
         "indent": ["error", 4],
         "no-unused-vars": "off",
         "quotes": ["error", "double", { "allowTemplateLiterals": true }],
-        "semi": ["error", "always"]
+        "semi": [2, "always"]
     },
     "plugins": [
         "@typescript-eslint"

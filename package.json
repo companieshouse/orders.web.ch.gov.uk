@@ -8,6 +8,7 @@
     "start:watch": "NODE_ENV=development nodemon",
     "build": "NODE_ENV=production tsc && cp -r src/views dist/ && gulp static",
     "lint": "eslint 'src/**/*'",
+    "lint:fix": "eslint src/*.ts src/**/*.ts --fix",
     "test": "mocha"
   },
   "keywords": [],
