@@ -138,7 +138,7 @@ export const mapAddress = (deliveryDetails): string | null => {
     if (deliveryDetails?.country) {
         addressArray.push(deliveryDetails?.country);
     }
-    return addressArray.length === 0 ? null : addressArray.reduce((accum, value) => accum + "<br/>" + value);
+    return addressArray.length === 0 ? "" : addressArray.reduce((accum, value) => accum + "<br/>" + value);
 };
 
 export const mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
@@ -156,7 +156,8 @@ export const mapIncludedOnCertificate = (itemOptions: Record<string, any>): stri
     if (itemOptions?.includeGoodStandingInformation === true) {
         includedOnCertificate.push("Statement of good standing");
     }
-    if (itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType?.length !== 0) {
+    if (itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType !== undefined &&
+        itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType?.length !== 0) {
         includedOnCertificate.push("Registered office address");
     }
     if (itemOptions?.directorDetails?.includeBasicInformation === true) {
@@ -168,5 +169,5 @@ export const mapIncludedOnCertificate = (itemOptions: Record<string, any>): stri
     if (itemOptions?.includeCompanyObjectsInformation === true) {
         includedOnCertificate.push("Company objects");
     }
-    return includedOnCertificate.length === 0 ? null : includedOnCertificate.reduce((accum, value) => accum + "<br/>" + value);
+    return includedOnCertificate.length === 0 ? "" : includedOnCertificate.reduce((accum, value) => accum + "<br/>" + value);
 };
