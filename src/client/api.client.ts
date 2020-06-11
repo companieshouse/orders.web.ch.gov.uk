@@ -90,7 +90,7 @@ const retryGetOrder = async (oAuth: string, orderId: string, retriesLeft: number
             }
         } else if (errorResponse.httpStatusCode === 401) {
             // throw 401 error as 404, so user does not know it exists
-            logger.error(`user is unauthorized to view order, status_code=${errorResponse.httpStatusCode}, order_id=${orderId}`)
+            logger.error(`user is unauthorized to view order, status_code=${errorResponse.httpStatusCode}, order_id=${orderId}`);
             throw createError(404, JSON.stringify(errorResponse?.errors) || "Unknown Error");
         } else {
             throw createError("Unknown Error");
