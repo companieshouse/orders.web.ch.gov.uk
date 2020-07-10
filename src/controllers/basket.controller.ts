@@ -4,11 +4,13 @@ import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInI
 import { ApiResponse } from "ch-sdk-node/dist/services/resource";
 import { Checkout } from "ch-sdk-node/dist/services/order/basket";
 import { createLogger } from "ch-structured-logging";
+import { HttpError } from "http-errors";
 
 import { checkoutBasket, createPayment } from "../client/api.client";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
 import { APPLICATION_NAME } from "../config/config";
 import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
+import * as templatePaths from "../model/template.paths";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -42,6 +44,16 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             res.redirect(replaceOrderId(ORDER_COMPLETE, checkoutApiResponse.resource?.reference!));
         }
     } catch (err) {
-        next(err);
+        if (err instanceof HttpError) {
+            const statusCode: number = err?.statusCode || 500;
+            let template: string = templatePaths.ERROR;
+            const errorMessage: string = err?.message || "";
+            if (statusCode === 409 && err?.message?.includes("Delivery details missing for postal delivery")) {
+                template = templatePaths.ERROR_START_AGAIN;
+            }
+            res.status(statusCode).render(template, { errorMessage });
+        } else {
+            next(err);
+        }
     }
 };
