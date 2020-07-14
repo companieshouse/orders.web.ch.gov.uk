@@ -1,4 +1,12 @@
 {% extends "layout.html" %} 
+{% block header %}
+{% include "includes/cookie-banner.html" %}
+  {{ chHeader({
+    homepageUrl: "/",
+    containerClasses: "govuk-width-container",
+    assetPath: ""
+  }) }}
+{% endblock %}
 
 {% block pageTitle %} Page not found {% endblock %}
 

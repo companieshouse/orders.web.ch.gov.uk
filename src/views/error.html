@@ -1,6 +1,15 @@
 
 {% extends "layout.html" %}
 
+{% block header %}
+{% include "includes/cookie-banner.html" %}
+  {{ chHeader({
+    homepageUrl: "/",
+    containerClasses: "govuk-width-container",
+    assetPath: ""
+  }) }}
+{% endblock %}
+
 {% block pageTitle %}
   Sorry, there is a problem with the service - GOV.UK
 {% endblock %}
