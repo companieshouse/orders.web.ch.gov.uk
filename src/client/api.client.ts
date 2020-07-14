@@ -31,7 +31,7 @@ export const checkoutBasket = async (oAuth: string): Promise<ApiResponse<Checkou
         if (errorResponse.httpStatusCode === 409 ||
             errorResponse.httpStatusCode === 401 ||
             errorResponse.httpStatusCode === 400) {
-            throw createError(errorResponse.httpStatusCode, JSON.stringify(errorResponse?.errors) || "Unknown Error");
+            throw createError(errorResponse.httpStatusCode, JSON.stringify(errorResponse?.errors?.[0]) || "Unknown Error");
         } else {
             throw createError("Unknown Error");
         }

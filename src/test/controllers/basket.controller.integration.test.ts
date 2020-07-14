@@ -5,6 +5,7 @@ import nock from "nock";
 import { Checkout } from "ch-sdk-node/dist/services/order/basket";
 import { ApiResponse } from "ch-sdk-node/dist/services/resource";
 import { Payment } from "ch-sdk-node/dist/services/payment";
+import createError from "http-errors";
 
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
@@ -97,5 +98,15 @@ describe("basket.controller.integration", () => {
                 chai.expect(resp.status).to.equal(500);
                 done();
             });
+    });
+
+    it("renders an error page if delivery details are missing", async () => {
+        checkoutBasketStub = sandbox.stub(apiClient, "checkoutBasket").throws(createError(409, "Delivery details missing for postal delivery"));
+        const resp = await chai.request(testApp)
+            .get("/basket")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+        chai.expect(resp.status).to.equal(409);
+        chai.expect(resp.text).to.contains("If you pasted the web address to order a document, you'll need to start the order again.");
     });
 });

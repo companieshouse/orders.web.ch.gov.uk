@@ -10,6 +10,7 @@ import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
 import { PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, COOKIE_DOMAIN, CACHE_SERVER, APPLICATION_NAME } from "./config/config";
 import * as pageUrls from "./model/page.urls";
+import errorHandlers from "./controllers/error.controller";
 
 const app = express();
 
@@ -62,5 +63,6 @@ if (process.env.NODE_ENV !== "production") {
 
 // apply our default router to /
 app.use("/", router);
+app.use(...errorHandlers);
 
 export default app;

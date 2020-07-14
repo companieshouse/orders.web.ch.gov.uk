@@ -1,0 +1,37 @@
+{% extends "layout.html" %} 
+
+{% block pageTitle %} Page not found {% endblock %}
+
+{% set mainClasses = "govuk-main-wrapper--l" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Page not found</h1>
+    <p class="govuk-body">
+      If you pasted the web address to order a document, you'll need to start the order again.
+    </p>
+
+    <ol class="govuk-list govuk-list--number">
+      <li>
+        <a href="/" class="govuk-link"
+          >Go to the Companies House service</a
+        >.
+      </li>
+      <li>Search for the company you want to order a document for.</li>
+      <li>
+        Select the More Services tab to find the document ordering services.
+      </li>
+    </ol>
+
+    <p class="govuk-body">
+      <a
+        href="https://beta.companieshouse.gov.uk/help/contact-us"
+        class="govuk-link"
+        >Contact Companies House</a
+      >
+      if you need to speak to someone about ordering a document.
+    </p>
+  </div>
+</div>
+{% endblock %}
