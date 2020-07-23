@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  Certificate ordered confirmation
+  {{ pageTitle }}
 {% endblock %}
 
 {% block beforeContent %}
@@ -15,11 +15,11 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
-        titleText: "Certificate ordered",
+        titleText: titleText,
         html: "Your order reference number<br><strong id='orderReference' aria-label='"+ orderDetails.referenceNumberAriaLabel + "'>" + orderDetails.referenceNumber + "</strong>"
       }) }}
       <h1 class="govuk-heading-m">What happens next</h1>
-      <p class="govuk-body">We'll prepare the certificate and aim to dispatch it within 4 working days.</p>
+      <p class="govuk-body">{{ happensNext }}</p>
       {{ govukInsetText({
         html: "<p class='govuk-body govuk-!-font-weight-bold'>You will not be sent an email confirmation of this order.</p> 
 
@@ -36,66 +36,75 @@
       <h2 class="govuk-heading-m">Your order details</h2>
 
       {{ govukSummaryList({
-        rows: [
-          {
-            key: {
-              text: "Company name",
-              classes: 'govuk-!-width-one-half'
-            },
-            value: {
-              classes: 'govuk-!-width-one-half',
-              html: "<p id='companyNameValue'>" + itemDetails.companyName + "</p>"
-            }
-          },
-          {
-            key: {
-              text: "Company number"
-            },
-            value: {
-              classes: 'govuk-!-width-one-half',
-              html: "<p id='companyNumberValue'>" + itemDetails.companyNumber + "</p>"
-            }
-          },
-          {
-            key: {
-              text: "Certificate type",
-              classes: 'govuk-!-width-one-half'
-            },
-            value: {
-              classes: 'govuk-!-width-one-half',
-              html: "<p id='certificateTypeValue'>" + certificateDetails.certificateType + "</p>"
-              
-            }
-          },
-          {
-            key: {
-              text: "Included on certificate"
-            },
-            value: {
-              classes: 'govuk-!-width-one-half',
-              html: "<p id='includedOnCertificateValue'>" + certificateDetails.includedOnCertificate + "</p>"
-            }
-          },
-          {
-            key: {
-              text: "Delivery method"
-            },
-            value: {
-               classes: 'govuk-!-width-one-half',
-               html: "<p id='deliveryMethodValue'>" + deliveryDetails.deliveryMethod + "</p>"
-            }
-          },
-          {
-            key: {
-              text: "Delivery details"
-            },
-            value: {
-               classes: 'govuk-!-width-one-half',
-               html: "<p id='deliveryAddressValue'>" + deliveryDetails.address + "</p>"
-            }
-          }
-        ]
+        rows: orderDetailsTable
       }) }}
+
+      {% if documentDetailsTable %}
+      <h3 class="govuk-heading-m">Document details</h3>
+
+      {{ govukTable({
+          caption: "",
+
+
+          head: [
+            {
+              html: "Date filed",
+              classes: 'govuk-!-width-one-quarter'
+            },
+            {
+              html: "Type"
+            },
+            {
+              html: "Description",
+              classes: 'govuk-!-width-half'
+            },
+            {
+              html: "Fee"
+            }
+          ],
+          rows: [
+            [
+              {
+                text: "15 Feb 2018"
+              },
+              {
+              html: "AP01"
+              },
+              {
+                text:"Appointment of Ms Sharon Michelle White as a director on 4 February 2020"
+              },
+              {
+                text:"£15"
+              }
+
+            ],
+             [
+              {
+                html: "07 Feb 2020"
+              },
+              {
+                html: "AP03"
+              },
+              {
+                html: "Appointment of Mr Peter Simpson as a secretary on 31 January 2018"
+              },
+              {
+                text:"£15"
+              }
+            ],
+            [
+              {
+                html: "<p class='govuk-body govuk-!-font-weight-bold'>Total</p>"
+              },
+              {},
+              {},
+              {
+                html:"<p class='govuk-body govuk-!-font-weight-bold'>£30</p>"
+              }
+            ]
+          ]
+        }) }}
+      {% endif %}
 
       <h2 class="govuk-heading-m">Your payment details</h2>
       {{ govukSummaryList({

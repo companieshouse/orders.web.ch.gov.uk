@@ -24,3 +24,9 @@ export const API_URL = getEnvironmentValue("API_URL");
 export const CHS_URL = getEnvironmentValue("CHS_URL");
 
 export const APPLICATION_NAME = "orders.web.ch.gov.uk";
+
+export const SERVICE_NAME_CERTIFIED_COPIES = "Order a certified document";
+
+export const SERVICE_NAME_CERTIFICATES = "Order a certificate";
+
+export const SERVICE_NAME_GENERIC = "";
