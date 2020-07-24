@@ -8,7 +8,7 @@ import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserPr
 
 import { getOrder, getBasket } from "../client/api.client";
 import { ORDER_COMPLETE } from "../model/template.paths";
-import { APPLICATION_NAME } from "../config/config";
+import { APPLICATION_NAME, SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES } from "../config/config";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -61,18 +61,147 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             orderedAt: mapDate(order?.orderedAt)
         };
 
+        const certificatesOrderDetails = [
+            {
+                key: {
+                    text: "Company name",
+                    classes: "govuk-!-width-one-half"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='companyNameValue'>" + itemDetails.companyName + "</p>"
+                }
+            },
+            {
+                key: {
+                    text: "Company number"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='companyNumberValue'>" + itemDetails.companyNumber + "</p>"
+                }
+            },
+            {
+                key: {
+                    text: "Certificate type",
+                    classes: "govuk-!-width-one-half"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='certificateTypeValue'>" + certificateDetails.certificateType + "</p>"
+                }
+            },
+            {
+                key: {
+                    text: "Included on certificate"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='includedOnCertificateValue'>" + certificateDetails.includedOnCertificate + "</p>"
+                }
+            },
+            {
+                key: {
+                    text: "Delivery method"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='deliveryMethodValue'>" + deliveryDetails.deliveryMethod + "</p>"
+                }
+            },
+            {
+                key: {
+                    text: "Delivery details"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='deliveryAddressValue'>" + deliveryDetails.address + "</p>"
+                }
+            }
+        ];
+
+        const certifiedCopiesOrderDetails = [
+            {
+                key: {
+                    text: "Company name",
+                    classes: "govuk-!-width-one-half"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='companyNameValue'>" + itemDetails.companyName + "</p>"
+                }
+            },
+            {
+                key: {
+                    text: "Company number"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='companyNumberValue'>" + itemDetails.companyNumber + "</p>"
+                }
+            },
+            {
+                key: {
+                    text: "Delivery method"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='deliveryMethodValue'>" + deliveryDetails.deliveryMethod + "</p>"
+                }
+            },
+            {
+                key: {
+                    text: "Delivery details"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='deliveryAddressValue'>" + deliveryDetails.address + "</p>"
+                }
+            }
+        ];
+
+        let titleText;
+        const itemKind = item?.kind;
         let serviceUrl = "/";
+        let serviceName;
+        let pageTitle;
+        let happensNext;
+        let orderDetailsTable;
+        let documentDetailsTable = 0;
+
         if (item?.kind === "item#certificate") {
             serviceUrl = `/company/${item?.companyNumber}/orderable/certificates`;
-        }
+            serviceName = SERVICE_NAME_CERTIFICATES;
+            titleText = "Certificate ordered";
+            pageTitle = "Certificate ordered confirmation";
+            happensNext = "We'll prepare the certificate and aim to dispatch it within 4 working days.";
+            orderDetailsTable = certificatesOrderDetails;
+        };
+
+        if (item?.kind === "item#certified-copy") {
+            serviceUrl = `/company/${item?.companyNumber}/orderable/certified-copies`;
+            serviceName = SERVICE_NAME_CERTIFIED_COPIES;
+            titleText = "Certified document order confirmed";
+            pageTitle = "Certified document order confirmation";
+            happensNext = "We'll prepare your order and aim to dispatch it within 4 working days.";
+            orderDetailsTable = certifiedCopiesOrderDetails;
+            documentDetailsTable = 1;
+        };
 
         res.render(ORDER_COMPLETE, {
+            pageTitle,
+            happensNext,
+            orderDetailsTable,
+            documentDetailsTable,
             serviceUrl,
+            serviceName,
             orderDetails,
             itemDetails,
             certificateDetails,
             deliveryDetails,
             paymentDetails,
+            titleText,
+            itemKind,
             templateName: ORDER_COMPLETE
         });
     } catch (err) {

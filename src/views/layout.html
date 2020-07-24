@@ -6,6 +6,7 @@
 {% from "govuk/components/panel/macro.njk"            import govukPanel %}
 {% from "govuk/components/summary-list/macro.njk"     import govukSummaryList %}
 {% from "govuk/components/inset-text/macro.njk"       import govukInsetText %}
+{% from "govuk/components/table/macro.njk"            import govukTable %}
 
 {% block head %}
 <meta name="format-detection" content="telephone=no">
@@ -29,7 +30,7 @@
   {% include "includes/cookie-banner.html" %}
   {{ chHeader({
     homepageUrl: "/",
-    serviceName: "Order a certificate",
+    serviceName: serviceName,
     serviceUrl: serviceUrl,
     containerClasses: "govuk-width-container",
     assetPath: ""
