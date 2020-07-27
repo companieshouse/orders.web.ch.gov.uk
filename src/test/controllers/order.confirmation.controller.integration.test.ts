@@ -225,7 +225,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#companyNumberValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyNumber);
                 chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                 chai.expect($("#includedOnCertificateValue").html()).to.equal("Statement of good standing");
-                chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (dispatched within 4 working days)");
+                chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 4 working days)");
                 chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country");
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
@@ -251,7 +251,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
                 chai.expect($("#companyNameValue").text()).to.equal(mockCertifiedCopyOrderResponse.items[0].companyName);
                 chai.expect($("#companyNumberValue").text()).to.equal(mockCertifiedCopyOrderResponse.items[0].companyNumber);
-                chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (dispatched within 4 working days)");
+                chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 4 working days)");
                 chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country");
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertifiedCopyOrderResponse.paymentReference);
