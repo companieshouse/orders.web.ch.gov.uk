@@ -272,7 +272,7 @@ export const mapAddress = (deliveryDetails): string | null => {
 
 export const mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
     if (itemOptions?.deliveryTimescale === "standard") {
-        return "Standard delivery (dispatched within 4 working days)";
+        return "Standard delivery (aim to dispatch within 4 working days)";
     }
     if (itemOptions?.deliveryTimescale === "same-day") {
         return "Same Day";

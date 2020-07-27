@@ -65,7 +65,7 @@ describe("order.confirmation.controller.unit", () => {
     describe("mapDeliveryMethod", () => {
         it("map standard to Standard delivery (dispatched within 4 working days)", () => {
             const result = mapDeliveryMethod({ deliveryTimescale: "standard" });
-            chai.expect(result).to.equal("Standard delivery (dispatched within 4 working days)");
+            chai.expect(result).to.equal("Standard delivery (aim to dispatch within 4 working days)");
         });
 
         it("maps same-day to Same Day", () => {
