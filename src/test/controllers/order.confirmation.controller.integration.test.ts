@@ -231,7 +231,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
                 chai.expect($("#paymentTimeValue").text()).to.equal("16 Dec 2019 - 09:16:17");
                 chai.expect(getOrderStub).to.have.been.called;
-                chai.expect(resp.text).to.not.contain("Document details");
+                chai.expect(resp.text).to.not.contain("Your document details");
                 done();
             });
     });
@@ -256,7 +256,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertifiedCopyOrderResponse.paymentReference);
                 chai.expect($("#paymentTimeValue").text()).to.equal("16 Dec 2019 - 09:16:17");
-                chai.expect(resp.text).to.contain("Document details");
+                chai.expect(resp.text).to.contain("Your document details");
                 chai.expect(resp.text).to.not.contain("certificateTypeValue");
                 chai.expect(resp.text).to.not.contain("includedOnCertificateValue");
                 chai.expect(getOrderStub).to.have.been.called;
