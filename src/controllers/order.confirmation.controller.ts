@@ -26,7 +26,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         if (status === "cancelled" || status === "failed") {
             const basket = await getBasket(accessToken);
             const item = basket?.items?.[0];
-            if (item?.kind === "item#certificate") {
+            if (item?.kind === "item#certificate" || item?.kind === "item#certified-copy") {
                 const redirectUrl = item?.itemUri + "/check-details";
                 logger.info(`Redirecting to ${redirectUrl}`);
                 return res.redirect(redirectUrl);
