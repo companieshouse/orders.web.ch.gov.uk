@@ -13,10 +13,22 @@ let testApp = null;
 let getOrderStub;
 let getBasketStub;
 
-const ORDER_ID = "ORD-123-456";
-const ORDER_ID_ARIA_LABEL = "ORD hyphen 123 hyphen 456";
-const CERTIFICATE_ID = "CHS00000000000000000";
-const CERTIFIED_COPY_ID = "CRT-257015-948931";
+const ORDER_ID = "ORD-123456-123456";
+const ORDER_ID_ARIA_LABEL = "ORD hyphen 123456 hyphen 123456";
+const CERTIFICATE_ID = "CRT-123456-123456";
+const CERTIFIED_COPY_ID = "CCD-123456-123456";
+
+const ITEM_KINDS = [{
+    kind: "item#certificate",
+    name: "certificate",
+    url: "/orderable/certificates/CRT-123456-123456"
+},
+{
+    kind: "item#certified-copy",
+    name: "certified-copy",
+    url: "/orderable/certified-copies/CCD-123456-123456"
+}];
+
 const mockCertificateOrderResponse: Order = {
     orderedAt: "2019-12-16T09:16:17.791Z",
     orderedBy: {
@@ -150,50 +162,6 @@ const mockCertifiedCopyOrderResponse: Order = {
     reference: ORDER_ID
 };
 
-const mockBasketResponse: Basket = {
-    deliveryDetails: {
-        addressLine1: "117 kings road",
-        addressLine2: "canton",
-        country: "wales",
-        forename: "John",
-        locality: "Cardiff",
-        poBox: "po box",
-        postalCode: "CF5 3NB",
-        region: "Glamorgan",
-        surname: "Smith"
-    },
-    etag: "etag",
-    items: [{
-        companyName: "company name",
-        companyNumber: "00000000",
-        customerReference: "reference",
-        description: "description",
-        descriptionIdentifier: "description identifier",
-        descriptionValues: { key: "value" },
-        etag: "etag",
-        id: CERTIFICATE_ID,
-        itemCosts: [{
-            calculatedCost: "calculated cost",
-            discountApplied: "discount applies",
-            itemCost: "item cost",
-            productType: "product type"
-        }],
-        itemOptions: { key: {} },
-        itemUri: "/orderable/certificates/" + CERTIFICATE_ID,
-        kind: "item#certificate",
-        links: { self: "/orderable/certificates/" + CERTIFICATE_ID },
-        postageCost: "postage cost",
-        postalDelivery: true,
-        quantity: 1,
-        totalItemCost: "total item cost"
-    }],
-    kind: "kind",
-    links: {
-        self: "self"
-    },
-    totalBasketCost: "5"
-};
-
 describe("order.confirmation.controller.integration", () => {
     beforeEach(done => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
@@ -276,27 +244,44 @@ describe("order.confirmation.controller.integration", () => {
             });
     });
 
-    it("redirects to check details in certs web if status is cancelled and item type is certificate", (done) => {
-        getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(mockBasketResponse));
-        chai.request(testApp)
-            .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled`)
-            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
-            .end((err, resp) => {
-                if (err) return done(err);
-                chai.expect(resp.redirects[0]).to.include(`/orderable/certificates/${CERTIFICATE_ID}/check-details`);
-                done();
-            });
-    });
+    ITEM_KINDS.forEach((itemKind) => {
+        const basketCancelledFailedResponse = {
+            deliveryDetails: {
+                addressLine1: "117 kings road",
+                addressLine2: "canton",
+                country: "wales",
+                forename: "John",
+                locality: "Cardiff",
+                poBox: "po box",
+                postalCode: "CF5 3NB",
+                region: "Glamorgan",
+                surname: "Smith"
+            },
+            etag: "etag",
+            items: [{
+                itemOptions: { key: {} },
+                itemUri: itemKind.url,
+                kind: itemKind.kind,
+                links: { self: itemKind.url }
+            }]
+        } as unknown as Basket;
 
-    it("redirects to check details in certs web if status is failed and item type is certificate", (done) => {
-        getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(mockBasketResponse));
-        chai.request(testApp)
-            .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=failed`)
-            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
-            .end((err, resp) => {
-                if (err) return done(err);
-                chai.expect(resp.redirects[0]).to.include(`/orderable/certificates/${CERTIFICATE_ID}/check-details`);
-                done();
-            });
+        it("redirects to " + itemKind.name + " check details page if status is cancelled and item type is " + itemKind.name, async () => {
+            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketCancelledFailedResponse));
+            const resp = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+                .redirects(0);
+            chai.expect(resp.text).to.include(`${itemKind.url}/check-details`);
+        });
+
+        it("redirects to " + itemKind.name + " check details page if status is failed and item type is " + itemKind.name, async () => {
+            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketCancelledFailedResponse));
+            const resp = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=failed`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+                .redirects(0);
+            chai.expect(resp.text).to.include(`${itemKind.url}/check-details`);
+        });
     });
 });
