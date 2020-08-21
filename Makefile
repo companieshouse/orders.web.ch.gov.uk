@@ -1,7 +1,12 @@
 artifact_name       := orders.web.ch.gov.uk
 
 .PHONY: build
-build: clean init build-app
+build: clean init submodules build-app
+
+.PHONY: submodules
+submodules:
+	git submodule init
+	git submodule update
 
 .PHONY: build-app
 build-app:
@@ -37,6 +42,8 @@ endif
 	$(info Packaging version: $(version))
 	$(eval tmpdir := $(shell mktemp -d build-XXXXXXXXXX))
 	cp -r ./dist/* $(tmpdir)
+	mkdir $(tmpdir)/api-enumerations
+	cp ./api-enumerations/*.yml $(tmpdir)/api-enumerations
 	cp -r ./package.json $(tmpdir)
 	cp -r ./package-lock.json $(tmpdir)
 	cp ./start.sh $(tmpdir)
