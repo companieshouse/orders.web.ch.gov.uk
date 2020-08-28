@@ -132,15 +132,35 @@ const mockCertifiedCopyOrderResponse: Order = {
         },
         itemCosts: [{
             discountApplied: "0",
-            itemCost: "15",
-            calculatedCost: "15",
+            itemCost: "30",
+            calculatedCost: "30",
             productType: "certified-copy"
         }],
         itemOptions: {
             deliveryMethod: "postal",
             deliveryTimescale: "standard",
-            forename: "forename",
-            surname: "surname"
+            filingHistoryDocuments: [{
+                filingHistoryDate: "2010-02-12",
+                filingHistoryDescription: "change-person-director-company-with-change-date",
+                filingHistoryDescriptionValues: {
+                    change_date: "2010-02-12",
+                    officer_name: "Thomas David Wheare"
+                },
+                filingHistoryId: "MzAwOTM2MDg5OWFkaXF6a2N4",
+                filingHistoryType: "CH01",
+                filingHistoryCost: "15"
+            },
+            {
+                filingHistoryDate: "2009-03-12",
+                filingHistoryDescription: "accounts-with-accounts-type-group",
+                filingHistoryDescriptionValues: {
+                    made_up_date: "2008-08-31"
+                },
+                filingHistoryId: "MjAzNTYyNTE5M2FkaXF6a2N4",
+                filingHistoryType: "AA",
+                filingHistoryCost: "15"
+            }
+            ]
         },
         etag: "abcdefg123456",
         kind: "item#certified-copy",
@@ -152,13 +172,13 @@ const mockCertifiedCopyOrderResponse: Order = {
         itemUri: "/orderable/certified-copies/" + CERTIFIED_COPY_ID,
         status: "unknown",
         postageCost: "0",
-        totalItemCost: "15",
+        totalItemCost: "30",
         customerReference: "mycert",
         satisfiedAt: "2020-05-15T08:41:05.798Z"
     }
     ],
     kind: "order",
-    totalOrderCost: "15",
+    totalOrderCost: "30",
     reference: ORDER_ID
 };
 
@@ -194,42 +214,46 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                 chai.expect($("#includedOnCertificateValue").html()).to.equal("Statement of good standing");
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 4 working days)");
-                chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country");
+                chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country<br>");
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
-                chai.expect($("#paymentTimeValue").text()).to.equal("16 Dec 2019 - 09:16:17");
+                chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
                 chai.expect(getOrderStub).to.have.been.called;
                 chai.expect(resp.text).to.not.contain("Your document details");
                 done();
             });
     });
 
-    it("renders get order page on successful get order call for a certified copy order", (done) => {
+    it("renders get order page on successful get order call for a certified copy order", async () => {
         getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockCertifiedCopyOrderResponse));
 
-        chai.request(testApp)
+        const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
-            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
-            .end((err, resp) => {
-                if (err) return done(err);
-                const $ = cheerio.load(resp.text);
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
 
-                chai.expect(resp.status).to.equal(200);
-                chai.expect($("#orderReference").text()).to.equal(mockCertifiedCopyOrderResponse.reference);
-                chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
-                chai.expect($("#companyNameValue").text()).to.equal(mockCertifiedCopyOrderResponse.items[0].companyName);
-                chai.expect($("#companyNumberValue").text()).to.equal(mockCertifiedCopyOrderResponse.items[0].companyNumber);
-                chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 4 working days)");
-                chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country");
-                chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertifiedCopyOrderResponse.paymentReference);
-                chai.expect($("#paymentTimeValue").text()).to.equal("16 Dec 2019 - 09:16:17");
-                chai.expect(resp.text).to.contain("Your document details");
-                chai.expect(resp.text).to.not.contain("certificateTypeValue");
-                chai.expect(resp.text).to.not.contain("includedOnCertificateValue");
-                chai.expect(getOrderStub).to.have.been.called;
-                done();
-            });
+        const $ = cheerio.load(resp.text);
+
+        chai.expect(resp.status).to.equal(200);
+        chai.expect($("#orderReference").text()).to.equal(mockCertifiedCopyOrderResponse.reference);
+        chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
+        chai.expect($("#companyNameValue").text()).to.equal(mockCertifiedCopyOrderResponse.items[0].companyName);
+        chai.expect($("#companyNumberValue").text()).to.equal(mockCertifiedCopyOrderResponse.items[0].companyNumber);
+        chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 4 working days)");
+        chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country<br>");
+        chai.expect($("#filingHistoryDateValue1").text().trim()).to.equal("12 Feb 2010");
+        chai.expect($("#filingHistoryTypeValue1").text().trim()).to.equal("CH01");
+        chai.expect($("#filingHistoryDescriptionValue1").text().trim()).to.equal("Director's details changed for Thomas David Wheare on 12 February 2010");
+        chai.expect($("#filingHistoryFeeValue1").text().trim()).to.equal("£15");
+        chai.expect($("#filingHistoryDateValue2").text().trim()).to.equal("12 Mar 2009");
+        chai.expect($("#filingHistoryTypeValue2").text().trim()).to.equal("AA");
+        chai.expect($("#filingHistoryDescriptionValue2").text().trim()).to.equal("Group of companies' accounts made up to 31 August 2008");
+        chai.expect($("#filingHistoryFeeValue2").text().trim()).to.equal("£15");
+        chai.expect($("#paymentAmountValue").text()).to.equal("£30");
+        chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertifiedCopyOrderResponse.paymentReference);
+        chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
+        chai.expect(resp.text).to.not.contain("certificateTypeValue");
+        chai.expect(resp.text).to.not.contain("includedOnCertificateValue");
+        chai.expect(getOrderStub).to.have.been.called;
     });
 
     it.skip("renders an error page if get order fails", (done) => {

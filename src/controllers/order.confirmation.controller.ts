@@ -2,13 +2,16 @@ import { NextFunction, Request, Response } from "express";
 import { Session } from "ch-node-session-handler";
 import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
-import { Order } from "ch-sdk-node/dist/services/order/order";
+import { Order, CertificateItemOptions, CertifiedCopyItemOptions } from "ch-sdk-node/dist/services/order/order";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
-
+import { CertifiedCopyItem, FilingHistoryDocuments } from "ch-sdk-node/dist/services/order/certified-copies";
 import { getOrder, getBasket } from "../client/api.client";
 import { ORDER_COMPLETE } from "../model/template.paths";
 import { APPLICATION_NAME, SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES } from "../config/config";
+import { mapDeliveryMethod, mapDeliveryDetails, mapFilingHistoryDate } from "../utils/check.details.utils";
+import { getFullFilingHistoryDescription } from "../config/api.enumerations";
+import { CertificateItem } from "ch-sdk-node/dist/services/order/certificates/types";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -17,7 +20,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const orderId = req.params.orderId;
         const status = req.query.status;
         const ref = req.query.ref;
-
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
@@ -43,17 +45,21 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         const item = order.items[0];
 
+        const itemOptionsCertificate = item.itemOptions as CertificateItemOptions;
+
+        const totalItemsCost = `£${item?.totalItemCost}`;
+
         const itemDetails = {
             companyName: item?.companyName,
             companyNumber: item?.companyNumber
         };
         const certificateDetails = {
-            certificateType: mapCertificateType(item?.itemOptions?.certificateType),
+            certificateType: mapCertificateType(itemOptionsCertificate.certificateType),
             includedOnCertificate: mapIncludedOnCertificate(item?.itemOptions)
         };
         const deliveryDetails = {
             deliveryMethod: mapDeliveryMethod(item?.itemOptions),
-            address: mapAddress(order.deliveryDetails)
+            address: mapDeliveryDetails(order.deliveryDetails)
         };
         const paymentDetails = {
             amount: "£" + order?.totalOrderCost,
@@ -167,6 +173,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         let pageTitle;
         let happensNext;
         let orderDetailsTable;
+        let filingHistoryDocuments;
         let documentDetailsTable = 0;
 
         if (item?.kind === "item#certificate") {
@@ -179,12 +186,15 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         };
 
         if (item?.kind === "item#certified-copy") {
+            const certifiedCopyId = item?.id;
+            const itemOptionsCertifiedCopy = item.itemOptions as CertifiedCopyItemOptions;
             serviceUrl = `/company/${item?.companyNumber}/orderable/certified-copies`;
             serviceName = SERVICE_NAME_CERTIFIED_COPIES;
             titleText = "Certified document order confirmed";
             pageTitle = "Certified document order confirmation";
             happensNext = "We'll prepare your order and aim to dispatch it within 4 working days.";
             orderDetailsTable = certifiedCopiesOrderDetails;
+            filingHistoryDocuments = mapFilingHistoriesDocuments(itemOptionsCertifiedCopy.filingHistoryDocuments);
             documentDetailsTable = 1;
         };
 
@@ -202,9 +212,12 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             paymentDetails,
             titleText,
             itemKind,
+            filingHistoryDocuments,
+            totalItemsCost,
             templateName: ORDER_COMPLETE
         });
     } catch (err) {
+        console.log(err);
         next(err);
     }
 };
@@ -223,7 +236,7 @@ export const mapCertificateType = (cerificateType: string): string | null => {
 export const mapDate = (dateString: string): string => {
     const d = new Date(dateString);
     const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(d);
-    const month = new Intl.DateTimeFormat("en", { month: "short" }).format(d);
+    const month = new Intl.DateTimeFormat("en", { month: "long" }).format(d);
     const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(d);
 
     const hour = new Intl.DateTimeFormat("en", { hour: "2-digit", hour12: false }).format(d);
@@ -244,40 +257,13 @@ const mapTimeLessThan10 = (time: string): string => {
     return time;
 };
 
-export const mapAddress = (deliveryDetails): string | null => {
-    const addressArray: string[] = [];
-    if (deliveryDetails?.forename && deliveryDetails?.surname) {
-        addressArray.push(deliveryDetails?.forename + " " + deliveryDetails?.surname);
-    }
-    if (deliveryDetails?.addressLine1) {
-        addressArray.push(deliveryDetails?.addressLine1);
-    }
-    if (deliveryDetails?.addressLine2) {
-        addressArray.push(deliveryDetails?.addressLine2);
-    }
-    if (deliveryDetails?.locality) {
-        addressArray.push(deliveryDetails?.locality);
-    }
-    if (deliveryDetails?.region) {
-        addressArray.push(deliveryDetails?.region);
-    }
-    if (deliveryDetails?.postalCode) {
-        addressArray.push(deliveryDetails?.postalCode);
-    }
-    if (deliveryDetails?.country) {
-        addressArray.push(deliveryDetails?.country);
-    }
-    return addressArray.length === 0 ? "" : addressArray.reduce((accum, value) => accum + "<br/>" + value);
-};
+export const mapDateFullMonth = (dateString: string): string => {
+    const d = new Date(dateString);
+    const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(d);
+    const month = new Intl.DateTimeFormat("en", { month: "long" }).format(d);
+    const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(d);
 
-export const mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
-    if (itemOptions?.deliveryTimescale === "standard") {
-        return "Standard delivery (aim to dispatch within 4 working days)";
-    }
-    if (itemOptions?.deliveryTimescale === "same-day") {
-        return "Same Day";
-    }
-    return null;
+    return `${day} ${month} ${year}`;
 };
 
 export const mapIncludedOnCertificate = (itemOptions: Record<string, any>): string | null => {
@@ -299,4 +285,41 @@ export const mapIncludedOnCertificate = (itemOptions: Record<string, any>): stri
         includedOnCertificate.push("Company objects");
     }
     return includedOnCertificate.length === 0 ? "" : includedOnCertificate.reduce((accum, value) => accum + "<br/>" + value);
+};
+
+export const mapFilingHistoryDescriptionValues = (description: string, descriptionValues: Record<string, string>) => {
+    if (descriptionValues.description) {
+        return descriptionValues.description;
+    } else {
+        return Object.entries(descriptionValues).reduce((newObj, [key, val]) => {
+            const value = key.includes("date") ? mapDateFullMonth(val) : val;
+            return newObj.replace("{" + key + "}", value as string);
+        }, description);
+    }
+};
+
+export const removeAsterisks = (description: string) => {
+    return description.replace(/\*/g, "");
+};
+
+export const addCurrency = (filingHistoryCost: string) => {
+    return `£${filingHistoryCost}`;
+};
+
+export const mapFilingHistoriesDocuments = (filingHistoryDocuments: FilingHistoryDocuments[]) => {
+    const mappedFilingHistories = filingHistoryDocuments.map(filingHistoryDocument => {
+        const descriptionFromFile = getFullFilingHistoryDescription(filingHistoryDocument.filingHistoryDescription);
+        const mappedFilingHistoryDescription = mapFilingHistoryDescriptionValues(descriptionFromFile, filingHistoryDocument.filingHistoryDescriptionValues || {});
+        const cleanedFilingHistoryDescription = removeAsterisks(mappedFilingHistoryDescription);
+        const mappedFilingHistoryDescriptionDate = mapFilingHistoryDate(filingHistoryDocument.filingHistoryDate);
+        const mappedFilingHistoryCost = addCurrency(filingHistoryDocument.filingHistoryCost);
+        return {
+            filingHistoryDate: mappedFilingHistoryDescriptionDate,
+            filingHistoryDescription: cleanedFilingHistoryDescription,
+            filingHistoryId: filingHistoryDocument.filingHistoryId,
+            filingHistoryType: filingHistoryDocument.filingHistoryType,
+            filingHistoryCost: mappedFilingHistoryCost
+        };
+    });
+    return mappedFilingHistories;
 };
