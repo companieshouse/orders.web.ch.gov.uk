@@ -1,12 +1,7 @@
 import chai from "chai";
 
-import {
-    mapCertificateType,
-    mapDate,
-    mapAddress,
-    mapDeliveryMethod,
-    mapIncludedOnCertificate
-} from "../../controllers/order.confirmation.controller";
+import { mapCertificateType, mapDate, mapIncludedOnCertificate } from "../../controllers/order.confirmation.controller";
+import { mapDeliveryDetails, mapDeliveryMethod, mapFilingHistoryDate } from "../../utils/check.details.utils";
 
 describe("order.confirmation.controller.unit", () => {
     describe("mapCertificateType", () => {
@@ -19,17 +14,24 @@ describe("order.confirmation.controller.unit", () => {
     describe("mapDate", () => {
         it("maps am date correctly", () => {
             const result = mapDate("2019-12-16T09:16:17.791Z");
-            chai.expect(result).to.equal("16 Dec 2019 - 09:16:17");
+            chai.expect(result).to.equal("16 December 2019 - 09:16:17");
         });
 
         it("maps pm date correctly", () => {
             const result = mapDate("2019-12-16T13:16:17.791Z");
-            chai.expect(result).to.equal("16 Dec 2019 - 13:16:17");
+            chai.expect(result).to.equal("16 December 2019 - 13:16:17");
         });
 
         it("maps date with minutes and seconds less than 10 correctly", () => {
             const result = mapDate("2019-12-16T13:06:07.791Z");
-            chai.expect(result).to.equal("16 Dec 2019 - 13:06:07");
+            chai.expect(result).to.equal("16 December 2019 - 13:06:07");
+        });
+    });
+
+    describe("mapFilingHistoryDate", () => {
+        it("maps short month date correctly", () => {
+            const result = mapFilingHistoryDate("2009-12-23");
+            chai.expect(result).to.equal("23 Dec 2009");
         });
     });
 
@@ -46,8 +48,8 @@ describe("order.confirmation.controller.unit", () => {
                 surname: "surname",
                 poBox: "po box"
             };
-            const result = mapAddress(deliveryDetails);
-            chai.expect(result).to.equal("forename surname<br/>address line 1<br/>address line 2<br/>locality<br/>region<br/>postal code<br/>country");
+            const result = mapDeliveryDetails(deliveryDetails);
+            chai.expect(result).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country<br>");
         });
         it("maps full delivery details correctly", () => {
             const deliveryDetails = {
@@ -55,10 +57,12 @@ describe("order.confirmation.controller.unit", () => {
                 forename: "forename",
                 postalCode: "postal code",
                 region: "region",
-                surname: "surname"
+                surname: "surname",
+                country: "country",
+                locality: "locality"
             };
-            const result = mapAddress(deliveryDetails);
-            chai.expect(result).to.equal("forename surname<br/>address line 1<br/>region<br/>postal code");
+            const result = mapDeliveryDetails(deliveryDetails);
+            chai.expect(result).to.equal("forename surname<br>address line 1<br>locality<br>region<br>postal code<br>country<br>");
         });
     });
 
