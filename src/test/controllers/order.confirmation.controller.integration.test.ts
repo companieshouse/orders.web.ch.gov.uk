@@ -307,5 +307,14 @@ describe("order.confirmation.controller.integration", () => {
                 .redirects(0);
             chai.expect(resp.text).to.include(`${itemKind.url}/check-details`);
         });
+
+        it("redirects and applies the itemType query param", async () => {
+            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketCancelledFailedResponse));
+            const resp = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+                .redirects(0);
+            chai.expect(resp).to.redirectTo(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=${itemKind.name}`);
+        });
     });
 });
