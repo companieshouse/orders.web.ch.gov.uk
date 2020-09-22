@@ -19,11 +19,25 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const orderId = req.params.orderId;
         const status = req.query.status;
         const ref = req.query.ref;
+        const itemType = req.query.itemType;
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
 
-        logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, user_id=${userId}`);
+        if (itemType === undefined || itemType === "") {
+            const basket = await getBasket(accessToken);
+            const item = basket?.items?.[0];
+
+            if (item?.kind === "item#certificate") {
+                return res.redirect(req.originalUrl + "&itemType=certificate");
+            }
+
+            if (item?.kind === "item#certified-copy") {
+                return res.redirect(req.originalUrl + "&itemType=certified-copy");
+            }
+        }
+
+        logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, itemType=${itemType}, user_id=${userId}`);
         if (status === "cancelled" || status === "failed") {
             const basket = await getBasket(accessToken);
             const item = basket?.items?.[0];
