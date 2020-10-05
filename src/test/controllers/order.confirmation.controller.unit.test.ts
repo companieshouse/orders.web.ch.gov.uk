@@ -1,6 +1,6 @@
 import chai from "chai";
 
-import { mapCertificateType, mapDate, mapIncludedOnCertificate } from "../../controllers/order.confirmation.controller";
+import { getItemTypeUrlParam, mapCertificateType, mapDate, mapIncludedOnCertificate } from "../../controllers/order.confirmation.controller";
 import { mapDeliveryDetails, mapDeliveryMethod, mapFilingHistoryDate } from "../../utils/check.details.utils";
 
 describe("order.confirmation.controller.unit", () => {
@@ -113,6 +113,23 @@ describe("order.confirmation.controller.unit", () => {
             };
             const result = mapIncludedOnCertificate(itemOptions);
             chai.expect(result).to.equal("Secretaries<br/>Company objects");
+        });
+    });
+
+    describe("getItemTypeUrlParam", () => {
+        it("get itemType for certificate correctly", () => {
+            const result = getItemTypeUrlParam("item#certificate");
+            chai.expect(result).to.equal("&itemType=certificate");
+        });
+
+        it("get itemType for certified-copies correctly", () => {
+            const result = getItemTypeUrlParam("item#certified-copy");
+            chai.expect(result).to.equal("&itemType=certified-copy");
+        });
+
+        it("get itemType for missing-image-delivery correctly", () => {
+            const result = getItemTypeUrlParam("item#missing-image-delivery");
+            chai.expect(result).to.equal("&itemType=missing-image-delivery");
         });
     });
 });
