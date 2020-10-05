@@ -28,13 +28,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             const basket = await getBasket(accessToken);
             const item = basket?.items?.[0];
 
-            if (item?.kind === "item#certificate") {
-                return res.redirect(req.originalUrl + "&itemType=certificate");
-            }
-
-            if (item?.kind === "item#certified-copy") {
-                return res.redirect(req.originalUrl + "&itemType=certified-copy");
-            }
+            return res.redirect(req.originalUrl + getItemTypeUrlParam(item?.kind));
         }
 
         logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, itemType=${itemType}, user_id=${userId}`);
@@ -333,3 +327,19 @@ export const mapFilingHistoriesDocuments = (filingHistoryDocuments: FilingHistor
     });
     return mappedFilingHistories;
 };
+
+export const getItemTypeUrlParam = (kind: string | undefined):string => {
+    if (kind === "item#certificate") {
+        return "&itemType=certificate";
+    }
+
+    if (kind === "item#certified-copy") {
+        return "&itemType=certified-copy";
+    }
+
+    if (kind === "item#missing-image-delivery") {
+        return "&itemType=missing-image-delivery";
+    }
+
+    return "";
+}
