@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Session } from "ch-node-session-handler";
 import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
-import { Order, CertificateItemOptions, CertifiedCopyItemOptions } from "ch-sdk-node/dist/services/order/order";
+import { Order, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "ch-sdk-node/dist/services/order/order";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
 import { FilingHistoryDocuments } from "ch-sdk-node/dist/services/order/certified-copies";
@@ -58,10 +58,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             companyName: item?.companyName,
             companyNumber: item?.companyNumber
         };
-        const deliveryDetails = {
-            deliveryMethod: mapDeliveryMethod(item?.itemOptions),
-            address: mapDeliveryDetails(order.deliveryDetails)
-        };
         const paymentDetails = {
             amount: "£" + order?.totalOrderCost,
             paymentReference: order?.paymentReference,
@@ -80,6 +76,10 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         let certificateDetails;
 
         if (itemKind === "item#certificate") {
+            const deliveryDetails = {
+                deliveryMethod: mapDeliveryMethod(item?.itemOptions),
+                address: mapDeliveryDetails(order.deliveryDetails)
+            };
             const itemOptionsCertificate = item.itemOptions as CertificateItemOptions;
             certificateDetails = {
                 certificateType: mapCertificateType(itemOptionsCertificate.certificateType),
@@ -152,6 +152,10 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         };
 
         if (itemKind === "item#certified-copy") {
+            const deliveryDetails = {
+                deliveryMethod: mapDeliveryMethod(item?.itemOptions),
+                address: mapDeliveryDetails(order.deliveryDetails)
+            };
             const itemOptionsCertifiedCopy = item.itemOptions as CertifiedCopyItemOptions;
             const certifiedCopiesOrderDetails = [
                 {
@@ -202,6 +206,68 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             documentDetailsTable = 1;
         };
 
+        if (itemKind === "item#missing-image-delivery") {
+            const itemOptionsMissingImageDelivery = item.itemOptions as MissingImageDeliveryItemOptions;
+            const missingImageDeliveryOrderDetails = [
+                {
+                    key: {
+                        text: "Company name",
+                        classes: "govuk-!-width-one-half"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='companyNameValue'>" + itemDetails.companyName + "</p>"
+                    }
+                },
+                {
+                    key: {
+                        text: "Company number"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='companyNumberValue'>" + itemDetails.companyNumber + "</p>"
+                    }
+                },
+                {
+                    key: {
+                        text: "Date"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='deliveryMethodValue'>" + mapFilingHistoryDate(itemOptionsMissingImageDelivery.filingHistoryDate) + "</p>"
+                    }
+                },
+                {
+                    key: {
+                        text: "Type"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='deliveryAddressValue'>" + itemOptionsMissingImageDelivery.filingHistoryType + "</p>"
+                    }
+                },
+                {
+                    key: {
+                        text: "Description"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='deliveryAddressValue'>" + mapFilingHistoryDescriptionValues(itemOptionsMissingImageDelivery.filingHistoryDescription, itemOptionsMissingImageDelivery.filingHistoryDescriptionValues) + "</p>"
+                    }
+                }
+            ];
+            orderDetailsTable = missingImageDeliveryOrderDetails;
+            titleText = "Document Requested";
+            pageTitle = "Document Requested";
+            happensNext = `<p class="govuk-body">We will check if the document is available. This takes us up to 2 hours between 8.30am - 4pm, Monday - Friday (excluding holidays).</p>
+
+            <p class="govuk-body">If your request has been made outside of this time, the document will be added the next working day.</p>
+            
+            <p class="govuk-body">Check the <a href="/company/${itemDetails.companyNumber}/filing-history" class="govuk-link govuk-link--no-visited-state">company’s filing history</a> for updates on the document's availablility.</p>
+            
+            <p class="govuk-body">If we cannot add the document to the filing history, we will contact you to issue a refund.</p>`;
+        }
+
         res.render(ORDER_COMPLETE, {
             pageTitle,
             happensNext,
@@ -212,7 +278,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             orderDetails,
             itemDetails,
             certificateDetails,
-            deliveryDetails,
             paymentDetails,
             titleText,
             itemKind,
@@ -342,4 +407,4 @@ export const getItemTypeUrlParam = (kind: string | undefined):string => {
     }
 
     return "";
-}
+};
