@@ -46,8 +46,8 @@ describe("map.item.service.unit", () => {
 
         it("should return correct data if item is missing image delivery", () => {
             const result = mapItem(mockMissingImageDeliveryItem, deliveryDetails);
-            expect(result.serviceUrl).to.be.undefined;
-            expect(result.serviceName).to.be.undefined;
+            expect(result.serviceUrl).to.equal(`/company/${mockMissingImageDeliveryItem?.companyNumber}/filing-history`);
+            expect(result.serviceName).to.equal("Request a document");
             expect(result.titleText).to.equal("Document Requested");
             expect(result.pageTitle).to.equal("Document Requested");
             expect(result.happensNext).to.not.be.empty;

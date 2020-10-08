@@ -2,7 +2,7 @@ import { Basket, DeliveryDetails } from "api-sdk-node/dist/services/order/basket
 import { Order, Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "api-sdk-node/dist/services/order/order";
 import { FilingHistoryDocuments } from "api-sdk-node/dist/services/order/certified-copies";
 
-import { APPLICATION_NAME, SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES } from "../config/config";
+import { SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, SERVICE_NAME_MISSING_IMAGE_DELIVERIES } from "../config/config";
 import { mapFilingHistory } from "./filing.history.service";
 import { mapFilingHistoryDate } from "../utils/date.util";
 
@@ -202,6 +202,8 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
             }
         ];
         return {
+            serviceUrl: `/company/${item?.companyNumber}/filing-history`,
+            serviceName: SERVICE_NAME_MISSING_IMAGE_DELIVERIES,
             orderDetailsTable: missingImageDeliveryOrderDetails,
             titleText: "Document Requested",
             pageTitle: "Document Requested",
