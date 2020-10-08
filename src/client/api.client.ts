@@ -1,8 +1,8 @@
-import { createApiClient } from "ch-sdk-node";
-import { Checkout, Basket } from "ch-sdk-node/dist/services/order/basket";
-import { Order } from "ch-sdk-node/dist/services/order/order";
-import { CreatePaymentRequest, Payment } from "ch-sdk-node/dist/services/payment";
-import Resource, { ApiResponse, ApiResult } from "ch-sdk-node/dist/services/resource";
+import { createApiClient } from "api-sdk-node";
+import { Checkout, Basket } from "api-sdk-node/dist/services/order/basket";
+import { Order } from "api-sdk-node/dist/services/order/order";
+import { CreatePaymentRequest, Payment } from "api-sdk-node/dist/services/payment";
+import Resource, { ApiResponse, ApiResult } from "api-sdk-node/dist/services/resource";
 import { createLogger } from "ch-structured-logging";
 import { v4 as uuidv4 } from "uuid";
 import createError from "http-errors";
