@@ -29,4 +29,6 @@ export const SERVICE_NAME_CERTIFIED_COPIES = "Order a certified document";
 
 export const SERVICE_NAME_CERTIFICATES = "Order a certificate";
 
+export const SERVICE_NAME_MISSING_IMAGE_DELIVERIES = "Request a document";
+
 export const SERVICE_NAME_GENERIC = "";
