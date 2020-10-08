@@ -2,9 +2,9 @@ import chai from "chai";
 import sinon from "sinon";
 import ioredis from "ioredis";
 import nock from "nock";
-import { Checkout } from "ch-sdk-node/dist/services/order/basket";
-import { ApiResponse } from "ch-sdk-node/dist/services/resource";
-import { Payment } from "ch-sdk-node/dist/services/payment";
+import { Checkout } from "api-sdk-node/dist/services/order/basket";
+import { ApiResponse } from "api-sdk-node/dist/services/resource";
+import { Payment } from "api-sdk-node/dist/services/payment";
 import createError from "http-errors";
 
 import * as apiClient from "../../client/api.client";
