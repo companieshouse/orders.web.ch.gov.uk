@@ -24,13 +24,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
 
-        if (itemType === undefined || itemType === "") {
-            const basket = await getBasket(accessToken);
-            const item = basket?.items?.[0];
-
-            return res.redirect(req.originalUrl + getItemTypeUrlParam(item?.kind));
-        }
-
         logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, itemType=${itemType}, user_id=${userId}`);
         if (status === "cancelled" || status === "failed") {
             const basket = await getBasket(accessToken);
@@ -43,6 +36,11 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         }
 
         const order: Order = await getOrder(accessToken, orderId);
+        if (itemType === undefined || itemType === "") {
+            const item = order?.items?.[0];
+            return res.redirect(req.originalUrl + getItemTypeUrlParam(item?.kind));
+        }
+
         logger.info(`Order retrieved order_id=${order.reference}, user_id=${userId}`);
 
         const orderDetails = {
