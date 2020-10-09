@@ -17,7 +17,8 @@ export interface CheckDetailsItem {
     documentDetailsTable?: number;
 }
 
-export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined): CheckDetailsItem => {
+export const mapItem = (item: Item, companyStatus: String, deliveryDetails: DeliveryDetails| undefined): CheckDetailsItem => {
+    console.log("Company Status " + companyStatus);
     const itemKind = item?.kind;
     if (itemKind === "item#certificate") {
         const deliveryMethod = mapDeliveryMethod(item?.itemOptions);
@@ -28,7 +29,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
             certificateType: mapCertificateType(itemOptionsCertificate.certificateType),
             includedOnCertificate: mapIncludedOnCertificate(item?.itemOptions)
         };
-        const certificatesOrderDetails = [
+        let certificatesOrderDetails = [
             {
                 key: {
                     text: "Company name",
@@ -86,6 +87,9 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                 }
             }
         ];
+        if (companyStatus === "dissolved") {
+            certificatesOrderDetails = certificatesOrderDetails.slice(3, 1);
+        }
         return {
             serviceUrl: `/company/${item?.companyNumber}/orderable/certificates`,
             serviceName: SERVICE_NAME_CERTIFICATES,
@@ -224,6 +228,9 @@ export const mapCertificateType = (cerificateType: string): string | null => {
     }
     if (cerificateType === "incorporation-with-all-name-changes") {
         return "Incorporation with all company name changes";
+    }
+    if (cerificateType === "dissolution") {
+        return "Dissolution with all company name changes";
     }
     const cleanedCertificateType = cerificateType.replace(/-/g, " ");
     return cleanedCertificateType.charAt(0).toUpperCase() + cleanedCertificateType.slice(1);

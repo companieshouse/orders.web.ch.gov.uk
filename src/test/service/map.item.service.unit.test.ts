@@ -23,7 +23,7 @@ const deliveryDetails = {
 describe("map.item.service.unit", () => {
     describe("mapItem", () => {
         it("should return correct data if item is certificate", () => {
-            const result = mapItem(mockCertificateItem, deliveryDetails);
+            const result = mapItem(mockCertificateItem, "active", deliveryDetails);
             expect(result.serviceUrl).to.equal(`/company/${mockCertificateItem?.companyNumber}/orderable/certificates`);
             expect(result.serviceName).to.equal("Order a certificate");
             expect(result.titleText).to.equal("Certificate ordered");
@@ -33,7 +33,7 @@ describe("map.item.service.unit", () => {
         });
 
         it("should return correct data if item is certified copy", () => {
-            const result = mapItem(mockCertifiedCopyItem, deliveryDetails);
+            const result = mapItem(mockCertifiedCopyItem, "active", deliveryDetails);
             expect(result.serviceUrl).to.equal(`/company/${mockCertifiedCopyItem?.companyNumber}/orderable/certified-copies`);
             expect(result.serviceName).to.equal("Order a certified document");
             expect(result.titleText).to.equal("Certified document order confirmed");
@@ -45,7 +45,7 @@ describe("map.item.service.unit", () => {
         });
 
         it("should return correct data if item is missing image delivery", () => {
-            const result = mapItem(mockMissingImageDeliveryItem, deliveryDetails);
+            const result = mapItem(mockMissingImageDeliveryItem, "active", deliveryDetails);
             expect(result.serviceUrl).to.equal(`/company/${mockMissingImageDeliveryItem?.companyNumber}/filing-history`);
             expect(result.serviceName).to.equal("Request a document");
             expect(result.titleText).to.equal("Document Requested");

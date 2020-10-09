@@ -1,4 +1,5 @@
 import { createApiClient } from "api-sdk-node";
+import { CompanyProfile, CompanyProfileResource } from "api-sdk-node/dist/services/company-profile";
 import { Checkout, Basket } from "api-sdk-node/dist/services/order/basket";
 import { Order } from "api-sdk-node/dist/services/order/order";
 import { CreatePaymentRequest, Payment } from "api-sdk-node/dist/services/payment";
@@ -11,6 +12,16 @@ import { API_URL, APPLICATION_NAME, CHS_URL } from "../config/config";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
 
 const logger = createLogger(APPLICATION_NAME);
+
+export const getCompanyProfile = async (apiKey: string, companyNumber: string): Promise<CompanyProfile> => {
+    const api = createApiClient(apiKey, undefined, API_URL);
+    const companyProfileResource: Resource<CompanyProfile> = await api.companyProfile.getCompanyProfile(companyNumber.toUpperCase());
+    if (companyProfileResource.httpStatusCode !== 200 && companyProfileResource.httpStatusCode !== 201) {
+        throw createError(companyProfileResource.httpStatusCode, companyProfileResource.httpStatusCode.toString());
+    }
+    logger.info(`Get company profile, company_number=${companyNumber}, status_code=${companyProfileResource.httpStatusCode}`);
+    return companyProfileResource.resource as CompanyProfile;
+};
 
 export const getBasket = async (oAuth: string): Promise<Basket> => {
     const api = createApiClient(undefined, oAuth, API_URL);

@@ -5,10 +5,12 @@ import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInI
 import { Order } from "api-sdk-node/dist/services/order/order";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
+import { CompanyProfile } from "api-sdk-node/dist/services/company-profile";
+import { getCompanyProfile } from "../client/api.client";
 
 import { getOrder, getBasket } from "../client/api.client";
 import { ORDER_COMPLETE } from "../model/template.paths";
-import { APPLICATION_NAME } from "../config/config";
+import { APPLICATION_NAME, API_KEY } from "../config/config";
 import { mapItem } from "../service/map.item.service";
 import { mapDate } from "../utils/date.util";
 
@@ -51,6 +53,10 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         };
 
         const item = order.items[0];
+        const companyNumber = item?.companyNumber;
+        const companyProfile: CompanyProfile = await getCompanyProfile(API_KEY, companyNumber);
+        const companyStatus = companyProfile.companyStatus;
+        logger.info("Company Status " + companyStatus);
 
         const totalItemsCost = `£${item?.totalItemCost}`;
 
@@ -62,7 +68,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         const itemKind = item?.kind;
 
-        const mappedItem = mapItem(item, order?.deliveryDetails);
+        const mappedItem = mapItem(item, companyStatus, order?.deliveryDetails);
 
         res.render(ORDER_COMPLETE, {
             ...mappedItem,
