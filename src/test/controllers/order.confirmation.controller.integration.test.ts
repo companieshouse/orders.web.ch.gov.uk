@@ -27,6 +27,11 @@ const ITEM_KINDS = [{
     kind: "item#certified-copy",
     name: "certified-copy",
     url: "/orderable/certified-copies/CCD-123456-123456"
+},
+{
+    kind: "item#missing-image-delivery",
+    name: "missing-image-delivery",
+    url: "/orderable/missing-image-delivery/MID-123456-123456"
 }];
 
 describe("order.confirmation.controller.integration", () => {
