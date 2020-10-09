@@ -27,6 +27,11 @@ const ITEM_KINDS = [{
     kind: "item#certified-copy",
     name: "certified-copy",
     url: "/orderable/certified-copies/CCD-123456-123456"
+},
+{
+    kind: "item#missing-image-delivery",
+    name: "missing-image-delivery",
+    url: "/orderable/missing-image-delivery/MID-123456-123456"
 }];
 
 describe("order.confirmation.controller.integration", () => {
@@ -165,7 +170,7 @@ describe("order.confirmation.controller.integration", () => {
         it("redirects to " + itemKind.name + " check details page if status is cancelled and item type is " + itemKind.name, async () => {
             getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketCancelledFailedResponse));
             const resp = await chai.request(testApp)
-                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled&itemType=certified-copy`)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled&itemType=${itemKind.name}`)
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
                 .redirects(0);
             chai.expect(resp.text).to.include(`${itemKind.url}/check-details`);
@@ -174,7 +179,7 @@ describe("order.confirmation.controller.integration", () => {
         it("redirects to " + itemKind.name + " check details page if status is failed and item type is " + itemKind.name, async () => {
             getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketCancelledFailedResponse));
             const resp = await chai.request(testApp)
-                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=failed&itemType=certified-copy`)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=failed&itemType=${itemKind.name}`)
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
                 .redirects(0);
             chai.expect(resp.text).to.include(`${itemKind.url}/check-details`);
