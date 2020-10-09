@@ -2,13 +2,15 @@ import { NextFunction, Request, Response } from "express";
 import { Session } from "ch-node-session-handler";
 import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
+import { CompanyProfile } from "ch-sdk-node/dist/services/company-profile";
+import { getCompanyProfile } from "../client/api.client";
 import { Order, CertificateItemOptions, CertifiedCopyItemOptions } from "ch-sdk-node/dist/services/order/order";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
 import { FilingHistoryDocuments } from "ch-sdk-node/dist/services/order/certified-copies";
 import { getOrder, getBasket } from "../client/api.client";
 import { ORDER_COMPLETE } from "../model/template.paths";
-import { APPLICATION_NAME, SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES } from "../config/config";
+import { APPLICATION_NAME, SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, API_KEY } from "../config/config";
 import { mapDeliveryMethod, mapDeliveryDetails, mapFilingHistoryDate } from "../utils/check.details.utils";
 import { getFullFilingHistoryDescription } from "../config/api.enumerations";
 
@@ -58,6 +60,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             companyName: item?.companyName,
             companyNumber: item?.companyNumber
         };
+        const companyProfile: CompanyProfile = await getCompanyProfile(API_KEY, itemDetails.companyNumber);
+        const companyStatus = companyProfile.companyStatus;
         const deliveryDetails = {
             deliveryMethod: mapDeliveryMethod(item?.itemOptions),
             address: mapDeliveryDetails(order.deliveryDetails)
@@ -85,7 +89,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                 certificateType: mapCertificateType(itemOptionsCertificate.certificateType),
                 includedOnCertificate: mapIncludedOnCertificate(item?.itemOptions)
             };
-            const certificatesOrderDetails = [
+            let certificatesOrderDetails = [
                 {
                     key: {
                         text: "Company name",
@@ -115,6 +119,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                         html: "<p id='certificateTypeValue'>" + certificateDetails.certificateType + "</p>"
                     }
                 },
+                ///---- handle "dissolution" type
                 {
                     key: {
                         text: "Included on certificate"
@@ -143,6 +148,9 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                     }
                 }
             ];
+            if (companyStatus !== "active") {
+                certificatesOrderDetails = certificatesOrderDetails.splice(3, 1);
+            }
             serviceUrl = `/company/${item?.companyNumber}/orderable/certificates`;
             serviceName = SERVICE_NAME_CERTIFICATES;
             titleText = "Certificate ordered";
@@ -232,6 +240,9 @@ export const mapCertificateType = (cerificateType: string): string | null => {
     }
     if (cerificateType === "incorporation-with-all-name-changes") {
         return "Incorporation with all company name changes";
+    }
+    if (cerificateType === "dissolution") {
+        return "Dissolution with all company name changes";
     }
     const cleanedCertificateType = cerificateType.replace(/-/g, " ");
     return cleanedCertificateType.charAt(0).toUpperCase() + cleanedCertificateType.slice(1);
