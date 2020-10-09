@@ -170,7 +170,7 @@ describe("order.confirmation.controller.integration", () => {
         it("redirects to " + itemKind.name + " check details page if status is cancelled and item type is " + itemKind.name, async () => {
             getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketCancelledFailedResponse));
             const resp = await chai.request(testApp)
-                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled&itemType=certified-copy`)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled&itemType=certificate`)
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
                 .redirects(0);
             chai.expect(resp.text).to.include(`${itemKind.url}/check-details`);
