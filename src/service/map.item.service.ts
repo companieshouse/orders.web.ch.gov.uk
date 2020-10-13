@@ -24,76 +24,141 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
         const address = mapDeliveryDetails(deliveryDetails);
 
         const itemOptionsCertificate = item.itemOptions as CertificateItemOptions;
-        const certificateDetails = {
-            certificateType: mapCertificateType(itemOptionsCertificate.certificateType),
-            includedOnCertificate: mapIncludedOnCertificate(item?.itemOptions)
-        };
-        const certificatesOrderDetails = [
-            {
-                key: {
-                    text: "Company name",
-                    classes: "govuk-!-width-one-half"
+        const certificateType = itemOptionsCertificate.certificateType;
+
+        if (certificateType === "incorporation-with-all-name-changes") {
+            const certificateDetails = {
+                certificateType: mapCertificateType(itemOptionsCertificate.certificateType),
+                includedOnCertificate: mapIncludedOnCertificate(item?.itemOptions)
+            };
+            const certificatesOrderDetails = [
+                {
+                    key: {
+                        text: "Company name",
+                        classes: "govuk-!-width-one-half"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='companyNameValue'>" + item.companyName + "</p>"
+                    }
                 },
-                value: {
-                    classes: "govuk-!-width-one-half",
-                    html: "<p id='companyNameValue'>" + item.companyName + "</p>"
-                }
-            },
-            {
-                key: {
-                    text: "Company number"
+                {
+                    key: {
+                        text: "Company number"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='companyNumberValue'>" + item.companyNumber + "</p>"
+                    }
                 },
-                value: {
-                    classes: "govuk-!-width-one-half",
-                    html: "<p id='companyNumberValue'>" + item.companyNumber + "</p>"
-                }
-            },
-            {
-                key: {
-                    text: "Certificate type",
-                    classes: "govuk-!-width-one-half"
+                {
+                    key: {
+                        text: "Certificate type",
+                        classes: "govuk-!-width-one-half"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='certificateTypeValue'>" + certificateDetails.certificateType + "</p>"
+                    }
                 },
-                value: {
-                    classes: "govuk-!-width-one-half",
-                    html: "<p id='certificateTypeValue'>" + certificateDetails.certificateType + "</p>"
-                }
-            },
-            {
-                key: {
-                    text: "Included on certificate"
+                {
+                    key: {
+                        text: "Included on certificate"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='includedOnCertificateValue'>" + certificateDetails.includedOnCertificate + "</p>"
+                    }
                 },
-                value: {
-                    classes: "govuk-!-width-one-half",
-                    html: "<p id='includedOnCertificateValue'>" + certificateDetails.includedOnCertificate + "</p>"
-                }
-            },
-            {
-                key: {
-                    text: "Delivery method"
+                {
+                    key: {
+                        text: "Delivery method"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='deliveryMethodValue'>" + deliveryMethod + "</p>"
+                    }
                 },
-                value: {
-                    classes: "govuk-!-width-one-half",
-                    html: "<p id='deliveryMethodValue'>" + deliveryMethod + "</p>"
+                {
+                    key: {
+                        text: "Delivery details"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='deliveryAddressValue'>" + address + "</p>"
+                    }
                 }
-            },
-            {
-                key: {
-                    text: "Delivery details"
+            ];
+            return {
+                serviceUrl: `/company/${item?.companyNumber}/orderable/certificates`,
+                serviceName: SERVICE_NAME_CERTIFICATES,
+                titleText: "Certificate ordered",
+                pageTitle: "Certificate ordered confirmation",
+                happensNext: "We'll prepare the certificate and aim to dispatch it within 4 working days.",
+                orderDetailsTable: certificatesOrderDetails
+            };
+        } else {
+            const certificateDetails = {
+                certificateType: mapCertificateType(itemOptionsCertificate.certificateType)
+            };
+            const dissolvedCertificatesOrderDetails = [
+                {
+                    key: {
+                        text: "Company name",
+                        classes: "govuk-!-width-one-half"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='companyNameValue'>" + item.companyName + "</p>"
+                    }
                 },
-                value: {
-                    classes: "govuk-!-width-one-half",
-                    html: "<p id='deliveryAddressValue'>" + address + "</p>"
+                {
+                    key: {
+                        text: "Company number"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='companyNumberValue'>" + item.companyNumber + "</p>"
+                    }
+                },
+                {
+                    key: {
+                        text: "Certificate type",
+                        classes: "govuk-!-width-one-half"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='certificateTypeValue'>" + certificateDetails.certificateType + "</p>"
+                    }
+                },
+                {
+                    key: {
+                        text: "Delivery method"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='deliveryMethodValue'>" + deliveryMethod + "</p>"
+                    }
+                },
+                {
+                    key: {
+                        text: "Delivery details"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='deliveryAddressValue'>" + address + "</p>"
+                    }
                 }
-            }
-        ];
-        return {
-            serviceUrl: `/company/${item?.companyNumber}/orderable/certificates`,
-            serviceName: SERVICE_NAME_CERTIFICATES,
-            titleText: "Certificate ordered",
-            pageTitle: "Certificate ordered confirmation",
-            happensNext: "We'll prepare the certificate and aim to dispatch it within 4 working days.",
-            orderDetailsTable: certificatesOrderDetails
-        };
+            ];
+            return {
+                serviceUrl: `/company/${item?.companyNumber}/orderable/certificates`,
+                serviceName: SERVICE_NAME_CERTIFICATES,
+                titleText: "Certificate ordered",
+                pageTitle: "Certificate ordered confirmation",
+                happensNext: "We'll prepare the certificate and aim to dispatch it within 4 working days.",
+                orderDetailsTable: dissolvedCertificatesOrderDetails
+            };
+        }
     } else if (itemKind === "item#certified-copy") {
         const deliveryMethod = mapDeliveryMethod(item?.itemOptions);
         const address = mapDeliveryDetails(deliveryDetails);
@@ -218,14 +283,19 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
     }
 };
 
-export const mapCertificateType = (cerificateType: string): string | null => {
-    if (!cerificateType) {
+export const mapCertificateType = (certificateType: string): string | null => {
+    if (!certificateType) {
         return null;
     }
-    if (cerificateType === "incorporation-with-all-name-changes") {
+    if (certificateType === "incorporation-with-all-name-changes") {
         return "Incorporation with all company name changes";
     }
-    const cleanedCertificateType = cerificateType.replace(/-/g, " ");
+
+    if (certificateType === "dissolution") {
+        return "Dissolution with all company name changes";
+    }
+
+    const cleanedCertificateType = certificateType.replace(/-/g, " ");
     return cleanedCertificateType.charAt(0).toUpperCase() + cleanedCertificateType.slice(1);
 };
 

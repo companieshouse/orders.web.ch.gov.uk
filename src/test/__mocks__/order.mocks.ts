@@ -47,6 +47,48 @@ export const mockCertificateItem: Item = {
     satisfiedAt: "2020-05-15T08:41:05.798Z"
 };
 
+export const mockDissolvedCertificateItem: Item = {
+    id: CERTIFICATE_ID,
+    companyName: "Company Name",
+    companyNumber: "00000000",
+    description: "certificate for company 00000000",
+    descriptionIdentifier: "certificate",
+    descriptionValues: {
+        certificate: "certificate for company 00000000",
+        companyNumber: "00000000"
+    },
+    itemCosts: [{
+        discountApplied: "0",
+        itemCost: "15",
+        calculatedCost: "15",
+        productType: "certificate"
+    }],
+    itemOptions: {
+        certificateType: "dissolution",
+        deliveryMethod: "postal",
+        deliveryTimescale: "standard",
+        directorDetails: {},
+        forename: "forename",
+        includeGoodStandingInformation: undefined,
+        registeredOfficeAddressDetails: {},
+        secretaryDetails: {},
+        surname: "surname"
+    },
+    etag: "abcdefg123456",
+    kind: "item#certificate",
+    links: {
+        self: "/orderable/certificates/" + CERTIFICATE_ID
+    },
+    postalDelivery: true,
+    quantity: 1,
+    itemUri: "/orderable/certificates/" + CERTIFICATE_ID,
+    status: "unknown",
+    postageCost: "0",
+    totalItemCost: "15",
+    customerReference: "mycert",
+    satisfiedAt: "2020-05-15T08:41:05.798Z"
+};
+
 export const mockCertificateOrderResponse: Order = {
     orderedAt: "2019-12-16T09:16:17.791Z",
     orderedBy: {
@@ -70,6 +112,34 @@ export const mockCertificateOrderResponse: Order = {
         poBox: "po box"
     },
     items: [mockCertificateItem],
+    kind: "order",
+    totalOrderCost: "15",
+    reference: ORDER_ID
+};
+
+export const mockDissolvedCertificateOrderResponse: Order = {
+    orderedAt: "2019-12-16T09:16:17.791Z",
+    orderedBy: {
+        id: "123456",
+        email: "email@examlpe.come"
+    },
+    links: {
+        self: `/orders/${ORDER_ID}`
+    },
+    paymentReference: "1234567",
+    etag: "abcdefghijk123456789",
+    deliveryDetails: {
+        addressLine1: "address line 1",
+        addressLine2: "address line 2",
+        country: "country",
+        forename: "forename",
+        locality: "locality",
+        postalCode: "postal code",
+        region: "region",
+        surname: "surname",
+        poBox: "po box"
+    },
+    items: [mockDissolvedCertificateItem],
     kind: "order",
     totalOrderCost: "15",
     reference: ORDER_ID

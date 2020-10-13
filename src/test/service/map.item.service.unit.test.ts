@@ -5,7 +5,7 @@ import {
     mapIncludedOnCertificate, mapItem
 } from "../../service/map.item.service";
 import {
-    mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem
+    mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem
 } from "../__mocks__/order.mocks";
 
 const deliveryDetails = {
@@ -24,6 +24,16 @@ describe("map.item.service.unit", () => {
     describe("mapItem", () => {
         it("should return correct data if item is certificate", () => {
             const result = mapItem(mockCertificateItem, deliveryDetails);
+            expect(result.serviceUrl).to.equal(`/company/${mockCertificateItem?.companyNumber}/orderable/certificates`);
+            expect(result.serviceName).to.equal("Order a certificate");
+            expect(result.titleText).to.equal("Certificate ordered");
+            expect(result.pageTitle).to.equal("Certificate ordered confirmation");
+            expect(result.happensNext).to.equal("We'll prepare the certificate and aim to dispatch it within 4 working days.");
+            expect(result.orderDetailsTable).to.not.be.empty;
+        });
+
+        it("should return correct data if item is certificate of type dissolved", () => {
+            const result = mapItem(mockDissolvedCertificateItem, deliveryDetails);
             expect(result.serviceUrl).to.equal(`/company/${mockCertificateItem?.companyNumber}/orderable/certificates`);
             expect(result.serviceName).to.equal("Order a certificate");
             expect(result.titleText).to.equal("Certificate ordered");
@@ -59,6 +69,11 @@ describe("map.item.service.unit", () => {
         it("maps incorporation-with-all-name-changes to Incorporation with all company name changes", () => {
             const result = mapCertificateType("incorporation-with-all-name-changes");
             expect(result).to.equal("Incorporation with all company name changes");
+        });
+
+        it("maps dissolution to Dissolution with all company name changes", () => {
+            const result = mapCertificateType("dissolution");
+            expect(result).to.equal("Dissolution with all company name changes");
         });
     });
 
