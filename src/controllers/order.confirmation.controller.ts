@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Session } from "ch-node-session-handler";
 import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
-import { Order } from "api-sdk-node/dist/services/order/order";
+import { CertificateItemOptions, Item, Order } from "api-sdk-node/dist/services/order/order";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
 
@@ -38,7 +38,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const order: Order = await getOrder(accessToken, orderId);
         if (itemType === undefined || itemType === "") {
             const item = order?.items?.[0];
-            return res.redirect(req.originalUrl + getItemTypeUrlParam(item?.kind));
+            return res.redirect(req.originalUrl + getItemTypeUrlParam(item));
         }
 
         logger.info(`Order retrieved order_id=${order.reference}, user_id=${userId}`);
@@ -77,16 +77,20 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-export const getItemTypeUrlParam = (kind: string | undefined):string => {
-    if (kind === "item#certificate") {
+export const getItemTypeUrlParam = (item: Item):string => {
+    if (item?.kind === "item#certificate") {
+        const itemOptions = item.itemOptions as CertificateItemOptions;
+        if (itemOptions?.certificateType === "dissolved") {
+            return "&itemType=dissolved-certificate";
+        }
         return "&itemType=certificate";
     }
 
-    if (kind === "item#certified-copy") {
+    if (item?.kind === "item#certified-copy") {
         return "&itemType=certified-copy";
     }
 
-    if (kind === "item#missing-image-delivery") {
+    if (item?.kind === "item#missing-image-delivery") {
         return "&itemType=missing-image-delivery";
     }
 
