@@ -14,7 +14,7 @@ describe("order.confirmation.controller.unit", () => {
 
             const mockDissolved = mockCertificateItem;
             mockDissolved.itemOptions =  {
-                certificateType: "dissolved",
+                certificateType: "dissolution",
                 deliveryMethod: "postal",
                 deliveryTimescale: "standard",
                 directorDetails: {},
