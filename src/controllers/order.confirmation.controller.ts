@@ -80,7 +80,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 export const getItemTypeUrlParam = (item: Item):string => {
     if (item?.kind === "item#certificate") {
         const itemOptions = item.itemOptions as CertificateItemOptions;
-        if (itemOptions?.certificateType === "dissolved") {
+        if (itemOptions?.certificateType === "dissolution") {
             return "&itemType=dissolved-certificate";
         }
         return "&itemType=certificate";
