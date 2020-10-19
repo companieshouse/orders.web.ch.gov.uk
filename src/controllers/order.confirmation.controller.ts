@@ -28,12 +28,18 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         if (status === "cancelled" || status === "failed") {
             const basket = await getBasket(accessToken);
             const item = basket?.items?.[0];
-            if (item?.kind === "item#certificate" || item?.kind === "item#certified-copy" || item?.kind === "item#missing-image-delivery") {
-                const redirectUrl = item?.itemUri + "/check-details";
-                logger.info(`Redirecting to ${redirectUrl}`);
-                return res.redirect(redirectUrl);
+            const order: Order = await getOrder(accessToken, orderId);
+            const itemOrder = order?.items?.[0];
+            const itemOrderOptions = itemOrder.itemOptions as CertificateItemOptions;
+            let redirectUrl;
+            if ((item?.kind === "item#certificate" && itemOrderOptions?.certificateType !== "dissolution") || item?.kind === "item#certified-copy" || item?.kind === "item#missing-image-delivery") {
+                redirectUrl = item?.itemUri + "/check-details";
+            } else {
+                redirectUrl = `/orderable/dissolved-certificates/${item?.id}/check-details`;
             }
-        }
+            logger.info(`Redirecting to ${redirectUrl}`);
+            return res.redirect(redirectUrl);
+        };
 
         const order: Order = await getOrder(accessToken, orderId);
         if (itemType === undefined || itemType === "") {

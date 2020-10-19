@@ -11,9 +11,8 @@ describe("order.confirmation.controller.unit", () => {
         });
 
         it("get itemType for dissolved certificate correctly", () => {
-
             const mockDissolved = mockCertificateItem;
-            mockDissolved.itemOptions =  {
+            mockDissolved.itemOptions = {
                 certificateType: "dissolved",
                 deliveryMethod: "postal",
                 deliveryTimescale: "standard",
@@ -23,7 +22,7 @@ describe("order.confirmation.controller.unit", () => {
                 registeredOfficeAddressDetails: {},
                 secretaryDetails: {},
                 surname: "surname"
-            }
+            };
 
             const result = getItemTypeUrlParam(mockDissolved);
             chai.expect(result).to.equal("&itemType=dissolved-certificate");
