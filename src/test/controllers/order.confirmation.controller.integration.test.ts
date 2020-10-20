@@ -196,7 +196,7 @@ describe("order.confirmation.controller.integration", () => {
             },
             etag: "etag",
             items: [{
-                itemOptions: { key: {} },
+                itemOptions: { certificateType: "incorporation-with-all-name-changes" },
                 itemUri: itemKind.url,
                 kind: itemKind.kind,
                 links: { self: itemKind.url }
@@ -205,7 +205,6 @@ describe("order.confirmation.controller.integration", () => {
 
         it("redirects to " + itemKind.name + " check details page if status is cancelled and item type is " + itemKind.name, async () => {
             getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketCancelledFailedResponse));
-            getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockCertificateOrderResponse));
             const resp = await chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled&itemType=${itemKind.name}`)
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
@@ -215,7 +214,6 @@ describe("order.confirmation.controller.integration", () => {
 
         it("redirects to " + itemKind.name + " check details page if status is failed and item type is " + itemKind.name, async () => {
             getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketCancelledFailedResponse));
-            getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockCertificateOrderResponse));
             const resp = await chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=failed&itemType=${itemKind.name}`)
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
@@ -238,7 +236,9 @@ describe("order.confirmation.controller.integration", () => {
         },
         etag: "etag",
         items: [{
-            itemOptions: { key: {} },
+            itemOptions: {
+                certificateType: "dissolution"
+            },
             itemUri: "/orderable/certificates/CRT-123456-123456",
             kind: "item#certificate",
             links: { self: "item#certificate" },
@@ -248,7 +248,6 @@ describe("order.confirmation.controller.integration", () => {
 
     it("redirects to dissolved certificates check details page if status is cancelled", async () => {
         getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(dissolvedCertificatebasketCancelledFailedResponse));
-        getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockDissolvedCertificateOrderResponse));
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled&itemType=dissolved-certificate`)
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
@@ -258,7 +257,6 @@ describe("order.confirmation.controller.integration", () => {
 
     it("redirects to dissolved certificates check details page if status is failed", async () => {
         getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(dissolvedCertificatebasketCancelledFailedResponse));
-        getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockDissolvedCertificateOrderResponse));
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=failed&itemType=dissolved-certificate`)
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])

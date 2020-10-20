@@ -1,7 +1,7 @@
 import chai from "chai";
 
 import { getItemTypeUrlParam } from "../../controllers/order.confirmation.controller";
-import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
+import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem } from "../__mocks__/order.mocks";
 
 describe("order.confirmation.controller.unit", () => {
     describe("getItemTypeUrlParam", () => {
@@ -11,20 +11,7 @@ describe("order.confirmation.controller.unit", () => {
         });
 
         it("get itemType for dissolved certificate correctly", () => {
-            const mockDissolved = mockCertificateItem;
-            mockDissolved.itemOptions = {
-                certificateType: "dissolved",
-                deliveryMethod: "postal",
-                deliveryTimescale: "standard",
-                directorDetails: {},
-                forename: "forename",
-                includeGoodStandingInformation: true,
-                registeredOfficeAddressDetails: {},
-                secretaryDetails: {},
-                surname: "surname"
-            };
-
-            const result = getItemTypeUrlParam(mockDissolved);
+            const result = getItemTypeUrlParam(mockDissolvedCertificateItem);
             chai.expect(result).to.equal("&itemType=dissolved-certificate");
         });
 

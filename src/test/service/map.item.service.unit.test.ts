@@ -34,7 +34,7 @@ describe("map.item.service.unit", () => {
 
         it("should return correct data if item is certificate of type dissolved", () => {
             const result = mapItem(mockDissolvedCertificateItem, deliveryDetails);
-            expect(result.serviceUrl).to.equal(`/company/${mockCertificateItem?.companyNumber}/orderable/certificates`);
+            expect(result.serviceUrl).to.equal(`/company/${mockDissolvedCertificateItem?.companyNumber}/orderable/dissolved-certificates`);
             expect(result.serviceName).to.equal("Order a certificate");
             expect(result.titleText).to.equal("Certificate ordered");
             expect(result.pageTitle).to.equal("Certificate ordered confirmation");

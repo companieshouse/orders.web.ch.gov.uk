@@ -11,6 +11,7 @@ import { ORDER_COMPLETE } from "../model/template.paths";
 import { APPLICATION_NAME } from "../config/config";
 import { mapItem } from "../service/map.item.service";
 import { mapDate } from "../utils/date.util";
+import { Basket } from "api-sdk-node/dist/services/order/basket";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -26,16 +27,16 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, itemType=${itemType}, user_id=${userId}`);
         if (status === "cancelled" || status === "failed") {
-            const basket = await getBasket(accessToken);
+            const basket: Basket = await getBasket(accessToken);
             const item = basket?.items?.[0];
-            const order: Order = await getOrder(accessToken, orderId);
-            const itemOrder = order?.items?.[0];
-            const itemOrderOptions = itemOrder.itemOptions as CertificateItemOptions;
+            const itemId = item?.id;
+            const itemOptions = item?.itemOptions;
+            const certType = itemOptions?.certificateType.toString();
             let redirectUrl;
-            if ((item?.kind === "item#certificate" && itemOrderOptions?.certificateType !== "dissolution") || item?.kind === "item#certified-copy" || item?.kind === "item#missing-image-delivery") {
+            if ((item?.kind === "item#certificate" && certType !== "dissolution") || item?.kind === "item#certified-copy" || item?.kind === "item#missing-image-delivery") {
                 redirectUrl = item?.itemUri + "/check-details";
             } else {
-                redirectUrl = `/orderable/dissolved-certificates/${item?.id}/check-details`;
+                redirectUrl = `/orderable/dissolved-certificates/${itemId}/check-details`;
             }
             logger.info(`Redirecting to ${redirectUrl}`);
             return res.redirect(redirectUrl);
@@ -86,7 +87,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 export const getItemTypeUrlParam = (item: Item):string => {
     if (item?.kind === "item#certificate") {
         const itemOptions = item.itemOptions as CertificateItemOptions;
-        if (itemOptions?.certificateType === "dissolved") {
+        if (itemOptions?.certificateType === "dissolution") {
             return "&itemType=dissolved-certificate";
         }
         return "&itemType=certificate";

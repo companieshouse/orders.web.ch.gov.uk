@@ -25,7 +25,6 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
 
         const itemOptionsCertificate = item.itemOptions as CertificateItemOptions;
         const certificateType = itemOptionsCertificate.certificateType;
-
         if (certificateType === "incorporation-with-all-name-changes") {
             const certificateDetails = {
                 certificateType: mapCertificateType(itemOptionsCertificate.certificateType),
@@ -151,7 +150,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                 }
             ];
             return {
-                serviceUrl: `/company/${item?.companyNumber}/orderable/certificates`,
+                serviceUrl: `/company/${item?.companyNumber}/orderable/dissolved-certificates`,
                 serviceName: SERVICE_NAME_CERTIFICATES,
                 titleText: "Certificate ordered",
                 pageTitle: "Certificate ordered confirmation",
