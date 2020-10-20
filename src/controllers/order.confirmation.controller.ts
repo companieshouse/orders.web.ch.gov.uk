@@ -11,6 +11,7 @@ import { ORDER_COMPLETE } from "../model/template.paths";
 import { APPLICATION_NAME } from "../config/config";
 import { mapItem } from "../service/map.item.service";
 import { mapDate } from "../utils/date.util";
+import { Basket } from "api-sdk-node/dist/services/order/basket";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -26,14 +27,20 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, itemType=${itemType}, user_id=${userId}`);
         if (status === "cancelled" || status === "failed") {
-            const basket = await getBasket(accessToken);
+            const basket: Basket = await getBasket(accessToken);
             const item = basket?.items?.[0];
-            if (item?.kind === "item#certificate" || item?.kind === "item#certified-copy" || item?.kind === "item#missing-image-delivery") {
-                const redirectUrl = item?.itemUri + "/check-details";
-                logger.info(`Redirecting to ${redirectUrl}`);
-                return res.redirect(redirectUrl);
+            const itemId = item?.id;
+            const itemOptions = item?.itemOptions;
+            const certType = itemOptions?.certificateType.toString();
+            let redirectUrl;
+            if ((item?.kind === "item#certificate" && certType !== "dissolution") || item?.kind === "item#certified-copy" || item?.kind === "item#missing-image-delivery") {
+                redirectUrl = item?.itemUri + "/check-details";
+            } else {
+                redirectUrl = `/orderable/dissolved-certificates/${itemId}/check-details`;
             }
-        }
+            logger.info(`Redirecting to ${redirectUrl}`);
+            return res.redirect(redirectUrl);
+        };
 
         const order: Order = await getOrder(accessToken, orderId);
         if (itemType === undefined || itemType === "") {
