@@ -11,7 +11,7 @@ import { ORDER_COMPLETE } from "../model/template.paths";
 import { APPLICATION_NAME } from "../config/config";
 import { mapItem } from "../service/map.item.service";
 import { mapDate } from "../utils/date.util";
-import { Basket } from "api-sdk-node/dist/services/order/basket";
+import { Basket, BasketItem } from "api-sdk-node/dist/services/order/basket";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -30,14 +30,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             const basket: Basket = await getBasket(accessToken);
             const item = basket?.items?.[0];
             const itemId = item?.id;
-            const itemOptions = item?.itemOptions;
-            const certType = itemOptions?.certificateType.toString();
-            let redirectUrl;
-            if ((item?.kind === "item#certificate" && certType !== "dissolution") || item?.kind === "item#certified-copy" || item?.kind === "item#missing-image-delivery") {
-                redirectUrl = item?.itemUri + "/check-details";
-            } else {
-                redirectUrl = `/orderable/dissolved-certificates/${itemId}/check-details`;
-            }
+            const redirectUrl: string = getRedirectUrl(item, itemId)
             logger.info(`Redirecting to ${redirectUrl}`);
             return res.redirect(redirectUrl);
         };
@@ -103,3 +96,14 @@ export const getItemTypeUrlParam = (item: Item):string => {
 
     return "";
 };
+
+export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | undefined):string => {
+    if (item?.kind === "item#certificate" ) {
+        const itemOptions = item?.itemOptions;
+        const certType = itemOptions?.certificateType.toString();
+        if (certType === "dissolution") {
+            return `/orderable/dissolved-certificates/${itemId}/check-details`;
+        }
+    }
+    return item?.itemUri + "/check-details";
+}
