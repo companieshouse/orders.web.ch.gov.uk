@@ -274,7 +274,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
             happensNext: `<p class="govuk-body">It can take us several hours to check the availability of a document. We will aim to add it to the <a href="/company/${item.companyNumber}/filing-history" class="govuk-link govuk-link--no-visited-state">company’s filing history </a>
             that day if the request is received between 8:30am and 3pm, Monday to Friday (excluding bank holidays).</p>
 
-            <p class="govuk-body">If you make a request after 3pm, we will add the document the next working day.</p>
+            <p class="govuk-body">If you make the request after 3pm, we will add the document the next working day.</p>
             
             <p class="govuk-body">If we cannot add the document to the filing history, we will contact you to issue a refund.</p>`
         };
