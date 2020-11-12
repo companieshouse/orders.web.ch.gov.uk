@@ -1,0 +1,11 @@
+*
+
+!api-enumerations
+!src
+!static
+
+!gulpfile.js
+!package-lock.json
+!package.json
+!tsconfig.json
+
