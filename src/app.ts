@@ -3,7 +3,7 @@ import nunjucks from "nunjucks";
 import path from "path";
 import cookieParser from "cookie-parser";
 import Redis from "ioredis";
-import { SessionStore, SessionMiddleware, CookieConfig } from "ch-node-session-handler";
+import { SessionStore, SessionMiddleware, CookieConfig } from "@companieshouse/node-session-handler";
 import { createLoggerMiddleware } from "ch-structured-logging";
 
 import authMiddleware from "./middleware/auth.middleware";

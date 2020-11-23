@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
-import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
+import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
+import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { ApiResponse } from "api-sdk-node/dist/services/resource";
 import { Checkout } from "api-sdk-node/dist/services/order/basket";
 import { createLogger } from "ch-structured-logging";
@@ -9,7 +9,7 @@ import { HttpError } from "http-errors";
 import { checkoutBasket, createPayment } from "../client/api.client";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
 import { APPLICATION_NAME } from "../config/config";
-import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
+import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import * as templatePaths from "../model/template.paths";
 
 const logger = createLogger(APPLICATION_NAME);
