@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { Session } from "ch-node-session-handler";
-import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
-import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
+import { Session } from "@companieshouse/node-session-handler";
+import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
+import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { CertificateItemOptions, Item, Order } from "api-sdk-node/dist/services/order/order";
 import { createLogger } from "ch-structured-logging";
-import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
+import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
 import { getOrder, getBasket } from "../client/api.client";
 import { ORDER_COMPLETE } from "../model/template.paths";

@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
-import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
+import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
+import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { createLogger } from "ch-structured-logging";
 
 import { APPLICATION_NAME } from "../config/config";
-import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
+import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
 const logger = createLogger(APPLICATION_NAME);
 
