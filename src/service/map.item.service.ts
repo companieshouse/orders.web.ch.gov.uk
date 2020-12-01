@@ -77,7 +77,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                     },
                     value: {
                         classes: "govuk-!-width-one-half",
-                        html: "<p id='currentCompanyDirectors'>" + "To be done in another ticket" + "</p>"
+                        html: "<p id='registeredOfficeAddress>" + "To be done in another ticket" + "</p>"
                     }
                 },
                 {
