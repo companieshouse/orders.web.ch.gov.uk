@@ -15,6 +15,8 @@ export interface CheckDetailsItem {
     filingHistoryDocuments?: any[];
     orderDetailsTable?: any[];
     documentDetailsTable?: number;
+    certificateDetailsTable?: number;
+    deliveryDetailsTable?: any[];
 }
 
 export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined): CheckDetailsItem => {
@@ -62,15 +64,54 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                 },
                 {
                     key: {
-                        text: "Included on certificate"
+                        text: "Statement of good standing"
                     },
                     value: {
                         classes: "govuk-!-width-one-half",
-                        html: "<p id='includedOnCertificateValue'>" + certificateDetails.includedOnCertificate + "</p>"
+                        html: "<p id='statementOfGoodStandingValue'>" + determineItemOptionsSelectedText(itemOptionsCertificate.includeGoodStandingInformation) + "</p>"
                     }
                 },
                 {
                     key: {
+                        text: "Registered office address"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='currentCompanyDirectors'>" + "To be done in another ticket" + "</p>"
+                    }
+                },
+                {
+                    key: {
+                        text: "The names of all current company directors"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='currentCompanyDirectors'>" + determineItemOptionsSelectedText(itemOptionsCertificate.directorDetails) + "</p>"
+                    }
+                },
+                {
+                    key: {
+                        text: "The names of all current company secretaries"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='currentCompanySercretaries'>" + determineItemOptionsSelectedText(itemOptionsCertificate.secretaryDetails) + "</p>"
+                    }
+                },
+                {
+                    key: {
+                        text: "Company objects"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='companyObjects'>" + determineItemOptionsSelectedText(itemOptionsCertificate.includeCompanyObjectsInformation) + "</p>"
+                    }
+                }
+            ];
+            const certificateDeliveryDetails = [
+                {
+                    key: {
+                        classes: "govuk-!-width-one-half",
                         text: "Delivery method"
                     },
                     value: {
@@ -80,6 +121,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                 },
                 {
                     key: {
+                        classes: "govuk-!-width-one-half",
                         text: "Delivery details"
                     },
                     value: {
@@ -94,7 +136,9 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                 titleText: "Certificate ordered",
                 pageTitle: "Certificate ordered confirmation",
                 happensNext: "We'll prepare the certificate and aim to dispatch it within 4 working days.",
-                orderDetailsTable: certificatesOrderDetails
+                orderDetailsTable: certificatesOrderDetails,
+                certificateDetailsTable: 1,
+                deliveryDetailsTable: certificateDeliveryDetails
             };
         } else {
             const certificateDetails = {
@@ -384,4 +428,8 @@ export const mapToHtml = (mappings: string[]): string => {
         htmlString += element + "<br>";
     });
     return htmlString;
+};
+
+export const determineItemOptionsSelectedText = (itemOption: any): string => {
+    return (itemOption === undefined) ? "No" : "Yes";
 };

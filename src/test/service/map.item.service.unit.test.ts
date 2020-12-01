@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import {
     mapDeliveryDetails, mapDeliveryMethod, mapCertificateType,
-    mapIncludedOnCertificate, mapItem
+    mapIncludedOnCertificate, mapItem, determineItemOptionsSelectedText
 } from "../../service/map.item.service";
 import {
     mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem
@@ -155,6 +155,18 @@ describe("map.item.service.unit", () => {
             };
             const result = mapIncludedOnCertificate(itemOptions);
             expect(result).to.equal("Secretaries<br/>Company objects");
+        });
+    });
+
+    describe("determineItemOptionsSelectedText", () => {
+        it("item option defined returns Yes", () => {
+            const result = determineItemOptionsSelectedText(true);
+            expect(result).to.equal("Yes");
+        });
+
+        it("item option undefined returns No", () => {
+            const result = determineItemOptionsSelectedText(undefined);
+            expect(result).to.equal("No");
         });
     });
 });
