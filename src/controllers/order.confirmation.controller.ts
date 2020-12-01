@@ -30,7 +30,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             const basket: Basket = await getBasket(accessToken);
             const item = basket?.items?.[0];
             const itemId = item?.id;
-            const redirectUrl: string = getRedirectUrl(item, itemId)
+            const redirectUrl: string = getRedirectUrl(item, itemId);
             logger.info(`Redirecting to ${redirectUrl}`);
             return res.redirect(redirectUrl);
         };
@@ -98,7 +98,7 @@ export const getItemTypeUrlParam = (item: Item):string => {
 };
 
 export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | undefined):string => {
-    if (item?.kind === "item#certificate" ) {
+    if (item?.kind === "item#certificate") {
         const itemOptions = item?.itemOptions;
         const certType = itemOptions?.certificateType.toString();
         if (certType === "dissolution") {
@@ -106,4 +106,4 @@ export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | un
         }
     }
     return item?.itemUri + "/check-details";
-}
+};

@@ -64,7 +64,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#companyNameValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyName);
                 chai.expect($("#companyNumberValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyNumber);
                 chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
-                chai.expect($("#includedOnCertificateValue").html()).to.equal("Statement of good standing");
+                chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 4 working days)");
                 chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country<br>");
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");

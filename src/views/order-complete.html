@@ -39,6 +39,14 @@
         rows: orderDetailsTable
       }) }}
 
+      {% if certificateDetailsTable %}
+        <h2 class="govuk-heading-m">Delivery Details</h2>
+        
+        {{ govukSummaryList({
+          rows: deliveryDetailsTable
+        }) }}
+      {% endif %}
+
       {% if documentDetailsTable %}
       <h3 class="govuk-heading-m">Document details</h3>
                 <table class="govuk-table">
