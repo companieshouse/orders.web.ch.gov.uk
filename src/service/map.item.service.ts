@@ -77,7 +77,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                     },
                     value: {
                         classes: "govuk-!-width-one-half",
-                        html: "<p id='registeredOfficeAddress'>" + "To be done in another ticket" + "</p>"
+                        html: "<p id='registeredOfficeAddress'>" + mapRegisteredOfficeAddress(itemOptionsCertificate) + "</p>"
                     }
                 },
                 {
@@ -433,3 +433,31 @@ export const mapToHtml = (mappings: string[]): string => {
 export const determineItemOptionsSelectedText = (itemOption: any): string => {
     return (itemOption === undefined) ? "No" : "Yes";
 };
+
+export const mapRegisteredOfficeAddress = (itemOptions: Record<string, any>): string => {
+
+    const optionSelected: string | undefined =
+        itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType;
+
+    if (optionSelected === "current") {
+        return "Current address";
+    }
+
+    if (optionSelected === "current-and-previous") {
+        return "Current address and the one previous";
+    }
+
+    if (optionSelected === "current-previous-and-prior") {
+        return "Current address and the two previous";
+    }
+
+    if (optionSelected === "all") {
+        return "All current and previous addresses";
+    }
+
+    if (optionSelected === undefined) {
+        return "No";
+    }
+
+    return "";
+}
