@@ -1,12 +1,29 @@
+import { ItemOptions } from "api-sdk-node/dist/services/order/order";
 import { expect } from "chai";
 
 import {
     mapDeliveryDetails, mapDeliveryMethod, mapCertificateType,
-    mapIncludedOnCertificate, mapItem, determineItemOptionsSelectedText
+    mapIncludedOnCertificate, mapItem, determineItemOptionsSelectedText, mapRegisteredOfficeAddress
 } from "../../service/map.item.service";
 import {
     mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem
 } from "../__mocks__/order.mocks";
+
+const itemOptionsRegOfficeAddress = (addressRecordsType: string) => {
+    return {
+        directorDetails: {
+            includeBasicInformation: true
+        },
+        includeCompanyObjectsInformation: true,
+        includeGoodStandingInformation: true,
+        registeredOfficeAddressDetails: {
+            includeAddressRecordsType: addressRecordsType
+        },
+        secretaryDetails: {
+            includeBasicInformation: true
+        }
+    };
+}
 
 const deliveryDetails = {
     addressLine1: "address line 1",
@@ -166,6 +183,48 @@ describe("map.item.service.unit", () => {
 
         it("item option undefined returns No", () => {
             const result = determineItemOptionsSelectedText(undefined);
+            expect(result).to.equal("No");
+        });
+    });
+
+    describe("mapRegisteredOfficeAddress", () => {
+        it("includeAddressRecordsType with a value of 'current' returns correct mapped text", () => {
+            const itemOptions = itemOptionsRegOfficeAddress("current");
+            const result = mapRegisteredOfficeAddress(itemOptions);
+            expect(result).to.equal("Current address");
+        });
+
+        it("includeAddressRecordsType with a value of 'current-and-previous' returns correct mapped text", () => {
+            const itemOptions = itemOptionsRegOfficeAddress("current-and-previous");
+            const result = mapRegisteredOfficeAddress(itemOptions);
+            expect(result).to.equal("Current address and the one previous");
+        });
+
+        it("includeAddressRecordsType with a value of 'current-previous-and-prior' returns correct mapped text", () => {
+            const itemOptions = itemOptionsRegOfficeAddress("current-previous-and-prior");
+            const result = mapRegisteredOfficeAddress(itemOptions);
+            expect(result).to.equal("Current address and the two previous");
+        });
+
+        it("includeAddressRecordsType with a value of 'all' returns correct mapped text", () => {
+            const itemOptions = itemOptionsRegOfficeAddress("all");
+            const result = mapRegisteredOfficeAddress(itemOptions);
+            expect(result).to.equal("All current and previous addresses");
+        });
+
+        it("includeAddressRecordsType with a value of undefined returns correct mapped text", () => {
+            const itemOptions = {
+                directorDetails: {
+                    includeBasicInformation: true
+                },
+                includeCompanyObjectsInformation: true,
+                includeGoodStandingInformation: true,
+                registeredOfficeAddressDetails: {},
+                secretaryDetails: {
+                    includeBasicInformation: true
+                }
+            };
+            const result = mapRegisteredOfficeAddress(itemOptions);
             expect(result).to.equal("No");
         });
     });
