@@ -2,9 +2,12 @@ import { Basket, DeliveryDetails } from "api-sdk-node/dist/services/order/basket
 import { Order, Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "api-sdk-node/dist/services/order/order";
 import { FilingHistoryDocuments } from "api-sdk-node/dist/services/order/certified-copies";
 
-import { SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, SERVICE_NAME_MISSING_IMAGE_DELIVERIES } from "../config/config";
+import { SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, SERVICE_NAME_MISSING_IMAGE_DELIVERIES, APPLICATION_NAME } from "../config/config";
 import { mapFilingHistory } from "./filing.history.service";
 import { mapFilingHistoryDate } from "../utils/date.util";
+import { createLogger } from "ch-structured-logging";
+
+const logger = createLogger(APPLICATION_NAME);
 
 export interface CheckDetailsItem {
     serviceUrl?: string;
@@ -77,7 +80,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                     },
                     value: {
                         classes: "govuk-!-width-one-half",
-                        html: "<p id='registeredOfficeAddress'>" + "To be done in another ticket" + "</p>"
+                        html: "<p id='registeredOfficeAddress'>" + mapRegisteredOfficeAddress(itemOptionsCertificate) + "</p>"
                     }
                 },
                 {
@@ -432,4 +435,30 @@ export const mapToHtml = (mappings: string[]): string => {
 
 export const determineItemOptionsSelectedText = (itemOption: any): string => {
     return (itemOption === undefined) ? "No" : "Yes";
+};
+
+export const mapRegisteredOfficeAddress = (itemOptions: Record<string, any>): string => {
+    const optionSelected: string | undefined =
+        itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType;
+
+    switch (optionSelected) {
+    case "current":
+        return "Current address";
+
+    case "current-and-previous":
+        return "Current address and the one previous";
+
+    case "current-previous-and-prior":
+        return "Current address and the two previous";
+
+    case "all":
+        return "All current and previous addresses";
+
+    case undefined:
+        return "No";
+
+    default:
+        logger.error(`Unable to map value for registererd office address options: ${optionSelected}`);
+        return "";
+    }
 };
