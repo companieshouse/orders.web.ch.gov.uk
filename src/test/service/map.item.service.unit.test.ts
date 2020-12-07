@@ -23,7 +23,7 @@ const itemOptionsRegOfficeAddress = (addressRecordsType: string) => {
             includeBasicInformation: true
         }
     };
-}
+};
 
 const deliveryDetails = {
     addressLine1: "address line 1",

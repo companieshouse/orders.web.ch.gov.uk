@@ -70,6 +70,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
                 chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
+                chai.expect($("#registeredOfficeAddress").text().trim()).to.equal("Current address and the one previous");
                 chai.expect(getOrderStub).to.have.been.called;
                 chai.expect(resp.text).to.not.contain("Your document details");
                 done();

@@ -28,7 +28,9 @@ export const mockCertificateItem: Item = {
         directorDetails: {},
         forename: "forename",
         includeGoodStandingInformation: true,
-        registeredOfficeAddressDetails: {},
+        registeredOfficeAddressDetails: {
+            includeAddressRecordsType: "current-and-previous"
+        },
         secretaryDetails: {},
         surname: "surname"
     },
