@@ -1,9 +1,10 @@
-import { ItemOptions } from "api-sdk-node/dist/services/order/order";
+import { ItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { expect } from "chai";
 
 import {
     mapDeliveryDetails, mapDeliveryMethod, mapCertificateType,
-    mapIncludedOnCertificate, mapItem, determineItemOptionsSelectedText, mapRegisteredOfficeAddress
+    mapIncludedOnCertificate, mapItem, determineItemOptionsSelectedText, mapRegisteredOfficeAddress,
+    determineDirectorOptionsText
 } from "../../service/map.item.service";
 import {
     mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem
@@ -225,6 +226,78 @@ describe("map.item.service.unit", () => {
                 }
             };
             const result = mapRegisteredOfficeAddress(itemOptions);
+            expect(result).to.equal("No");
+        });
+    });
+
+    describe("determineDirectorOptionsText", () => {
+        it("directorDetails with just basic information", () => {
+            const directorDetails = {
+                includeBasicInformation: true
+            };
+            const result = determineDirectorOptionsText(directorDetails);
+            expect(result).to.equal("Yes");
+        });
+
+        it("directorDetails with basic information plus correspondence address", () => {
+            const directorDetails = {
+                includeBasicInformation: true,
+                includeAddress: true
+            };
+            const result = determineDirectorOptionsText(directorDetails);
+            expect(result).to.equal("Including directors':<br><br>Correspondence address<br>");
+        });
+
+        it("directorDetails with basic information plus appointment date", () => {
+            const directorDetails = {
+                includeBasicInformation: true,
+                includeAppointmentDate: true
+            };
+            const result = determineDirectorOptionsText(directorDetails);
+            expect(result).to.equal("Including directors':<br><br>Appointment date<br>");
+        });
+
+        it("directorDetails with basic information plus country of residence", () => {
+            const directorDetails = {
+                includeBasicInformation: true,
+                includeCountryOfResidence: true
+            };
+            const result = determineDirectorOptionsText(directorDetails);
+            expect(result).to.equal("Including directors':<br><br>Country of residence<br>");
+        });
+
+        it("directorDetails with basic information plus nationality", () => {
+            const directorDetails = {
+                includeBasicInformation: true,
+                includeNationality: true
+            };
+            const result = determineDirectorOptionsText(directorDetails);
+            expect(result).to.equal("Including directors':<br><br>Nationality<br>");
+        });
+
+        it("directorDetails with basic information plus occupation", () => {
+            const directorDetails = {
+                includeBasicInformation: true,
+                includeOccupation: true
+            };
+            const result = determineDirectorOptionsText(directorDetails);
+            expect(result).to.equal("Including directors':<br><br>Occupation<br>");
+        });
+
+        it("directorDetails with basic information plus date of birth", () => {
+            const directorDetails = {
+                includeBasicInformation: true,
+                includeDobType: "partial"
+            };
+            const result = determineDirectorOptionsText(directorDetails);
+            expect(result).to.equal("Including directors':<br><br>Date of birth (month and year)<br>");
+        });
+
+        it("directorDetails include basic information is false", () => {
+            const directorDetails = {
+                includeBasicInformation: false
+            };
+            const result = determineDirectorOptionsText(directorDetails);
             expect(result).to.equal("No");
         });
     });

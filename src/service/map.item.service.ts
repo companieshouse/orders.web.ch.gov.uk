@@ -1,6 +1,6 @@
-import { Basket, DeliveryDetails } from "api-sdk-node/dist/services/order/basket/types";
-import { Order, Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "api-sdk-node/dist/services/order/order";
-import { FilingHistoryDocuments } from "api-sdk-node/dist/services/order/certified-copies";
+import { Basket, DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
+import { Order, Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions, DirectorDetails } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { FilingHistoryDocuments } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
 
 import { SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, SERVICE_NAME_MISSING_IMAGE_DELIVERIES, APPLICATION_NAME } from "../config/config";
 import { mapFilingHistory } from "./filing.history.service";
@@ -89,7 +89,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                     },
                     value: {
                         classes: "govuk-!-width-one-half",
-                        html: "<p id='currentCompanyDirectors'>" + determineItemOptionsSelectedText(itemOptionsCertificate.directorDetails) + "</p>"
+                        html: "<p id='currentCompanyDirectors'>" + determineDirectorOptionsText(itemOptionsCertificate.directorDetails) + "</p>"
                     }
                 },
                 {
@@ -461,4 +461,36 @@ export const mapRegisteredOfficeAddress = (itemOptions: Record<string, any>): st
         logger.error(`Unable to map value for registererd office address options: ${optionSelected}`);
         return "";
     }
+};
+
+export const determineDirectorOptionsText = (directorDetails : DirectorDetails) => {
+    if (directorDetails === undefined || !directorDetails.includeBasicInformation) {
+        return "No";
+    }
+    const directorOptions:string[] = [];
+
+    if (directorDetails.includeAddress) {
+        directorOptions.push("Correspondence address");
+    }
+    if (directorDetails.includeOccupation) {
+        directorOptions.push("Occupation");
+    }
+    if (directorDetails.includeDobType === "partial") {
+        directorOptions.push("Date of birth (month and year)");
+    }
+    if (directorDetails.includeAppointmentDate) {
+        directorOptions.push("Appointment date");
+    }
+    if (directorDetails.includeNationality) {
+        directorOptions.push("Nationality");
+    }
+    if (directorDetails.includeCountryOfResidence) {
+        directorOptions.push("Country of residence");
+    }
+    if (directorOptions.length > 0) {
+        directorOptions.unshift("Including directors':", "");
+    } else {
+        return "Yes";
+    }
+    return mapToHtml(directorOptions);
 };

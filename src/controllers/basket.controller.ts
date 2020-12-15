@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
-import { ApiResponse } from "api-sdk-node/dist/services/resource";
-import { Checkout } from "api-sdk-node/dist/services/order/basket";
+import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { createLogger } from "ch-structured-logging";
 import { HttpError } from "http-errors";
 

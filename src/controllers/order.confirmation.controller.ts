@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Session } from "@companieshouse/node-session-handler";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
-import { CertificateItemOptions, Item, Order } from "api-sdk-node/dist/services/order/order";
+import { CertificateItemOptions, Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
@@ -11,7 +11,7 @@ import { ORDER_COMPLETE } from "../model/template.paths";
 import { APPLICATION_NAME } from "../config/config";
 import { mapItem } from "../service/map.item.service";
 import { mapDate } from "../utils/date.util";
-import { Basket, BasketItem } from "api-sdk-node/dist/services/order/basket";
+import { Basket, BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 
 const logger = createLogger(APPLICATION_NAME);
 

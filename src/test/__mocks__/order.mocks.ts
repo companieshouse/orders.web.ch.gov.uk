@@ -1,4 +1,4 @@
-import { Item, Order } from "api-sdk-node/dist/services/order/order";
+import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order";
 
 export const CERTIFICATE_ID = "CRT-123456-123456";
 export const CERTIFIED_COPY_ID = "CCD-123456-123456";
