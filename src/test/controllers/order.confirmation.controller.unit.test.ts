@@ -1,4 +1,4 @@
-import { Basket, BasketItem } from "api-sdk-node/dist/services/order/basket";
+import { Basket, BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import chai from "chai";
 
 import { getItemTypeUrlParam, getRedirectUrl } from "../../controllers/order.confirmation.controller";

@@ -1,11 +1,11 @@
 import sinon from "sinon";
 import chai from "chai";
-import BasketService from "api-sdk-node/dist/services/order/basket/service";
-import PaymentService from "api-sdk-node/dist/services/payment/service";
-import { Checkout } from "api-sdk-node/dist/services/order/basket";
-import { ApiResponse, ApiErrorResponse } from "api-sdk-node/dist/services/resource";
-import { success, failure } from "api-sdk-node/dist/services/result";
-import { Payment } from "api-sdk-node/dist/services/payment";
+import BasketService from "@companieshouse/api-sdk-node/dist/services/order/basket/service";
+import PaymentService from "@companieshouse/api-sdk-node/dist/services/payment/service";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { ApiResponse, ApiErrorResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
+import { success, failure } from "@companieshouse/api-sdk-node/dist/services/result";
+import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 
 import { checkoutBasket, createPayment } from "../../client/api.client";
 const O_AUTH_TOKEN = "oauth";
