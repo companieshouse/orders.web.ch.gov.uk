@@ -1,5 +1,5 @@
 import { Basket, DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
-import { Order, Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions, DirectorDetails } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { Order, Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions, DirectorOrSecretaryDetails } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { FilingHistoryDocuments } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
 
 import { SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, SERVICE_NAME_MISSING_IMAGE_DELIVERIES, APPLICATION_NAME } from "../config/config";
@@ -89,7 +89,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                     },
                     value: {
                         classes: "govuk-!-width-one-half",
-                        html: "<p id='currentCompanyDirectors'>" + determineDirectorOptionsText(itemOptionsCertificate.directorDetails) + "</p>"
+                        html: "<p id='currentCompanyDirectors'>" + determineDirectorOrSecretaryOptionsText(itemOptionsCertificate.directorDetails, "directors") + "</p>"
                     }
                 },
                 {
@@ -98,7 +98,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                     },
                     value: {
                         classes: "govuk-!-width-one-half",
-                        html: "<p id='currentCompanySercretaries'>" + determineItemOptionsSelectedText(itemOptionsCertificate.secretaryDetails) + "</p>"
+                        html: "<p id='currentCompanySercretaries'>" + determineDirectorOrSecretaryOptionsText(itemOptionsCertificate.secretaryDetails, "secretaries") + "</p>"
                     }
                 },
                 {
@@ -463,34 +463,34 @@ export const mapRegisteredOfficeAddress = (itemOptions: Record<string, any>): st
     }
 };
 
-export const determineDirectorOptionsText = (directorDetails : DirectorDetails) => {
-    if (directorDetails === undefined || !directorDetails.includeBasicInformation) {
+export const determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails : DirectorOrSecretaryDetails, officer: string) => {
+    if (directorOrSecretaryDetails === undefined || !directorOrSecretaryDetails.includeBasicInformation) {
         return "No";
     }
-    const directorOptions:string[] = [];
+    const directorOrSecretaryOptions:string[] = [];
 
-    if (directorDetails.includeAddress) {
-        directorOptions.push("Correspondence address");
+    if (directorOrSecretaryDetails.includeAddress) {
+        directorOrSecretaryOptions.push("Correspondence address");
     }
-    if (directorDetails.includeOccupation) {
-        directorOptions.push("Occupation");
+    if (directorOrSecretaryDetails.includeOccupation) {
+        directorOrSecretaryOptions.push("Occupation");
     }
-    if (directorDetails.includeDobType === "partial") {
-        directorOptions.push("Date of birth (month and year)");
+    if (directorOrSecretaryDetails.includeDobType === "partial") {
+        directorOrSecretaryOptions.push("Date of birth (month and year)");
     }
-    if (directorDetails.includeAppointmentDate) {
-        directorOptions.push("Appointment date");
+    if (directorOrSecretaryDetails.includeAppointmentDate) {
+        directorOrSecretaryOptions.push("Appointment date");
     }
-    if (directorDetails.includeNationality) {
-        directorOptions.push("Nationality");
+    if (directorOrSecretaryDetails.includeNationality) {
+        directorOrSecretaryOptions.push("Nationality");
     }
-    if (directorDetails.includeCountryOfResidence) {
-        directorOptions.push("Country of residence");
+    if (directorOrSecretaryDetails.includeCountryOfResidence) {
+        directorOrSecretaryOptions.push("Country of residence");
     }
-    if (directorOptions.length > 0) {
-        directorOptions.unshift("Including directors':", "");
+    if (directorOrSecretaryOptions.length > 0) {
+        directorOrSecretaryOptions.unshift("Including " + officer + "':", "");
     } else {
         return "Yes";
     }
-    return mapToHtml(directorOptions);
+    return mapToHtml(directorOrSecretaryOptions);
 };
