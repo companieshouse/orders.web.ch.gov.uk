@@ -4,7 +4,7 @@ import { expect } from "chai";
 import {
     mapDeliveryDetails, mapDeliveryMethod, mapCertificateType,
     mapIncludedOnCertificate, mapItem, determineItemOptionsSelectedText, mapRegisteredOfficeAddress,
-    determineDirectorOptionsText
+    determineDirectorOrSecretaryOptionsText
 } from "../../service/map.item.service";
 import {
     mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem
@@ -230,12 +230,12 @@ describe("map.item.service.unit", () => {
         });
     });
 
-    describe("determineDirectorOptionsText", () => {
+    describe("determineDirectorOrSecretaryOptionsText", () => {
         it("directorDetails with just basic information", () => {
             const directorDetails = {
                 includeBasicInformation: true
             };
-            const result = determineDirectorOptionsText(directorDetails);
+            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
             expect(result).to.equal("Yes");
         });
 
@@ -244,7 +244,7 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeAddress: true
             };
-            const result = determineDirectorOptionsText(directorDetails);
+            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
             expect(result).to.equal("Including directors':<br><br>Correspondence address<br>");
         });
 
@@ -253,7 +253,7 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeAppointmentDate: true
             };
-            const result = determineDirectorOptionsText(directorDetails);
+            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
             expect(result).to.equal("Including directors':<br><br>Appointment date<br>");
         });
 
@@ -262,7 +262,7 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeCountryOfResidence: true
             };
-            const result = determineDirectorOptionsText(directorDetails);
+            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
             expect(result).to.equal("Including directors':<br><br>Country of residence<br>");
         });
 
@@ -271,7 +271,7 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeNationality: true
             };
-            const result = determineDirectorOptionsText(directorDetails);
+            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
             expect(result).to.equal("Including directors':<br><br>Nationality<br>");
         });
 
@@ -280,7 +280,7 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeOccupation: true
             };
-            const result = determineDirectorOptionsText(directorDetails);
+            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
             expect(result).to.equal("Including directors':<br><br>Occupation<br>");
         });
 
@@ -289,7 +289,7 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeDobType: "partial"
             };
-            const result = determineDirectorOptionsText(directorDetails);
+            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
             expect(result).to.equal("Including directors':<br><br>Date of birth (month and year)<br>");
         });
 
@@ -297,7 +297,7 @@ describe("map.item.service.unit", () => {
             const directorDetails = {
                 includeBasicInformation: false
             };
-            const result = determineDirectorOptionsText(directorDetails);
+            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
             expect(result).to.equal("No");
         });
     });
