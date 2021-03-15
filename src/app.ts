@@ -8,7 +8,7 @@ import { createLoggerMiddleware } from "ch-structured-logging";
 
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
-import { PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, COOKIE_DOMAIN, CACHE_SERVER, APPLICATION_NAME } from "./config/config";
+import { PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, COOKIE_DOMAIN, CACHE_SERVER, APPLICATION_NAME, CHS_URL } from "./config/config";
 import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
 
@@ -48,6 +48,7 @@ app.set("view engine", "html");
 env.addGlobal("CDN_URL", process.env.CDN_HOST);
 env.addGlobal("PIWIK_URL", PIWIK_URL);
 env.addGlobal("PIWIK_SITE_ID", PIWIK_SITE_ID);
+env.addGlobal("CHS_URL", CHS_URL);
 
 // serve static assets in development.
 // this will execute in production for now, but we will host these else where in the future.
