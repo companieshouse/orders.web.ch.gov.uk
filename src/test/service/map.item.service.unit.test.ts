@@ -127,9 +127,9 @@ describe("map.item.service.unit", () => {
     });
 
     describe("mapDeliveryMethod", () => {
-        it("map standard to Standard delivery (dispatched within 4 working days)", () => {
+        it("map standard to Standard delivery (dispatched within 10 working days)", () => {
             const result = mapDeliveryMethod({ deliveryTimescale: "standard" });
-            expect(result).to.equal("Standard delivery (aim to dispatch within 4 working days)");
+            expect(result).to.equal("Standard delivery (aim to dispatch within 10 working days)");
         });
 
         it("maps same-day to Same Day", () => {

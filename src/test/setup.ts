@@ -17,3 +17,4 @@ process.env.CACHE_SERVER = "test";
 process.env.CHS_URL = "http://chsurl.co";
 process.env.PIWIK_SITE_ID = "test";
 process.env.PIWIK_URL = "test";
+process.env.DISPATCH_DAYS = "10";

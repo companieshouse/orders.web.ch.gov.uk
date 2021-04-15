@@ -2,12 +2,13 @@ import { Basket, DeliveryDetails } from "@companieshouse/api-sdk-node/dist/servi
 import { Order, Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions, DirectorOrSecretaryDetails } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { FilingHistoryDocuments } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
 
-import { SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, SERVICE_NAME_MISSING_IMAGE_DELIVERIES, APPLICATION_NAME } from "../config/config";
+import { SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, SERVICE_NAME_MISSING_IMAGE_DELIVERIES, APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
 import { mapFilingHistory } from "./filing.history.service";
 import { mapFilingHistoryDate } from "../utils/date.util";
 import { createLogger } from "ch-structured-logging";
 
 const logger = createLogger(APPLICATION_NAME);
+const dispatchDays: string = DISPATCH_DAYS;
 
 export interface CheckDetailsItem {
     serviceUrl?: string;
@@ -416,7 +417,7 @@ export const mapDeliveryDetails = (deliveryDetails: DeliveryDetails | undefined)
 
 export const mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
     if (itemOptions?.deliveryTimescale === "standard") {
-        return "Standard delivery (aim to dispatch within 4 working days)";
+        return "Standard delivery (aim to dispatch within " + dispatchDays + " working days)";
     }
     if (itemOptions?.deliveryTimescale === "same-day") {
         return "Same Day";
