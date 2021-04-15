@@ -255,7 +255,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
             serviceName: SERVICE_NAME_CERTIFIED_COPIES,
             titleText: "Certified document order confirmed",
             pageTitle: "Certified document order confirmation",
-            happensNext: "We'll prepare your order and aim to dispatch it within 4 working days.",
+            happensNext: "We'll prepare your order and aim to dispatch it within " + dispatchDays + " working days.",
             orderDetailsTable: certifiedCopiesOrderDetails,
             filingHistoryDocuments: mapFilingHistoriesDocuments(itemOptionsCertifiedCopy.filingHistoryDocuments),
             documentDetailsTable: 1
