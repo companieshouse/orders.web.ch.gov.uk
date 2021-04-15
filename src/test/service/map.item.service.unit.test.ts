@@ -66,7 +66,7 @@ describe("map.item.service.unit", () => {
             expect(result.serviceName).to.equal("Order a certified document");
             expect(result.titleText).to.equal("Certified document order confirmed");
             expect(result.pageTitle).to.equal("Certified document order confirmation");
-            expect(result.happensNext).to.equal("We'll prepare your order and aim to dispatch it within 4 working days.");
+            expect(result.happensNext).to.equal("We'll prepare your order and aim to dispatch it within 10 working days.");
             expect(result.orderDetailsTable).to.not.be.empty;
             expect(result.filingHistoryDocuments).to.not.be.empty;
             expect(result.documentDetailsTable).to.not.be.null;
