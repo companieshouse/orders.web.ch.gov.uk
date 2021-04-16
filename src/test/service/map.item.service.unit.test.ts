@@ -9,6 +9,7 @@ import {
 import {
     mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem
 } from "../__mocks__/order.mocks";
+import { DISPATCH_DAYS } from "../../config/config";
 
 const itemOptionsRegOfficeAddress = (addressRecordsType: string) => {
     return {
@@ -46,7 +47,7 @@ describe("map.item.service.unit", () => {
             expect(result.serviceName).to.equal("Order a certificate");
             expect(result.titleText).to.equal("Certificate ordered");
             expect(result.pageTitle).to.equal("Certificate ordered confirmation");
-            expect(result.happensNext).to.equal("We'll prepare the certificate and aim to dispatch it within 10 working days.");
+            expect(result.happensNext).to.equal("We'll prepare the certificate and aim to dispatch it within " + DISPATCH_DAYS + " working days.");
             expect(result.orderDetailsTable).to.not.be.empty;
         });
 
@@ -56,7 +57,7 @@ describe("map.item.service.unit", () => {
             expect(result.serviceName).to.equal("Order a certificate");
             expect(result.titleText).to.equal("Certificate ordered");
             expect(result.pageTitle).to.equal("Certificate ordered confirmation");
-            expect(result.happensNext).to.equal("We'll prepare the certificate and aim to dispatch it within 10 working days.");
+            expect(result.happensNext).to.equal("We'll prepare the certificate and aim to dispatch it within " + DISPATCH_DAYS + " working days.");
             expect(result.orderDetailsTable).to.not.be.empty;
         });
 
@@ -66,7 +67,7 @@ describe("map.item.service.unit", () => {
             expect(result.serviceName).to.equal("Order a certified document");
             expect(result.titleText).to.equal("Certified document order confirmed");
             expect(result.pageTitle).to.equal("Certified document order confirmation");
-            expect(result.happensNext).to.equal("We'll prepare your order and aim to dispatch it within 10 working days.");
+            expect(result.happensNext).to.equal("We'll prepare your order and aim to dispatch it within " + DISPATCH_DAYS + " working days.");
             expect(result.orderDetailsTable).to.not.be.empty;
             expect(result.filingHistoryDocuments).to.not.be.empty;
             expect(result.documentDetailsTable).to.not.be.null;
@@ -127,9 +128,9 @@ describe("map.item.service.unit", () => {
     });
 
     describe("mapDeliveryMethod", () => {
-        it("map standard to Standard delivery (dispatched within 10 working days)", () => {
+        it("map standard to Standard delivery (dispatched within the 'dispatch date config value' working days)", () => {
             const result = mapDeliveryMethod({ deliveryTimescale: "standard" });
-            expect(result).to.equal("Standard delivery (aim to dispatch within 10 working days)");
+            expect(result).to.equal("Standard delivery (aim to dispatch within " + DISPATCH_DAYS + " working days)");
         });
 
         it("maps same-day to Same Day", () => {
