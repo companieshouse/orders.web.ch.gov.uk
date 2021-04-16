@@ -46,7 +46,7 @@ describe("map.item.service.unit", () => {
             expect(result.serviceName).to.equal("Order a certificate");
             expect(result.titleText).to.equal("Certificate ordered");
             expect(result.pageTitle).to.equal("Certificate ordered confirmation");
-            expect(result.happensNext).to.equal("We'll prepare the certificate and aim to dispatch it within 4 working days.");
+            expect(result.happensNext).to.equal("We'll prepare the certificate and aim to dispatch it within 10 working days.");
             expect(result.orderDetailsTable).to.not.be.empty;
         });
 
@@ -56,7 +56,7 @@ describe("map.item.service.unit", () => {
             expect(result.serviceName).to.equal("Order a certificate");
             expect(result.titleText).to.equal("Certificate ordered");
             expect(result.pageTitle).to.equal("Certificate ordered confirmation");
-            expect(result.happensNext).to.equal("We'll prepare the certificate and aim to dispatch it within 4 working days.");
+            expect(result.happensNext).to.equal("We'll prepare the certificate and aim to dispatch it within 10 working days.");
             expect(result.orderDetailsTable).to.not.be.empty;
         });
 
