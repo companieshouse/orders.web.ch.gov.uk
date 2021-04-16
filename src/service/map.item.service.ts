@@ -139,7 +139,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                 serviceName: SERVICE_NAME_CERTIFICATES,
                 titleText: "Certificate ordered",
                 pageTitle: "Certificate ordered confirmation",
-                happensNext: "We'll prepare the certificate and aim to dispatch it within 4 working days.",
+                happensNext: "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.",
                 orderDetailsTable: certificatesOrderDetails,
                 certificateDetailsTable: 1,
                 deliveryDetailsTable: certificateDeliveryDetails
@@ -202,7 +202,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
                 serviceName: SERVICE_NAME_CERTIFICATES,
                 titleText: "Certificate ordered",
                 pageTitle: "Certificate ordered confirmation",
-                happensNext: "We'll prepare the certificate and aim to dispatch it within 4 working days.",
+                happensNext: "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.",
                 orderDetailsTable: dissolvedCertificatesOrderDetails
             };
         }
