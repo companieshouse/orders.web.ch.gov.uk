@@ -103,11 +103,11 @@ export const getPiwikURL = (item: Item):string => {
    
 
     if (item?.kind === "item#certificate") {
-        return 'data-event-id="order-confirmed-certificates"';
+        return "certificates";
     }
 
     if (item?.kind === "item#certified-copy") {
-        return 'data-event-id="order-confirmed-certified-copies"';
+        return "certified-copies";
     }
 
     return "";
