@@ -59,6 +59,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         };
 
         const itemKind = item?.kind;
+        const piwikLink = getPiwikURL(item);
 
         const mappedItem = mapItem(item, order?.deliveryDetails);
 
@@ -68,6 +69,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             orderDetails,
             paymentDetails,
             itemKind,
+            piwikLink,
             totalItemsCost,
             templateName: ORDER_COMPLETE
         });
@@ -92,6 +94,20 @@ export const getItemTypeUrlParam = (item: Item):string => {
 
     if (item?.kind === "item#missing-image-delivery") {
         return "&itemType=missing-image-delivery";
+    }
+
+    return "";
+};
+
+export const getPiwikURL = (item: Item):string => {
+   
+
+    if (item?.kind === "item#certificate") {
+        return "certificates";
+    }
+
+    if (item?.kind === "item#certified-copy") {
+        return "certified-copies";
     }
 
     return "";

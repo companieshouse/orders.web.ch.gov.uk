@@ -20,19 +20,45 @@
       }) }}
       <h1 class="govuk-heading-m">What happens next</h1>
       <p class="govuk-body">{{ happensNext | safe}}</p>
+      {% if piwikLink === "certificates" %}
+        {{ govukInsetText({
+          html: "<p class='govuk-body govuk-!-font-weight-bold'>You will not be sent an email confirmation of this order.</p> 
+          <ul class='govuk-list'>
+            <li id='print-page-link'>
+              <img src='/orders-assets/static/images/print-icon.png'  alt='print icon'/> 
+                <a class='govuk-link' href='javascript:window.print()' data-event-id='order-confirmed-certificates'>
+                  Print your order confirmation
+                </a>
+            </li>
+          </ul>"
+        }) }}
+      {% endif %}
+      {% if piwikLink === "certified-copies" %}
       {{ govukInsetText({
         html: "<p class='govuk-body govuk-!-font-weight-bold'>You will not be sent an email confirmation of this order.</p> 
-
         <ul class='govuk-list'>
-        <li id='print-page-link'>
-          <img src='/orders-assets/static/images/print-icon.png'  alt='print icon'/>
-          <a class='govuk-link' href='javascript:window.print()'>
-            Print your order confirmation
-          </a> 
-        </li>
-      </ul>"
-
+          <li id='print-page-link'>
+            <img src='/orders-assets/static/images/print-icon.png'  alt='print icon'/> 
+              <a class='govuk-link' href='javascript:window.print()' data-event-id='order-confirmed-certified-copies'>
+                Print your order confirmation
+              </a>
+          </li>
+        </ul>"
       }) }}
+      {% endif %}
+      {% if piwikLink === "" %}
+      {{ govukInsetText({
+        html: "<p class='govuk-body govuk-!-font-weight-bold'>You will not be sent an email confirmation of this order.</p> 
+        <ul class='govuk-list'>
+          <li id='print-page-link'>
+            <img src='/orders-assets/static/images/print-icon.png'  alt='print icon'/> 
+              <a class='govuk-link' href='javascript:window.print()' >
+                Print your order confirmation
+              </a>
+          </li>
+        </ul>"
+      }) }}
+      {% endif %}
       <h2 class="govuk-heading-m">Your order details</h2>
 
       {{ govukSummaryList({
