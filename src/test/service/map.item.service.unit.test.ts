@@ -246,7 +246,7 @@ describe("map.item.service.unit", () => {
                 includeAddress: true
             };
             const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors':<br><br>Correspondence address<br>");
+            expect(result).to.equal("Including directors&#39;:<br><br>Correspondence address<br>");
         });
 
         it("directorDetails with basic information plus appointment date", () => {
@@ -255,7 +255,7 @@ describe("map.item.service.unit", () => {
                 includeAppointmentDate: true
             };
             const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors':<br><br>Appointment date<br>");
+            expect(result).to.equal("Including directors&#39;:<br><br>Appointment date<br>");
         });
 
         it("directorDetails with basic information plus country of residence", () => {
@@ -264,7 +264,7 @@ describe("map.item.service.unit", () => {
                 includeCountryOfResidence: true
             };
             const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors':<br><br>Country of residence<br>");
+            expect(result).to.equal("Including directors&#39;:<br><br>Country of residence<br>");
         });
 
         it("directorDetails with basic information plus nationality", () => {
@@ -273,7 +273,7 @@ describe("map.item.service.unit", () => {
                 includeNationality: true
             };
             const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors':<br><br>Nationality<br>");
+            expect(result).to.equal("Including directors&#39;:<br><br>Nationality<br>");
         });
 
         it("directorDetails with basic information plus occupation", () => {
@@ -282,7 +282,7 @@ describe("map.item.service.unit", () => {
                 includeOccupation: true
             };
             const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors':<br><br>Occupation<br>");
+            expect(result).to.equal("Including directors&#39;:<br><br>Occupation<br>");
         });
 
         it("directorDetails with basic information plus date of birth", () => {
@@ -291,7 +291,7 @@ describe("map.item.service.unit", () => {
                 includeDobType: "partial"
             };
             const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors':<br><br>Date of birth (month and year)<br>");
+            expect(result).to.equal("Including directors&#39;:<br><br>Date of birth (month and year)<br>");
         });
 
         it("directorDetails include basic information is false", () => {
