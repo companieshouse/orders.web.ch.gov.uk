@@ -6,6 +6,7 @@ import { SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, SERVICE_NAME_
 import { mapFilingHistory } from "./filing.history.service";
 import { mapFilingHistoryDate } from "../utils/date.util";
 import { createLogger } from "ch-structured-logging";
+const escape = require("escape-html");
 
 const logger = createLogger(APPLICATION_NAME);
 const dispatchDays: string = DISPATCH_DAYS;
@@ -429,7 +430,7 @@ export const mapToHtml = (mappings: string[]): string => {
     let htmlString: string = "";
 
     mappings.forEach((element) => {
-        htmlString += element + "<br>";
+        htmlString += escape(element) + "<br>";
     });
     return htmlString;
 };
