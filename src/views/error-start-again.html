@@ -1,14 +1,12 @@
 {% extends "layout.html" %} 
 {% block header %}
 {% include "includes/cookie-banner.html" %}
-  {{ chHeader({
-    homepageUrl: "/",
-    containerClasses: "govuk-width-container",
-    assetPath: ""
+  {{ govukHeader({
+    homepageUrl: "http://gov.uk/"
   }) }}
 {% endblock %}
 
-{% block pageTitle %} Page not found {% endblock %}
+{% block pageTitle %} Page not found - Request a document - GOV.UK {% endblock %}
 
 {% set mainClasses = "govuk-main-wrapper--l" %}
 
