@@ -3,15 +3,13 @@
 
 {% block header %}
 {% include "includes/cookie-banner.html" %}
-  {{ chHeader({
-    homepageUrl: "/",
-    containerClasses: "govuk-width-container",
-    assetPath: ""
+ {{ govukHeader({
+    homepageUrl: "http://gov.uk/"
   }) }}
 {% endblock %}
 
 {% block pageTitle %}
-  Sorry, there is a problem with the service - GOV.UK
+  Sorry, there is a problem with the service - Request a document - GOV.UK
 {% endblock %}
 
 {% block content %}
