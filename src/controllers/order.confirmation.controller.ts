@@ -24,8 +24,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
-        const CERTIFICATE_PAGE_TITLE = "Certificate ordered- Order a certificate - GOV.UK";
-        const CERTIFIED_COPY_PAGE_TITLE = "Certified document order confirmed - Order a certified document- GOV.UK";
+        const CERTIFICATE_PAGE_TITLE = "Certificate ordered - Order a certificate - GOV.UK";
+        const CERTIFIED_COPY_PAGE_TITLE = "Certified document order confirmed - Order a certified document - GOV.UK";
         const MID_PAGE_TITLE = "Document Requested - Request a document - GOV.UK";
 
         logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, itemType=${itemType}, user_id=${userId}`);
