@@ -1,15 +1,16 @@
-import { ItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
-import { expect } from "chai";
+import {expect} from "chai";
 
 import {
-    mapDeliveryDetails, mapDeliveryMethod, mapCertificateType,
-    mapIncludedOnCertificate, mapItem, determineItemOptionsSelectedText, mapRegisteredOfficeAddress,
-    determineDirectorOrSecretaryOptionsText
+    mapIncludedOnCertificate, mapItem
+
 } from "../../service/map.item.service";
 import {
     mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem
 } from "../__mocks__/order.mocks";
-import { DISPATCH_DAYS } from "../../config/config";
+import {DISPATCH_DAYS} from "../../config/config";
+import {MapUtil} from "../../service/MapUtil";
+import {ItemMapper} from "../../service/ItemMapper";
+import {OtherCertificateItemMapper} from "../../service/OtherCertificateItemMapper";
 
 const itemOptionsRegOfficeAddress = (addressRecordsType: string) => {
     return {
@@ -86,12 +87,12 @@ describe("map.item.service.unit", () => {
 
     describe("mapCertificateType", () => {
         it("maps incorporation-with-all-name-changes to Incorporation with all company name changes", () => {
-            const result = mapCertificateType("incorporation-with-all-name-changes");
+            const result = ItemMapper.mapCertificateType("incorporation-with-all-name-changes");
             expect(result).to.equal("Incorporation with all company name changes");
         });
 
         it("maps dissolution to Dissolution with all company name changes", () => {
-            const result = mapCertificateType("dissolution");
+            const result = ItemMapper.mapCertificateType("dissolution");
             expect(result).to.equal("Dissolution with all company name changes");
         });
     });
@@ -109,8 +110,8 @@ describe("map.item.service.unit", () => {
                 surname: "surname",
                 poBox: "po box"
             };
-            const result = mapDeliveryDetails(deliveryDetails);
-            expect(result).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country<br>");
+            const result = ItemMapper.mapDeliveryDetails(deliveryDetails);
+            expect(result).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
         });
         it("maps full delivery details correctly", () => {
             const deliveryDetails = {
@@ -122,19 +123,19 @@ describe("map.item.service.unit", () => {
                 country: "country",
                 locality: "locality"
             };
-            const result = mapDeliveryDetails(deliveryDetails);
-            expect(result).to.equal("forename surname<br>address line 1<br>locality<br>region<br>postal code<br>country<br>");
+            const result = ItemMapper.mapDeliveryDetails(deliveryDetails);
+            expect(result).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "locality", "region", "postal code", "country"]));
         });
     });
 
     describe("mapDeliveryMethod", () => {
         it("map standard to Standard delivery (dispatched within the 'dispatch date config value' working days)", () => {
-            const result = mapDeliveryMethod({ deliveryTimescale: "standard" });
+            const result = ItemMapper.mapDeliveryMethod({deliveryTimescale: "standard"});
             expect(result).to.equal("Standard delivery (aim to dispatch within " + DISPATCH_DAYS + " working days)");
         });
 
         it("maps same-day to Same Day", () => {
-            const result = mapDeliveryMethod({ deliveryTimescale: "same-day" });
+            const result = ItemMapper.mapDeliveryMethod({deliveryTimescale: "same-day"});
             expect(result).to.equal("Same Day");
         });
     });
@@ -179,12 +180,12 @@ describe("map.item.service.unit", () => {
 
     describe("determineItemOptionsSelectedText", () => {
         it("item option defined returns Yes", () => {
-            const result = determineItemOptionsSelectedText(true);
+            const result = MapUtil.determineItemOptionsSelectedText(true);
             expect(result).to.equal("Yes");
         });
 
         it("item option undefined returns No", () => {
-            const result = determineItemOptionsSelectedText(undefined);
+            const result = MapUtil.determineItemOptionsSelectedText(undefined);
             expect(result).to.equal("No");
         });
     });
@@ -192,25 +193,25 @@ describe("map.item.service.unit", () => {
     describe("mapRegisteredOfficeAddress", () => {
         it("includeAddressRecordsType with a value of 'current' returns correct mapped text", () => {
             const itemOptions = itemOptionsRegOfficeAddress("current");
-            const result = mapRegisteredOfficeAddress(itemOptions);
+            const result = OtherCertificateItemMapper.mapRegisteredOfficeAddress(itemOptions);
             expect(result).to.equal("Current address");
         });
 
         it("includeAddressRecordsType with a value of 'current-and-previous' returns correct mapped text", () => {
             const itemOptions = itemOptionsRegOfficeAddress("current-and-previous");
-            const result = mapRegisteredOfficeAddress(itemOptions);
+            const result = OtherCertificateItemMapper.mapRegisteredOfficeAddress(itemOptions);
             expect(result).to.equal("Current address and the one previous");
         });
 
         it("includeAddressRecordsType with a value of 'current-previous-and-prior' returns correct mapped text", () => {
             const itemOptions = itemOptionsRegOfficeAddress("current-previous-and-prior");
-            const result = mapRegisteredOfficeAddress(itemOptions);
+            const result = OtherCertificateItemMapper.mapRegisteredOfficeAddress(itemOptions);
             expect(result).to.equal("Current address and the two previous");
         });
 
         it("includeAddressRecordsType with a value of 'all' returns correct mapped text", () => {
             const itemOptions = itemOptionsRegOfficeAddress("all");
-            const result = mapRegisteredOfficeAddress(itemOptions);
+            const result = OtherCertificateItemMapper.mapRegisteredOfficeAddress(itemOptions);
             expect(result).to.equal("All current and previous addresses");
         });
 
@@ -226,7 +227,7 @@ describe("map.item.service.unit", () => {
                     includeBasicInformation: true
                 }
             };
-            const result = mapRegisteredOfficeAddress(itemOptions);
+            const result = OtherCertificateItemMapper.mapRegisteredOfficeAddress(itemOptions);
             expect(result).to.equal("No");
         });
     });
@@ -236,7 +237,7 @@ describe("map.item.service.unit", () => {
             const directorDetails = {
                 includeBasicInformation: true
             };
-            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
+            const result = OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
             expect(result).to.equal("Yes");
         });
 
@@ -245,8 +246,8 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeAddress: true
             };
-            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors&#39;:<br><br>Correspondence address<br>");
+            const result = OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
+            expect(result).to.equal(MapUtil.mapToHtml(["Including directors':", "", "Correspondence address"]));
         });
 
         it("directorDetails with basic information plus appointment date", () => {
@@ -254,8 +255,8 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeAppointmentDate: true
             };
-            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors&#39;:<br><br>Appointment date<br>");
+            const result = OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
+            expect(result).to.equal(MapUtil.mapToHtml(["Including directors':", "", "Appointment date"]));
         });
 
         it("directorDetails with basic information plus country of residence", () => {
@@ -263,8 +264,8 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeCountryOfResidence: true
             };
-            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors&#39;:<br><br>Country of residence<br>");
+            const result = OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
+            expect(result).to.equal(MapUtil.mapToHtml(["Including directors':", "", "Country of residence"]));
         });
 
         it("directorDetails with basic information plus nationality", () => {
@@ -272,8 +273,8 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeNationality: true
             };
-            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors&#39;:<br><br>Nationality<br>");
+            const result = OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
+            expect(result).to.equal(MapUtil.mapToHtml(["Including directors':", "", "Nationality"]));
         });
 
         it("directorDetails with basic information plus occupation", () => {
@@ -281,8 +282,8 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeOccupation: true
             };
-            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors&#39;:<br><br>Occupation<br>");
+            const result = OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
+            expect(result).to.equal(MapUtil.mapToHtml(["Including directors':", "", "Occupation"]));
         });
 
         it("directorDetails with basic information plus date of birth", () => {
@@ -290,15 +291,15 @@ describe("map.item.service.unit", () => {
                 includeBasicInformation: true,
                 includeDobType: "partial"
             };
-            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
-            expect(result).to.equal("Including directors&#39;:<br><br>Date of birth (month and year)<br>");
+            const result = OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
+            expect(result).to.equal(MapUtil.mapToHtml(["Including directors':", "", "Date of birth (month and year)"]));
         });
 
         it("directorDetails include basic information is false", () => {
             const directorDetails = {
                 includeBasicInformation: false
             };
-            const result = determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
+            const result = OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(directorDetails, "directors");
             expect(result).to.equal("No");
         });
     });

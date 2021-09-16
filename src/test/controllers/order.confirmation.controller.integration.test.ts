@@ -10,6 +10,7 @@ import {
     ORDER_ID, mockCertificateOrderResponse, mockCertifiedCopyOrderResponse,
     mockMissingImageDeliveryOrderResponse, mockDissolvedCertificateOrderResponse
 } from "../__mocks__/order.mocks";
+import {MapUtil} from "../../service/MapUtil";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -66,7 +67,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                 chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
-                chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country<br>");
+                chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
                 chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
@@ -94,7 +95,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#companyNumberValue").text()).to.equal(mockDissolvedCertificateOrderResponse.items[0].companyNumber);
                 chai.expect($("#certificateTypeValue").text()).to.equal("Dissolution with all company name changes");
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
-                chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country<br>");
+                chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockDissolvedCertificateOrderResponse.paymentReference);
                 chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
@@ -119,7 +120,7 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect($("#companyNameValue").text()).to.equal(mockCertifiedCopyOrderResponse.items[0].companyName);
         chai.expect($("#companyNumberValue").text()).to.equal(mockCertifiedCopyOrderResponse.items[0].companyNumber);
         chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
-        chai.expect($("#deliveryAddressValue").html()).to.equal("forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country<br>");
+        chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
         chai.expect($("#filingHistoryDateValue1").text().trim()).to.equal("12 Feb 2010");
         chai.expect($("#filingHistoryTypeValue1").text().trim()).to.equal("CH01");
         chai.expect($("#filingHistoryDescriptionValue1").text().trim()).to.equal("Director's details changed for Thomas David Wheare on 12 February 2010");

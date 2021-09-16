@@ -1,153 +1,27 @@
-import { Basket, DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
-import { Order, Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions, DirectorOrSecretaryDetails } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
+import { Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { FilingHistoryDocuments } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
 
 import { SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, SERVICE_NAME_MISSING_IMAGE_DELIVERIES, APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
 import { mapFilingHistory } from "./filing.history.service";
 import { mapFilingHistoryDate } from "../utils/date.util";
-import { createLogger } from "ch-structured-logging";
-const escape = require("escape-html");
+import {ItemMapperFactory} from "./ItemMapperFactory";
+import {MapUtil} from "./MapUtil";
+import {CheckDetailsItem, ItemMapper} from "./ItemMapper";
 
-const logger = createLogger(APPLICATION_NAME);
 const dispatchDays: string = DISPATCH_DAYS;
 
-export interface CheckDetailsItem {
-    serviceUrl?: string;
-    serviceName?: string;
-    titleText?: string;
-    pageTitle?: string;
-    happensNext?: string;
-    filingHistoryDocuments?: any[];
-    orderDetailsTable?: any[];
-    documentDetailsTable?: number;
-    certificateDetailsTable?: number;
-    deliveryDetailsTable?: any[];
-}
-
-export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined): CheckDetailsItem => {
+export const mapItem = (item: Item, deliveryDetails: DeliveryDetails | undefined): CheckDetailsItem => {
     const itemKind = item?.kind;
     if (itemKind === "item#certificate") {
-        const deliveryMethod = mapDeliveryMethod(item?.itemOptions);
-        const address = mapDeliveryDetails(deliveryDetails);
-
-        const itemOptionsCertificate = item.itemOptions as CertificateItemOptions;
-        const certificateType = itemOptionsCertificate.certificateType;
-        if (certificateType === "incorporation-with-all-name-changes") {
-            const certificateDetails = {
-                certificateType: mapCertificateType(itemOptionsCertificate.certificateType),
-                includedOnCertificate: mapIncludedOnCertificate(item?.itemOptions)
-            };
-            const certificatesOrderDetails = [
-                {
-                    key: {
-                        text: "Company name",
-                        classes: "govuk-!-width-one-half"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='companyNameValue'>" + item.companyName + "</p>"
-                    }
-                },
-                {
-                    key: {
-                        text: "Company number"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='companyNumberValue'>" + item.companyNumber + "</p>"
-                    }
-                },
-                {
-                    key: {
-                        text: "Certificate type",
-                        classes: "govuk-!-width-one-half"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='certificateTypeValue'>" + certificateDetails.certificateType + "</p>"
-                    }
-                },
-                {
-                    key: {
-                        text: "Statement of good standing"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='statementOfGoodStandingValue'>" + determineItemOptionsSelectedText(itemOptionsCertificate.includeGoodStandingInformation) + "</p>"
-                    }
-                },
-                {
-                    key: {
-                        text: "Registered office address"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='registeredOfficeAddress'>" + mapRegisteredOfficeAddress(itemOptionsCertificate) + "</p>"
-                    }
-                },
-                {
-                    key: {
-                        text: "The names of all current company directors"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='currentCompanyDirectors'>" + determineDirectorOrSecretaryOptionsText(itemOptionsCertificate.directorDetails, "directors") + "</p>"
-                    }
-                },
-                {
-                    key: {
-                        text: "The names of all current company secretaries"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='currentCompanySercretaries'>" + determineDirectorOrSecretaryOptionsText(itemOptionsCertificate.secretaryDetails, "secretaries") + "</p>"
-                    }
-                },
-                {
-                    key: {
-                        text: "Company objects"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='companyObjects'>" + determineItemOptionsSelectedText(itemOptionsCertificate.includeCompanyObjectsInformation) + "</p>"
-                    }
-                }
-            ];
-            const certificateDeliveryDetails = [
-                {
-                    key: {
-                        classes: "govuk-!-width-one-half",
-                        text: "Delivery method"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='deliveryMethodValue'>" + deliveryMethod + "</p>"
-                    }
-                },
-                {
-                    key: {
-                        classes: "govuk-!-width-one-half",
-                        text: "Delivery details"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='deliveryAddressValue'>" + address + "</p>"
-                    }
-                }
-            ];
-            return {
-                serviceUrl: `/company/${item?.companyNumber}/orderable/certificates`,
-                serviceName: SERVICE_NAME_CERTIFICATES,
-                titleText: "Certificate ordered",
-                pageTitle: "Certificate ordered confirmation",
-                happensNext: "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.",
-                orderDetailsTable: certificatesOrderDetails,
-                certificateDetailsTable: 1,
-                deliveryDetailsTable: certificateDeliveryDetails
-            };
+        const itemOptions = item.itemOptions as CertificateItemOptions;
+        if (itemOptions.certificateType === "incorporation-with-all-name-changes") {
+            return new ItemMapperFactory().getItemMapper(itemOptions.companyType).getCheckDetailsItem({companyName: item?.companyName, companyNumber: item?.companyNumber, itemOptions, deliveryDetails});
         } else {
+            const deliveryMethod = ItemMapper.mapDeliveryMethod(item?.itemOptions);
+            const address = ItemMapper.mapDeliveryDetails(deliveryDetails);
             const certificateDetails = {
-                certificateType: mapCertificateType(itemOptionsCertificate.certificateType)
+                certificateType: ItemMapper.mapCertificateType(itemOptions.certificateType)
             };
             const dissolvedCertificatesOrderDetails = [
                 {
@@ -208,8 +82,8 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
             };
         }
     } else if (itemKind === "item#certified-copy") {
-        const deliveryMethod = mapDeliveryMethod(item?.itemOptions);
-        const address = mapDeliveryDetails(deliveryDetails);
+        const deliveryMethod = ItemMapper.mapDeliveryMethod(item?.itemOptions);
+        const address = ItemMapper.mapDeliveryDetails(deliveryDetails);
 
         const itemOptionsCertifiedCopy = item.itemOptions as CertifiedCopyItemOptions;
         const certifiedCopiesOrderDetails = [
@@ -330,22 +204,6 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails| undefined)
     }
 };
 
-export const mapCertificateType = (certificateType: string): string | null => {
-    if (!certificateType) {
-        return null;
-    }
-    if (certificateType === "incorporation-with-all-name-changes") {
-        return "Incorporation with all company name changes";
-    }
-
-    if (certificateType === "dissolution") {
-        return "Dissolution with all company name changes";
-    }
-
-    const cleanedCertificateType = certificateType.replace(/-/g, " ");
-    return cleanedCertificateType.charAt(0).toUpperCase() + cleanedCertificateType.slice(1);
-};
-
 export const mapIncludedOnCertificate = (itemOptions: Record<string, any>): string | null => {
     const includedOnCertificate: string[] = [];
     if (itemOptions?.includeGoodStandingInformation === true) {
@@ -371,7 +229,7 @@ export const mapFilingHistoriesDocuments = (filingHistoryDocuments: FilingHistor
     const mappedFilingHistories = filingHistoryDocuments.map(filingHistoryDocument => {
         const mappedFilingHistoryDescription = mapFilingHistory(filingHistoryDocument.filingHistoryDescription, filingHistoryDocument.filingHistoryDescriptionValues || {});
         const mappedFilingHistoryDescriptionDate = mapFilingHistoryDate(filingHistoryDocument.filingHistoryDate);
-        const mappedFilingHistoryCost = addCurrency(filingHistoryDocument.filingHistoryCost);
+        const mappedFilingHistoryCost = MapUtil.addCurrency(filingHistoryDocument.filingHistoryCost);
         return {
             filingHistoryDate: mappedFilingHistoryDescriptionDate,
             filingHistoryDescription: mappedFilingHistoryDescription,
@@ -383,116 +241,3 @@ export const mapFilingHistoriesDocuments = (filingHistoryDocuments: FilingHistor
     return mappedFilingHistories;
 };
 
-export const addCurrency = (filingHistoryCost: string) => {
-    return `£${filingHistoryCost}`;
-};
-
-export const mapDeliveryDetails = (deliveryDetails: DeliveryDetails | undefined): string => {
-    const mappings:string[] = [];
-
-    if (deliveryDetails === undefined) {
-        return "";
-    }
-
-    mappings.push(deliveryDetails.forename + " " + deliveryDetails.surname);
-    mappings.push(deliveryDetails.addressLine1);
-
-    if (deliveryDetails.addressLine2 !== "" && deliveryDetails.addressLine2 !== undefined) {
-        mappings.push(deliveryDetails.addressLine2);
-    }
-
-    mappings.push(deliveryDetails.locality);
-
-    if (deliveryDetails.region !== "" && deliveryDetails.region !== undefined) {
-        mappings.push(deliveryDetails.region);
-    }
-
-    if (deliveryDetails.postalCode !== "" && deliveryDetails.postalCode !== undefined) {
-        mappings.push(deliveryDetails.postalCode);
-    }
-
-    mappings.push(deliveryDetails.country);
-
-    return mapToHtml(mappings);
-};
-
-export const mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
-    if (itemOptions?.deliveryTimescale === "standard") {
-        return "Standard delivery (aim to dispatch within " + dispatchDays + " working days)";
-    }
-    if (itemOptions?.deliveryTimescale === "same-day") {
-        return "Same Day";
-    }
-    return null;
-};
-
-export const mapToHtml = (mappings: string[]): string => {
-    let htmlString: string = "";
-
-    mappings.forEach((element) => {
-        htmlString += escape(element) + "<br>";
-    });
-    return htmlString;
-};
-
-export const determineItemOptionsSelectedText = (itemOption: any): string => {
-    return (itemOption === undefined) ? "No" : "Yes";
-};
-
-export const mapRegisteredOfficeAddress = (itemOptions: Record<string, any>): string => {
-    const optionSelected: string | undefined =
-        itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType;
-
-    switch (optionSelected) {
-    case "current":
-        return "Current address";
-
-    case "current-and-previous":
-        return "Current address and the one previous";
-
-    case "current-previous-and-prior":
-        return "Current address and the two previous";
-
-    case "all":
-        return "All current and previous addresses";
-
-    case undefined:
-        return "No";
-
-    default:
-        logger.error(`Unable to map value for registererd office address options: ${optionSelected}`);
-        return "";
-    }
-};
-
-export const determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails : DirectorOrSecretaryDetails, officer: string) => {
-    if (directorOrSecretaryDetails === undefined || !directorOrSecretaryDetails.includeBasicInformation) {
-        return "No";
-    }
-    const directorOrSecretaryOptions:string[] = [];
-
-    if (directorOrSecretaryDetails.includeAddress) {
-        directorOrSecretaryOptions.push("Correspondence address");
-    }
-    if (directorOrSecretaryDetails.includeOccupation) {
-        directorOrSecretaryOptions.push("Occupation");
-    }
-    if (directorOrSecretaryDetails.includeDobType === "partial") {
-        directorOrSecretaryOptions.push("Date of birth (month and year)");
-    }
-    if (directorOrSecretaryDetails.includeAppointmentDate) {
-        directorOrSecretaryOptions.push("Appointment date");
-    }
-    if (directorOrSecretaryDetails.includeNationality) {
-        directorOrSecretaryOptions.push("Nationality");
-    }
-    if (directorOrSecretaryDetails.includeCountryOfResidence) {
-        directorOrSecretaryOptions.push("Country of residence");
-    }
-    if (directorOrSecretaryOptions.length > 0) {
-        directorOrSecretaryOptions.unshift("Including " + officer + "':", "");
-    } else {
-        return "Yes";
-    }
-    return mapToHtml(directorOrSecretaryOptions);
-};

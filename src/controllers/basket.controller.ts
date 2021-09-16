@@ -25,7 +25,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const checkoutApiResponse: ApiResponse<Checkout> = await checkoutBasket(accessToken);
 
         const checkoutId = checkoutApiResponse.resource?.reference;
-        logger.info(`Checkout created, checkout_id=${checkoutId}, user_id=${userId}`);
+        logger.info(`XXXXX Checkout created, checkout_id=${checkoutId}, user_id=${userId}`);
 
         // for unknown reasons, the sdk brings X-Payment-Required come back as x-payment-required
         const paymentRequired = Object.keys(checkoutApiResponse?.headers as Array<String>)
