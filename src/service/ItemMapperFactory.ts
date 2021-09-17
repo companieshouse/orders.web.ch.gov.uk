@@ -5,23 +5,12 @@ import {OtherCertificateItemMapper} from "./OtherCertificateItemMapper";
 import {LPCertificateItemMapper} from "./LPCertificateItemMapper";
 
 export class ItemMapperFactory {
+    private readonly factoryMap = new Map<string, () => ItemMapper>([
+        [CompanyType.LIMITED_PARTNERSHIP, () => { return new LPCertificateItemMapper() }],
+        [CompanyType.LIMITED_LIABILITY_PARTNERSHIP, () => { return new LLPCertificateItemMapper() }]
+    ]);
+
     getItemMapper = (companyType: CompanyType | string): ItemMapper => {
-        let itemMapper: ItemMapper;
-        switch (companyType) {
-            case CompanyType.LIMITED_LIABILITY_PARTNERSHIP: {
-                itemMapper = new LLPCertificateItemMapper();
-                break;
-            }
-            case CompanyType.LIMITED_PARTNERSHIP: {
-                itemMapper = new LPCertificateItemMapper();
-                break;
-            }
-            default: {
-                // Handle Ltd company and all other company types
-                itemMapper = new OtherCertificateItemMapper();
-                break;
-            }
-        }
-        return itemMapper;
+        return (this.factoryMap.get(companyType) || (() => { return new OtherCertificateItemMapper() }))();
     }
 }
