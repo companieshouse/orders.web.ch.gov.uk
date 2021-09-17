@@ -63,7 +63,7 @@ export class LPCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    text: "<p id='generalPartners'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.generalPartnerDetails?.includeBasicInformation)
+                    html: "<p id='generalPartners'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.generalPartnerDetails?.includeBasicInformation) + "</p>"
                 },
                 actions: {
                     items: [
@@ -79,7 +79,7 @@ export class LPCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    text: "<p id='limitedPartners'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.limitedPartnerDetails?.includeBasicInformation)
+                    html: "<p id='limitedPartners'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.limitedPartnerDetails?.includeBasicInformation) + "</p>"
                 },
                 actions: {
                     items: [
@@ -95,7 +95,7 @@ export class LPCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    text: "<p id='generalNatureOfBusiness'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.includeGeneralNatureOfBusinessInformation)
+                    html: "<p id='generalNatureOfBusiness'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.includeGeneralNatureOfBusinessInformation) + "</p>"
                 },
                 actions: {
                     items: [
@@ -108,9 +108,9 @@ export class LPCertificateItemMapper extends ItemMapper {
         ];
     }
 
-    mapPrincipalPlaceOfBusiness = (itemOptions: Record<string, any>): string => {
+    mapPrincipalPlaceOfBusiness = (itemOptions: CertificateItemOptions): string => {
         const optionSelected: string | undefined =
-            itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType;
+            itemOptions?.principalPlaceOfBusinessDetails?.includeAddressRecordsType;
 
         switch (optionSelected) {
             case "current":
@@ -129,7 +129,7 @@ export class LPCertificateItemMapper extends ItemMapper {
                 return "No";
 
             default:
-                logger.error(`Unable to map value for registererd office address options: ${optionSelected}`);
+                logger.error(`Unable to map value for principal place of business options: ${optionSelected}`);
                 return "";
         }
     }

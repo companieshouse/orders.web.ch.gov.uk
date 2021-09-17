@@ -11,8 +11,9 @@ import {DISPATCH_DAYS} from "../../config/config";
 import {MapUtil} from "../../service/MapUtil";
 import {ItemMapper} from "../../service/ItemMapper";
 import {OtherCertificateItemMapper} from "../../service/OtherCertificateItemMapper";
+import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
 
-const itemOptionsRegOfficeAddress = (addressRecordsType: string) => {
+const itemOptionsRegOfficeAddress = (addressRecordsType: string): CertificateItemOptions => {
     return {
         directorDetails: {
             includeBasicInformation: true
@@ -25,7 +26,7 @@ const itemOptionsRegOfficeAddress = (addressRecordsType: string) => {
         secretaryDetails: {
             includeBasicInformation: true
         }
-    };
+    } as CertificateItemOptions;
 };
 
 const deliveryDetails = {
@@ -226,7 +227,7 @@ describe("map.item.service.unit", () => {
                 secretaryDetails: {
                     includeBasicInformation: true
                 }
-            };
+            } as CertificateItemOptions;
             const result = OtherCertificateItemMapper.mapRegisteredOfficeAddress(itemOptions);
             expect(result).to.equal("No");
         });

@@ -90,7 +90,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
         ]
     }
 
-    static mapRegisteredOfficeAddress = (itemOptions: Record<string, any>): string => {
+    static mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
         const optionSelected: string | undefined =
             itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType;
 

@@ -95,7 +95,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
         ];
     }
 
-    mapRegisteredOfficeAddress = (itemOptions: Record<string, any>): string => {
+    mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
         const optionSelected: string | undefined =
             itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType;
 
@@ -116,7 +116,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
                 return "No";
 
             default:
-                logger.error(`Unable to map value for registererd office address options: ${optionSelected}`);
+                logger.error(`Unable to map value for registered office address options: ${optionSelected}`);
                 return "";
         }
     }
