@@ -57,7 +57,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='registeredOfficeAddress'>" + this.mapRegisteredOfficeAddress(item.itemOptions) + "</p>"
+                    html: "<p id='registeredOfficeAddress'>" + LLPCertificateItemMapper.mapRegisteredOfficeAddress(item.itemOptions) + "</p>"
                 }
             },
             {
@@ -66,7 +66,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='currentDesignatedMembersNames'>" + this.mapDesignatedMembersOptions(item.itemOptions.designatedMemberDetails) + "</p>"
+                    html: "<p id='currentDesignatedMembersNames'>" + LLPCertificateItemMapper.mapDesignatedMembersOptions(item.itemOptions.designatedMemberDetails) + "</p>"
                 },
                 actions: {
                     items: [
@@ -82,7 +82,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='currentDesignatedMembersNames'>" + this.mapMembersOptions(item.itemOptions.memberDetails) + "</p>"
+                    html: "<p id='currentDesignatedMembersNames'>" + LLPCertificateItemMapper.mapMembersOptions(item.itemOptions.memberDetails) + "</p>"
                 },
                 actions: {
                     items: [
@@ -95,7 +95,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
         ];
     }
 
-    mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
+    static mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
         const optionSelected: string | undefined =
             itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType;
 
@@ -121,7 +121,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
         }
     }
 
-    mapDesignatedMembersOptions = (designatedMembersOptions?: DesignatedMemberDetails): string => {
+    static mapDesignatedMembersOptions = (designatedMembersOptions?: DesignatedMemberDetails): string => {
         if (designatedMembersOptions === undefined || designatedMembersOptions.includeBasicInformation === undefined) {
             return "No";
         }
@@ -157,7 +157,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
         return MapUtil.mapToHtml(designatedMembersMappings);
     };
 
-    mapMembersOptions = (memberOptions?: MemberDetails): string => {
+    static mapMembersOptions = (memberOptions?: MemberDetails): string => {
         if (memberOptions === undefined || memberOptions.includeBasicInformation === undefined) {
             return "No";
         }

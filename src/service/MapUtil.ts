@@ -1,10 +1,10 @@
 const escape = require("escape-html");
 
 export abstract class MapUtil {
-    static mapToHtml = (mappings: string[]): string => {
+    static mapToHtml = (elements: string[]): string => {
         let htmlString: string = "";
 
-        mappings.forEach((element) => {
+        elements.forEach((element) => {
             htmlString += escape(element) + "<br>";
         });
         return htmlString;

@@ -54,7 +54,7 @@ export class LPCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='registeredOfficeAddress'>" + this.mapPrincipalPlaceOfBusiness(item.itemOptions) + "</p>"
+                    html: "<p id='registeredOfficeAddress'>" + LPCertificateItemMapper.mapPrincipalPlaceOfBusiness(item.itemOptions) + "</p>"
                 }
             },
             {
@@ -108,7 +108,7 @@ export class LPCertificateItemMapper extends ItemMapper {
         ];
     }
 
-    mapPrincipalPlaceOfBusiness = (itemOptions: CertificateItemOptions): string => {
+    static mapPrincipalPlaceOfBusiness = (itemOptions: CertificateItemOptions): string => {
         const optionSelected: string | undefined =
             itemOptions?.principalPlaceOfBusinessDetails?.includeAddressRecordsType;
 

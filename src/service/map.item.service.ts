@@ -204,27 +204,6 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails | undefined
     }
 };
 
-export const mapIncludedOnCertificate = (itemOptions: Record<string, any>): string | null => {
-    const includedOnCertificate: string[] = [];
-    if (itemOptions?.includeGoodStandingInformation === true) {
-        includedOnCertificate.push("Statement of good standing");
-    }
-    if (itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType !== undefined &&
-        itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType?.length !== 0) {
-        includedOnCertificate.push("Registered office address");
-    }
-    if (itemOptions?.directorDetails?.includeBasicInformation === true) {
-        includedOnCertificate.push("Directors");
-    }
-    if (itemOptions?.secretaryDetails?.includeBasicInformation === true) {
-        includedOnCertificate.push("Secretaries");
-    }
-    if (itemOptions?.includeCompanyObjectsInformation === true) {
-        includedOnCertificate.push("Company objects");
-    }
-    return includedOnCertificate.length === 0 ? "" : includedOnCertificate.reduce((accum, value) => accum + "<br/>" + value);
-};
-
 export const mapFilingHistoriesDocuments = (filingHistoryDocuments: FilingHistoryDocuments[]) => {
     const mappedFilingHistories = filingHistoryDocuments.map(filingHistoryDocument => {
         const mappedFilingHistoryDescription = mapFilingHistory(filingHistoryDocument.filingHistoryDescription, filingHistoryDocument.filingHistoryDescriptionValues || {});
