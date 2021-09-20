@@ -1,4 +1,6 @@
-import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import {CertificateItemOptions, Item, Order} from "@companieshouse/api-sdk-node/dist/services/order/order";
+import {ItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/certificates";
+import {CompanyType} from "../../model/CompanyType";
 
 export const CERTIFICATE_ID = "CRT-123456-123456";
 export const CERTIFIED_COPY_ID = "CCD-123456-123456";
@@ -25,15 +27,20 @@ export const mockCertificateItem: Item = {
         certificateType: "incorporation-with-all-name-changes",
         deliveryMethod: "postal",
         deliveryTimescale: "standard",
-        directorDetails: {},
+        directorDetails: {
+            includeBasicInformation: true
+        },
         forename: "forename",
         includeGoodStandingInformation: true,
         registeredOfficeAddressDetails: {
             includeAddressRecordsType: "current-and-previous"
         },
-        secretaryDetails: {},
-        surname: "surname"
-    },
+        secretaryDetails: {
+            includeBasicInformation: true
+        },
+        surname: "surname",
+        companyType: CompanyType.LIMITED_LIABILITY_COMPANY
+    } as CertificateItemOptions,
     etag: "abcdefg123456",
     kind: "item#certificate",
     links: {
@@ -75,7 +82,7 @@ export const mockDissolvedCertificateItem: Item = {
         registeredOfficeAddressDetails: {},
         secretaryDetails: {},
         surname: "surname"
-    },
+    } as CertificateItemOptions,
     etag: "abcdefg123456",
     kind: "item#certificate",
     links: {
