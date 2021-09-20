@@ -46,14 +46,12 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         logger.info(`Order retrieved order_id=${order.reference}, user_id=${userId}`);
 
-        const item = order.items[0];
-
         const orderDetails = {
             referenceNumber: order.reference,
             referenceNumberAriaLabel: order.reference.replace(/-/g, " hyphen "),
-            itemOptions: item.itemOptions
         };
 
+        const item = order.items[0];
 
         const totalItemsCost = `£${item?.totalItemCost}`;
 

@@ -11,8 +11,7 @@ import {
     mockMissingImageDeliveryOrderResponse, mockDissolvedCertificateOrderResponse, mockCertificateItem
 } from "../__mocks__/order.mocks";
 import {MapUtil} from "../../service/MapUtil";
-import {CertificateItemOptions, Item, Order} from "@companieshouse/api-sdk-node/dist/services/order/order";
-import {ItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/mid";
+import {Order} from "@companieshouse/api-sdk-node/dist/services/order/order";
 import {CompanyType} from "../../model/CompanyType";
 import {DobType} from "../../model/DobType";
 
@@ -28,16 +27,16 @@ const ITEM_KINDS = [{
     name: "certificate",
     url: "/orderable/certificates/CRT-123456-123456"
 },
-    {
-        kind: "item#certified-copy",
-        name: "certified-copy",
-        url: "/orderable/certified-copies/CCD-123456-123456"
-    },
-    {
-        kind: "item#missing-image-delivery",
-        name: "missing-image-delivery",
-        url: "/orderable/missing-image-delivery/MID-123456-123456"
-    }];
+{
+    kind: "item#certified-copy",
+    name: "certified-copy",
+    url: "/orderable/certified-copies/CCD-123456-123456"
+},
+{
+    kind: "item#missing-image-delivery",
+    name: "missing-image-delivery",
+    url: "/orderable/missing-image-delivery/MID-123456-123456"
+}];
 
 describe("order.confirmation.controller.integration", () => {
     beforeEach(done => {
@@ -127,7 +126,7 @@ describe("order.confirmation.controller.integration", () => {
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
                 .end((err, resp) => {
                     if (err) return done(err);
-                    const $ = cheerio.load(resp.text, {decodeEntities: false});
+                    const $ = cheerio.load(resp.text);
 
                     chai.expect(resp.status).to.equal(200);
                     chai.expect($("#orderReference").text()).to.equal(mockCertificateOrderResponse.reference);
@@ -186,7 +185,7 @@ describe("order.confirmation.controller.integration", () => {
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
             .end((err, resp) => {
                 if (err) return done(err);
-                const $ = cheerio.load(resp.text, {decodeEntities: false});
+                const $ = cheerio.load(resp.text);
 
                 chai.expect(resp.status).to.equal(200);
                 chai.expect($("#orderReference").text()).to.equal(mockCertificateOrderResponse.reference);

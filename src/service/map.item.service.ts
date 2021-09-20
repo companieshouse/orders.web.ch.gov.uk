@@ -7,7 +7,7 @@ import { mapFilingHistory } from "./filing.history.service";
 import { mapFilingHistoryDate } from "../utils/date.util";
 import {ItemMapperFactory} from "./ItemMapperFactory";
 import {MapUtil} from "./MapUtil";
-import {CheckDetailsItem, ItemMapper} from "./ItemMapper";
+import {CheckDetailsItem} from "./ItemMapper";
 
 const dispatchDays: string = DISPATCH_DAYS;
 
@@ -18,10 +18,10 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails | undefined
         if (itemOptions.certificateType === "incorporation-with-all-name-changes") {
             return new ItemMapperFactory().getItemMapper(itemOptions.companyType).getCheckDetailsItem({companyName: item?.companyName, companyNumber: item?.companyNumber, itemOptions, deliveryDetails});
         } else {
-            const deliveryMethod = ItemMapper.mapDeliveryMethod(item?.itemOptions);
-            const address = ItemMapper.mapDeliveryDetails(deliveryDetails);
+            const deliveryMethod = MapUtil.mapDeliveryMethod(item?.itemOptions);
+            const address = MapUtil.mapDeliveryDetails(deliveryDetails);
             const certificateDetails = {
-                certificateType: ItemMapper.mapCertificateType(itemOptions.certificateType)
+                certificateType: MapUtil.mapCertificateType(itemOptions.certificateType)
             };
             const dissolvedCertificatesOrderDetails = [
                 {
@@ -82,8 +82,8 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails | undefined
             };
         }
     } else if (itemKind === "item#certified-copy") {
-        const deliveryMethod = ItemMapper.mapDeliveryMethod(item?.itemOptions);
-        const address = ItemMapper.mapDeliveryDetails(deliveryDetails);
+        const deliveryMethod = MapUtil.mapDeliveryMethod(item?.itemOptions);
+        const address = MapUtil.mapDeliveryDetails(deliveryDetails);
 
         const itemOptionsCertifiedCopy = item.itemOptions as CertifiedCopyItemOptions;
         const certifiedCopiesOrderDetails = [

@@ -35,8 +35,8 @@ export abstract class ItemMapper {
     }
 
     protected getDeliveryDetailsTable = (item: { itemOptions: CertificateItemOptions, deliveryDetails: DeliveryDetails | undefined }): any => {
-        const address = ItemMapper.mapDeliveryDetails(item.deliveryDetails);
-        const deliveryMethod = ItemMapper.mapDeliveryMethod(item?.itemOptions);
+        const address = MapUtil.mapDeliveryDetails(item.deliveryDetails);
+        const deliveryMethod = MapUtil.mapDeliveryMethod(item?.itemOptions);
 
         let certificateDeliveryDetails = [
             {
@@ -67,58 +67,15 @@ export abstract class ItemMapper {
 
     abstract getOrdersDetailTable(item: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions }): any;
 
-    static mapDeliveryDetails = (deliveryDetails: DeliveryDetails | undefined): string => {
-        const mappings: string[] = [];
-
-        if (deliveryDetails === undefined) {
-            return "";
-        }
-
-        mappings.push(deliveryDetails.forename + " " + deliveryDetails.surname);
-        mappings.push(deliveryDetails.addressLine1);
-
-        if (deliveryDetails.addressLine2 !== "" && deliveryDetails.addressLine2 !== undefined) {
-            mappings.push(deliveryDetails.addressLine2);
-        }
-
-        mappings.push(deliveryDetails.locality);
-
-        if (deliveryDetails.region !== "" && deliveryDetails.region !== undefined) {
-            mappings.push(deliveryDetails.region);
-        }
-
-        if (deliveryDetails.postalCode !== "" && deliveryDetails.postalCode !== undefined) {
-            mappings.push(deliveryDetails.postalCode);
-        }
-
-        mappings.push(deliveryDetails.country);
-
-        return MapUtil.mapToHtml(mappings);
+    mapDeliveryDetails = (deliveryDetails: DeliveryDetails | undefined): string => {
+        return MapUtil.mapDeliveryDetails(deliveryDetails);
     }
 
-    static mapDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
-        if (itemOptions?.deliveryTimescale === "standard") {
-            return "Standard delivery (aim to dispatch within " + dispatchDays + " working days)";
-        }
-        if (itemOptions?.deliveryTimescale === "same-day") {
-            return "Same Day";
-        }
-        return null;
+    mapDeliveryMethod = (itemOptions: CertificateItemOptions): string | null => {
+        return MapUtil.mapDeliveryMethod(itemOptions);
     }
 
-    static mapCertificateType = (certificateType: string): string | null => {
-        if (!certificateType) {
-            return null;
-        }
-        if (certificateType === "incorporation-with-all-name-changes") {
-            return "Incorporation with all company name changes";
-        }
-
-        if (certificateType === "dissolution") {
-            return "Dissolution with all company name changes";
-        }
-
-        const cleanedCertificateType = certificateType.replace(/-/g, " ");
-        return cleanedCertificateType.charAt(0).toUpperCase() + cleanedCertificateType.slice(1);
+    mapCertificateType = (certificateType: string): string | null => {
+        return MapUtil.mapCertificateType(certificateType);
     }
 }

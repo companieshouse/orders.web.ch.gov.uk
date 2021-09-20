@@ -39,7 +39,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='certificateTypeValue'>" + OtherCertificateItemMapper.mapCertificateType(item.itemOptions.certificateType) + "</p>"
+                    html: "<p id='certificateTypeValue'>" + this.mapCertificateType(item.itemOptions.certificateType) + "</p>"
                 }
             },
             {
@@ -57,7 +57,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='registeredOfficeAddress'>" + OtherCertificateItemMapper.mapRegisteredOfficeAddress(item.itemOptions) + "</p>"
+                    html: "<p id='registeredOfficeAddress'>" + this.mapRegisteredOfficeAddress(item.itemOptions) + "</p>"
                 }
             },
             {
@@ -66,7 +66,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='currentCompanyDirectors'>" + OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(item.itemOptions.directorDetails, "directors") + "</p>"
+                    html: "<p id='currentCompanyDirectors'>" + this.determineDirectorOrSecretaryOptionsText(item.itemOptions.directorDetails, "directors") + "</p>"
                 }
             },
             {
@@ -75,7 +75,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='currentCompanySecretaries'>" + OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(item.itemOptions.secretaryDetails, "secretaries") + "</p>"
+                    html: "<p id='currentCompanySecretaries'>" + this.determineDirectorOrSecretaryOptionsText(item.itemOptions.secretaryDetails, "secretaries") + "</p>"
                 }
             },
             {
@@ -90,33 +90,11 @@ export class OtherCertificateItemMapper extends ItemMapper {
         ]
     }
 
-    static mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
-        const optionSelected: string | undefined =
-            itemOptions?.registeredOfficeAddressDetails?.includeAddressRecordsType;
-
-        switch (optionSelected) {
-            case "current":
-                return "Current address";
-
-            case "current-and-previous":
-                return "Current address and the one previous";
-
-            case "current-previous-and-prior":
-                return "Current address and the two previous";
-
-            case "all":
-                return "All current and previous addresses";
-
-            case undefined:
-                return "No";
-
-            default:
-                logger.error(`Unable to map value for registered office address options: ${optionSelected}`);
-                return "";
-        }
+    mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
+        return MapUtil.mapAddressOptions(itemOptions.registeredOfficeAddressDetails);
     }
 
-    static determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails, officer: string) => {
+    determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails, officer: string) => {
         if (directorOrSecretaryDetails === undefined || !directorOrSecretaryDetails.includeBasicInformation) {
             return "No";
         }

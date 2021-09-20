@@ -4,6 +4,9 @@ import {expect} from "chai";
 import {AddressRecordsType} from "../../model/AddressRecordsType";
 
 describe("mapPrincipalPlaceOfBusiness", () => {
+
+    const lpCertificateItemMapper: LPCertificateItemMapper = new LPCertificateItemMapper;
+
     const itemOptions = {
         principalPlaceOfBusinessDetails: {
             includeAddressRecordsType: "current"
@@ -16,7 +19,7 @@ describe("mapPrincipalPlaceOfBusiness", () => {
                 includeAddressRecordsType: AddressRecordsType.CURRENT
             }
         } as CertificateItemOptions;
-        const result = LPCertificateItemMapper.mapPrincipalPlaceOfBusiness(itemOptions);
+        const result = lpCertificateItemMapper.mapPrincipalPlaceOfBusiness(itemOptions);
         expect(result).to.equal("Current address");
     });
 
@@ -26,7 +29,7 @@ describe("mapPrincipalPlaceOfBusiness", () => {
                 includeAddressRecordsType: AddressRecordsType.CURRENT_AND_PREVIOUS
             }
         } as CertificateItemOptions;
-        const result = LPCertificateItemMapper.mapPrincipalPlaceOfBusiness(itemOptions);
+        const result = lpCertificateItemMapper.mapPrincipalPlaceOfBusiness(itemOptions);
         expect(result).to.equal("Current address and the one previous");
     });
 
@@ -36,7 +39,7 @@ describe("mapPrincipalPlaceOfBusiness", () => {
                 includeAddressRecordsType: AddressRecordsType.CURRENT_PREVIOUS_AND_PRIOR
             }
         } as CertificateItemOptions;
-        const result = LPCertificateItemMapper.mapPrincipalPlaceOfBusiness(itemOptions);
+        const result = lpCertificateItemMapper.mapPrincipalPlaceOfBusiness(itemOptions);
         expect(result).to.equal("Current address and the two previous");
     });
 
@@ -46,7 +49,7 @@ describe("mapPrincipalPlaceOfBusiness", () => {
                 includeAddressRecordsType: AddressRecordsType.ALL
             }
         } as CertificateItemOptions;
-        const result = LPCertificateItemMapper.mapPrincipalPlaceOfBusiness(itemOptions);
+        const result = lpCertificateItemMapper.mapPrincipalPlaceOfBusiness(itemOptions);
         expect(result).to.equal("All current and previous addresses");
     });
 
@@ -54,7 +57,7 @@ describe("mapPrincipalPlaceOfBusiness", () => {
         const itemOptions = {
             principalPlaceOfBusinessDetails: {}
         } as CertificateItemOptions;
-        const result = LPCertificateItemMapper.mapPrincipalPlaceOfBusiness(itemOptions);
+        const result = lpCertificateItemMapper.mapPrincipalPlaceOfBusiness(itemOptions);
         expect(result).to.equal("No");
     });
 });
