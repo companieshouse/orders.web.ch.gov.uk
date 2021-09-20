@@ -116,7 +116,7 @@ describe("LLPCertificateItemMapper unit tests", () => {
         });
     });
 
-        describe("Map members options", () => {
+    describe("Map members options", () => {
         it("should correctly map members options when undefined", () => {
             // Given
             const itemOptions = {

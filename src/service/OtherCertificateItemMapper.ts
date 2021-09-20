@@ -75,7 +75,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='currentCompanySercretaries'>" + OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(item.itemOptions.secretaryDetails, "secretaries") + "</p>"
+                    html: "<p id='currentCompanySecretaries'>" + OtherCertificateItemMapper.determineDirectorOrSecretaryOptionsText(item.itemOptions.secretaryDetails, "secretaries") + "</p>"
                 }
             },
             {

@@ -27,13 +27,17 @@ export const mockCertificateItem: Item = {
         certificateType: "incorporation-with-all-name-changes",
         deliveryMethod: "postal",
         deliveryTimescale: "standard",
-        directorDetails: {},
+        directorDetails: {
+            includeBasicInformation: true
+        },
         forename: "forename",
         includeGoodStandingInformation: true,
         registeredOfficeAddressDetails: {
             includeAddressRecordsType: "current-and-previous"
         },
-        secretaryDetails: {},
+        secretaryDetails: {
+            includeBasicInformation: true
+        },
         surname: "surname",
         companyType: CompanyType.LIMITED_LIABILITY_COMPANY
     } as CertificateItemOptions,

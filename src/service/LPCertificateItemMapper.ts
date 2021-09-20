@@ -54,7 +54,7 @@ export class LPCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='registeredOfficeAddress'>" + LPCertificateItemMapper.mapPrincipalPlaceOfBusiness(item.itemOptions) + "</p>"
+                    html: "<p id='principalPlaceOfBusiness'>" + LPCertificateItemMapper.mapPrincipalPlaceOfBusiness(item.itemOptions) + "</p>"
                 }
             },
             {

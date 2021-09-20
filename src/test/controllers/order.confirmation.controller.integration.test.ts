@@ -1,16 +1,20 @@
 import chai from "chai";
 import sinon from "sinon";
 import ioredis from "ioredis";
-import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import {Basket} from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import cheerio from "cheerio";
 
 import * as apiClient from "../../client/api.client";
-import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
+import {SIGNED_IN_COOKIE, signedInSession} from "../__mocks__/redis.mocks";
 import {
     ORDER_ID, mockCertificateOrderResponse, mockCertifiedCopyOrderResponse,
-    mockMissingImageDeliveryOrderResponse, mockDissolvedCertificateOrderResponse
+    mockMissingImageDeliveryOrderResponse, mockDissolvedCertificateOrderResponse, mockCertificateItem
 } from "../__mocks__/order.mocks";
 import {MapUtil} from "../../service/MapUtil";
+import {CertificateItemOptions, Item, Order} from "@companieshouse/api-sdk-node/dist/services/order/order";
+import {ItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/mid";
+import {CompanyType} from "../../model/CompanyType";
+import {DobType} from "../../model/DobType";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -24,16 +28,16 @@ const ITEM_KINDS = [{
     name: "certificate",
     url: "/orderable/certificates/CRT-123456-123456"
 },
-{
-    kind: "item#certified-copy",
-    name: "certified-copy",
-    url: "/orderable/certified-copies/CCD-123456-123456"
-},
-{
-    kind: "item#missing-image-delivery",
-    name: "missing-image-delivery",
-    url: "/orderable/missing-image-delivery/MID-123456-123456"
-}];
+    {
+        kind: "item#certified-copy",
+        name: "certified-copy",
+        url: "/orderable/certified-copies/CCD-123456-123456"
+    },
+    {
+        kind: "item#missing-image-delivery",
+        name: "missing-image-delivery",
+        url: "/orderable/missing-image-delivery/MID-123456-123456"
+    }];
 
 describe("order.confirmation.controller.integration", () => {
     beforeEach(done => {
@@ -49,15 +53,140 @@ describe("order.confirmation.controller.integration", () => {
         sandbox.restore();
     });
 
-    it("renders get order page on successful get order call for a certificate order", (done) => {
-        getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockCertificateOrderResponse));
+    describe("Certificate order confirmation page integration tests", () => {
+        it("Correctly renders order confirmation page on for a limited company certificate order", (done) => {
+            getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockCertificateOrderResponse));
+
+            chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+                .end((err, resp) => {
+                    if (err) return done(err);
+                    const $ = cheerio.load(resp.text);
+
+                    chai.expect(resp.status).to.equal(200);
+                    chai.expect($("#orderReference").text()).to.equal(mockCertificateOrderResponse.reference);
+                    chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
+                    chai.expect($("#companyNameValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyName);
+                    chai.expect($("#companyNumberValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyNumber);
+                    chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
+                    chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
+                    chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
+                    chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
+                    chai.expect($("#paymentAmountValue").text()).to.equal("£15");
+                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
+                    chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
+                    chai.expect($("#registeredOfficeAddress").text().trim()).to.equal("Current address and the one previous");
+                    chai.expect($("#currentCompanyDirectors").html()).to.equal("Yes");
+                    chai.expect($("#currentCompanySecretaries").html()).to.equal("Yes");
+
+                    chai.expect(getOrderStub).to.have.been.called;
+                    chai.expect(resp.text).to.not.contain("Your document details");
+                    done();
+                });
+        });
+
+        it("Correctly renders order confirmation page on for a LLP company certificate order", (done) => {
+            const certificateOrderResponse = {
+                ...mockCertificateOrderResponse,
+                items: [{
+                    ...mockCertificateItem,
+                    itemOptions: {
+                        certificateType: "incorporation-with-all-name-changes",
+                        deliveryMethod: "postal",
+                        deliveryTimescale: "standard",
+                        forename: "forename",
+                        includeGoodStandingInformation: true,
+                        registeredOfficeAddressDetails: {
+                            includeAddressRecordsType: "current-and-previous"
+                        },
+                        designatedMemberDetails: {
+                            includeAddress: true,
+                            includeAppointmentDate: true,
+                            includeBasicInformation: true,
+                            includeCountryOfResidence: true,
+                            includeDobType: DobType.PARTIAL
+                        },
+                        memberDetails: {
+                            includeAddress: true,
+                            includeAppointmentDate: true,
+                            includeBasicInformation: true,
+                            includeCountryOfResidence: true,
+                            includeDobType: DobType.PARTIAL
+                        },
+                        surname: "surname",
+                        companyType: CompanyType.LIMITED_LIABILITY_PARTNERSHIP
+                    }
+                }]
+            } as Order;
+
+            getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(certificateOrderResponse));
+
+            chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+                .end((err, resp) => {
+                    if (err) return done(err);
+                    const $ = cheerio.load(resp.text, {decodeEntities: false});
+
+                    chai.expect(resp.status).to.equal(200);
+                    chai.expect($("#orderReference").text()).to.equal(mockCertificateOrderResponse.reference);
+                    chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
+                    chai.expect($("#companyNameValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyName);
+                    chai.expect($("#companyNumberValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyNumber);
+                    chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
+                    chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
+                    chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
+                    chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
+                    chai.expect($("#paymentAmountValue").text()).to.equal("£15");
+                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
+                    chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
+                    chai.expect($("#registeredOfficeAddress").text().trim()).to.equal("Current address and the one previous");
+                    chai.expect($("#currentDesignatedMembersNames").html()).to.equal("Including designated members':<br>Correspondence address<br>Appointment date<br>Country of residence<br>Date of birth (month and year)<br>");
+                    chai.expect($("#currentMembersNames").html()).to.equal("Including members':<br>Correspondence address<br>Appointment date<br>Country of residence<br>Date of birth (month and year)<br>");
+                    chai.expect(getOrderStub).to.have.been.called;
+                    chai.expect(resp.text).to.not.contain("Your document details");
+                    done();
+                });
+        });
+
+    });
+
+    it("Correctly renders order confirmation page on for a LP company certificate order", (done) => {
+        const certificateOrderResponse = {
+            ...mockCertificateOrderResponse,
+            items: [{
+                ...mockCertificateItem,
+                itemOptions: {
+                    certificateType: "incorporation-with-all-name-changes",
+                    deliveryMethod: "postal",
+                    deliveryTimescale: "standard",
+                    forename: "forename",
+                    includeGoodStandingInformation: true,
+                    principalPlaceOfBusinessDetails: {
+                        includeAddressRecordsType: "current-and-previous"
+                    },
+                    generalPartnerDetails: {
+                        includeBasicInformation: true
+                    },
+                    limitedPartnerDetails: {
+                        includeBasicInformation: true
+                    },
+                    includeGeneralNatureOfBusinessInformation: true,
+                    surname: "surname",
+                    companyType: CompanyType.LIMITED_PARTNERSHIP
+                }
+            }]
+        } as Order;
+
+        getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(certificateOrderResponse));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
             .end((err, resp) => {
                 if (err) return done(err);
-                const $ = cheerio.load(resp.text);
+                const $ = cheerio.load(resp.text, {decodeEntities: false});
 
                 chai.expect(resp.status).to.equal(200);
                 chai.expect($("#orderReference").text()).to.equal(mockCertificateOrderResponse.reference);
@@ -71,7 +200,10 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
                 chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
-                chai.expect($("#registeredOfficeAddress").text().trim()).to.equal("Current address and the one previous");
+                chai.expect($("#principalPlaceOfBusiness").text().trim()).to.equal("Current address and the one previous");
+                chai.expect($("#generalPartners").html()).to.equal("Yes");
+                chai.expect($("#limitedPartners").html()).to.equal("Yes");
+                chai.expect($("#generalNatureOfBusiness").html()).to.equal("Yes");
                 chai.expect(getOrderStub).to.have.been.called;
                 chai.expect(resp.text).to.not.contain("Your document details");
                 done();
@@ -198,10 +330,10 @@ describe("order.confirmation.controller.integration", () => {
             },
             etag: "etag",
             items: [{
-                itemOptions: { certificateType: "incorporation-with-all-name-changes" },
+                itemOptions: {certificateType: "incorporation-with-all-name-changes"},
                 itemUri: itemKind.url,
                 kind: itemKind.kind,
-                links: { self: itemKind.url }
+                links: {self: itemKind.url}
             }]
         } as unknown as Basket;
 
@@ -243,7 +375,7 @@ describe("order.confirmation.controller.integration", () => {
             },
             itemUri: "/orderable/certificates/CRT-123456-123456",
             kind: "item#certificate",
-            links: { self: "item#certificate" },
+            links: {self: "item#certificate"},
             itemId: "CRT-123456-123456"
         }]
     } as unknown as Basket;
@@ -265,4 +397,5 @@ describe("order.confirmation.controller.integration", () => {
             .redirects(0);
         chai.expect(resp.text).to.include(`/orderable/dissolved-certificates/${dissolvedCertificatebasketCancelledFailedResponse.items?.[0].id}/check-details`);
     });
-});
+})
+;

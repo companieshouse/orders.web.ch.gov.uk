@@ -82,7 +82,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='currentDesignatedMembersNames'>" + LLPCertificateItemMapper.mapMembersOptions(item.itemOptions.memberDetails) + "</p>"
+                    html: "<p id='currentMembersNames'>" + LLPCertificateItemMapper.mapMembersOptions(item.itemOptions.memberDetails) + "</p>"
                 },
                 actions: {
                     items: [
