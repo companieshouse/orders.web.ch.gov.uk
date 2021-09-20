@@ -35,8 +35,8 @@ export abstract class ItemMapper {
     }
 
     protected getDeliveryDetailsTable = (item: { itemOptions: CertificateItemOptions, deliveryDetails: DeliveryDetails | undefined }): any => {
-        const address = MapUtil.mapDeliveryDetails(item.deliveryDetails);
-        const deliveryMethod = MapUtil.mapDeliveryMethod(item?.itemOptions);
+        const address = this.mapDeliveryDetails(item.deliveryDetails);
+        const deliveryMethod = this.mapDeliveryMethod(item?.itemOptions);
 
         let certificateDeliveryDetails = [
             {

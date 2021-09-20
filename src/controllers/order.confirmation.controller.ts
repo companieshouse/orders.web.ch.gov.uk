@@ -48,7 +48,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         const orderDetails = {
             referenceNumber: order.reference,
-            referenceNumberAriaLabel: order.reference.replace(/-/g, " hyphen "),
+            referenceNumberAriaLabel: order.reference.replace(/-/g, " hyphen ")
         };
 
         const item = order.items[0];
