@@ -2,6 +2,7 @@ import {MapUtil} from "../../service/MapUtil";
 import {expect} from "chai";
 import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { DISPATCH_DAYS } from "../../config/config";
+import {AddressRecordsType} from "../../model/AddressRecordsType";
 
 describe("MapUtil unit tests", () => {
     describe("determineItemOptionsSelectedText", () => {
@@ -91,6 +92,43 @@ describe("MapUtil unit tests", () => {
         it("maps same-day to Same Day", () => {
             const result = MapUtil.mapDeliveryMethod({deliveryTimescale: "same-day"} as CertificateItemOptions);
             expect(result).to.equal("Same Day");
+        });
+    });
+
+    describe("addressMapping unit tests", () => {
+        it("correctly handles the case where registeredOfficeAddressDetails are undefined", () => {
+            const result = MapUtil.mapAddressOptions(undefined);
+            expect(result).to.equal("No");
+        });
+
+        it("correctly handles the case where registeredOfficeAddressDetails is defined but includeAddressRecordsType is undefined", () => {
+            const result = MapUtil.mapAddressOptions({});
+            expect(result).to.equal("No");
+        });
+
+        it("correctly handles the case where registeredOfficeAddressDetails is defined but includeAddressRecordsType is defined but set to undefine", () => {
+            const result = MapUtil.mapAddressOptions({includeAddressRecordsType: undefined});
+            expect(result).to.equal("No");
+        });
+
+        it("correctly handles the case where registeredOfficeAddressDetails is defined but includeAddressRecordsType current", () => {
+            const result = MapUtil.mapAddressOptions({includeAddressRecordsType: AddressRecordsType.CURRENT});
+            expect(result).to.equal("Current address");
+        });
+
+        it("correctly handles the case where registeredOfficeAddressDetails is defined but includeAddressRecordsType current and previous", () => {
+            const result = MapUtil.mapAddressOptions({includeAddressRecordsType: AddressRecordsType.CURRENT_AND_PREVIOUS});
+            expect(result).to.equal("Current address and the one previous");
+        });
+
+        it("correctly handles the case where registeredOfficeAddressDetails is defined but includeAddressRecordsType current previous and prior", () => {
+            const result = MapUtil.mapAddressOptions({includeAddressRecordsType: AddressRecordsType.CURRENT_PREVIOUS_AND_PRIOR});
+            expect(result).to.equal("Current address and the two previous");
+        });
+
+        it("correctly handles the case where registeredOfficeAddressDetails is defined but includeAddressRecordsType ALL", () => {
+            const result = MapUtil.mapAddressOptions({includeAddressRecordsType: AddressRecordsType.ALL});
+            expect(result).to.equal("All current and previous addresses");
         });
     });
 });
