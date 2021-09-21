@@ -79,8 +79,11 @@ export abstract class MapUtil {
         return cleanedCertificateType.charAt(0).toUpperCase() + cleanedCertificateType.slice(1);
     }
 
-    static mapAddressOptions = (addressDetais: { includeAddressRecordsType?: string }): string => {
-        switch (addressDetais.includeAddressRecordsType) {
+    static mapAddressOptions = (addressDetails: { includeAddressRecordsType?: string } | undefined): string => {
+        if (addressDetails === undefined || addressDetails.includeAddressRecordsType === undefined) {
+            return "No";
+        }
+        switch (addressDetails.includeAddressRecordsType) {
             case AddressRecordsType.CURRENT:
                 return "Current address";
 
@@ -93,11 +96,8 @@ export abstract class MapUtil {
             case AddressRecordsType.ALL:
                 return "All current and previous addresses";
 
-            case undefined:
-                return "No";
-
             default:
-                logger.error(`Unable to map value for registered office address options: ${addressDetais.includeAddressRecordsType}`);
+                logger.error(`Unable to map value for registered office address options: ${addressDetails.includeAddressRecordsType}`);
                 return "";
         }
     }

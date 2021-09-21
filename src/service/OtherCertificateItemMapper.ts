@@ -91,7 +91,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
     }
 
     mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
-        return MapUtil.mapAddressOptions(itemOptions.registeredOfficeAddressDetails);
+        return MapUtil.mapAddressOptions(itemOptions?.registeredOfficeAddressDetails);
     }
 
     determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails, officer: string) => {

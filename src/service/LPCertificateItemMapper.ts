@@ -109,6 +109,6 @@ export class LPCertificateItemMapper extends ItemMapper {
     }
 
     mapPrincipalPlaceOfBusiness = (itemOptions: CertificateItemOptions): string => {
-        return MapUtil.mapAddressOptions(itemOptions.principalPlaceOfBusinessDetails);
+        return MapUtil.mapAddressOptions(itemOptions?.principalPlaceOfBusinessDetails);
     }
 }

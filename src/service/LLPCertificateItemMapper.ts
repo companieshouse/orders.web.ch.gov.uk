@@ -96,7 +96,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
     }
 
     mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
-        return MapUtil.mapAddressOptions(itemOptions.registeredOfficeAddressDetails);
+        return MapUtil.mapAddressOptions(itemOptions?.registeredOfficeAddressDetails);
     }
 
     mapDesignatedMembersOptions = (designatedMembersOptions?: DesignatedMemberDetails): string => {
