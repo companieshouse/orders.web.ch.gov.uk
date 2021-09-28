@@ -2,11 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { Session } from "@companieshouse/node-session-handler";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
-import { CertificateItemOptions, Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { CertificateItemOptions, Item } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
-import { getOrder, getBasket } from "../client/api.client";
+import { getCheckout, getBasket } from "../client/api.client";
 import { ORDER_COMPLETE } from "../model/template.paths";
 import { APPLICATION_NAME } from "../config/config";
 import { mapItem } from "../service/map.item.service";
@@ -38,33 +39,33 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             return res.redirect(redirectUrl);
         };
 
-        const order: Order = await getOrder(accessToken, orderId);
+        const checkout: Checkout = await getCheckout(accessToken, orderId);
         if (itemType === undefined || itemType === "") {
-            const item = order?.items?.[0];
+            const item = checkout?.items?.[0];
             return res.redirect(req.originalUrl + getItemTypeUrlParam(item));
         }
 
-        logger.info(`Order retrieved order_id=${order.reference}, user_id=${userId}`);
+        logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);
 
         const orderDetails = {
-            referenceNumber: order.reference,
-            referenceNumberAriaLabel: order.reference.replace(/-/g, " hyphen ")
+            referenceNumber: checkout.reference,
+            referenceNumberAriaLabel: checkout.reference.replace(/-/g, " hyphen ")
         };
 
-        const item = order.items[0];
+        const item = checkout.items[0];
 
         const totalItemsCost = `£${item?.totalItemCost}`;
 
         const paymentDetails = {
-            amount: "£" + order?.totalOrderCost,
-            paymentReference: order?.paymentReference,
-            orderedAt: mapDate(order?.orderedAt)
+            amount: "£" + checkout?.totalOrderCost,
+            paymentReference: checkout?.paymentReference,
+            orderedAt: mapDate(checkout?.paidAt)
         };
 
         const itemKind = item?.kind;
         const piwikLink = getPiwikURL(item);
 
-        const mappedItem = mapItem(item, order?.deliveryDetails);
+        const mappedItem = mapItem(item, checkout?.deliveryDetails);
 
         const pageTitle = item?.kind === "item#certificate" ? CERTIFICATE_PAGE_TITLE : item?.kind === "item#certified-copy"
             ? CERTIFIED_COPY_PAGE_TITLE : item?.kind === "item#missing-image-delivery" ? MID_PAGE_TITLE : "";

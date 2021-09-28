@@ -1,6 +1,6 @@
-import {CertificateItemOptions, Item, Order} from "@companieshouse/api-sdk-node/dist/services/order/order";
-import {ItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/certificates";
-import {CompanyType} from "../../model/CompanyType";
+import { CertificateItemOptions, Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout"
+import { CompanyType } from "../../model/CompanyType";
 
 export const CERTIFICATE_ID = "CRT-123456-123456";
 export const CERTIFIED_COPY_ID = "CCD-123456-123456";
@@ -98,14 +98,16 @@ export const mockDissolvedCertificateItem: Item = {
     satisfiedAt: "2020-05-15T08:41:05.798Z"
 };
 
-export const mockCertificateOrderResponse: Order = {
-    orderedAt: "2019-12-16T09:16:17.791Z",
-    orderedBy: {
+export const mockCertificateCheckoutResponse: Checkout = {
+    paidAt: "2019-12-16T09:16:17.791Z",
+    status: "pending",
+    checkedOutBy: {
         id: "123456",
         email: "email@examlpe.come"
     },
     links: {
-        self: `/orders/${ORDER_ID}`
+        self: `/orders/${ORDER_ID}`,
+        payment: `"/basket/checkouts/${ORDER_ID}/payment"`
     },
     paymentReference: "1234567",
     etag: "abcdefghijk123456789",
@@ -126,14 +128,16 @@ export const mockCertificateOrderResponse: Order = {
     reference: ORDER_ID
 };
 
-export const mockDissolvedCertificateOrderResponse: Order = {
-    orderedAt: "2019-12-16T09:16:17.791Z",
-    orderedBy: {
+export const mockDissolvedCertificateCheckoutResponse: Checkout = {
+    paidAt: "2019-12-16T09:16:17.791Z",
+    status: "pending",
+    checkedOutBy: {
         id: "123456",
         email: "email@examlpe.come"
     },
     links: {
-        self: `/orders/${ORDER_ID}`
+        self: `/orders/${ORDER_ID}`,
+        payment: `"/basket/checkouts/${ORDER_ID}/payment"`
     },
     paymentReference: "1234567",
     etag: "abcdefghijk123456789",
@@ -211,14 +215,16 @@ export const mockCertifiedCopyItem: Item = {
     satisfiedAt: "2020-05-15T08:41:05.798Z"
 };
 
-export const mockCertifiedCopyOrderResponse: Order = {
-    orderedAt: "2019-12-16T09:16:17.791Z",
-    orderedBy: {
+export const mockCertifiedCopyCheckoutResponse: Checkout = {
+    paidAt: "2019-12-16T09:16:17.791Z",
+    status: "pending",
+    checkedOutBy: {
         id: "123456",
         email: "email@examlpe.come"
     },
     links: {
-        self: `/orders/${ORDER_ID}`
+        self: `/orders/${ORDER_ID}`,
+        payment: `"/basket/checkouts/${ORDER_ID}/payment"`
     },
     paymentReference: "1234567",
     etag: "abcdefghijk123456789",
@@ -279,19 +285,21 @@ export const mockMissingImageDeliveryItem: Item = {
     postalDelivery: false
 };
 
-export const mockMissingImageDeliveryOrderResponse: Order = {
+export const mockMissingImageDeliveryCheckoutResponse: Checkout = {
     paymentReference: "q4nn5UxZiZxVG2e",
     etag: "80bd2953c79729aa0885f6987208690341376db0",
     items: [mockMissingImageDeliveryItem],
     kind: "order",
     totalOrderCost: "3",
     reference: ORDER_ID,
-    orderedAt: "2020-10-07T11:09:46.196",
-    orderedBy: {
-        email: "demo@ch.gov.uk",
-        id: "67ZeMsvAEgkBWs7tNKacdrPvOmQ"
+    paidAt: "2020-10-07T11:09:46.196",
+    status: "pending",
+    checkedOutBy: {
+        id: "123456",
+        email: "email@example.come"
     },
     links: {
-        self: "/orders/" + ORDER_ID
+        self: "/orders/" + ORDER_ID,
+        payment: `"/basket/checkouts/${ORDER_ID}/payment"`
     }
 };
