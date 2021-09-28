@@ -1,19 +1,19 @@
 import chai from "chai";
 import sinon from "sinon";
 import ioredis from "ioredis";
-import {Basket} from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import cheerio from "cheerio";
 
 import * as apiClient from "../../client/api.client";
-import {SIGNED_IN_COOKIE, signedInSession} from "../__mocks__/redis.mocks";
+import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 import {
-    ORDER_ID, mockCertificateOrderResponse, mockCertifiedCopyOrderResponse,
-    mockMissingImageDeliveryOrderResponse, mockDissolvedCertificateOrderResponse, mockCertificateItem
+    ORDER_ID, mockCertificateCheckoutResponse, mockCertifiedCopyCheckoutResponse,
+    mockMissingImageDeliveryCheckoutResponse, mockDissolvedCertificateCheckoutResponse, mockCertificateItem
 } from "../__mocks__/order.mocks";
-import {MapUtil} from "../../service/MapUtil";
-import {Order} from "@companieshouse/api-sdk-node/dist/services/order/order";
-import {CompanyType} from "../../model/CompanyType";
-import {DobType} from "../../model/DobType";
+import { MapUtil } from "../../service/MapUtil";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout"
+import { CompanyType } from "../../model/CompanyType";
+import { DobType } from "../../model/DobType";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -54,7 +54,7 @@ describe("order.confirmation.controller.integration", () => {
 
     describe("Certificate order confirmation page integration tests", () => {
         it("Correctly renders order confirmation page on for a limited company certificate order", (done) => {
-            getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockCertificateOrderResponse));
+            getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockCertificateCheckoutResponse));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -64,16 +64,16 @@ describe("order.confirmation.controller.integration", () => {
                     const $ = cheerio.load(resp.text);
 
                     chai.expect(resp.status).to.equal(200);
-                    chai.expect($("#orderReference").text()).to.equal(mockCertificateOrderResponse.reference);
+                    chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
                     chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
-                    chai.expect($("#companyNameValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyName);
-                    chai.expect($("#companyNumberValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyNumber);
+                    chai.expect($("#companyNameValue").text()).to.equal(mockCertificateCheckoutResponse.items[0].companyName);
+                    chai.expect($("#companyNumberValue").text()).to.equal(mockCertificateCheckoutResponse.items[0].companyNumber);
                     chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                     chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
                     chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
                     chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                     chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
+                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
                     chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
                     chai.expect($("#registeredOfficeAddress").text().trim()).to.equal("Current address and the one previous");
                     chai.expect($("#currentCompanyDirectors").html()).to.equal("Yes");
@@ -86,8 +86,8 @@ describe("order.confirmation.controller.integration", () => {
         });
 
         it("Correctly renders order confirmation page on for a LLP company certificate order", (done) => {
-            const certificateOrderResponse = {
-                ...mockCertificateOrderResponse,
+            const certificateCheckoutResponse = {
+                ...mockCertificateCheckoutResponse,
                 items: [{
                     ...mockCertificateItem,
                     itemOptions: {
@@ -117,9 +117,9 @@ describe("order.confirmation.controller.integration", () => {
                         companyType: CompanyType.LIMITED_LIABILITY_PARTNERSHIP
                     }
                 }]
-            } as Order;
+            } as Checkout;
 
-            getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(certificateOrderResponse));
+            getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(certificateCheckoutResponse));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -129,16 +129,16 @@ describe("order.confirmation.controller.integration", () => {
                     const $ = cheerio.load(resp.text);
 
                     chai.expect(resp.status).to.equal(200);
-                    chai.expect($("#orderReference").text()).to.equal(mockCertificateOrderResponse.reference);
+                    chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
                     chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
-                    chai.expect($("#companyNameValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyName);
-                    chai.expect($("#companyNumberValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyNumber);
+                    chai.expect($("#companyNameValue").text()).to.equal(mockCertificateCheckoutResponse.items[0].companyName);
+                    chai.expect($("#companyNumberValue").text()).to.equal(mockCertificateCheckoutResponse.items[0].companyNumber);
                     chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                     chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
                     chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
                     chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                     chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
+                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
                     chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
                     chai.expect($("#registeredOfficeAddress").text().trim()).to.equal("Current address and the one previous");
                     chai.expect($("#currentDesignatedMembersNames").html()).to.equal("Including designated members':<br>Correspondence address<br>Appointment date<br>Country of residence<br>Date of birth (month and year)<br>");
@@ -152,8 +152,8 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("Correctly renders order confirmation page on for a LP company certificate order", (done) => {
-        const certificateOrderResponse = {
-            ...mockCertificateOrderResponse,
+        const certificateCheckoutResponse = {
+            ...mockCertificateCheckoutResponse,
             items: [{
                 ...mockCertificateItem,
                 itemOptions: {
@@ -176,9 +176,9 @@ describe("order.confirmation.controller.integration", () => {
                     companyType: CompanyType.LIMITED_PARTNERSHIP
                 }
             }]
-        } as Order;
+        } as Checkout;
 
-        getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(certificateOrderResponse));
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(certificateCheckoutResponse));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -188,16 +188,16 @@ describe("order.confirmation.controller.integration", () => {
                 const $ = cheerio.load(resp.text);
 
                 chai.expect(resp.status).to.equal(200);
-                chai.expect($("#orderReference").text()).to.equal(mockCertificateOrderResponse.reference);
+                chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
                 chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
-                chai.expect($("#companyNameValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyName);
-                chai.expect($("#companyNumberValue").text()).to.equal(mockCertificateOrderResponse.items[0].companyNumber);
+                chai.expect($("#companyNameValue").text()).to.equal(mockCertificateCheckoutResponse.items[0].companyName);
+                chai.expect($("#companyNumberValue").text()).to.equal(mockCertificateCheckoutResponse.items[0].companyNumber);
                 chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                 chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
                 chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateOrderResponse.paymentReference);
+                chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
                 chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
                 chai.expect($("#principalPlaceOfBusiness").text().trim()).to.equal("Current address and the one previous");
                 chai.expect($("#generalPartners").html()).to.equal("Yes");
@@ -209,8 +209,8 @@ describe("order.confirmation.controller.integration", () => {
             });
     });
 
-    it("renders get order page on successful get order call for a dissolved certificate order", (done) => {
-        getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockDissolvedCertificateOrderResponse));
+    it("renders get order page on successful get checkout call for a dissolved certificate order", (done) => {
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockDissolvedCertificateCheckoutResponse));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -220,15 +220,15 @@ describe("order.confirmation.controller.integration", () => {
                 const $ = cheerio.load(resp.text);
 
                 chai.expect(resp.status).to.equal(200);
-                chai.expect($("#orderReference").text()).to.equal(mockDissolvedCertificateOrderResponse.reference);
+                chai.expect($("#orderReference").text()).to.equal(mockDissolvedCertificateCheckoutResponse.reference);
                 chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
-                chai.expect($("#companyNameValue").text()).to.equal(mockDissolvedCertificateOrderResponse.items[0].companyName);
-                chai.expect($("#companyNumberValue").text()).to.equal(mockDissolvedCertificateOrderResponse.items[0].companyNumber);
+                chai.expect($("#companyNameValue").text()).to.equal(mockDissolvedCertificateCheckoutResponse.items[0].companyName);
+                chai.expect($("#companyNumberValue").text()).to.equal(mockDissolvedCertificateCheckoutResponse.items[0].companyNumber);
                 chai.expect($("#certificateTypeValue").text()).to.equal("Dissolution with all company name changes");
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
                 chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                chai.expect($("#paymentReferenceValue").text()).to.equal(mockDissolvedCertificateOrderResponse.paymentReference);
+                chai.expect($("#paymentReferenceValue").text()).to.equal(mockDissolvedCertificateCheckoutResponse.paymentReference);
                 chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
                 chai.expect(getOrderStub).to.have.been.called;
                 chai.expect(resp.text).to.not.contain("Your document details");
@@ -236,8 +236,8 @@ describe("order.confirmation.controller.integration", () => {
             });
     });
 
-    it("renders get order page on successful get order call for a certified copy order", async () => {
-        getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockCertifiedCopyOrderResponse));
+    it("renders get order page on successful get checkout call for a certified copy order", async () => {
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockCertifiedCopyCheckoutResponse));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certified-copy`)
@@ -246,10 +246,10 @@ describe("order.confirmation.controller.integration", () => {
         const $ = cheerio.load(resp.text);
 
         chai.expect(resp.status).to.equal(200);
-        chai.expect($("#orderReference").text()).to.equal(mockCertifiedCopyOrderResponse.reference);
+        chai.expect($("#orderReference").text()).to.equal(mockCertifiedCopyCheckoutResponse.reference);
         chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
-        chai.expect($("#companyNameValue").text()).to.equal(mockCertifiedCopyOrderResponse.items[0].companyName);
-        chai.expect($("#companyNumberValue").text()).to.equal(mockCertifiedCopyOrderResponse.items[0].companyNumber);
+        chai.expect($("#companyNameValue").text()).to.equal(mockCertifiedCopyCheckoutResponse.items[0].companyName);
+        chai.expect($("#companyNumberValue").text()).to.equal(mockCertifiedCopyCheckoutResponse.items[0].companyNumber);
         chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
         chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
         chai.expect($("#filingHistoryDateValue1").text().trim()).to.equal("12 Feb 2010");
@@ -261,15 +261,15 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect($("#filingHistoryDescriptionValue2").text().trim()).to.equal("Group of companies' accounts made up to 31 August 2008");
         chai.expect($("#filingHistoryFeeValue2").text().trim()).to.equal("£15");
         chai.expect($("#paymentAmountValue").text()).to.equal("£30");
-        chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertifiedCopyOrderResponse.paymentReference);
+        chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertifiedCopyCheckoutResponse.paymentReference);
         chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
         chai.expect(resp.text).to.not.contain("certificateTypeValue");
         chai.expect(resp.text).to.not.contain("includedOnCertificateValue");
         chai.expect(getOrderStub).to.have.been.called;
     });
 
-    it("renders get order page on successful get order call for a missing image delivery order", async () => {
-        getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockMissingImageDeliveryOrderResponse));
+    it("renders get order page on successful get checkout call for a missing image delivery order", async () => {
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockMissingImageDeliveryCheckoutResponse));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=missing-image-delivery`)
@@ -278,15 +278,15 @@ describe("order.confirmation.controller.integration", () => {
         const $ = cheerio.load(resp.text);
 
         chai.expect(resp.status).to.equal(200);
-        chai.expect($("#orderReference").text()).to.equal(mockMissingImageDeliveryOrderResponse.reference);
+        chai.expect($("#orderReference").text()).to.equal(mockMissingImageDeliveryCheckoutResponse.reference);
         chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
-        chai.expect($("#companyNameValue").text()).to.equal(mockMissingImageDeliveryOrderResponse.items[0].companyName);
-        chai.expect($("#companyNumberValue").text()).to.equal(mockMissingImageDeliveryOrderResponse.items[0].companyNumber);
+        chai.expect($("#companyNameValue").text()).to.equal(mockMissingImageDeliveryCheckoutResponse.items[0].companyName);
+        chai.expect($("#companyNumberValue").text()).to.equal(mockMissingImageDeliveryCheckoutResponse.items[0].companyNumber);
         chai.expect($("#filingHistoryDateValue").text().trim()).to.equal("26 May 2015");
         chai.expect($("#filingHistoryTypeValue").text().trim()).to.equal("AP01");
         chai.expect($("#filingHistoryDescriptionValue").text().trim()).to.equal("Appointment of Mr Richard John Harris as a director");
         chai.expect($("#paymentAmountValue").text()).to.equal("£3");
-        chai.expect($("#paymentReferenceValue").text()).to.equal(mockMissingImageDeliveryOrderResponse.paymentReference);
+        chai.expect($("#paymentReferenceValue").text()).to.equal(mockMissingImageDeliveryCheckoutResponse.paymentReference);
         chai.expect($("#paymentTimeValue").text()).to.equal("07 October 2020 - 11:09:46");
         chai.expect(resp.text).to.not.contain("certificateTypeValue");
         chai.expect(resp.text).to.not.contain("includedOnCertificateValue");
@@ -294,7 +294,7 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("redirects and applies the itemType query param", async () => {
-        getOrderStub = sandbox.stub(apiClient, "getOrder").returns(Promise.resolve(mockCertificateOrderResponse));
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockCertificateCheckoutResponse));
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
@@ -396,5 +396,4 @@ describe("order.confirmation.controller.integration", () => {
             .redirects(0);
         chai.expect(resp.text).to.include(`/orderable/dissolved-certificates/${dissolvedCertificatebasketCancelledFailedResponse.items?.[0].id}/check-details`);
     });
-})
-;
+});
