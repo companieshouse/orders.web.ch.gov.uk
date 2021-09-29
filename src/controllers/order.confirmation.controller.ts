@@ -56,10 +56,21 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         const totalItemsCost = `£${item?.totalItemCost}`;
 
+        let paymentReference: string = checkout?.paymentReference;
+        let paidAt: string = checkout?.paidAt;
+
+        // A race condition exists with the payment, therefore it is sometimes required to retry
+        if (paidAt === undefined || paymentReference === undefined) {
+            logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} user_id=${userId} - retrying get checkout`);
+            const retryCheckout: Checkout = await getCheckout(accessToken, orderId);
+            paidAt = retryCheckout.paidAt;
+            paymentReference = retryCheckout.paymentReference;
+        }
+
         const paymentDetails = {
             amount: "£" + checkout?.totalOrderCost,
             paymentReference: checkout?.paymentReference,
-            orderedAt: mapDate(checkout?.paidAt)
+            orderedAt: mapDate(paidAt)
         };
 
         const itemKind = item?.kind;
