@@ -59,7 +59,7 @@ export class LPCertificateItemMapper extends ItemMapper {
             },
             {
                 key: {
-                    text: "General Partners"
+                    text: "The names of all current general partners"
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
@@ -68,14 +68,14 @@ export class LPCertificateItemMapper extends ItemMapper {
                 actions: {
                     items: [
                         {
-                            visuallyHiddenText: "general partners"
+                            visuallyHiddenText: "current general partners names"
                         }
                     ]
                 }
             },
             {
                 key: {
-                    text: "Limited Partners"
+                    text: "The names of all current limited partners"
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
@@ -84,7 +84,7 @@ export class LPCertificateItemMapper extends ItemMapper {
                 actions: {
                     items: [
                         {
-                            visuallyHiddenText: "limited partners"
+                            visuallyHiddenText: "current limited partners names"
                         }
                     ]
                 }

@@ -62,7 +62,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
             },
             {
                 key: {
-                    text: "The names of all designated members"
+                    text: "The names of all current designated members"
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
@@ -78,7 +78,7 @@ export class LLPCertificateItemMapper extends ItemMapper {
             },
             {
                 key: {
-                    text: "The names of members"
+                    text: "The names of all current members"
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
