@@ -14,6 +14,7 @@ import { MapUtil } from "../../service/MapUtil";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout"
 import { CompanyType } from "../../model/CompanyType";
 import { DobType } from "../../model/DobType";
+import { ITEM_MAPPER_FACTORY_CONFIG } from "../../config/config";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -39,6 +40,8 @@ const ITEM_KINDS = [{
 }];
 
 describe("order.confirmation.controller.integration", () => {
+    ITEM_MAPPER_FACTORY_CONFIG.config = { llpCertificateOrdersEnabled: "true", lpCertificateOrdersEnabled: "true" }
+
     beforeEach(done => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
