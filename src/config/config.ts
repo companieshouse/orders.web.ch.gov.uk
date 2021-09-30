@@ -37,9 +37,6 @@ export const SERVICE_NAME_GENERIC = "";
 
 export const DISPATCH_DAYS = getEnvironmentValue("DISPATCH_DAYS");
 
-export const DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED = getEnvironmentValue("DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED", "false");
+export const DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED = getEnvironmentValue("DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED", "false") === "true";
 
-export const DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED = getEnvironmentValue("DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED", "false");
-
-export const ITEM_MAPPER_FACTORY_CONFIG = new ItemMapperFactoryConfig({ llpCertificateOrdersEnabled: DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED,
-                                            lpCertificateOrdersEnabled: DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED });
+export const DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED = getEnvironmentValue("DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED", "false") === "true";

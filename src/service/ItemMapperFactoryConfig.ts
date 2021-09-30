@@ -1,29 +1,26 @@
-import {ItemMapperFactory} from "../service/ItemMapperFactory";
-import {OtherCertificateItemMapper} from "../service/OtherCertificateItemMapper";
+import {ItemMapperFactory} from "./ItemMapperFactory";
+import {OtherCertificateItemMapper} from "./OtherCertificateItemMapper";
 import {CompanyType} from "../model/CompanyType";
-import {ItemMapper} from "../service/ItemMapper";
-import {LLPCertificateItemMapper} from "../service/LLPCertificateItemMapper";
-import {LPCertificateItemMapper} from "../service/LPCertificateItemMapper";
-
-type Config =  { llpCertificateOrdersEnabled: boolean, lpCertificateOrdersEnabled: boolean };
+import {ItemMapper} from "./ItemMapper";
+import {LLPCertificateItemMapper} from "./LLPCertificateItemMapper";
+import {LPCertificateItemMapper} from "./LPCertificateItemMapper";
+import {DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED, DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED} from "../config/config";
 
 export class ItemMapperFactoryConfig {
-    public constructor(private _config: Config) {
+    public constructor(private readonly dynamicLPCertificateOrdersEnabled, private readonly dynamicLLPCertificateOrdersEnabled) {
     }
 
     getInstance = () => {
         const typeSpecificItemMappers: [CompanyType,  () => ItemMapper][] = [];
-        if (this._config.llpCertificateOrdersEnabled) {
+        if (this.dynamicLLPCertificateOrdersEnabled) {
             typeSpecificItemMappers.push([CompanyType.LIMITED_LIABILITY_PARTNERSHIP, () => { return new LLPCertificateItemMapper() }]);
         }
-        if (this._config.lpCertificateOrdersEnabled) {
+        if (this.dynamicLPCertificateOrdersEnabled) {
             typeSpecificItemMappers.push([CompanyType.LIMITED_PARTNERSHIP, () => { return new LPCertificateItemMapper() }]);
         }
 
         return new ItemMapperFactory(typeSpecificItemMappers, () => {return new OtherCertificateItemMapper()});
     }
-
-    set config(value: Config) {
-        this._config = value;
-    }
 }
+
+export const ITEM_MAPPER_FACTORY_CONFIG = new ItemMapperFactoryConfig(DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED, DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED);

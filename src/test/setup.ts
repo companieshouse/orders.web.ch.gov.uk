@@ -18,3 +18,9 @@ process.env.CHS_URL = "http://chsurl.co";
 process.env.PIWIK_SITE_ID = "test";
 process.env.PIWIK_URL = "test";
 process.env.DISPATCH_DAYS = "10";
+process.env.DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED = "true";
+process.env.DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED = "true";
+
+
+
+
