@@ -6,6 +6,7 @@ export const CERTIFICATE_ID = "CRT-123456-123456";
 export const CERTIFIED_COPY_ID = "CCD-123456-123456";
 export const MISSING_IMAGE_DELIVERY_ID = "MID-123456-123456";
 export const ORDER_ID = "ORD-123456-123456";
+export const ACCESS_TOKEN = "oKi1z8KY0gXsXu__hy2-YU_JJSdtxOkJ4K5MAE-gOFVzpKt5lvqnFpVeUjhqhVHZ1K8Hkr7M4IYdzJUnOz2hQw"
 
 export const mockCertificateItem: Item = {
     id: CERTIFICATE_ID,

@@ -1,8 +1,11 @@
 import { Basket, BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/basket";
-import chai from "chai";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
+import * as apiClient from "../../client/api.client";
+import chai, { expect } from "chai";
+import sinon from "sinon";
 
-import { getItemTypeUrlParam, getRedirectUrl } from "../../controllers/order.confirmation.controller";
-import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem } from "../__mocks__/order.mocks";
+import { getItemTypeUrlParam, getRedirectUrl, retryGetCheckout } from "../../controllers/order.confirmation.controller";
+import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem, mockCertificateCheckoutResponse, ACCESS_TOKEN, ORDER_ID } from "../__mocks__/order.mocks";
 
 describe("order.confirmation.controller.unit", () => {
     describe("getItemTypeUrlParam", () => {
@@ -58,5 +61,20 @@ describe("order.confirmation.controller.unit", () => {
 
         const result = getRedirectUrl(basketItem, "itemId");
         chai.expect(result).to.contain("/check-details");
+    });
+
+    it("retry checkout", async() => {
+        const sandbox = sinon.createSandbox();
+
+        const getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockCertificateCheckoutResponse));
+
+        const mockCheckoutResponse = mockCertificateCheckoutResponse;
+
+        const result = await retryGetCheckout(ACCESS_TOKEN, ORDER_ID);
+        expect(result[0]).to.equal(mockCheckoutResponse.paidAt)
+        expect(result[1]).to.equal(mockCheckoutResponse.paymentReference)
+
+        sandbox.reset();
+        sandbox.restore();
     });
 });
