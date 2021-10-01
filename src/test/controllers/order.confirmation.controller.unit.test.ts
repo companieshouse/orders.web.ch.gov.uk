@@ -63,16 +63,14 @@ describe("order.confirmation.controller.unit", () => {
         chai.expect(result).to.contain("/check-details");
     });
 
-    it("retry checkout", async() => {
+    it("retry checkout", async () => {
         const sandbox = sinon.createSandbox();
-
         const getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockCertificateCheckoutResponse));
-
         const mockCheckoutResponse = mockCertificateCheckoutResponse;
 
         const result = await retryGetCheckout(ACCESS_TOKEN, ORDER_ID);
         expect(result[0]).to.equal(mockCheckoutResponse.paidAt)
-        expect(result[1]).to.equal(mockCheckoutResponse.paymentReference)
+        expect(result[1]).to.equal(mockCheckoutResponse.paymentReference);
 
         sandbox.reset();
         sandbox.restore();
