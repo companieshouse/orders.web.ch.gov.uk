@@ -40,7 +40,7 @@ export const mockCertificateItem: Item = {
             includeBasicInformation: true
         },
         surname: "surname",
-        companyType: CompanyType.LIMITED_LIABILITY_COMPANY
+        companyType: CompanyType.LIMITED_COMPANY
     } as CertificateItemOptions,
     etag: "abcdefg123456",
     kind: "item#certificate",

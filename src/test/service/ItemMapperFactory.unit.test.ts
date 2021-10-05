@@ -6,47 +6,56 @@ import {LPCertificateItemMapper} from "../../service/LPCertificateItemMapper";
 import {LLPCertificateItemMapper} from "../../service/LLPCertificateItemMapper";
 
 describe("ItemMapperFactory unit tests", () => {
-    it("should correctly return OtherCertificateItemMapper for non LP & LLP companies", () => {
-        // Given
-        const companyType = "any";
+    const TRUE: string = "true";
 
-        // When
-        const itemMapper = new ItemMapperFactory().getItemMapper(companyType);
+    describe("LP and LLP feature flags set to true", () => {
+        let itemMapperFactory: ItemMapperFactory;
+        beforeEach("instantiate ItemMapperFactory", () => {
+            itemMapperFactory = new ItemMapperFactory([[CompanyType.LIMITED_PARTNERSHIP, ()=>{return new LPCertificateItemMapper()}],
+            [CompanyType.LIMITED_LIABILITY_PARTNERSHIP, ()=>{return new LLPCertificateItemMapper()}]], () => {return new OtherCertificateItemMapper()})
+        })
+        it("should correctly return OtherCertificateItemMapper for non LP & LLP companies", () => {
+            // Given
+            const companyType = "any";
 
-        // Then
-        expect(itemMapper).to.be.an.instanceOf(OtherCertificateItemMapper);
-    })
+            // When
+            const itemMapper = itemMapperFactory.getItemMapper(companyType);
 
-    it("should correctly return OtherCertificateItemMapper for limited company type", () => {
-        // Given
-        const companyType = CompanyType.LIMITED_LIABILITY_COMPANY;
+            // Then
+            expect(itemMapper).to.be.an.instanceOf(OtherCertificateItemMapper);
+        })
 
-        // When
-        const itemMapper = new ItemMapperFactory().getItemMapper(companyType);
+        it("should correctly return OtherCertificateItemMapper for limited company type", () => {
+            // Given
+            const companyType = CompanyType.LIMITED_COMPANY;
 
-        // Then
-        expect(itemMapper).to.be.an.instanceOf(OtherCertificateItemMapper);
-    })
+            // When
+            const itemMapper = itemMapperFactory.getItemMapper(companyType);
 
-    it("should correctly return LPCertificateItemMapper for limited partnership company type", () => {
-        // Given
-        const companyType = CompanyType.LIMITED_PARTNERSHIP;
+            // Then
+            expect(itemMapper).to.be.an.instanceOf(OtherCertificateItemMapper);
+        })
 
-        // When
-        const itemMapper = new ItemMapperFactory().getItemMapper(companyType);
+        it("should correctly return LPCertificateItemMapper for limited partnership company type", () => {
+            // Given
+            const companyType = CompanyType.LIMITED_PARTNERSHIP;
 
-        // Then
-        expect(itemMapper).to.be.an.instanceOf(LPCertificateItemMapper);
-    })
+            // When
+            const itemMapper = itemMapperFactory.getItemMapper(companyType);
 
-    it("should correctly return LLPCertificateItemMapper for limited liability partnership company type", () => {
-        // Given
-        const companyType = CompanyType.LIMITED_LIABILITY_PARTNERSHIP;
+            // Then
+            expect(itemMapper).to.be.an.instanceOf(LPCertificateItemMapper);
+        })
 
-        // When
-        const itemMapper = new ItemMapperFactory().getItemMapper(companyType);
+        it("should correctly return LLPCertificateItemMapper for limited liability partnership company type", () => {
+            // Given
+            const companyType = CompanyType.LIMITED_LIABILITY_PARTNERSHIP;
 
-        // Then
-        expect(itemMapper).to.be.an.instanceOf(LLPCertificateItemMapper);
+            // When
+            const itemMapper = itemMapperFactory.getItemMapper(companyType);
+
+            // Then
+            expect(itemMapper).to.be.an.instanceOf(LLPCertificateItemMapper);
+        })
     })
 })

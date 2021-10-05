@@ -2,21 +2,28 @@ import { DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/orde
 import { Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { FilingHistoryDocuments } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
 
-import { SERVICE_NAME_CERTIFICATES, SERVICE_NAME_CERTIFIED_COPIES, SERVICE_NAME_MISSING_IMAGE_DELIVERIES, APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
+import {
+    SERVICE_NAME_CERTIFICATES,
+    SERVICE_NAME_CERTIFIED_COPIES,
+    SERVICE_NAME_MISSING_IMAGE_DELIVERIES,
+    DISPATCH_DAYS
+} from "../config/config";
 import { mapFilingHistory } from "./filing.history.service";
 import { mapFilingHistoryDate } from "../utils/date.util";
 import {ItemMapperFactory} from "./ItemMapperFactory";
 import {MapUtil} from "./MapUtil";
 import {CheckDetailsItem} from "./ItemMapper";
+import {ITEM_MAPPER_FACTORY_CONFIG} from "./ItemMapperFactoryConfig";
 
 const dispatchDays: string = DISPATCH_DAYS;
 
-export const mapItem = (item: Item, deliveryDetails: DeliveryDetails | undefined): CheckDetailsItem => {
+export const mapItem = (item: Item, deliveryDetails: DeliveryDetails | undefined,
+                        itemMapperFactory: ItemMapperFactory = ITEM_MAPPER_FACTORY_CONFIG.getInstance()): CheckDetailsItem => {
     const itemKind = item?.kind;
     if (itemKind === "item#certificate") {
         const itemOptions = item.itemOptions as CertificateItemOptions;
         if (itemOptions.certificateType === "incorporation-with-all-name-changes") {
-            return new ItemMapperFactory().getItemMapper(itemOptions.companyType).getCheckDetailsItem({companyName: item?.companyName, companyNumber: item?.companyNumber, itemOptions, deliveryDetails});
+            return itemMapperFactory.getItemMapper(itemOptions.companyType).getCheckDetailsItem({companyName: item?.companyName, companyNumber: item?.companyNumber, itemOptions, deliveryDetails});
         } else {
             const deliveryMethod = MapUtil.mapDeliveryMethod(item?.itemOptions);
             const address = MapUtil.mapDeliveryDetails(deliveryDetails);
