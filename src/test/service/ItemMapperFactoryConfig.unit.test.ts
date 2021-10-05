@@ -4,12 +4,13 @@ import {CompanyType} from "../../model/CompanyType";
 import {OtherCertificateItemMapper} from "../../service/OtherCertificateItemMapper";
 import {LLPCertificateItemMapper} from "../../service/LLPCertificateItemMapper";
 import {LPCertificateItemMapper} from "../../service/LPCertificateItemMapper";
+import {FeatureFlags} from "../../config/FeatureFlags";
 
 
 describe("ItemMapperFactoryConfig unit tests", ()=>{
     it("correctly returns OtherCertificateItemMapper when LP & LLP Feature flags are false", () => {
         // Given
-        const itemMapperFactoryConfig = new ItemMapperFactoryConfig(false, false);
+        const itemMapperFactoryConfig = new ItemMapperFactoryConfig(new FeatureFlags(false, false));
 
         // When
         const itemMapperFactory = itemMapperFactoryConfig.getInstance();
@@ -22,7 +23,7 @@ describe("ItemMapperFactoryConfig unit tests", ()=>{
 
     it("correctly returns LPCertificateItemMapper when LP Feature flags is true", () => {
         // Given
-        const itemMapperFactoryConfig = new ItemMapperFactoryConfig(true, false);
+        const itemMapperFactoryConfig = new ItemMapperFactoryConfig(new FeatureFlags(true, false));
 
         // When
         const itemMapperFactory = itemMapperFactoryConfig.getInstance();
@@ -35,7 +36,7 @@ describe("ItemMapperFactoryConfig unit tests", ()=>{
 
     it("correctly returns LLPCertificateItemMapper when LLP Feature flags is true", () => {
         // Given
-        const itemMapperFactoryConfig = new ItemMapperFactoryConfig(false, true);
+        const itemMapperFactoryConfig = new ItemMapperFactoryConfig(new FeatureFlags(false, true));
 
         // When
         const itemMapperFactory = itemMapperFactoryConfig.getInstance();
@@ -48,7 +49,7 @@ describe("ItemMapperFactoryConfig unit tests", ()=>{
 
     it("correctly returns LPCertificateItemMapper & LLPCertificateItemMapper when LP & LLP Feature flags are true", () => {
         // Given
-        const itemMapperFactoryConfig = new ItemMapperFactoryConfig(true, true);
+        const itemMapperFactoryConfig = new ItemMapperFactoryConfig(new FeatureFlags(true, true));
 
         // When
         const itemMapperFactory = itemMapperFactoryConfig.getInstance();

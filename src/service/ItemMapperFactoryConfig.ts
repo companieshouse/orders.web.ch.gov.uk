@@ -4,23 +4,29 @@ import {CompanyType} from "../model/CompanyType";
 import {ItemMapper} from "./ItemMapper";
 import {LLPCertificateItemMapper} from "./LLPCertificateItemMapper";
 import {LPCertificateItemMapper} from "./LPCertificateItemMapper";
-import {DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED, DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED} from "../config/config";
+import {FEATURE_FLAGS, FeatureFlags} from "../config/FeatureFlags";
 
 export class ItemMapperFactoryConfig {
-    public constructor(private readonly dynamicLPCertificateOrdersEnabled, private readonly dynamicLLPCertificateOrdersEnabled) {
+    public constructor(private readonly featureFlags: FeatureFlags) {
     }
 
     getInstance = () => {
-        const typeSpecificItemMappers: [CompanyType,  () => ItemMapper][] = [];
-        if (this.dynamicLLPCertificateOrdersEnabled) {
-            typeSpecificItemMappers.push([CompanyType.LIMITED_LIABILITY_PARTNERSHIP, () => { return new LLPCertificateItemMapper() }]);
+        const typeSpecificItemMappers: [CompanyType, () => ItemMapper][] = [];
+        if (this.featureFlags.llpCertificateOrdersEnabled) {
+            typeSpecificItemMappers.push([CompanyType.LIMITED_LIABILITY_PARTNERSHIP, () => {
+                return new LLPCertificateItemMapper()
+            }]);
         }
-        if (this.dynamicLPCertificateOrdersEnabled) {
-            typeSpecificItemMappers.push([CompanyType.LIMITED_PARTNERSHIP, () => { return new LPCertificateItemMapper() }]);
+        if (this.featureFlags.lpCertificateOrdersEnabled) {
+            typeSpecificItemMappers.push([CompanyType.LIMITED_PARTNERSHIP, () => {
+                return new LPCertificateItemMapper()
+            }]);
         }
 
-        return new ItemMapperFactory(typeSpecificItemMappers, () => {return new OtherCertificateItemMapper()});
+        return new ItemMapperFactory(typeSpecificItemMappers, () => {
+            return new OtherCertificateItemMapper()
+        });
     }
 }
 
-export const ITEM_MAPPER_FACTORY_CONFIG = new ItemMapperFactoryConfig(DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED, DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED);
+export const ITEM_MAPPER_FACTORY_CONFIG = new ItemMapperFactoryConfig(FEATURE_FLAGS);
