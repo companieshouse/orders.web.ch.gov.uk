@@ -1,7 +1,6 @@
 import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
 import {OtherCertificateItemMapper} from "../../service/OtherCertificateItemMapper";
 import {expect} from "chai";
-import {MapUtil} from "../../service/MapUtil";
 
 describe("Other certificate item mapper tests", () => {
 

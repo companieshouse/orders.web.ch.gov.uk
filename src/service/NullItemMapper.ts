@@ -2,7 +2,7 @@ import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/servic
 import { ItemMapper } from "./ItemMapper";
 
 export class NullItemMapper extends ItemMapper {
-  getOrdersDetailTable(item: { companyName: string; companyNumber: string; itemOptions: CertificateItemOptions; }) {
-    throw new Error("Mapper not found");
-  }
+    getOrdersDetailTable (item: { companyName: string; companyNumber: string; itemOptions: CertificateItemOptions; }) {
+        throw new Error("Mapper not found");
+    }
 }

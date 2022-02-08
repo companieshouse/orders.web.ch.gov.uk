@@ -2,7 +2,7 @@ import {ItemMapper} from "./ItemMapper";
 import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
 import {MapUtil} from "./MapUtil";
 
-export class LLPCertificateItemMapper extends ItemMapper {
+export class LiquidatedLLPCertificateItemMapper extends ItemMapper {
 
     getOrdersDetailTable(item: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions }): any {
 
@@ -34,15 +34,6 @@ export class LLPCertificateItemMapper extends ItemMapper {
                 value: {
                     classes: "govuk-!-width-one-half",
                     html: "<p id='certificateTypeValue'>" + this.mapCertificateType(item.itemOptions.certificateType) + "</p>"
-                }
-            },
-            {
-                key: {
-                    text: "Statement of good standing"
-                },
-                value: {
-                    classes: "govuk-!-width-one-half",
-                    html: "<p id='statementOfGoodStandingValue'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.includeGoodStandingInformation) + "</p>"
                 }
             },
             {
@@ -82,6 +73,22 @@ export class LLPCertificateItemMapper extends ItemMapper {
                     items: [
                         {
                             visuallyHiddenText: "current members names"
+                        }
+                    ]
+                }
+            },
+            {
+                key: {
+                    text: "Liquidators' details"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='liquidators'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.liquidatorsDetails?.includeBasicInformation) + "</p>"
+                },
+                actions: {
+                    items: [
+                        {
+                            visuallyHiddenText: "liquidators' details"
                         }
                     ]
                 }

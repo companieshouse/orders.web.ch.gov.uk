@@ -1,10 +1,6 @@
 import {ItemMapper} from "./ItemMapper";
 import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
-import {createLogger} from "ch-structured-logging";
-import {APPLICATION_NAME} from "../config/config";
 import {MapUtil} from "./MapUtil";
-
-const logger = createLogger(APPLICATION_NAME);
 
 export class OtherCertificateItemMapper extends ItemMapper {
 
@@ -54,7 +50,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='registeredOfficeAddress'>" + MapUtil.mapRegisteredOfficeAddress(item.itemOptions) + "</p>"
+                    html: "<p id='registeredOfficeAddress'>" + MapUtil.mapAddressOptions(item.itemOptions?.registeredOfficeAddressDetails) + "</p>"
                 }
             },
             {

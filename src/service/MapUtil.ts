@@ -1,6 +1,8 @@
 import { DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
-import { DirectorOrSecretaryDetails } from "@companieshouse/api-sdk-node/dist/services/order/certificates";
-import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import {
+    DirectorOrSecretaryDetails,
+    MemberDetails
+} from "@companieshouse/api-sdk-node/dist/services/order/certificates";
 import { createLogger } from "ch-structured-logging";
 import { AddressRecordsType } from "model/AddressRecordsType";
 import { APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
@@ -104,10 +106,6 @@ export abstract class MapUtil {
         }
     }
 
-    static mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
-        return MapUtil.mapAddressOptions(itemOptions?.registeredOfficeAddressDetails);
-    }
-
     static determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails, officer: string) => {
         if (directorOrSecretaryDetails === undefined || !directorOrSecretaryDetails.includeBasicInformation) {
             return "No";
@@ -138,5 +136,41 @@ export abstract class MapUtil {
             return "Yes";
         }
         return MapUtil.mapToHtml(directorOrSecretaryOptions);
+    }
+
+    static mapMembersOptions = (heading: string, memberOptions?: MemberDetails): string => {
+        if (memberOptions === undefined || memberOptions.includeBasicInformation === undefined) {
+            return "No";
+        }
+
+        if (memberOptions.includeBasicInformation === true &&
+            memberOptions.includeAddress === false &&
+            memberOptions.includeAppointmentDate === false &&
+            memberOptions.includeCountryOfResidence === false &&
+            memberOptions.includeDobType === undefined) {
+            return "Yes";
+        }
+
+        const membersMappings: string[] = [];
+        membersMappings.push(heading);
+
+        if (memberOptions.includeAddress) {
+            membersMappings.push("Correspondence address");
+        }
+
+        if (memberOptions.includeAppointmentDate) {
+            membersMappings.push("Appointment date");
+        }
+
+        if (memberOptions.includeCountryOfResidence) {
+            membersMappings.push("Country of residence");
+        }
+
+        if (memberOptions.includeDobType === "partial" ||
+            memberOptions.includeDobType === "full") {
+            membersMappings.push("Date of birth (month and year)");
+        }
+
+        return MapUtil.mapToHtml(membersMappings);
     }
 }

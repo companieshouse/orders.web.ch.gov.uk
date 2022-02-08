@@ -1,10 +1,10 @@
 import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
-import {LiquidatedOtherCertificateItemMapper} from "../../service/LiquidatedOtherCertificateItemMapper";
 import {expect} from "chai";
+import { LiquidatedLLPCertificateItemMapper } from "../../service/LiquidatedLLPCertificateItemMapper";
 
-describe("Liquidated other certificate item mapper tests", () => {
+describe("Liquidated LLP certificate item mapper tests", () => {
 
-    const liquidatedOtherCertificateItemMapper: LiquidatedOtherCertificateItemMapper = new LiquidatedOtherCertificateItemMapper;
+    const liquidatedOtherCertificateItemMapper: LiquidatedLLPCertificateItemMapper = new LiquidatedLLPCertificateItemMapper;
 
     describe("getOrdersDetailTable", () => {
         it("transforms item into table", () => {
@@ -14,14 +14,13 @@ describe("Liquidated other certificate item mapper tests", () => {
                 companyNumber: "12345678",
                 itemOptions: {
                     certificateType: "incorporation-with-all-name-changes",
-                    directorDetails: {
+                    designatedMemberDetails: {
                         includeBasicInformation: true
                     },
-                    includeCompanyObjectsInformation: true,
                     registeredOfficeAddressDetails: {
                         includeAddressRecordsType: "current"
                     },
-                    secretaryDetails: {
+                    memberDetails: {
                         includeBasicInformation: true
                     },
                     liquidatorsDetails: {
@@ -34,8 +33,8 @@ describe("Liquidated other certificate item mapper tests", () => {
             const expected = liquidatedOtherCertificateItemMapper.getOrdersDetailTable(item)
 
             // then
-            expect(expected.length).to.equal(8)
-            expect(expected[7].key.text).to.equal("Liquidators' details")
+            expect(expected.length).to.equal(7)
+            expect(expected[6].key.text).to.equal("Liquidators' details")
         })
     })
 });

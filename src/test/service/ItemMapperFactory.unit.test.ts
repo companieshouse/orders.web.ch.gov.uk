@@ -8,30 +8,31 @@ import { CompanyStatus } from "../../model/CompanyStatus";
 import { LiquidatedOtherCertificateItemMapper } from "../../service/LiquidatedOtherCertificateItemMapper";
 import { ItemMapper } from "../../service/ItemMapper";
 import { NullItemMapper } from "../../service/NullItemMapper";
+import { LiquidatedLLPCertificateItemMapper } from "../../service/LiquidatedLLPCertificateItemMapper";
 
 describe("ItemMapperFactory unit tests", () => {
-    const TRUE: string = "true";
 
     describe("LP and LLP feature flags set to true", () => {
         let itemMapperFactory: ItemMapperFactory;
         beforeEach("instantiate ItemMapperFactory", () => {
             itemMapperFactory = new ItemMapperFactory([
                 [CompanyType.LIMITED_PARTNERSHIP, new Map<string, () => ItemMapper>([
-                    ["default", () => {return new LPCertificateItemMapper()}]
+                    [ItemMapperFactory.defaultMapping, () => {return new LPCertificateItemMapper()}]
                 ])],
                 [CompanyType.LIMITED_LIABILITY_PARTNERSHIP, new Map<string, () => ItemMapper>([
-                    ["default", () => {return new LLPCertificateItemMapper()}]
+                    [CompanyStatus.LIQUIDATION, () => {return new LiquidatedLLPCertificateItemMapper()}],
+                    [ItemMapperFactory.defaultMapping, () => {return new LLPCertificateItemMapper()}]
                 ])],
-                ["default", new Map<string, () => ItemMapper>([
+                [ItemMapperFactory.defaultMapping, new Map<string, () => ItemMapper>([
                     [CompanyStatus.LIQUIDATION, () => {return new LiquidatedOtherCertificateItemMapper()}],
-                    ["default", () => {return new OtherCertificateItemMapper()}]
+                    [ItemMapperFactory.defaultMapping, () => {return new OtherCertificateItemMapper()}]
                 ])]
             ], () => {return new NullItemMapper()})
         })
-        it("should correctly return OtherCertificateItemMapper for non LP & LLP companies", () => {
+        it("should correctly return OtherCertificateItemMapper for non LP & LLP companies not in liquidation", () => {
             // Given
             const companyType = "any";
-            const companyStatus = "active";
+            const companyStatus = CompanyStatus.ACTIVE;
 
             // When
             const itemMapper = itemMapperFactory.getItemMapper(companyType, companyStatus);
@@ -79,7 +80,7 @@ describe("ItemMapperFactory unit tests", () => {
         it("should correctly return LiquidatedOtherCertificateItemMapper for non LP & LLP companies in liquidation", () => {
             // Given
             const companyType = "any";
-            const companyStatus = "liquidation";
+            const companyStatus = CompanyStatus.LIQUIDATION;
 
             // When
             const itemMapper = itemMapperFactory.getItemMapper(companyType, companyStatus);
@@ -88,5 +89,28 @@ describe("ItemMapperFactory unit tests", () => {
             expect(itemMapper).to.be.an.instanceOf(LiquidatedOtherCertificateItemMapper);
         })
 
+        it("should correctly return LiquidatedLLPCertificateItemMapper for LLP companies in liquidation", () => {
+            // Given
+            const companyType = CompanyType.LIMITED_LIABILITY_PARTNERSHIP;
+            const companyStatus = CompanyStatus.LIQUIDATION;
+
+            // When
+            const itemMapper = itemMapperFactory.getItemMapper(companyType, companyStatus);
+
+            // Then
+            expect(itemMapper).to.be.an.instanceOf(LiquidatedLLPCertificateItemMapper);
+        })
+
+        it("should return NullItemMapper if fallback mapper undefined", () => {
+            // Given
+            const misconfiguredMapperFactory = new ItemMapperFactory([], () => new NullItemMapper());
+
+            // When
+            const itemMapper = misconfiguredMapperFactory.getItemMapper("any", "any");
+
+            // Then
+            expect(itemMapper).to.be.an.instanceOf(NullItemMapper);
+        });
     })
+
 })

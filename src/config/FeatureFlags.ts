@@ -1,7 +1,11 @@
-import {DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED, DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED} from "./config";
+import {
+    CERTS_FOR_LIQUIDATED_COMPANIES,
+    DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED,
+    DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED
+} from "./config";
 
 export class FeatureFlags {
-    constructor(private _lpCertificateOrdersEnabled: boolean, private _llpCertificateOrdersEnabled: boolean) {
+    constructor(private _lpCertificateOrdersEnabled: boolean, private _llpCertificateOrdersEnabled: boolean, private _liquidationEnabled: boolean) {
     }
 
     get lpCertificateOrdersEnabled(): boolean {
@@ -19,6 +23,14 @@ export class FeatureFlags {
     set llpCertificateOrdersEnabled(value: boolean) {
         this._llpCertificateOrdersEnabled = value;
     }
+
+    get liquidationEnabled (): boolean {
+        return this._liquidationEnabled;
+    }
+
+    set liquidationEnabled (value: boolean) {
+        this._liquidationEnabled = value;
+    }
 }
 
-export const FEATURE_FLAGS = new FeatureFlags(DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED, DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED)
+export const FEATURE_FLAGS = new FeatureFlags(DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED, DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED, CERTS_FOR_LIQUIDATED_COMPANIES);
