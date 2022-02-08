@@ -1,4 +1,6 @@
 import { DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
+import { DirectorOrSecretaryDetails } from "@companieshouse/api-sdk-node/dist/services/order/certificates";
+import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { createLogger } from "ch-structured-logging";
 import { AddressRecordsType } from "model/AddressRecordsType";
 import { APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
@@ -100,5 +102,41 @@ export abstract class MapUtil {
                 logger.error(`Unable to map value for registered office address options: ${addressDetails.includeAddressRecordsType}`);
                 return "";
         }
+    }
+
+    static mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
+        return MapUtil.mapAddressOptions(itemOptions?.registeredOfficeAddressDetails);
+    }
+
+    static determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails, officer: string) => {
+        if (directorOrSecretaryDetails === undefined || !directorOrSecretaryDetails.includeBasicInformation) {
+            return "No";
+        }
+        const directorOrSecretaryOptions: string[] = [];
+
+        if (directorOrSecretaryDetails.includeAddress) {
+            directorOrSecretaryOptions.push("Correspondence address");
+        }
+        if (directorOrSecretaryDetails.includeOccupation) {
+            directorOrSecretaryOptions.push("Occupation");
+        }
+        if (directorOrSecretaryDetails.includeDobType === "partial") {
+            directorOrSecretaryOptions.push("Date of birth (month and year)");
+        }
+        if (directorOrSecretaryDetails.includeAppointmentDate) {
+            directorOrSecretaryOptions.push("Appointment date");
+        }
+        if (directorOrSecretaryDetails.includeNationality) {
+            directorOrSecretaryOptions.push("Nationality");
+        }
+        if (directorOrSecretaryDetails.includeCountryOfResidence) {
+            directorOrSecretaryOptions.push("Country of residence");
+        }
+        if (directorOrSecretaryOptions.length > 0) {
+            directorOrSecretaryOptions.unshift("Including " + officer + "':", "");
+        } else {
+            return "Yes";
+        }
+        return MapUtil.mapToHtml(directorOrSecretaryOptions);
     }
 }

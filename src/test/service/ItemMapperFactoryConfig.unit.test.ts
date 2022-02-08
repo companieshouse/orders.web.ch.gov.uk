@@ -5,6 +5,8 @@ import {OtherCertificateItemMapper} from "../../service/OtherCertificateItemMapp
 import {LLPCertificateItemMapper} from "../../service/LLPCertificateItemMapper";
 import {LPCertificateItemMapper} from "../../service/LPCertificateItemMapper";
 import {FeatureFlags} from "../../config/FeatureFlags";
+import { CompanyStatus } from "../../model/CompanyStatus";
+import { LiquidatedOtherCertificateItemMapper } from "../../service/LiquidatedOtherCertificateItemMapper";
 
 
 describe("ItemMapperFactoryConfig unit tests", ()=>{
@@ -16,9 +18,9 @@ describe("ItemMapperFactoryConfig unit tests", ()=>{
         const itemMapperFactory = itemMapperFactoryConfig.getInstance();
 
         // Then
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_LIABILITY_PARTNERSHIP)).to.be.instanceOf(OtherCertificateItemMapper);
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_PARTNERSHIP)).to.be.instanceOf(OtherCertificateItemMapper);
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_COMPANY)).to.be.instanceOf(OtherCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_LIABILITY_PARTNERSHIP, CompanyStatus.ACTIVE)).to.be.instanceOf(OtherCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_PARTNERSHIP, CompanyStatus.ACTIVE)).to.be.instanceOf(OtherCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_COMPANY, CompanyStatus.ACTIVE)).to.be.instanceOf(OtherCertificateItemMapper);
     });
 
     it("correctly returns LPCertificateItemMapper when LP Feature flags is true", () => {
@@ -29,9 +31,9 @@ describe("ItemMapperFactoryConfig unit tests", ()=>{
         const itemMapperFactory = itemMapperFactoryConfig.getInstance();
 
         // Then
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_LIABILITY_PARTNERSHIP)).to.be.instanceOf(OtherCertificateItemMapper);
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_PARTNERSHIP)).to.be.instanceOf(LPCertificateItemMapper);
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_COMPANY)).to.be.instanceOf(OtherCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_LIABILITY_PARTNERSHIP, CompanyStatus.ACTIVE)).to.be.instanceOf(OtherCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_PARTNERSHIP, CompanyStatus.ACTIVE)).to.be.instanceOf(LPCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_COMPANY, CompanyStatus.ACTIVE)).to.be.instanceOf(OtherCertificateItemMapper);
     });
 
     it("correctly returns LLPCertificateItemMapper when LLP Feature flags is true", () => {
@@ -42,9 +44,9 @@ describe("ItemMapperFactoryConfig unit tests", ()=>{
         const itemMapperFactory = itemMapperFactoryConfig.getInstance();
 
         // Then
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_LIABILITY_PARTNERSHIP)).to.be.instanceOf(LLPCertificateItemMapper);
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_PARTNERSHIP)).to.be.instanceOf(OtherCertificateItemMapper);
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_COMPANY)).to.be.instanceOf(OtherCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_LIABILITY_PARTNERSHIP, CompanyStatus.ACTIVE)).to.be.instanceOf(LLPCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_PARTNERSHIP, CompanyStatus.ACTIVE)).to.be.instanceOf(OtherCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_COMPANY, CompanyStatus.ACTIVE)).to.be.instanceOf(OtherCertificateItemMapper);
     });
 
     it("correctly returns LPCertificateItemMapper & LLPCertificateItemMapper when LP & LLP Feature flags are true", () => {
@@ -55,8 +57,9 @@ describe("ItemMapperFactoryConfig unit tests", ()=>{
         const itemMapperFactory = itemMapperFactoryConfig.getInstance();
 
         // Then
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_LIABILITY_PARTNERSHIP)).to.be.instanceOf(LLPCertificateItemMapper);
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_PARTNERSHIP)).to.be.instanceOf(LPCertificateItemMapper);
-        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_COMPANY)).to.be.instanceOf(OtherCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_LIABILITY_PARTNERSHIP, CompanyStatus.ACTIVE)).to.be.instanceOf(LLPCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_PARTNERSHIP, CompanyStatus.ACTIVE)).to.be.instanceOf(LPCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_COMPANY, CompanyStatus.ACTIVE)).to.be.instanceOf(OtherCertificateItemMapper);
+        expect(itemMapperFactory.getItemMapper(CompanyType.LIMITED_COMPANY, CompanyStatus.LIQUIDATION)).to.be.instanceOf(LiquidatedOtherCertificateItemMapper)
     });
 })
