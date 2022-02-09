@@ -35,7 +35,7 @@ describe("ItemMapperFactory unit tests", () => {
             const companyStatus = CompanyStatus.ACTIVE;
 
             // When
-            const itemMapper = itemMapperFactory.getItemMapper(companyType, companyStatus);
+            const itemMapper = itemMapperFactory.getItemMapper({companyType, companyStatus});
 
             // Then
             expect(itemMapper).to.be.an.instanceOf(OtherCertificateItemMapper);
@@ -47,7 +47,7 @@ describe("ItemMapperFactory unit tests", () => {
             const companyStatus = CompanyStatus.ACTIVE;
 
             // When
-            const itemMapper = itemMapperFactory.getItemMapper(companyType, companyStatus);
+            const itemMapper = itemMapperFactory.getItemMapper({companyType, companyStatus});
 
             // Then
             expect(itemMapper).to.be.an.instanceOf(OtherCertificateItemMapper);
@@ -59,7 +59,7 @@ describe("ItemMapperFactory unit tests", () => {
             const companyStatus = CompanyStatus.ACTIVE;
 
             // When
-            const itemMapper = itemMapperFactory.getItemMapper(companyType, companyStatus);
+            const itemMapper = itemMapperFactory.getItemMapper({companyType, companyStatus});
 
             // Then
             expect(itemMapper).to.be.an.instanceOf(LPCertificateItemMapper);
@@ -71,7 +71,7 @@ describe("ItemMapperFactory unit tests", () => {
             const companyStatus = CompanyStatus.ACTIVE;
 
             // When
-            const itemMapper = itemMapperFactory.getItemMapper(companyType, companyStatus);
+            const itemMapper = itemMapperFactory.getItemMapper({companyType, companyStatus});
 
             // Then
             expect(itemMapper).to.be.an.instanceOf(LLPCertificateItemMapper);
@@ -83,7 +83,7 @@ describe("ItemMapperFactory unit tests", () => {
             const companyStatus = CompanyStatus.LIQUIDATION;
 
             // When
-            const itemMapper = itemMapperFactory.getItemMapper(companyType, companyStatus);
+            const itemMapper = itemMapperFactory.getItemMapper({companyType, companyStatus});
 
             // Then
             expect(itemMapper).to.be.an.instanceOf(LiquidatedOtherCertificateItemMapper);
@@ -95,7 +95,7 @@ describe("ItemMapperFactory unit tests", () => {
             const companyStatus = CompanyStatus.LIQUIDATION;
 
             // When
-            const itemMapper = itemMapperFactory.getItemMapper(companyType, companyStatus);
+            const itemMapper = itemMapperFactory.getItemMapper({companyType, companyStatus});
 
             // Then
             expect(itemMapper).to.be.an.instanceOf(LiquidatedLLPCertificateItemMapper);
@@ -106,7 +106,7 @@ describe("ItemMapperFactory unit tests", () => {
             const misconfiguredMapperFactory = new ItemMapperFactory([], () => new NullItemMapper());
 
             // When
-            const itemMapper = misconfiguredMapperFactory.getItemMapper("any", "any");
+            const itemMapper = misconfiguredMapperFactory.getItemMapper({companyType: "any", companyStatus: "any"});
 
             // Then
             expect(itemMapper).to.be.an.instanceOf(NullItemMapper);

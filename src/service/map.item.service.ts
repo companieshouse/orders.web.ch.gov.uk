@@ -23,7 +23,8 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails | undefined
     if (itemKind === "item#certificate") {
         const itemOptions = item.itemOptions as CertificateItemOptions;
         if (itemOptions.certificateType === "incorporation-with-all-name-changes") {
-            return itemMapperFactory.getItemMapper(itemOptions.companyType, itemOptions.companyStatus).getCheckDetailsItem({companyName: item?.companyName, companyNumber: item?.companyNumber, itemOptions, deliveryDetails});
+            return itemMapperFactory.getItemMapper({ companyType: itemOptions.companyType, companyStatus: itemOptions.companyStatus } )
+                .getCheckDetailsItem({companyName: item?.companyName, companyNumber: item?.companyNumber, itemOptions, deliveryDetails});
         } else {
             const deliveryMethod = MapUtil.mapDeliveryMethod(item?.itemOptions);
             const address = MapUtil.mapDeliveryDetails(deliveryDetails);
