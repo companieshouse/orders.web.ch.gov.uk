@@ -2,10 +2,9 @@ import {ItemMapper} from "./ItemMapper";
 import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
 import {MapUtil} from "./MapUtil";
 
-export class LLPCertificateItemMapper extends ItemMapper {
+export class LiquidatedOtherCertificateItemMapper extends ItemMapper {
 
-    getOrdersDetailTable(item: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions }): any {
-
+    getOrdersDetailTable(item: {companyName: string,  companyNumber: string, itemOptions: CertificateItemOptions}): any {
         return [
             {
                 key: {
@@ -38,15 +37,6 @@ export class LLPCertificateItemMapper extends ItemMapper {
             },
             {
                 key: {
-                    text: "Statement of good standing"
-                },
-                value: {
-                    classes: "govuk-!-width-one-half",
-                    html: "<p id='statementOfGoodStandingValue'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.includeGoodStandingInformation) + "</p>"
-                }
-            },
-            {
-                key: {
                     text: "Registered office address"
                 },
                 value: {
@@ -56,36 +46,40 @@ export class LLPCertificateItemMapper extends ItemMapper {
             },
             {
                 key: {
-                    text: "The names of all current designated members"
+                    text: "The names of all current company directors"
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='currentDesignatedMembersNames'>" + MapUtil.mapMembersOptions("Including designated members':", item.itemOptions.designatedMemberDetails) + "</p>"
-                },
-                actions: {
-                    items: [
-                        {
-                            visuallyHiddenText: "current designated members names"
-                        }
-                    ]
+                    html: "<p id='currentCompanyDirectors'>" + MapUtil.determineDirectorOrSecretaryOptionsText(item.itemOptions.directorDetails, "directors") + "</p>"
                 }
             },
             {
                 key: {
-                    text: "The names of all current members"
+                    text: "The names of all current company secretaries"
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='currentMembersNames'>" + MapUtil.mapMembersOptions("Including members':", item.itemOptions.memberDetails) + "</p>"
-                },
-                actions: {
-                    items: [
-                        {
-                            visuallyHiddenText: "current members names"
-                        }
-                    ]
+                    html: "<p id='currentCompanySecretaries'>" + MapUtil.determineDirectorOrSecretaryOptionsText(item.itemOptions.secretaryDetails, "secretaries") + "</p>"
                 }
-            }
-        ];
+            },
+            {
+                key: {
+                    text: "Company objects"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='companyObjects'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.includeCompanyObjectsInformation) + "</p>"
+                }
+            },
+            {
+                key: {
+                    text: "Liquidators' details"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='liquidators'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.liquidatorsDetails?.includeBasicInformation) + "</p>"
+                }
+            },
+        ]
     }
 }

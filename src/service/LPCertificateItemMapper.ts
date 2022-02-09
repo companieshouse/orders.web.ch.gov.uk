@@ -1,14 +1,10 @@
-import {ItemMapper} from "./ItemMapper";
-import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
-import {createLogger} from "ch-structured-logging";
-import {APPLICATION_NAME} from "../config/config";
-import {MapUtil} from "./MapUtil";
-
-const logger = createLogger(APPLICATION_NAME);
+import { ItemMapper } from "./ItemMapper";
+import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { MapUtil } from "./MapUtil";
 
 export class LPCertificateItemMapper extends ItemMapper {
 
-    getOrdersDetailTable(item: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions }): any {
+    getOrdersDetailTable (item: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions }): any {
         return [
             {
                 key: {
@@ -54,7 +50,7 @@ export class LPCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='principalPlaceOfBusiness'>" + this.mapPrincipalPlaceOfBusiness(item.itemOptions) + "</p>"
+                    html: "<p id='principalPlaceOfBusiness'>" + MapUtil.mapAddressOptions(item.itemOptions?.principalPlaceOfBusinessDetails) + "</p>"
                 }
             },
             {
@@ -106,9 +102,5 @@ export class LPCertificateItemMapper extends ItemMapper {
                 }
             }
         ];
-    }
-
-    mapPrincipalPlaceOfBusiness = (itemOptions: CertificateItemOptions): string => {
-        return MapUtil.mapAddressOptions(itemOptions?.principalPlaceOfBusinessDetails);
     }
 }

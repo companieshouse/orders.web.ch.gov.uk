@@ -1,13 +1,6 @@
 import {ItemMapper} from "./ItemMapper";
-import {
-    CertificateItemOptions,
-    DirectorOrSecretaryDetails
-} from "@companieshouse/api-sdk-node/dist/services/order/order";
-import {createLogger} from "ch-structured-logging";
-import {APPLICATION_NAME} from "../config/config";
+import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
 import {MapUtil} from "./MapUtil";
-
-const logger = createLogger(APPLICATION_NAME);
 
 export class OtherCertificateItemMapper extends ItemMapper {
 
@@ -57,7 +50,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='registeredOfficeAddress'>" + this.mapRegisteredOfficeAddress(item.itemOptions) + "</p>"
+                    html: "<p id='registeredOfficeAddress'>" + MapUtil.mapAddressOptions(item.itemOptions?.registeredOfficeAddressDetails) + "</p>"
                 }
             },
             {
@@ -66,7 +59,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='currentCompanyDirectors'>" + this.determineDirectorOrSecretaryOptionsText(item.itemOptions.directorDetails, "directors") + "</p>"
+                    html: "<p id='currentCompanyDirectors'>" + MapUtil.determineDirectorOrSecretaryOptionsText(item.itemOptions.directorDetails, "directors") + "</p>"
                 }
             },
             {
@@ -75,7 +68,7 @@ export class OtherCertificateItemMapper extends ItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='currentCompanySecretaries'>" + this.determineDirectorOrSecretaryOptionsText(item.itemOptions.secretaryDetails, "secretaries") + "</p>"
+                    html: "<p id='currentCompanySecretaries'>" + MapUtil.determineDirectorOrSecretaryOptionsText(item.itemOptions.secretaryDetails, "secretaries") + "</p>"
                 }
             },
             {
@@ -88,41 +81,5 @@ export class OtherCertificateItemMapper extends ItemMapper {
                 }
             }
         ]
-    }
-
-    mapRegisteredOfficeAddress = (itemOptions: CertificateItemOptions): string => {
-        return MapUtil.mapAddressOptions(itemOptions?.registeredOfficeAddressDetails);
-    }
-
-    determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails, officer: string) => {
-        if (directorOrSecretaryDetails === undefined || !directorOrSecretaryDetails.includeBasicInformation) {
-            return "No";
-        }
-        const directorOrSecretaryOptions: string[] = [];
-
-        if (directorOrSecretaryDetails.includeAddress) {
-            directorOrSecretaryOptions.push("Correspondence address");
-        }
-        if (directorOrSecretaryDetails.includeOccupation) {
-            directorOrSecretaryOptions.push("Occupation");
-        }
-        if (directorOrSecretaryDetails.includeDobType === "partial") {
-            directorOrSecretaryOptions.push("Date of birth (month and year)");
-        }
-        if (directorOrSecretaryDetails.includeAppointmentDate) {
-            directorOrSecretaryOptions.push("Appointment date");
-        }
-        if (directorOrSecretaryDetails.includeNationality) {
-            directorOrSecretaryOptions.push("Nationality");
-        }
-        if (directorOrSecretaryDetails.includeCountryOfResidence) {
-            directorOrSecretaryOptions.push("Country of residence");
-        }
-        if (directorOrSecretaryOptions.length > 0) {
-            directorOrSecretaryOptions.unshift("Including " + officer + "':", "");
-        } else {
-            return "Yes";
-        }
-        return MapUtil.mapToHtml(directorOrSecretaryOptions);
     }
 }

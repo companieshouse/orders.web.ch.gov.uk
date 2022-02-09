@@ -1,10 +1,10 @@
 import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
-import {LPCertificateItemMapper} from "../../service/LPCertificateItemMapper";
 import {expect} from "chai";
+import { LiquidatedLLPCertificateItemMapper } from "../../service/LiquidatedLLPCertificateItemMapper";
 
-describe("mapPrincipalPlaceOfBusiness", () => {
+describe("Liquidated LLP certificate item mapper tests", () => {
 
-    const lpCertificateItemMapper: LPCertificateItemMapper = new LPCertificateItemMapper;
+    const liquidatedOtherCertificateItemMapper: LiquidatedLLPCertificateItemMapper = new LiquidatedLLPCertificateItemMapper;
 
     describe("getOrdersDetailTable", () => {
         it("transforms item into table", () => {
@@ -14,25 +14,27 @@ describe("mapPrincipalPlaceOfBusiness", () => {
                 companyNumber: "12345678",
                 itemOptions: {
                     certificateType: "incorporation-with-all-name-changes",
-                    includeGoodStandingInformation: true,
-                    principalPlaceOfBusinessDetails: {
+                    designatedMemberDetails: {
+                        includeBasicInformation: true
+                    },
+                    registeredOfficeAddressDetails: {
                         includeAddressRecordsType: "current"
                     },
-                    limitedPartnerDetails: {
+                    memberDetails: {
                         includeBasicInformation: true
                     },
-                    generalPartnerDetails: {
+                    liquidatorsDetails: {
                         includeBasicInformation: true
-                    },
-                    includeGeneralNatureOfBusinessInformation: true
+                    }
                 } as CertificateItemOptions
             }
 
             // when
-            const expected = lpCertificateItemMapper.getOrdersDetailTable(item)
+            const expected = liquidatedOtherCertificateItemMapper.getOrdersDetailTable(item)
 
             // then
-            expect(expected.length).to.equal(8)
+            expect(expected.length).to.equal(7)
+            expect(expected[6].key.text).to.equal("Liquidators' details")
         })
     })
 });

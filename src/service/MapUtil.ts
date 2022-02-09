@@ -1,4 +1,8 @@
 import { DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
+import {
+    DirectorOrSecretaryDetails,
+    MemberDetails
+} from "@companieshouse/api-sdk-node/dist/services/order/certificates";
 import { createLogger } from "ch-structured-logging";
 import { AddressRecordsType } from "model/AddressRecordsType";
 import { APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
@@ -100,5 +104,73 @@ export abstract class MapUtil {
                 logger.error(`Unable to map value for registered office address options: ${addressDetails.includeAddressRecordsType}`);
                 return "";
         }
+    }
+
+    static determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails, officer: string) => {
+        if (directorOrSecretaryDetails === undefined || !directorOrSecretaryDetails.includeBasicInformation) {
+            return "No";
+        }
+        const directorOrSecretaryOptions: string[] = [];
+
+        if (directorOrSecretaryDetails.includeAddress) {
+            directorOrSecretaryOptions.push("Correspondence address");
+        }
+        if (directorOrSecretaryDetails.includeOccupation) {
+            directorOrSecretaryOptions.push("Occupation");
+        }
+        if (directorOrSecretaryDetails.includeDobType === "partial") {
+            directorOrSecretaryOptions.push("Date of birth (month and year)");
+        }
+        if (directorOrSecretaryDetails.includeAppointmentDate) {
+            directorOrSecretaryOptions.push("Appointment date");
+        }
+        if (directorOrSecretaryDetails.includeNationality) {
+            directorOrSecretaryOptions.push("Nationality");
+        }
+        if (directorOrSecretaryDetails.includeCountryOfResidence) {
+            directorOrSecretaryOptions.push("Country of residence");
+        }
+        if (directorOrSecretaryOptions.length > 0) {
+            directorOrSecretaryOptions.unshift("Including " + officer + "':", "");
+        } else {
+            return "Yes";
+        }
+        return MapUtil.mapToHtml(directorOrSecretaryOptions);
+    }
+
+    static mapMembersOptions = (heading: string, memberOptions?: MemberDetails): string => {
+        if (memberOptions === undefined || memberOptions.includeBasicInformation === undefined) {
+            return "No";
+        }
+
+        if (memberOptions.includeBasicInformation === true &&
+            memberOptions.includeAddress === false &&
+            memberOptions.includeAppointmentDate === false &&
+            memberOptions.includeCountryOfResidence === false &&
+            memberOptions.includeDobType === undefined) {
+            return "Yes";
+        }
+
+        const membersMappings: string[] = [];
+        membersMappings.push(heading);
+
+        if (memberOptions.includeAddress) {
+            membersMappings.push("Correspondence address");
+        }
+
+        if (memberOptions.includeAppointmentDate) {
+            membersMappings.push("Appointment date");
+        }
+
+        if (memberOptions.includeCountryOfResidence) {
+            membersMappings.push("Country of residence");
+        }
+
+        if (memberOptions.includeDobType === "partial" ||
+            memberOptions.includeDobType === "full") {
+            membersMappings.push("Date of birth (month and year)");
+        }
+
+        return MapUtil.mapToHtml(membersMappings);
     }
 }
