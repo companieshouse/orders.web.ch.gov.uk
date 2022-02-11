@@ -153,6 +153,7 @@ export abstract class MapUtil {
 
         const membersMappings: string[] = [];
         membersMappings.push(heading);
+        membersMappings.push("");
 
         if (memberOptions.includeAddress) {
             membersMappings.push("Correspondence address");

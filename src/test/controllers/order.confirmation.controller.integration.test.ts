@@ -141,8 +141,8 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
                     chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
                     chai.expect($("#registeredOfficeAddress").text().trim()).to.equal("Current address and the one previous");
-                    chai.expect($("#currentDesignatedMembersNames").html()).to.equal("Including designated members':<br>Correspondence address<br>Appointment date<br>Country of residence<br>Date of birth (month and year)<br>");
-                    chai.expect($("#currentMembersNames").html()).to.equal("Including members':<br>Correspondence address<br>Appointment date<br>Country of residence<br>Date of birth (month and year)<br>");
+                    chai.expect($("#currentDesignatedMembersNames").html()).to.equal("Including designated members':<br><br>Correspondence address<br>Appointment date<br>Country of residence<br>Date of birth (month and year)<br>");
+                    chai.expect($("#currentMembersNames").html()).to.equal("Including members':<br><br>Correspondence address<br>Appointment date<br>Country of residence<br>Date of birth (month and year)<br>");
                     chai.expect(getOrderStub).to.have.been.called;
                     chai.expect(resp.text).to.not.contain("Your document details");
                     done();
