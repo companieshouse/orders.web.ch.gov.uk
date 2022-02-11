@@ -269,7 +269,7 @@ describe("MapUtil unit tests", () => {
             const result = MapUtil.mapMembersOptions("Including members':", itemOptions.memberDetails);
 
             // Then
-            expect(result).to.equal(MapUtil.mapToHtml(["Including members':", "Correspondence address", "Appointment date", "Country of residence", "Date of birth (month and year)"]));
+            expect(result).to.equal(MapUtil.mapToHtml(["Including members':", "", "Correspondence address", "Appointment date", "Country of residence", "Date of birth (month and year)"]));
         });
     });
 });
