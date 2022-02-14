@@ -144,12 +144,19 @@ export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | un
     return item?.itemUri + "/check-details";
 };
 
-export const retryGetCheckout = async (accessToken, orderId) => {
+export const retryGetCheckout = async (accessToken, orderId, retries: number = 3) => {
     await new Promise(resolve => setTimeout(resolve, 1500));
     const retryCheckout: Checkout = await getCheckout(accessToken, orderId);
 
     let paidAt = retryCheckout.paidAt;
     let paymentReference = retryCheckout.paymentReference;
+
+    if (paidAt === undefined || paymentReference === undefined) {
+        if(retries > 0) {
+            retryGetCheckout(accessToken, orderId, retries -1);
+        }
+        logger.error(`paid_at or payment_reference returned undefined after additional retries paid_at=${paidAt}, payment_reference=${paymentReference}`);
+    }
 
     return [paidAt, paymentReference];
 }
