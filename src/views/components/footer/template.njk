@@ -12,17 +12,23 @@
                   govuk-footer__list--columns-{{ nav.columns }}
                 {% endif %}
               {% endset %}
-              <ul class="govuk-footer__list {{ listClasses | trim }}">
-                {% for item in nav.items %}
-                  {% if item.href and item.text %}
-                    <li class="govuk-footer__list-item">
-                      <a class="govuk-footer__link" href="{{ item.href }}"{% for attribute, value in item.attributes %} {{attribute}}="{{value}}"{% endfor %}>
-                        {{ item.text }}
-                      </a>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
+              <ul class="govuk-footer__inline-list">
+              {% for item in params.meta.items %}
+              {% if item.target %}
+                <li class="govuk-footer__inline-list-item">
+                  <a class="govuk-footer__link" href="{{ item.href }}" target="{{ item.target }}"{% for attribute, value in item.attributes %} {{attribute}}="{{value}}"{% endfor %}>
+                    {{ item.text }} <span class="govuk-visually-hidden">{{ params.meta.visuallyHiddenTitle | default("Link opens in new tab") }}</span>
+                  </a>
+                </li>
+                {% else %}
+                <li class="govuk-footer__inline-list-item">
+                  <a class="govuk-footer__link" href="{{ item.href }}"{% for attribute, value in item.attributes %} {{attribute}}="{{value}}"{% endfor %}>
+                    {{ item.text }}
+                  </a>
+                </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
             {% endif %}
           </div>
         {% endfor %}
