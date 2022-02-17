@@ -61,12 +61,11 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         // A race condition exists with the payment, therefore it is sometimes required to retry
         if (paidAt === undefined || paymentReference === undefined) {
-            logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} user_id=${userId} - retrying get checkout`);
-
-            const returnedValues = await retryGetCheckout(accessToken, orderId);
-            paidAt = returnedValues[0];
-            paymentReference = returnedValues[1];
+            logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} order_id=${orderId} - retrying get checkout`);
+            await retryCheckoutInterval(accessToken, orderId, paidAt, paymentReference);
         }
+
+        logger.info(`EXITED THE INTERVAL paid_at: ${paidAt} payment_reference: ${paymentReference}`);
 
         const paymentDetails = {
             amount: "£" + checkout?.totalOrderCost,
@@ -144,19 +143,32 @@ export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | un
     return item?.itemUri + "/check-details";
 };
 
-export const retryGetCheckout = async (accessToken, orderId, retries: number = 3) => {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    const retryCheckout: Checkout = await getCheckout(accessToken, orderId);
+export const retryCheckoutInterval = async (accessToken, orderId, paidAt, paymentReference) => {
+    return new Promise(function(resolve) {
+        let retries = 1;
+        const checkoutInterval = setInterval(
+            async () => {
+                const retryCheckout: Checkout = await getCheckout(accessToken, orderId);
 
-    let paidAt = retryCheckout.paidAt;
-    let paymentReference = retryCheckout.paymentReference;
+                let paidAtRetry = retryCheckout.paidAt;
+                let paymentReferenceRetry = retryCheckout.paymentReference;
 
-    if (paidAt === undefined || paymentReference === undefined) {
-        if(retries > 0) {
-            retryGetCheckout(accessToken, orderId, retries -1);
-        }
-        logger.error(`paid_at or payment_reference returned undefined after additional retries paid_at=${paidAt}, payment_reference=${paymentReference}`);
-    }
-
-    return [paidAt, paymentReference];
-}
+                if(paidAtRetry === undefined || paymentReferenceRetry === undefined) {
+                    logger.info(`Retry attempt ${retries} failed to return paid_at or payment_reference for order_id=${orderId}`);
+                    retries++;
+                } else {
+                    logger.info(`paid_at and payment_reference returned successfully on retry attempt ${retries},
+                        order_id=${orderId} paid_at=${paidAtRetry}, payment_reference=${paymentReferenceRetry}`);
+                    paidAt = paidAtRetry;
+                    paymentReference = paymentReferenceRetry;
+                    clearInterval(checkoutInterval);
+                }
+                if(retries >= 4) {
+                    logger.error(`paid_at or payment_reference returned undefined after ${retries} retries,
+                        order_id=${orderId} paid_at=${paidAtRetry}, payment_reference=${paymentReferenceRetry}`);
+                    clearInterval(checkoutInterval);
+                }
+            }
+        , 1500);
+    });
+};
