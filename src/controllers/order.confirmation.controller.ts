@@ -62,7 +62,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         // A race condition exists with the payment, therefore it is sometimes required to retry
         if (paidAt === undefined || paymentReference === undefined) {
             logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} order_id=${orderId} - retrying get checkout`);
-            const returnedValues: string[] = await retryCheckoutInterval(accessToken, orderId);
+            const returnedValues: string[] = await retryGetCheckout(accessToken, orderId);
             console.log("RETURNED VALUES " + returnedValues);
 
             paidAt = returnedValues[0];
@@ -147,7 +147,7 @@ export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | un
     return item?.itemUri + "/check-details";
 };
 
-export const retryCheckoutInterval = async (accessToken, orderId) => {
+export const retryGetCheckout = async (accessToken, orderId) => {
     return new Promise<string[]>(function(resolve) {
         let retries = 1;
         const checkoutInterval = setInterval(
