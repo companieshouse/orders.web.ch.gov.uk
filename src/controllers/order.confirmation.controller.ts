@@ -9,7 +9,7 @@ import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/sessio
 
 import { getCheckout, getBasket } from "../client/api.client";
 import { ORDER_COMPLETE } from "../model/template.paths";
-import { APPLICATION_NAME } from "../config/config";
+import { APPLICATION_NAME, RETRY_CHECKOUT_NUMBER, RETRY_CHECKOUT_DELAY } from "../config/config";
 import { mapItem } from "../service/map.item.service";
 import { mapDate } from "../utils/date.util";
 import { Basket, BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/basket";
@@ -59,17 +59,17 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         let paidAt: string = checkout?.paidAt;
         let paymentReference: string = checkout?.paymentReference;
 
+        console.log(parseInt(RETRY_CHECKOUT_NUMBER));
+        console.log(parseInt(RETRY_CHECKOUT_DELAY));
+
         // A race condition exists with the payment, therefore it is sometimes required to retry
         if (paidAt === undefined || paymentReference === undefined) {
             logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} order_id=${orderId} - retrying get checkout`);
             const returnedValues: string[] = await retryGetCheckout(accessToken, orderId);
-            console.log("RETURNED VALUES " + returnedValues);
 
             paidAt = returnedValues[0];
             paymentReference = returnedValues[1];
         }
-
-        logger.info(`EXITED THE INTERVAL paid_at: ${paidAt} payment_reference: ${paymentReference}`);
 
         const paymentDetails = {
             amount: "£" + checkout?.totalOrderCost,
@@ -147,7 +147,7 @@ export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | un
     return item?.itemUri + "/check-details";
 };
 
-export const retryGetCheckout = async (accessToken, orderId) => {
+export const retryGetCheckout = async (accessToken, orderId: string) => {
     return new Promise<string[]>(function(resolve) {
         let retries = 1;
         const checkoutInterval = setInterval(
@@ -166,12 +166,12 @@ export const retryGetCheckout = async (accessToken, orderId) => {
                     resolve([paidAt, paymentReference]);
                     clearInterval(checkoutInterval);
                 }
-                if(retries >= 4) {
+                if(retries >= parseInt(RETRY_CHECKOUT_NUMBER)) {
                     logger.error(`paid_at or payment_reference returned undefined after ${retries} retries,
                         order_id=${orderId} paid_at=${paidAt}, payment_reference=${paymentReference}`);
                     clearInterval(checkoutInterval);
                 }
             }
-        , 1500);
+        , parseInt(RETRY_CHECKOUT_DELAY));
     });
 };
