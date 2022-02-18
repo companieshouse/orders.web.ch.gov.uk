@@ -59,9 +59,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         let paidAt: string = checkout?.paidAt;
         let paymentReference: string = checkout?.paymentReference;
 
-        console.log(parseInt(RETRY_CHECKOUT_NUMBER));
-        console.log(parseInt(RETRY_CHECKOUT_DELAY));
-
         // A race condition exists with the payment, therefore it is sometimes required to retry
         if (paidAt === undefined || paymentReference === undefined) {
             logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} order_id=${orderId} - retrying get checkout`);
