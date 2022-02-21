@@ -42,3 +42,7 @@ export const DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED = getEnvironmentValue("DYNAM
 export const DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED = getEnvironmentValue("DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED", "false") === "true";
 
 export const LIQUIDATED_COMPANY_CERTIFICATES_ENABLED = getEnvironmentValue("LIQUIDATED_COMPANY_CERTIFICATES_ENABLED", "false") === "true";
+
+export const RETRY_CHECKOUT_NUMBER = getEnvironmentValue("RETRY_CHECKOUT_NUMBER");
+
+export const RETRY_CHECKOUT_DELAY = getEnvironmentValue("RETRY_CHECKOUT_DELAY");
