@@ -9,6 +9,8 @@ import { CompanyStatus } from "../model/CompanyStatus";
 import { LiquidatedOtherCertificateItemMapper } from "./LiquidatedOtherCertificateItemMapper";
 import { NullItemMapper } from "./NullItemMapper";
 import { LiquidatedLLPCertificateItemMapper } from "./LiquidatedLLPCertificateItemMapper";
+import { AdministratedLLPCertificateItemMapper } from "./AdministratedLLPCertificateItemMapper";
+import { AdministratedOtherCertificateItemMapper } from "./AdministratedOtherCertificateItemMapper";
 
 export class ItemMapperFactoryConfig {
     public constructor (private readonly featureFlags: FeatureFlags) {
@@ -35,6 +37,9 @@ export class ItemMapperFactoryConfig {
         if (this.featureFlags.liquidationEnabled) {
             llpMappers.push([CompanyStatus.LIQUIDATION, () => new LiquidatedLLPCertificateItemMapper()]);
         }
+        if (this.featureFlags.administrationEnabled) {
+            llpMappers.push([CompanyStatus.ADMINISTRATION, () => new AdministratedLLPCertificateItemMapper()]);
+        }
         typeSpecificItemMappers.push([CompanyType.LIMITED_LIABILITY_PARTNERSHIP, new Map<string, () => ItemMapper>(llpMappers)]);
     }
 
@@ -52,6 +57,9 @@ export class ItemMapperFactoryConfig {
         ];
         if (this.featureFlags.liquidationEnabled) {
             defaultMappers.push([CompanyStatus.LIQUIDATION, () => new LiquidatedOtherCertificateItemMapper()]);
+        }
+        if (this.featureFlags.administrationEnabled) {
+            defaultMappers.push([CompanyStatus.ADMINISTRATION, () => new AdministratedOtherCertificateItemMapper()]);
         }
         typeSpecificItemMappers.push([ItemMapperFactory.defaultMapping, new Map<string, () => ItemMapper>(defaultMappers)]);
     }
