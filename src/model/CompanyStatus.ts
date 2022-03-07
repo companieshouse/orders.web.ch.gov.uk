@@ -1,4 +1,5 @@
 export enum CompanyStatus {
     ACTIVE = "active",
-    LIQUIDATION = "liquidation"
+    LIQUIDATION = "liquidation",
+    ADMINISTRATION = "administration"
 }
