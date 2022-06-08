@@ -34,6 +34,10 @@ test: test-unit
 test-unit:
 	npm run test
 
+.PHONY: sonar
+sonar:
+	npm run sonarqube
+
 .PHONY: package
 package: build
 ifndef version
