@@ -5,10 +5,19 @@ import { createLogger } from "ch-structured-logging";
 
 import { APPLICATION_NAME } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
+import { BASKET, ORDER_COMPLETE, ORDERS } from "../model/page.urls";
 
 const logger = createLogger(APPLICATION_NAME);
 
+const REDIRECTS_WHITELIST = {};
+REDIRECTS_WHITELIST[ORDERS] = ORDERS;
+REDIRECTS_WHITELIST[ORDER_COMPLETE] = ORDER_COMPLETE;
+REDIRECTS_WHITELIST[BASKET] = BASKET;
+
 export default (req: Request, res: Response, next: NextFunction) => {
+    // TODO GCI-2127: Do we need this log message?
+    logger.info(`req.originalUrl = ${req.originalUrl}`);
+
     if (!req.session) {
         logger.debug(`${req.url}: Session object is missing!`);
     }
@@ -16,11 +25,23 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
     if (!signedIn) {
         logger.info(`User unauthorized, status_code=401, Redirecting to: /signin?return_to=/basket`);
-        return res.redirect(`/signin?return_to=${req.originalUrl}`);
+        return res.redirect(`/signin?return_to=${getWhitelistedReturnToURL(req.originalUrl)}`);
     } else {
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
         logger.info(`User is signed in, user_id=${userId}`);
     }
     next();
+};
+
+const getWhitelistedReturnToURL = (returnToUrl: string) => {
+    logger.info(`Looking up return to URL ${returnToUrl} in whitelist.`);
+    if (returnToUrl in REDIRECTS_WHITELIST) {
+        logger.info(`Found return to URL ${returnToUrl} in whitelist.`);
+        return REDIRECTS_WHITELIST[returnToUrl];
+    } else {
+        const error = `Return to URL ${returnToUrl} not found in trusted URLs whitelist ${JSON.stringify(REDIRECTS_WHITELIST)}.`;
+        logger.error(error);
+        throw new Error(error);
+    }
 };
