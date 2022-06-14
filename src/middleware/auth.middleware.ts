@@ -15,9 +15,6 @@ REDIRECTS_WHITELIST[ORDER_COMPLETE] = ORDER_COMPLETE;
 REDIRECTS_WHITELIST[BASKET] = BASKET;
 
 export default (req: Request, res: Response, next: NextFunction) => {
-    // TODO GCI-2127: Do we need this log message?
-    logger.info(`req.originalUrl = ${req.originalUrl}`);
-
     if (!req.session) {
         logger.debug(`${req.url}: Session object is missing!`);
     }
