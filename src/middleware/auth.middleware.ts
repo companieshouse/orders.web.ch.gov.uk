@@ -31,7 +31,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     next();
 };
 
-const getWhitelistedReturnToURL = (returnToUrl: string) => {
+export const getWhitelistedReturnToURL = (returnToUrl: string) => {
     logger.info(`Looking up return to URL ${returnToUrl} in whitelist.`);
     if (returnToUrl in REDIRECTS_WHITELIST) {
         logger.info(`Found return to URL ${returnToUrl} in whitelist.`);
