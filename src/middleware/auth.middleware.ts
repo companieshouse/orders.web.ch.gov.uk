@@ -21,8 +21,9 @@ export default (req: Request, res: Response, next: NextFunction) => {
     const signedIn = req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1;
 
     if (!signedIn) {
-        logger.info(`User unauthorized, status_code=401, Redirecting to: /signin?return_to=/basket`);
-        return res.redirect(`/signin?return_to=${getWhitelistedReturnToURL(req.originalUrl)}`);
+        const redirection = `/signin?return_to=${getWhitelistedReturnToURL(req.originalUrl)}`;
+        logger.info(`User unauthorized, status_code=401, Redirecting to: ${redirection}`);
+        return res.redirect(redirection);
     } else {
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
@@ -31,7 +32,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     next();
 };
 
-const getWhitelistedReturnToURL = (returnToUrl: string) => {
+export const getWhitelistedReturnToURL = (returnToUrl: string) => {
     logger.info(`Looking up return to URL ${returnToUrl} in whitelist.`);
     if (returnToUrl in REDIRECTS_WHITELIST) {
         logger.info(`Found return to URL ${returnToUrl} in whitelist.`);
