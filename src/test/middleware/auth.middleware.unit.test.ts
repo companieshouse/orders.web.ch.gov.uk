@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { getWhitelistedReturnToURL } from "../../middleware/auth.middleware";
 import { ORDERS, ORDER_COMPLETE, BASKET } from "../../model/page.urls";
-const UNKNOWN_URL: string = "/unknown";
+const UNKNOWN_URL = "/unknown";
 
 describe("auth.middleware.unit", () => {
     describe("getWhitelistedReturnToURL", () => {
@@ -22,7 +22,9 @@ describe("auth.middleware.unit", () => {
 
         it("errors if asked to look up an unknown page URL", () => {
             const execution = () => getWhitelistedReturnToURL(UNKNOWN_URL);
-            expect(execution).to.throw("Return to URL /unknown not found in trusted URLs whitelist {\"/orders\":\"/orders\",\"/orders/:orderId/confirmation\":\"/orders/:orderId/confirmation\",\"/basket\":\"/basket\"}.");
+            expect(execution).to.throw("Return to URL /unknown not found in trusted URLs whitelist " +
+                "{\"/orders\":\"/orders\",\"/orders/:orderId/confirmation\":\"/orders/:orderId/confirmation\"," +
+                "\"/basket\":\"/basket\"}.");
         });
     });
 });
