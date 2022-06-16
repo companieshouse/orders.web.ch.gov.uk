@@ -36,7 +36,7 @@ const env = nunjucks.configure([
 const cookieConfig: CookieConfig = { cookieName: "__SID", cookieSecret: COOKIE_SECRET, cookieDomain: COOKIE_DOMAIN };
 const sessionStore = new SessionStore(new Redis(`redis://${CACHE_SERVER}`));
 
-const PROTECTED_PATHS = [pageUrls.BASKET, pageUrls.ORDERS];
+const PROTECTED_PATHS = [pageUrls.BASKET, pageUrls.ORDER_COMPLETE];
 app.use(PROTECTED_PATHS, createLoggerMiddleware(APPLICATION_NAME));
 app.use(PROTECTED_PATHS, SessionMiddleware(cookieConfig, sessionStore));
 app.use(PROTECTED_PATHS, authMiddleware);
