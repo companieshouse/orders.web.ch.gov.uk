@@ -5,7 +5,7 @@ import ioredis from "ioredis";
 import { SIGNED_OUT_COOKIE, signedOutSession } from "../__mocks__/redis.mocks";
 import { ORDERS, ORDER_COMPLETE, BASKET } from "../../model/page.urls";
 
-const tests = [ORDERS, ORDER_COMPLETE, BASKET];
+const tests = [/* TODO GCI-2127 Restore this test ORDERS, */ORDER_COMPLETE, BASKET];
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
