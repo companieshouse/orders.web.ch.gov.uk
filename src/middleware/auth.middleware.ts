@@ -6,7 +6,6 @@ import { createLogger } from "ch-structured-logging";
 import { APPLICATION_NAME } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import { BASKET, ORDER_COMPLETE, ORDERS, replaceOrderId } from "../model/page.urls";
-import * as QueryString from "querystring";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -24,7 +23,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     if (!req.session) {
         logger.debug(`${req.url}: Session object is missing!`);
     }
-    const signedIn = req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1 && !req.originalUrl.startsWith("/orders");
+    const signedIn = req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1;
 
     if (!signedIn) {
         const redirection = `/signin?return_to=${getWhitelistedReturnToURL(req)}`;
