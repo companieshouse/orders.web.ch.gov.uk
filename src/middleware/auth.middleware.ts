@@ -55,7 +55,18 @@ export const getWhitelistedReturnToURL = (req: Request) => {
 const rebuildOrderCompleteURL = (req: Request) => {
     const queryString = Object.keys.length > 0
         ? "?" + Object.keys(req.query).map(key => key + "=" + req.query[key]).join("&") : "";
-    const orderCompleteURL = replaceOrderId(ORDER_COMPLETE, /* GCI-2127 Try NOT using orderId req.params.orderId */"123") + queryString;
+    const orderCompleteURL = replaceOrderId(ORDER_COMPLETE, getWellFormedOrderId(req)) + queryString;
     logger.info(`Rebuilt order complete URL = ${orderCompleteURL}`);
     return orderCompleteURL;
+};
+
+const getWellFormedOrderId = (req: Request) => {
+    const wellFormedOrderId = /ORD-\d{6}-\d{6}/;
+    if (wellFormedOrderId.test(req.params.orderId)) {
+        return req.params.orderId;
+    } else {
+        const error = `req.params.orderId ${req.params.orderId} is not a valid order ID`;
+        logger.error(error);
+        throw new Error(error);
+    }
 };
