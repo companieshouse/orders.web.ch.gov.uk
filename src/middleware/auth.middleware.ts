@@ -16,7 +16,7 @@ REDIRECTS_WHITELIST[ORDERS] = ORDERS;
 REDIRECTS_WHITELIST[ORDER_COMPLETE] = ORDER_COMPLETE;
 REDIRECTS_WHITELIST[BASKET] = BASKET;
 
-export default async (req: Request, res: Response, next: NextFunction) => {
+export default (req: Request, res: Response, next: NextFunction) => {
     // TODO GCI-2127 We probably will not need to log these?
     logger.info(`req.originalUrl = ${req.originalUrl}`);
     logger.info(`req.params = ${JSON.stringify(req.params)}`);
@@ -39,7 +39,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     next();
 };
 
-export const getWhitelistedReturnToURL = async (req: Request) => {
+export const getWhitelistedReturnToURL = (req: Request) => {
     const returnToUrl = req.originalUrl;
     logger.info(`Looking up return to URL ${returnToUrl} in whitelist.`);
     if (returnToUrl in REDIRECTS_WHITELIST) {
