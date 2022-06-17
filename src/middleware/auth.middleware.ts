@@ -55,11 +55,12 @@ export const getWhitelistedReturnToURL = (req: Request) => {
 const rebuildOrderCompleteURL = (req: Request) => {
     const queryString = Object.keys.length > 0
         ? "?" + Object.keys(req.query).map(key => key + "=" + req.query[key]).join("&") : "";
-    const orderCompleteURL = replaceOrderId(ORDER_COMPLETE, getWellFormedOrderId2(req)) + queryString;
+    const orderCompleteURL = replaceOrderId(ORDER_COMPLETE, getWellFormedOrderId3(req)) + queryString;
     logger.info(`Rebuilt order complete URL = ${orderCompleteURL}`);
     return orderCompleteURL;
 };
 
+// FAIL - Sonar still sees this as a critical security vulnerability.
 const getWellFormedOrderId = (req: Request) => {
     const wellFormedOrderId = /ORD-\d{6}-\d{6}/;
     if (wellFormedOrderId.test(req.params.orderId)) {
@@ -72,6 +73,7 @@ const getWellFormedOrderId = (req: Request) => {
 };
 
 // getWellFormedOrderId2 gets the order ID indirectly by extracting it from the reference parameter.
+// - PASS according to Sonar.
 const getWellFormedOrderId2 = (req: Request) => {
     const wellFormedOrderId = /ORD-\d{6}-\d{6}/;
     const reference = req.query.ref;
@@ -82,6 +84,21 @@ const getWellFormedOrderId2 = (req: Request) => {
         }
     }
     const error = `Unable to extract order Id from ref parameter ${reference}`;
+    logger.error(error);
+    throw new Error(error);
+};
+
+// getWellFormedOrderId3 gets the order ID indirectly by extracting it from req.params.orderId via a regex match.
+const getWellFormedOrderId3 = (req: Request) => {
+    const wellFormedOrderId = /ORD-\d{6}-\d{6}/;
+    const orderId = req.params.orderId;
+    if (orderId !== null && orderId !== undefined) {
+        const extractedOrderIds = orderId.match(wellFormedOrderId);
+        if (extractedOrderIds !== null && extractedOrderIds.length > 0) {
+            return extractedOrderIds[0];
+        }
+    }
+    const error = `Unable to extract order Id from orderId path parameter ${orderId}`;
     logger.error(error);
     throw new Error(error);
 };
