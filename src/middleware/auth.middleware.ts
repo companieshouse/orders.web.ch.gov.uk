@@ -55,7 +55,7 @@ export const getWhitelistedReturnToURL = (req: Request) => {
 const rebuildOrderCompleteURL = (req: Request) => {
     const queryString = Object.keys.length > 0
         ? "?" + Object.keys(req.query).map(key => key + "=" + req.query[key]).join("&") : "";
-    const orderCompleteURL = replaceOrderId(ORDER_COMPLETE, getWellFormedOrderId(req)) + queryString;
+    const orderCompleteURL = replaceOrderId(ORDER_COMPLETE, getWellFormedOrderId2(req)) + queryString;
     logger.info(`Rebuilt order complete URL = ${orderCompleteURL}`);
     return orderCompleteURL;
 };
@@ -69,4 +69,19 @@ const getWellFormedOrderId = (req: Request) => {
         logger.error(error);
         throw new Error(error);
     }
+};
+
+// getWellFormedOrderId2 gets the order ID indirectly by extracting it from the reference parameter.
+const getWellFormedOrderId2 = (req: Request) => {
+    const wellFormedOrderId = /ORD-\d{6}-\d{6}/;
+    const reference = req.query.ref;
+    if (reference !== null && reference !== undefined && typeof reference === "string") {
+        const extractedOrderIds = reference.match(wellFormedOrderId);
+        if (extractedOrderIds !== null && extractedOrderIds.length > 0) {
+            return extractedOrderIds[0];
+        }
+    }
+    const error = `Unable to extract order Id from ref parameter ${reference}`;
+    logger.error(error);
+    throw new Error(error);
 };
