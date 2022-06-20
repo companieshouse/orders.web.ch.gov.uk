@@ -296,10 +296,10 @@ describe("order.confirmation.controller.integration", () => {
     it("redirects and applies the itemType query param", async () => {
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockCertificateCheckoutResponse));
         const resp = await chai.request(testApp)
-            .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+            .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid`)
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
             .redirects(0);
-        chai.expect(resp).to.redirectTo(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`);
+        chai.expect(resp).to.redirectTo(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid&itemType=certificate`);
     });
 
     it.skip("renders an error page if get order fails", (done) => {
@@ -339,7 +339,7 @@ describe("order.confirmation.controller.integration", () => {
         it("redirects to " + itemKind.name + " check details page if status is cancelled and item type is " + itemKind.name, async () => {
             getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketCancelledFailedResponse));
             const resp = await chai.request(testApp)
-                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=cancelled&itemType=${itemKind.name}`)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=cancelled&itemType=${itemKind.name}`)
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
                 .redirects(0);
             chai.expect(resp.text).to.include(`${itemKind.url}/check-details`);
