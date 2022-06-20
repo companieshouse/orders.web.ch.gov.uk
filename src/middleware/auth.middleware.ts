@@ -6,6 +6,7 @@ import { createLogger } from "ch-structured-logging";
 import { APPLICATION_NAME } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import { BASKET, ORDER_COMPLETE, ORDERS, replaceOrderId } from "../model/page.urls";
+import { extractValueFromRequestField } from "../utils/request.util";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -75,31 +76,11 @@ const getWellFormedOrderId = (req: Request) => {
 // getWellFormedOrderId2 gets the order ID indirectly by extracting it from the reference parameter.
 // - PASS according to Sonar.
 const getWellFormedOrderId2 = (req: Request) => {
-    const wellFormedOrderId = /ORD-\d{6}-\d{6}/;
-    const reference = req.query.ref;
-    if (reference !== null && reference !== undefined && typeof reference === "string") {
-        const extractedOrderIds = reference.match(wellFormedOrderId);
-        if (extractedOrderIds !== null && extractedOrderIds.length > 0) {
-            return extractedOrderIds[0];
-        }
-    }
-    const error = `Unable to extract order Id from ref parameter ${reference}`;
-    logger.error(error);
-    throw new Error(error);
+    return extractValueFromRequestField(<String>req.query.ref, /ORD-\d{6}-\d{6}/);
 };
 
 // getWellFormedOrderId3 gets the order ID indirectly by extracting it from req.params.orderId via a regex match.
 // - PASS according to Sonar.
 const getWellFormedOrderId3 = (req: Request) => {
-    const wellFormedOrderId = /ORD-\d{6}-\d{6}/;
-    const orderId = req.params.orderId;
-    if (orderId !== null && orderId !== undefined) {
-        const extractedOrderIds = orderId.match(wellFormedOrderId);
-        if (extractedOrderIds !== null && extractedOrderIds.length > 0) {
-            return extractedOrderIds[0];
-        }
-    }
-    const error = `Unable to extract order Id from orderId path parameter ${orderId}`;
-    logger.error(error);
-    throw new Error(error);
+    return extractValueFromRequestField(req.params.orderId, /ORD-\d{6}-\d{6}/);
 };
