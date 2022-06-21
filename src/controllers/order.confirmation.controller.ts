@@ -13,11 +13,9 @@ import { APPLICATION_NAME, RETRY_CHECKOUT_NUMBER, RETRY_CHECKOUT_DELAY } from ".
 import { mapItem } from "../service/map.item.service";
 import { mapDate } from "../utils/date.util";
 import { Basket, BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/basket";
-import { extractValueFromRequestField } from "../utils/request.util";
+import { getWhitelistedReturnToURL } from "../utils/request.util";
 
 const logger = createLogger(APPLICATION_NAME);
-
-const VALID_ORDER_CONFIRMATION_URL = /\/orders\/ORD-\d{6}-\d{6}\/confirmation\?ref=orderable_item_ORD-\d{6}-\d{6}\&state=[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}&status=[a-z]*/;
 
 export const render = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -48,8 +46,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const checkout: Checkout = await getCheckout(accessToken, orderId);
         if (itemType === undefined || itemType === "") {
             const item = checkout?.items?.[0];
-            return res.redirect(
-                extractValueFromRequestField(req.originalUrl, VALID_ORDER_CONFIRMATION_URL) + getItemTypeUrlParam(item));
+            return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + getItemTypeUrlParam(item));
         }
 
         logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);

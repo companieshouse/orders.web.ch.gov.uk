@@ -3,11 +3,11 @@ import sinon from "sinon";
 import ioredis from "ioredis";
 
 import { SIGNED_OUT_COOKIE, signedOutSession } from "../__mocks__/redis.mocks";
-import { ORDERS, ORDER_COMPLETE, BASKET } from "../../model/page.urls";
+import { ORDERS, BASKET } from "../../model/page.urls";
 
-const tests = [/* TODO GCI-2127 Restore this test ORDERS, */
-    "/orders/ORD-453216-553922/confirmation?ref=orderable_item_ORD-453216-553922&state=096e9be6-e57e-4923-8785-6b68b95665ee&status=paid",
-    ORDER_COMPLETE, BASKET];
+const ORDER_CONFIRMATION =
+        "/orders/ORD-453216-553922/confirmation?ref=orderable_item_ORD-453216-553922&state=096e9be6-e57e-4923-8785-6b68b95665ee&status=paid";
+const tests = [ORDERS, ORDER_CONFIRMATION, BASKET];
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
