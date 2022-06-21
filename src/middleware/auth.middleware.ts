@@ -10,11 +10,6 @@ import { getWhitelistedReturnToURL } from "../utils/request.util";
 const logger = createLogger(APPLICATION_NAME);
 
 export default (req: Request, res: Response, next: NextFunction) => {
-    // TODO GCI-2127 We probably will not need to log these?
-    logger.info(`req.originalUrl = ${req.originalUrl}`);
-    logger.info(`req.params = ${JSON.stringify(req.params)}`);
-    logger.info(`req.query = ${JSON.stringify(req.query)}`);
-
     if (!req.session) {
         logger.debug(`${req.url}: Session object is missing!`);
     }

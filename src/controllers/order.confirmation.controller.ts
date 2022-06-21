@@ -30,9 +30,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const CERTIFIED_COPY_PAGE_TITLE = "Certified document order confirmed - Order a certified document - GOV.UK";
         const MID_PAGE_TITLE = "Document Requested - Request a document - GOV.UK";
 
-        // TODO GCI-2127 We probably will not need to log this?
-        logger.info(`*** req.originalUrl = ${req.originalUrl}`);
-
         logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, itemType=${itemType}, user_id=${userId}`);
         if (status === "cancelled" || status === "failed") {
             const basket: Basket = await getBasket(accessToken);
