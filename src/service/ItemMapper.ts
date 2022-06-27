@@ -11,7 +11,7 @@ export interface CheckDetailsItem {
     serviceName?: string;
     titleText?: string;
     pageTitle?: string;
-    happensNext?: string;
+    happensNext?: any;
     filingHistoryDocuments?: any[];
     orderDetailsTable?: any[];
     documentDetailsTable?: number;
@@ -20,8 +20,8 @@ export interface CheckDetailsItem {
 }
 
 export abstract class ItemMapper {
-
     getCheckDetailsItem = (itemDetails: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions, deliveryDetails: DeliveryDetails | undefined }): CheckDetailsItem => {
+        
         return {
             serviceUrl: `/company/${itemDetails?.companyNumber}/orderable/certificates`,
             serviceName: SERVICE_NAME_CERTIFICATES,
@@ -37,6 +37,7 @@ export abstract class ItemMapper {
     protected getDeliveryDetailsTable = (item: { itemOptions: CertificateItemOptions, deliveryDetails: DeliveryDetails | undefined }): any => {
         const address = this.mapDeliveryDetails(item.deliveryDetails);
         const deliveryMethod = this.mapDeliveryMethod(item?.itemOptions);
+        const emailCopyRequired = this.mapEmailCopyRequired(item?.itemOptions);
 
         let certificateDeliveryDetails = [
             {
@@ -47,6 +48,16 @@ export abstract class ItemMapper {
                 value: {
                     classes: "govuk-!-width-one-half",
                     html: "<p id='deliveryMethodValue'>" + deliveryMethod + "</p>"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-half",
+                    text: "Email copy required"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='emailCopyRequiredValue'>" + emailCopyRequired + "</p>"
                 }
             },
             {
@@ -73,6 +84,10 @@ export abstract class ItemMapper {
 
     mapDeliveryMethod = (itemOptions: CertificateItemOptions): string | null => {
         return MapUtil.mapDeliveryMethod(itemOptions);
+    }
+
+    mapEmailCopyRequired = (itemOptions: CertificateItemOptions): string => {
+        return MapUtil.mapEmailCopyRequired(itemOptions);
     }
 
     mapCertificateType = (certificateType: string): string | null => {
