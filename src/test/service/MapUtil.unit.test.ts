@@ -96,6 +96,18 @@ describe("MapUtil unit tests", () => {
         });
     });
 
+    describe("mapEmailCopyRequired", () => {
+        it("item option true returns Yes", () => {
+            const result = MapUtil.mapEmailCopyRequired(true);
+            expect(result).to.equal("Yes");
+        });
+
+        it("item option false returns No", () => {
+            const result = MapUtil.mapEmailCopyRequired(false);
+            expect(result).to.equal("No");
+        });
+    });
+
     describe("addressMapping unit tests", () => {
         it("correctly handles the case where registeredOfficeAddressDetails are undefined", () => {
             const result = MapUtil.mapAddressOptions(undefined);

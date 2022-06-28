@@ -67,7 +67,7 @@ export abstract class MapUtil {
         return null;
     }
 
-    static mapEmailCopyRequired = (itemOptions: Record<string, any>): string  => {
+    static mapEmailCopyRequired = (itemOptions: any): string  => {
         if(itemOptions?.deliveryTimescale === "same-day") {
             if (itemOptions?.includeEmailCopy === true) {
                 return  "Yes";

@@ -11,7 +11,7 @@ export interface CheckDetailsItem {
     serviceName?: string;
     titleText?: string;
     pageTitle?: string;
-    happensNext?: any;
+    happensNext?: string;
     filingHistoryDocuments?: any[];
     orderDetailsTable?: any[];
     documentDetailsTable?: number;

@@ -71,6 +71,7 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                     chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
                     chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
+                    chai.expect($("#emailCopyRequiredValue").text()).to.equal("Yes");
                     chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                     chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                     chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
@@ -136,6 +137,7 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                     chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
                     chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
+                    chai.expect($("#emailCopyRequiredValue").text()).to.equal("Yes");
                     chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                     chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                     chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
@@ -195,6 +197,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                 chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
+                chai.expect($("#emailCopyRequiredValue").text()).to.equal("Yes");
                 chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
