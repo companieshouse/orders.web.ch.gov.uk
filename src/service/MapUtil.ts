@@ -67,6 +67,16 @@ export abstract class MapUtil {
         return null;
     }
 
+    static mapEmailCopyRequired = (itemOptions: Record<string, any>): string | null => {
+        if (itemOptions?.includeEmailCopy === true) {
+            return "Yes";
+        }
+        if (itemOptions?.includeEmailCopy === false) {
+            return "No";
+        }
+        return null;
+    }
+
     static mapCertificateType = (certificateType: string): string | null => {
         if (!certificateType) {
             return null;
