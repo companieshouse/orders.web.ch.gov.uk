@@ -272,4 +272,28 @@ describe("MapUtil unit tests", () => {
             expect(result).to.equal(MapUtil.mapToHtml(["Including members':", "", "Correspondence address", "Appointment date", "Country of residence", "Date of birth (month and year)"]));
         });
     });
+
+    describe("mapEmailRequired", () => {
+        let itemOptions = {
+            deliveryTimescale: "same-day",
+            includeEmailCopy: false
+        } as CertificateItemOptions;
+
+        it("map standard delivery timescale to show email only available for same day delivery", () => {
+            const result = MapUtil.mapEmailCopyRequired(itemOptions);
+            expect(result).to.equal("Email only available for express delivery method");
+        });
+        it("map same day delivery timescale with email required to display yes", () => {
+            itemOptions.deliveryTimescale = "same-day";
+            itemOptions.includeEmailCopy = true;
+            const result = MapUtil.mapEmailCopyRequired(itemOptions);
+            expect(result).to.equal("Yes");
+        });
+        it("map same day delivery timescale with np email required to display no", () => {
+            itemOptions.deliveryTimescale = "same-day";
+            itemOptions.includeEmailCopy = false;
+            const result = MapUtil.mapEmailCopyRequired(itemOptions);
+            expect(result).to.equal("No");
+        });
+    });
 });
