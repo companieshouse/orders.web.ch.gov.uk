@@ -1,6 +1,6 @@
 import {MapUtil} from "../../service/MapUtil";
 import {expect} from "chai";
-import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { DISPATCH_DAYS } from "../../config/config";
 import {AddressRecordsType} from "../../model/AddressRecordsType";
 import { DobType } from "../../model/DobType";
@@ -275,7 +275,7 @@ describe("MapUtil unit tests", () => {
 
     describe("mapEmailRequired", () => {
         let itemOptions = {
-            deliveryTimescale: "same-day",
+            deliveryTimescale: "standard",
             includeEmailCopy: false
         } as CertificateItemOptions;
 

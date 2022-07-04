@@ -3,7 +3,7 @@ import {
     DirectorOrSecretaryDetails,
     MemberDetails
 } from "@companieshouse/api-sdk-node/dist/services/order/certificates";
-import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { createLogger } from "ch-structured-logging";
 import { AddressRecordsType } from "model/AddressRecordsType";
 import { APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
@@ -68,7 +68,7 @@ export abstract class MapUtil {
         return null;
     }
 
-    static mapEmailCopyRequired = (itemOptions: CertificateItemOptions): string | null => {
+    static mapEmailCopyRequired = (itemOptions: CertificateItemOptions): string => {
         if(itemOptions?.deliveryTimescale === "same-day") {
             if (itemOptions?.includeEmailCopy === true) {
                 return "Yes"

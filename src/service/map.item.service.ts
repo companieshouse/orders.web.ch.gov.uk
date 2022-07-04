@@ -1,5 +1,5 @@
 import { DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
-import { Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { FilingHistoryDocuments } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
 
 import {
