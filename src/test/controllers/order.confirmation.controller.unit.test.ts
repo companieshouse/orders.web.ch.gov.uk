@@ -6,6 +6,7 @@ import sinon from "sinon";
 
 import { getItemTypeUrlParam, getRedirectUrl, retryGetCheckout } from "../../controllers/order.confirmation.controller";
 import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem, mockCertificateCheckoutResponse, ACCESS_TOKEN, ORDER_ID } from "../__mocks__/order.mocks";
+import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 
 describe("order.confirmation.controller.unit", () => {
     describe("getItemTypeUrlParam", () => {
@@ -65,7 +66,11 @@ describe("order.confirmation.controller.unit", () => {
 
     it("retry checkout", async () => {
         const sandbox = sinon.createSandbox();
-        const getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockCertificateCheckoutResponse));
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockCertificateCheckoutResponse
+        }
+        const getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
         const mockCheckoutResponse = mockCertificateCheckoutResponse;
 
         const result = await retryGetCheckout(ACCESS_TOKEN, ORDER_ID);

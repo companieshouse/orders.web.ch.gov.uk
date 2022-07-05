@@ -3,6 +3,7 @@ import {
     DirectorOrSecretaryDetails,
     MemberDetails
 } from "@companieshouse/api-sdk-node/dist/services/order/certificates";
+import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { createLogger } from "ch-structured-logging";
 import { AddressRecordsType } from "model/AddressRecordsType";
 import { APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
@@ -62,9 +63,21 @@ export abstract class MapUtil {
             return "Standard delivery (aim to dispatch within " + DISPATCH_DAYS + " working days)";
         }
         if (itemOptions?.deliveryTimescale === "same-day") {
-            return "Same Day";
+            return "Express (Orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day)";
         }
         return null;
+    }
+
+    static mapEmailCopyRequired = (itemOptions: CertificateItemOptions): string => {
+        if(itemOptions?.deliveryTimescale === "same-day") {
+            if (itemOptions?.includeEmailCopy === true) {
+                return "Yes"
+            } else {
+                return "No"
+            }
+        } else {
+            return "Email only available for express delivery method"
+        }
     }
 
     static mapCertificateType = (certificateType: string): string | null => {

@@ -2,8 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Session } from "@companieshouse/node-session-handler";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
-import { CertificateItemOptions, Item } from "@companieshouse/api-sdk-node/dist/services/order/order";
-import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
+import { CertificateItemOptions, Checkout, Item } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
@@ -40,7 +39,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             return res.redirect(redirectUrl);
         };
 
-        const checkout: Checkout = await getCheckout(accessToken, orderId);
+        const checkout = (await getCheckout(accessToken, orderId)).resource as Checkout;
         if (itemType === undefined || itemType === "") {
             const item = checkout?.items?.[0];
             return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + getItemTypeUrlParam(item));
@@ -150,7 +149,7 @@ export const retryGetCheckout = async (accessToken, orderId: string) => {
         let retries = 1;
         const checkoutInterval = setInterval(
             async () => {
-                const retryCheckout: Checkout = await getCheckout(accessToken, orderId);
+                const retryCheckout = (await getCheckout(accessToken, orderId)).resource as Checkout;
 
                 let paidAt = retryCheckout.paidAt;
                 let paymentReference = retryCheckout.paymentReference;

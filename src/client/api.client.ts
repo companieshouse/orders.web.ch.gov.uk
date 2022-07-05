@@ -68,12 +68,22 @@ export const createPayment = async (oAuth: string, paymentUrl: string, checkoutI
     }
 };
 
-export const getCheckout = async (oAuth: string, checkoutId: string): Promise<Checkout> => {
+export const getCheckout = async (oAuth: string, checkoutId: string): Promise<ApiResponse<Checkout>> => {
     const api = createApiClient(undefined, oAuth, API_URL);
-    const checkoutResource: Resource<Checkout> = await api.checkout.getCheckout(checkoutId);
-    if (checkoutResource.httpStatusCode !== 200 && checkoutResource.httpStatusCode !== 201) {
-        throw createError(checkoutResource.httpStatusCode, checkoutResource.httpStatusCode.toString());
+    const checkoutResult: ApiResult<ApiResponse<Checkout>> = await api.checkout.getCheckout(checkoutId);
+
+    if (checkoutResult.isFailure()) {
+        const errorResponse = checkoutResult.value;
+        logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);
+        if (errorResponse.httpStatusCode === 409 ||
+            errorResponse.httpStatusCode === 401 ||
+            errorResponse.httpStatusCode === 400) {
+            throw createError(errorResponse.httpStatusCode, JSON.stringify(errorResponse?.errors?.[0]) || "Unknown Error");
+        } else {
+            throw createError("Unknown Error");
+        }
+    } else {
+        logger.info(`Get checkout, status_code=${checkoutResult.value.httpStatusCode}`);
+        return checkoutResult.value;
     }
-    logger.info(`Get checkout, status_code=${checkoutResource.httpStatusCode}`);
-    return checkoutResource.resource as Checkout;
 };

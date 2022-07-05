@@ -36,7 +36,7 @@ describe("api.client", () => {
             chai.expect(apiResponse.resource?.reference).to.equal(checkoutServiceResponse.resource.reference);
         });
 
-        it.skip("should throw an error if call is unsuccessful", () => {
+        it("should throw an error if call is unsuccessful", () => {
             const checkoutServiceResponse: ApiErrorResponse = {
                 httpStatusCode: 400,
                 errors: [{ error: "error" }]
@@ -61,7 +61,7 @@ describe("api.client", () => {
             chai.expect(apiResponse.resource?.reference).to.equal(paymentServiceResponse.resource.reference);
         });
 
-        it.skip("should throw an error if call is unsuccessful", () => {
+        it("should throw an error if call is unsuccessful", () => {
             const checkoutServiceResponse: ApiErrorResponse = {
                 httpStatusCode: 400,
                 errors: [{ error: "error" }]
