@@ -5,6 +5,8 @@ import {MapUtil} from "./MapUtil";
 
 export const SERVICE_NAME_CERTIFICATES = "Order a certificate";
 const dispatchDays: string = DISPATCH_DAYS;
+const SAME_DAY_HAPPENS_NEXT_TEXT = "We'll prepare the certificate and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.";
+const DEFAULT_TEXT = "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.";
 
 export interface CheckDetailsItem {
     serviceUrl?: string;
@@ -22,10 +24,7 @@ export interface CheckDetailsItem {
 export abstract class ItemMapper {
 
     getCheckDetailsItem = (itemDetails: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions, deliveryDetails: DeliveryDetails | undefined }): CheckDetailsItem => {
-       const SAME_DAY_HAPPENS_NEXT_TEXT = "We'll prepare the certificate and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.";
-       const DEFAULT_TEXT = "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.";
-       
-        const whatHappensNextText = itemDetails.itemOptions?.deliveryTimescale === "same-day" ? SAME_DAY_HAPPENS_NEXT_TEXT : DEFAULT_TEXT
+       const whatHappensNextText = itemDetails.itemOptions?.deliveryTimescale === "same-day" ? SAME_DAY_HAPPENS_NEXT_TEXT : DEFAULT_TEXT
         
             return {
                 serviceUrl: `/company/${itemDetails?.companyNumber}/orderable/certificates`,
