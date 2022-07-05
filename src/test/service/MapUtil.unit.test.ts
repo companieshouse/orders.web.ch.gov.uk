@@ -92,7 +92,7 @@ describe("MapUtil unit tests", () => {
 
         it("maps same-day to Same Day", () => {
             const result = MapUtil.mapDeliveryMethod({deliveryTimescale: "same-day"} as CertificateItemOptions);
-            expect(result).to.equal("Same Day");
+            expect(result).to.equal("Express (Orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day)");
         });
     });
 
@@ -289,7 +289,7 @@ describe("MapUtil unit tests", () => {
             const result = MapUtil.mapEmailCopyRequired(itemOptions);
             expect(result).to.equal("Yes");
         });
-        it("map same day delivery timescale with np email required to display no", () => {
+        it("map same day delivery timescale with no email required to display no", () => {
             itemOptions.deliveryTimescale = "same-day";
             itemOptions.includeEmailCopy = false;
             const result = MapUtil.mapEmailCopyRequired(itemOptions);
