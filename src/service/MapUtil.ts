@@ -63,7 +63,7 @@ export abstract class MapUtil {
             return "Standard delivery (aim to dispatch within " + DISPATCH_DAYS + " working days)";
         }
         if (itemOptions?.deliveryTimescale === "same-day") {
-            return "Same Day";
+            return "Express (Orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day)";
         }
         return null;
     }
