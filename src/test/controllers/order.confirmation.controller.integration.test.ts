@@ -340,7 +340,7 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect(resp).to.redirectTo(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid&itemType=certificate`);
     });
 
-    it.skip("renders an error page if get order fails", (done) => {
+    it("renders an error page if get order fails", (done) => {
         getOrderStub = sandbox.stub(apiClient, "checkoutBasket").throws(new Error("ERROR"));
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
