@@ -39,7 +39,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             return res.redirect(redirectUrl);
         };
 
-        const checkout = await (await getCheckout(accessToken, orderId)).resource as Checkout;
+        const checkout = (await getCheckout(accessToken, orderId)).resource as Checkout;
         if (itemType === undefined || itemType === "") {
             const item = checkout?.items?.[0];
             return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + getItemTypeUrlParam(item));
@@ -149,7 +149,7 @@ export const retryGetCheckout = async (accessToken, orderId: string) => {
         let retries = 1;
         const checkoutInterval = setInterval(
             async () => {
-                const retryCheckout = await (await getCheckout(accessToken, orderId)).resource as Checkout;
+                const retryCheckout = (await getCheckout(accessToken, orderId)).resource as Checkout;
 
                 let paidAt = retryCheckout.paidAt;
                 let paymentReference = retryCheckout.paymentReference;
