@@ -22,16 +22,19 @@ export interface CheckDetailsItem {
 export abstract class ItemMapper {
 
     getCheckDetailsItem = (itemDetails: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions, deliveryDetails: DeliveryDetails | undefined }): CheckDetailsItem => {
-        return {
-            serviceUrl: `/company/${itemDetails?.companyNumber}/orderable/certificates`,
-            serviceName: SERVICE_NAME_CERTIFICATES,
-            titleText: "Certificate ordered",
-            pageTitle: "Certificate ordered confirmation",
-            happensNext: "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.",
-            orderDetailsTable: this.getOrdersDetailTable(itemDetails),
-            certificateDetailsTable: 1,
-            deliveryDetailsTable: this.getDeliveryDetailsTable(itemDetails)
-        }
+        const happensText = itemDetails.itemOptions?.deliveryTimescale === "same-day" ? "We'll prepare the certificate and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day." :
+        "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days."
+        
+            return {
+                serviceUrl: `/company/${itemDetails?.companyNumber}/orderable/certificates`,
+                serviceName: SERVICE_NAME_CERTIFICATES,
+                titleText: "Certificate ordered",
+                pageTitle: "Certificate ordered confirmation",
+                happensNext: happensText,
+                orderDetailsTable: this.getOrdersDetailTable(itemDetails),
+                certificateDetailsTable: 1,
+                deliveryDetailsTable: this.getDeliveryDetailsTable(itemDetails)
+            }
     }
 
     protected getDeliveryDetailsTable = (item: { itemOptions: CertificateItemOptions, deliveryDetails: DeliveryDetails | undefined }): any => {
