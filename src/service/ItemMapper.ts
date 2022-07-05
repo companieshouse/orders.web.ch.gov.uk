@@ -22,15 +22,17 @@ export interface CheckDetailsItem {
 export abstract class ItemMapper {
 
     getCheckDetailsItem = (itemDetails: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions, deliveryDetails: DeliveryDetails | undefined }): CheckDetailsItem => {
-        const happensText = itemDetails.itemOptions?.deliveryTimescale === "same-day" ? "We'll prepare the certificate and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day." :
-        "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days."
+       const SAME_DAY_HAPPENS_NEXT_TEXT = "We'll prepare the certificate and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.";
+       const DEFAULT_TEXT = "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.";
+       
+        const whatHappensNextText = itemDetails.itemOptions?.deliveryTimescale === "same-day" ? SAME_DAY_HAPPENS_NEXT_TEXT : DEFAULT_TEXT
         
             return {
                 serviceUrl: `/company/${itemDetails?.companyNumber}/orderable/certificates`,
                 serviceName: SERVICE_NAME_CERTIFICATES,
                 titleText: "Certificate ordered",
                 pageTitle: "Certificate ordered confirmation",
-                happensNext: happensText,
+                happensNext: whatHappensNextText,
                 orderDetailsTable: this.getOrdersDetailTable(itemDetails),
                 certificateDetailsTable: 1,
                 deliveryDetailsTable: this.getDeliveryDetailsTable(itemDetails)
