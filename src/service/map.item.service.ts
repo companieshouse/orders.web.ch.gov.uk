@@ -34,7 +34,7 @@ export const mapItem = (item: Item, deliveryDetails: DeliveryDetails | undefined
             const certificateDetails = {
                 certificateType: MapUtil.mapCertificateType(itemOptions.certificateType)
             };
-       const whatHappensNextText = itemOptions.deliveryTimescale === "same-day" ? SAME_DAY_HAPPENS_NEXT_TEXT : DEFAULT_TEXT;
+            const whatHappensNextText = itemOptions.deliveryTimescale === "same-day" ? SAME_DAY_HAPPENS_NEXT_TEXT : DEFAULT_TEXT;
             const dissolvedCertificatesOrderDetails = [
                 {
                     key: {
