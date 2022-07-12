@@ -3,6 +3,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { CertificateItemOptions, Item } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { Item as CheckoutItem } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
@@ -53,7 +54,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             referenceNumberAriaLabel: checkout.reference.replace(/-/g, " hyphen ")
         };
 
-        const item = checkout.items[0];
+        const item: CheckoutItem = checkout.items[0];
 
         const totalItemsCost = `£${item?.totalItemCost}`;
 
@@ -100,7 +101,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-export const getItemTypeUrlParam = (item: Item):string => {
+export const getItemTypeUrlParam = (item: CheckoutItem):string => {
     if (item?.kind === "item#certificate") {
         const itemOptions = item.itemOptions as CertificateItemOptions;
         if (itemOptions?.certificateType === "dissolution") {
@@ -120,8 +121,8 @@ export const getItemTypeUrlParam = (item: Item):string => {
     return "";
 };
 
-export const getPiwikURL = (item: Item):string => {
-   
+export const getPiwikURL = (item: CheckoutItem):string => {
+
 
     if (item?.kind === "item#certificate") {
         return "certificates";

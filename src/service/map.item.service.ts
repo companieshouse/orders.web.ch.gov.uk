@@ -1,5 +1,6 @@
 import { DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
-import { Item, CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { Item as CheckoutItem } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { FilingHistoryDocuments } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
 
 import {
@@ -17,7 +18,7 @@ import {ITEM_MAPPER_FACTORY_CONFIG} from "./ItemMapperFactoryConfig";
 
 const dispatchDays: string = DISPATCH_DAYS;
 
-export const mapItem = (item: Item, deliveryDetails: DeliveryDetails | undefined,
+export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | undefined,
                         itemMapperFactory: ItemMapperFactory = ITEM_MAPPER_FACTORY_CONFIG.getInstance()): CheckDetailsItem => {
     const itemKind = item?.kind;
     if (itemKind === "item#certificate") {

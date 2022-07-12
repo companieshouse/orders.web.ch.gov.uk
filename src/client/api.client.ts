@@ -70,10 +70,11 @@ export const createPayment = async (oAuth: string, paymentUrl: string, checkoutI
 
 export const getCheckout = async (oAuth: string, checkoutId: string): Promise<Checkout> => {
     const api = createApiClient(undefined, oAuth, API_URL);
-    const checkoutResource: Resource<Checkout> = await api.checkout.getCheckout(checkoutId);
-    if (checkoutResource.httpStatusCode !== 200 && checkoutResource.httpStatusCode !== 201) {
-        throw createError(checkoutResource.httpStatusCode, checkoutResource.httpStatusCode.toString());
+    const checkoutResource: ApiResult<ApiResponse<Checkout>> = await api.checkout.getCheckout(checkoutId);
+    if (checkoutResource.isSuccess()) {
+        logger.info(`Get checkout, status_code=${checkoutResource.value.httpStatusCode}`);
+        return checkoutResource.value.resource as Checkout;
+    } else {
+        throw createError(checkoutResource.value.httpStatusCode || 0, (checkoutResource.value.httpStatusCode || 0).toString());
     }
-    logger.info(`Get checkout, status_code=${checkoutResource.httpStatusCode}`);
-    return checkoutResource.resource as Checkout;
 };
