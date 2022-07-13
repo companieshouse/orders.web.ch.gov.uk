@@ -1,5 +1,6 @@
 import { createApiClient } from "@companieshouse/api-sdk-node";
 import { Checkout as BasketCheckout, Basket, CheckoutResource } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { BasketPatchRequest } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { CreatePaymentRequest, Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import Resource, { ApiResponse, ApiResult } from "@companieshouse/api-sdk-node/dist/services/resource";
@@ -19,6 +20,16 @@ export const getBasket = async (oAuth: string): Promise<Basket> => {
         throw createError(basketResource.httpStatusCode, basketResource.httpStatusCode.toString());
     }
     logger.info(`Get basket, status_code=${basketResource.httpStatusCode}`);
+    return basketResource.resource as Basket;
+};
+
+export const patchBasket = async (oAuth: string, basketPatchRequest: BasketPatchRequest): Promise<Basket> => {
+    const api = createApiClient(undefined, oAuth, API_URL);
+    const basketResource: Resource<Basket> = await api.basket.patchBasket(basketPatchRequest);
+    if (basketResource.httpStatusCode !== 200 && basketResource.httpStatusCode !== 201) {
+        throw createError(basketResource.httpStatusCode, basketResource.httpStatusCode.toString());
+    }
+    logger.info(`Patch basket, status_code=${basketResource.httpStatusCode}`);
     return basketResource.resource as Basket;
 };
 
@@ -68,13 +79,22 @@ export const createPayment = async (oAuth: string, paymentUrl: string, checkoutI
     }
 };
 
-export const getCheckout = async (oAuth: string, checkoutId: string): Promise<Checkout> => {
+export const getCheckout = async (oAuth: string, checkoutId: string): Promise<ApiResponse<Checkout>> => {
     const api = createApiClient(undefined, oAuth, API_URL);
-    const checkoutResource: ApiResult<ApiResponse<Checkout>> = await api.checkout.getCheckout(checkoutId);
-    if (checkoutResource.isSuccess()) {
-        logger.info(`Get checkout, status_code=${checkoutResource.value.httpStatusCode}`);
-        return checkoutResource.value.resource as Checkout;
+    const checkoutResult: ApiResult<ApiResponse<Checkout>> = await api.checkout.getCheckout(checkoutId);
+
+    if (checkoutResult.isFailure()) {
+        const errorResponse = checkoutResult.value;
+        logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);
+        if (errorResponse.httpStatusCode === 409 ||
+            errorResponse.httpStatusCode === 401 ||
+            errorResponse.httpStatusCode === 400) {
+            throw createError(errorResponse.httpStatusCode, JSON.stringify(errorResponse?.errors?.[0]) || "Unknown Error");
+        } else {
+            throw createError("Unknown Error");
+        }
     } else {
-        throw createError(checkoutResource.value.httpStatusCode || 0, (checkoutResource.value.httpStatusCode || 0).toString());
+        logger.info(`Get checkout, status_code=${checkoutResult.value.httpStatusCode}`);
+        return checkoutResult.value;
     }
 };

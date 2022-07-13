@@ -3,14 +3,46 @@ import chai from "chai";
 import BasketService from "@companieshouse/api-sdk-node/dist/services/order/basket/service";
 import PaymentService from "@companieshouse/api-sdk-node/dist/services/payment/service";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
-import { ApiResponse, ApiErrorResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
+import Resource, { ApiResponse, ApiErrorResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 import { success, failure } from "@companieshouse/api-sdk-node/dist/services/result";
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
+import { Basket, BasketPatchRequest } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
 
-import { checkoutBasket, createPayment } from "../../client/api.client";
+import { checkoutBasket, createPayment, patchBasket } from "../../client/api.client";
 const O_AUTH_TOKEN = "oauth";
 
 const sandbox = sinon.createSandbox();
+
+const dummyBasketSDKResponse: Resource<Basket> = {
+    httpStatusCode: 200,
+    resource: {
+        deliveryDetails: {
+            addressLine1: "117 kings road",
+            addressLine2: "canton",
+            country: "wales",
+            forename: "John",
+            locality: "Cardiff",
+            poBox: "po box",
+            postalCode: "CF5 3NB",
+            region: "Glamorgan",
+            surname: "Smith"
+        }
+    }
+};
+
+const basketPatchRequest: BasketPatchRequest = {
+    deliveryDetails: {
+        addressLine1: "117 kings road",
+        addressLine2: "canton",
+        country: "wales",
+        forename: "John",
+        locality: "Cardiff",
+        poBox: "po box",
+        postalCode: "CF5 3NB",
+        region: "Glamorgan",
+        surname: "Smith"
+    }
+};
 
 describe("api.client", () => {
     afterEach(() => {
@@ -36,7 +68,7 @@ describe("api.client", () => {
             chai.expect(apiResponse.resource?.reference).to.equal(checkoutServiceResponse.resource.reference);
         });
 
-        it.skip("should throw an error if call is unsuccessful", () => {
+        it("should throw an error if call is unsuccessful", () => {
             const checkoutServiceResponse: ApiErrorResponse = {
                 httpStatusCode: 400,
                 errors: [{ error: "error" }]
@@ -61,7 +93,7 @@ describe("api.client", () => {
             chai.expect(apiResponse.resource?.reference).to.equal(paymentServiceResponse.resource.reference);
         });
 
-        it.skip("should throw an error if call is unsuccessful", () => {
+        it("should throw an error if call is unsuccessful", () => {
             const checkoutServiceResponse: ApiErrorResponse = {
                 httpStatusCode: 400,
                 errors: [{ error: "error" }]
@@ -69,6 +101,13 @@ describe("api.client", () => {
             sandbox.stub(PaymentService.prototype, "createPaymentWithFullUrl").returns(Promise.resolve(failure(checkoutServiceResponse)));
 
             return chai.expect(checkoutBasket(O_AUTH_TOKEN)).to.be.rejected;
+        });
+    });
+    describe("patchBasket", () => {
+        it("returns the Basket details following PATCH basket", async () => {
+            sandbox.stub(BasketService.prototype, "patchBasket").returns(Promise.resolve(dummyBasketSDKResponse));
+            const patchBasketDetails = await patchBasket("oauth", basketPatchRequest);
+            chai.expect(patchBasketDetails).to.equal(dummyBasketSDKResponse.resource);
         });
     });
 });

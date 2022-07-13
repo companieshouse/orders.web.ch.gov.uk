@@ -14,6 +14,7 @@ import { MapUtil } from "../../service/MapUtil";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout"
 import { CompanyType } from "../../model/CompanyType";
 import { DobType } from "../../model/DobType";
+import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -54,7 +55,16 @@ describe("order.confirmation.controller.integration", () => {
 
     describe("Certificate order confirmation page integration tests", () => {
         it("Correctly renders order confirmation page on for a limited company certificate order", (done) => {
-            getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockCertificateCheckoutResponse));
+            const certificateCheckoutResponse = {
+                ...mockCertificateCheckoutResponse
+            } as Checkout;
+
+            const checkoutResponse: ApiResponse<Checkout> = {
+                httpStatusCode: 200,
+                resource: certificateCheckoutResponse
+            }
+
+            getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -119,7 +129,12 @@ describe("order.confirmation.controller.integration", () => {
                 }]
             } as Checkout;
 
-            getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(certificateCheckoutResponse));
+            const checkoutResponse: ApiResponse<Checkout> = {
+                httpStatusCode: 200,
+                resource: certificateCheckoutResponse
+            }
+
+            getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -178,7 +193,12 @@ describe("order.confirmation.controller.integration", () => {
             }]
         } as Checkout;
 
-        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(certificateCheckoutResponse));
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: certificateCheckoutResponse
+        }
+
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -210,7 +230,12 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a dissolved certificate order", (done) => {
-        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockDissolvedCertificateCheckoutResponse));
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockDissolvedCertificateCheckoutResponse
+        }
+
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -237,7 +262,12 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a certified copy order", async () => {
-        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockCertifiedCopyCheckoutResponse));
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockCertifiedCopyCheckoutResponse
+        }
+
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certified-copy`)
@@ -269,7 +299,11 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a missing image delivery order", async () => {
-        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockMissingImageDeliveryCheckoutResponse));
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockMissingImageDeliveryCheckoutResponse
+        }
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=missing-image-delivery`)
@@ -294,7 +328,11 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("redirects and applies the itemType query param", async () => {
-        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(mockCertificateCheckoutResponse));
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockCertificateCheckoutResponse
+        }
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid`)
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
@@ -302,7 +340,7 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect(resp).to.redirectTo(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid&itemType=certificate`);
     });
 
-    it.skip("renders an error page if get order fails", (done) => {
+    it("renders an error page if get order fails", (done) => {
         getOrderStub = sandbox.stub(apiClient, "checkoutBasket").throws(new Error("ERROR"));
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)

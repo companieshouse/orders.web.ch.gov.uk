@@ -18,6 +18,8 @@ import {CheckDetailsItem} from "./ItemMapper";
 import {ITEM_MAPPER_FACTORY_CONFIG} from "./ItemMapperFactoryConfig";
 
 const dispatchDays: string = DISPATCH_DAYS;
+const SAME_DAY_HAPPENS_NEXT_TEXT = "We'll prepare the certificate and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.";
+const DEFAULT_TEXT = "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.";
 
 export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | undefined,
                         itemMapperFactory: ItemMapperFactory = ITEM_MAPPER_FACTORY_CONFIG.getInstance()): CheckDetailsItem => {
@@ -29,10 +31,12 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
                 .getCheckDetailsItem({companyName: item?.companyName, companyNumber: item?.companyNumber, itemOptions, deliveryDetails});
         } else {
             const deliveryMethod = MapUtil.mapDeliveryMethod(item?.itemOptions);
+            const emailCopyRequired = MapUtil.mapEmailCopyRequired(itemOptions);
             const address = MapUtil.mapDeliveryDetails(deliveryDetails);
             const certificateDetails = {
                 certificateType: MapUtil.mapCertificateType(itemOptions.certificateType)
             };
+            const whatHappensNextText = itemOptions.deliveryTimescale === "same-day" ? SAME_DAY_HAPPENS_NEXT_TEXT : DEFAULT_TEXT;
             const dissolvedCertificatesOrderDetails = [
                 {
                     key: {
@@ -74,6 +78,16 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
                 },
                 {
                     key: {
+                        classes: "govuk-!-width-one-half",
+                        text: "Email copy required"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='emailCopyRequiredValue'>" + emailCopyRequired + "</p>"
+                    }
+                },
+                {
+                    key: {
                         text: "Delivery details"
                     },
                     value: {
@@ -87,7 +101,7 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
                 serviceName: SERVICE_NAME_CERTIFICATES,
                 titleText: "Certificate ordered",
                 pageTitle: "Certificate ordered confirmation",
-                happensNext: "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.",
+                happensNext: whatHappensNextText,
                 orderDetailsTable: dissolvedCertificatesOrderDetails
             };
         }
