@@ -6,3 +6,4 @@ routes:
   1: /orders.*
   2: /basket.*
   3: /orders-assets.*
+  4: ^/delivery-details.*
