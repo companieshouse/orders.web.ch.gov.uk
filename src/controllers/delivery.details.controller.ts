@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 import { Basket, BasketPatchRequest } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
 import { getBasket, patchBasket } from "../client/api.client";
 import { BASKET } from "../model/page.urls";
-import { DELIVERY_DETAILS, EMAIL_OPTIONS } from "../model/template.paths";
+import { DELIVERY_DETAILS } from "../model/template.paths";
 import { createLogger } from "ch-structured-logging";
 import { deliveryDetailsValidationRules, validate } from "../utils/delivery-details-validation";
 import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
@@ -76,7 +76,7 @@ export const route = async (req: Request, res: Response, next: NextFunction) => 
             addressTown,
             firstName,
             lastName,
-            pageTitle: PAGE_TITLE,
+            pageTitleText: PAGE_TITLE,
             templateName: (DELIVERY_DETAILS),
             backLink: BASKET
         });
@@ -102,3 +102,5 @@ export const route = async (req: Request, res: Response, next: NextFunction) => 
         return next(err);
     }
 };
+
+export default [...deliveryDetailsValidationRules, route];

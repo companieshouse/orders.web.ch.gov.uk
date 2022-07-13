@@ -22,7 +22,7 @@ const INVALID_CHARACTER = "|";
 const CHARACTER_LENGTH_TEXT_50 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const POSTCODE: string = "CX14 1BX";
 const COUNTY: string = "county";
-const DELIVERY_DETAILS_URL = "/basket";
+const DELIVERY_DETAILS_URL = "/delivery-details";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -180,7 +180,7 @@ describe("certificate.delivery.details.controller", () => {
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
 
             chai.expect(resp.status).to.equal(302);
-            chai.expect(resp.text).to.contain("Found. Redirecting to check-details");
+            chai.expect(resp.text).to.contain("Found. Redirecting to /basket");
         });
     });
 
