@@ -203,7 +203,7 @@ const getDeliveryDetailsTable = (item: { deliveryDetails?: DeliveryDetails }): a
             },
             actions: {
                 items: [{
-                    href: "javascript:void(0)",
+                    href: "/delivery-details",
                     text: "Change"
                 }]
             }
