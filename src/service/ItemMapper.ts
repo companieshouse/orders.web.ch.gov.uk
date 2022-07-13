@@ -45,8 +45,8 @@ export abstract class ItemMapper {
 
 
         let certificateDeliveryDetails;
-        // temp check to hide email section upcoming work will allow llp and lp companies to request email
-        if (item.itemOptions.companyType as string  === "llp" || item.itemOptions.companyType as string === "limited-partnership" ) {
+        // temp check to hide email section upcoming work will allow lp companies to request email
+        if (item.itemOptions.companyType as string === "limited-partnership" ) {
             certificateDeliveryDetails = [
                 {
                     key: {
