@@ -187,4 +187,25 @@ export abstract class MapUtil {
 
         return MapUtil.mapToHtml(membersMappings);
     }
+
+    static getDeliveryDetailsTable = (deliveryDetails: DeliveryDetails): any => {
+        return [
+            {
+                key: {
+                    classes: "govuk-!-width-one-half",
+                    text: "Delivery address"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='deliveryAddressValue'>" + MapUtil.mapDeliveryDetails(deliveryDetails) + "</p>"
+                },
+                actions: {
+                    items: [{
+                        href: "/delivery-details",
+                        text: "Change"
+                    }]
+                }
+            }
+        ];
+    };
 }

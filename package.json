@@ -10,7 +10,7 @@
     "lint": "eslint 'src/*.ts' 'src/**/*.ts'",
     "lint:fix": "eslint 'src/*.ts' 'src/**/*.ts' --fix",
     "sonarqube": "sonar-scanner",
-    "test": "mocha"
+    "test": "mocha --inspect-brk -g mapCertificateToViewModel"
   },
   "keywords": [],
   "author": "",

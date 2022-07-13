@@ -12,12 +12,7 @@ import { APPLICATION_NAME } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import * as templatePaths from "../model/template.paths";
 import { BASKET } from "../model/template.paths";
-import { DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
-import { MapUtil } from "../service/MapUtil";
-import { mapFilingHistoriesDocuments } from "../service/map.item.service";
-import { ItemOptions as MissingImageDeliveryItemOptions } from "../../../api-sdk-node/dist/services/order/mid";
-import { ItemOptions as CertificateItemOptions } from "../../../api-sdk-node/dist/services/order/certificates";
-import { ItemOptions as CertifiedCopyItemOptions } from "../../../api-sdk-node/dist/services/order/certified-copies";
+import { BasketSummaryMapper, BasketSummaryViewModel } from "../mappers/BasketSummaryMapper";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -33,85 +28,14 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         if (basketResource.enrolled) {
             res.render(BASKET, basketResource.items?.reduce((prev, curr) => {
+                const basketSummaryMapper = new BasketSummaryMapper(prev, curr, basketResource.deliveryDetails);
+
                 if (curr.kind === "item#certificate") {
-                    const itemOptions = curr.itemOptions as CertificateItemOptions;
-                    prev.certificates.push([
-                        {
-                            text: MapUtil.mapCertificateType(itemOptions?.certificateType)
-                        },
-                        {
-                            text: curr.companyNumber
-                        },
-                        {
-                            text: MapUtil.mapDeliveryMethod(itemOptions)
-                        },
-                        {
-                            text: `£${curr.totalItemCost}`
-                        },
-                        {
-                            html: `<a class="govuk-link" href="javascript:void(0)">View/Change certificate options</a>`
-                        },
-                        {
-                            html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
-                        }
-                    ]);
-                    prev.hasDeliverableItems = true;
-                    if (!prev.deliveryDetailsTable) {
-                        prev.deliveryDetailsTable = getDeliveryDetailsTable(basketResource);
-                    }
+                    basketSummaryMapper.mapCertificateToViewModel();
                 } else if (curr.kind === "item#certified-copy") {
-                    const itemOptions = curr.itemOptions as CertifiedCopyItemOptions;
-                    const mappedFilingHistory = mapFilingHistoriesDocuments(itemOptions?.filingHistoryDocuments || []);
-                    prev.certifiedCopies.push([
-                        {
-                            text: mappedFilingHistory[0]?.filingHistoryDate
-                        },
-                        {
-                            text: mappedFilingHistory[0]?.filingHistoryType
-                        },
-                        {
-                            text: mappedFilingHistory[0]?.filingHistoryDescription
-                        },
-                        {
-                            text: curr.companyNumber
-                        },
-                        {
-                            text: MapUtil.mapDeliveryMethod(itemOptions)
-                        },
-                        {
-                            text: `£${curr.totalItemCost}`
-                        },
-                        {
-                            html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
-                        }
-                    ]);
-                    prev.hasDeliverableItems = true;
-                    if (!prev.deliveryDetailsTable) {
-                        prev.deliveryDetailsTable = getDeliveryDetailsTable(basketResource);
-                    }
+                    basketSummaryMapper.mapCertifiedCopyToViewModel();
                 } else if (curr.kind === "item#missing-image-delivery") {
-                    const itemOptions = curr.itemOptions as MissingImageDeliveryItemOptions;
-                    const mappedFilingHistory = mapFilingHistoriesDocuments([itemOptions]);
-                    prev.missingImageDelivery.push([
-                        {
-                            text: mappedFilingHistory[0]?.filingHistoryDate
-                        },
-                        {
-                            text: mappedFilingHistory[0]?.filingHistoryType
-                        },
-                        {
-                            text: mappedFilingHistory[0]?.filingHistoryDescription
-                        },
-                        {
-                            text: curr.companyNumber
-                        },
-                        {
-                            text: `£${curr.totalItemCost}`
-                        },
-                        {
-                            html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
-                        }
-                        ]);
+                    basketSummaryMapper.mapMissingImageToViewModel();
                 } else {
                     throw Error(`Unknown item type: [${curr.kind}]`);
                 }
@@ -125,7 +49,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                 deliveryDetailsTable: null,
                 hasDeliverableItems: false,
                 serviceName: "Basket"
-            }));
+            } as BasketSummaryViewModel));
         } else {
             await proceedToPayment(req, res, next);
         }
@@ -188,25 +112,4 @@ const proceedToPayment = async (req: Request, res: Response, next: NextFunction)
         logger.info(`Payment is not required, order_id=${checkoutId}, user_id=${userId}`);
         res.redirect(replaceOrderId(ORDER_COMPLETE, checkoutApiResponse.resource?.reference!));
     }
-};
-
-const getDeliveryDetailsTable = (item: { deliveryDetails?: DeliveryDetails }): any => {
-    return [
-        {
-            key: {
-                classes: "govuk-!-width-one-half",
-                text: "Delivery address"
-            },
-            value: {
-                classes: "govuk-!-width-one-half",
-                html: "<p id='deliveryAddressValue'>" + MapUtil.mapDeliveryDetails(item.deliveryDetails) + "</p>"
-            },
-            actions: {
-                items: [{
-                    href: "/delivery-details",
-                    text: "Change"
-                }]
-            }
-        }
-    ];
 };

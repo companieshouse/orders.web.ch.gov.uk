@@ -6,7 +6,7 @@ import sinon from "sinon";
 import { getItemTypeUrlParam, getRedirectUrl, retryGetCheckout } from "../../controllers/order.confirmation.controller";
 import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem, mockCertificateCheckoutResponse, ACCESS_TOKEN, ORDER_ID } from "../__mocks__/order.mocks";
 import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
-import { Checkout } from "../../../../api-sdk-node/dist/services/order/checkout";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 
 describe("order.confirmation.controller.unit", () => {
     describe("getItemTypeUrlParam", () => {
