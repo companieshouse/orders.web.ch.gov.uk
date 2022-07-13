@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { Session } from "@companieshouse/node-session-handler";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
-import { CertificateItemOptions, Item } from "@companieshouse/api-sdk-node/dist/services/order/order";
-import { Item as CheckoutItem } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
+import { Item as CheckoutItem, Item as BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates/types";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
@@ -13,7 +13,7 @@ import { ORDER_COMPLETE } from "../model/template.paths";
 import { APPLICATION_NAME, RETRY_CHECKOUT_NUMBER, RETRY_CHECKOUT_DELAY } from "../config/config";
 import { mapItem } from "../service/map.item.service";
 import { mapDate } from "../utils/date.util";
-import { Basket, BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { getWhitelistedReturnToURL } from "../utils/request.util";
 
 const logger = createLogger(APPLICATION_NAME);
@@ -137,8 +137,8 @@ export const getPiwikURL = (item: CheckoutItem):string => {
 
 export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | undefined):string => {
     if (item?.kind === "item#certificate") {
-        const itemOptions = item?.itemOptions;
-        const certType = itemOptions?.certificateType.toString();
+        const itemOptions = item?.itemOptions as CertificateItemOptions;
+        const certType = itemOptions?.certificateType;
         if (certType === "dissolution") {
             return `/orderable/dissolved-certificates/${itemId}/check-details`;
         }

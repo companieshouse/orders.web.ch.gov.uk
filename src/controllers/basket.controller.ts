@@ -15,7 +15,9 @@ import { BASKET } from "../model/template.paths";
 import { DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
 import { MapUtil } from "../service/MapUtil";
 import { mapFilingHistoriesDocuments } from "../service/map.item.service";
-import Mapping from "@companieshouse/api-sdk-node/dist/mapping/mapping";
+import { ItemOptions as MissingImageDeliveryItemOptions } from "../../../api-sdk-node/dist/services/order/mid";
+import { ItemOptions as CertificateItemOptions } from "../../../api-sdk-node/dist/services/order/certificates";
+import { ItemOptions as CertifiedCopyItemOptions } from "../../../api-sdk-node/dist/services/order/certified-copies";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -32,15 +34,16 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         if (basketResource.enrolled) {
             res.render(BASKET, basketResource.items?.reduce((prev, curr) => {
                 if (curr.kind === "item#certificate") {
+                    const itemOptions = curr.itemOptions as CertificateItemOptions;
                     prev.certificates.push([
                         {
-                            text: MapUtil.mapCertificateType(curr.itemOptions.certificateType as any)
+                            text: MapUtil.mapCertificateType(itemOptions?.certificateType)
                         },
                         {
                             text: curr.companyNumber
                         },
                         {
-                            text: MapUtil.mapDeliveryMethod(curr.itemOptions)
+                            text: MapUtil.mapDeliveryMethod(itemOptions)
                         },
                         {
                             text: `£${curr.totalItemCost}`
@@ -57,23 +60,23 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                         prev.deliveryDetailsTable = getDeliveryDetailsTable(basketResource);
                     }
                 } else if (curr.kind === "item#certified-copy") {
-                    curr.itemOptions.filingHistoryDocuments[0]["filingHistoryDescriptionValues"] = Mapping.snakeCaseKeys(curr.itemOptions.filingHistoryDocuments[0]["filingHistoryDescriptionValues"]);
-                    const mappedFilingHistory = mapFilingHistoriesDocuments(curr.itemOptions.filingHistoryDocuments as any);
+                    const itemOptions = curr.itemOptions as CertifiedCopyItemOptions;
+                    const mappedFilingHistory = mapFilingHistoriesDocuments(itemOptions?.filingHistoryDocuments || []);
                     prev.certifiedCopies.push([
                         {
-                            text: mappedFilingHistory[0].filingHistoryDate
+                            text: mappedFilingHistory[0]?.filingHistoryDate
                         },
                         {
-                            text: mappedFilingHistory[0].filingHistoryType
+                            text: mappedFilingHistory[0]?.filingHistoryType
                         },
                         {
-                            text: mappedFilingHistory[0].filingHistoryDescription
+                            text: mappedFilingHistory[0]?.filingHistoryDescription
                         },
                         {
                             text: curr.companyNumber
                         },
                         {
-                            text: MapUtil.mapDeliveryMethod(curr.itemOptions)
+                            text: MapUtil.mapDeliveryMethod(itemOptions)
                         },
                         {
                             text: `£${curr.totalItemCost}`
@@ -87,17 +90,17 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                         prev.deliveryDetailsTable = getDeliveryDetailsTable(basketResource);
                     }
                 } else if (curr.kind === "item#missing-image-delivery") {
-                    curr.itemOptions.filingHistoryDescriptionValues = Mapping.snakeCaseKeys(curr.itemOptions.filingHistoryDescriptionValues);
-                    const mappedFilingHistory = mapFilingHistoriesDocuments([curr.itemOptions] as any);
+                    const itemOptions = curr.itemOptions as MissingImageDeliveryItemOptions;
+                    const mappedFilingHistory = mapFilingHistoriesDocuments([itemOptions]);
                     prev.missingImageDelivery.push([
                         {
-                            text: mappedFilingHistory[0].filingHistoryDate
+                            text: mappedFilingHistory[0]?.filingHistoryDate
                         },
                         {
-                            text: mappedFilingHistory[0].filingHistoryType
+                            text: mappedFilingHistory[0]?.filingHistoryType
                         },
                         {
-                            text: mappedFilingHistory[0].filingHistoryDescription
+                            text: mappedFilingHistory[0]?.filingHistoryDescription
                         },
                         {
                             text: curr.companyNumber
@@ -108,7 +111,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                         {
                             html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
                         }
-                    ]);
+                        ]);
                 } else {
                     throw Error(`Unknown item type: [${curr.kind}]`);
                 }

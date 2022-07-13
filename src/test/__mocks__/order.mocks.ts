@@ -1,4 +1,5 @@
-import { CertificateItemOptions, Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates/types"
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { CompanyType } from "../../model/CompanyType";
 
@@ -79,7 +80,6 @@ export const mockDissolvedCertificateItem: Item = {
         deliveryTimescale: "standard",
         directorDetails: {},
         forename: "forename",
-        includeGoodStandingInformation: undefined,
         registeredOfficeAddressDetails: {},
         secretaryDetails: {},
         surname: "surname"

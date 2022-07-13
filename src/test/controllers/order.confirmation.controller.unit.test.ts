@@ -1,5 +1,4 @@
-import { Basket, BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/basket";
-import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
+import { Item as BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import * as apiClient from "../../client/api.client";
 import chai, { expect } from "chai";
 import sinon from "sinon";

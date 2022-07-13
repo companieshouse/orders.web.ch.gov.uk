@@ -1,5 +1,5 @@
 import {DeliveryDetails} from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
-import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
+import {ItemOptions as CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/certificates/types";
 import {DISPATCH_DAYS} from "../config/config";
 import {MapUtil} from "./MapUtil";
 

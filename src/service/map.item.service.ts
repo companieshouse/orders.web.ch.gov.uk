@@ -1,7 +1,8 @@
 import { DeliveryDetails } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
-import { CertificateItemOptions, CertifiedCopyItemOptions, MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/order";
-import { Item as CheckoutItem } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
-import { FilingHistoryDocuments } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
+import {ItemOptions as CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/certificates";
+import {ItemOptions as CertifiedCopyItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
+import {ItemOptions as MissingImageDeliveryItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/mid";
+import { Item as CheckoutItem } from "@companieshouse/api-sdk-node/dist/services/order/order";
 
 import {
     SERVICE_NAME_CERTIFICATES,
@@ -213,11 +214,26 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
     }
 };
 
-export const mapFilingHistoriesDocuments = (filingHistoryDocuments: FilingHistoryDocuments[]) => {
+type FilingHistoryDocument = {
+    filingHistoryDescription: string,
+    filingHistoryDescriptionValues?: Record<string, string>,
+    filingHistoryDate: string,
+    filingHistoryCost?: string,
+    filingHistoryId: string,
+    filingHistoryType: string
+};
+
+export const mapFilingHistoriesDocuments = (filingHistoryDocuments: FilingHistoryDocument[]) => {
     const mappedFilingHistories = filingHistoryDocuments.map(filingHistoryDocument => {
+        if (!filingHistoryDocument) {
+            return {};
+        }
         const mappedFilingHistoryDescription = mapFilingHistory(filingHistoryDocument.filingHistoryDescription, filingHistoryDocument.filingHistoryDescriptionValues || {});
         const mappedFilingHistoryDescriptionDate = mapFilingHistoryDate(filingHistoryDocument.filingHistoryDate);
-        const mappedFilingHistoryCost = MapUtil.addCurrency(filingHistoryDocument.filingHistoryCost);
+        let mappedFilingHistoryCost;
+        if (filingHistoryDocument.filingHistoryCost) {
+            mappedFilingHistoryCost = MapUtil.addCurrency(filingHistoryDocument.filingHistoryCost);
+        }
         return {
             filingHistoryDate: mappedFilingHistoryDescriptionDate,
             filingHistoryDescription: mappedFilingHistoryDescription,

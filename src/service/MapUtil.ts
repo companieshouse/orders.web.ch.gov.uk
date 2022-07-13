@@ -106,7 +106,7 @@ export abstract class MapUtil {
         }
     }
 
-    static determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails, officer: string) => {
+    static determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails | undefined, officer: string) => {
         if (directorOrSecretaryDetails === undefined || !directorOrSecretaryDetails.includeBasicInformation) {
             return "No";
         }
