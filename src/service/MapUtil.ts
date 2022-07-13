@@ -3,7 +3,7 @@ import {
     DirectorOrSecretaryDetails,
     MemberDetails
 } from "@companieshouse/api-sdk-node/dist/services/order/certificates";
-import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
+import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates/types";
 import { createLogger } from "ch-structured-logging";
 import { AddressRecordsType } from "model/AddressRecordsType";
 import { APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
