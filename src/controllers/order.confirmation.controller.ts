@@ -2,7 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { Session } from "@companieshouse/node-session-handler";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
-import { CertificateItemOptions, Checkout, Item } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
+import { Item as CheckoutItem, Item as BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates/types";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
@@ -11,7 +13,7 @@ import { ORDER_COMPLETE } from "../model/template.paths";
 import { APPLICATION_NAME, RETRY_CHECKOUT_NUMBER, RETRY_CHECKOUT_DELAY } from "../config/config";
 import { mapItem } from "../service/map.item.service";
 import { mapDate } from "../utils/date.util";
-import { Basket, BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { getWhitelistedReturnToURL } from "../utils/request.util";
 
 const logger = createLogger(APPLICATION_NAME);
@@ -52,7 +54,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             referenceNumberAriaLabel: checkout.reference.replace(/-/g, " hyphen ")
         };
 
-        const item = checkout.items[0];
+        const item: CheckoutItem = checkout.items[0];
 
         const totalItemsCost = `£${item?.totalItemCost}`;
 
@@ -99,7 +101,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-export const getItemTypeUrlParam = (item: Item):string => {
+export const getItemTypeUrlParam = (item: CheckoutItem):string => {
     if (item?.kind === "item#certificate") {
         const itemOptions = item.itemOptions as CertificateItemOptions;
         if (itemOptions?.certificateType === "dissolution") {
@@ -119,8 +121,8 @@ export const getItemTypeUrlParam = (item: Item):string => {
     return "";
 };
 
-export const getPiwikURL = (item: Item):string => {
-   
+export const getPiwikURL = (item: CheckoutItem):string => {
+
 
     if (item?.kind === "item#certificate") {
         return "certificates";
@@ -135,8 +137,8 @@ export const getPiwikURL = (item: Item):string => {
 
 export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | undefined):string => {
     if (item?.kind === "item#certificate") {
-        const itemOptions = item?.itemOptions;
-        const certType = itemOptions?.certificateType.toString();
+        const itemOptions = item?.itemOptions as CertificateItemOptions;
+        const certType = itemOptions?.certificateType;
         if (certType === "dissolution") {
             return `/orderable/dissolved-certificates/${itemId}/check-details`;
         }

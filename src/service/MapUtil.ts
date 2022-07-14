@@ -3,7 +3,7 @@ import {
     DirectorOrSecretaryDetails,
     MemberDetails
 } from "@companieshouse/api-sdk-node/dist/services/order/certificates";
-import { CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
+import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates/types";
 import { createLogger } from "ch-structured-logging";
 import { AddressRecordsType } from "model/AddressRecordsType";
 import { APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
@@ -119,7 +119,7 @@ export abstract class MapUtil {
         }
     }
 
-    static determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails, officer: string) => {
+    static determineDirectorOrSecretaryOptionsText = (directorOrSecretaryDetails: DirectorOrSecretaryDetails | undefined, officer: string) => {
         if (directorOrSecretaryDetails === undefined || !directorOrSecretaryDetails.includeBasicInformation) {
             return "No";
         }
@@ -187,4 +187,28 @@ export abstract class MapUtil {
 
         return MapUtil.mapToHtml(membersMappings);
     }
+
+    static getDeliveryDetailsTable = (deliveryDetails: DeliveryDetails | undefined): object[] | null => {
+        if (!deliveryDetails) {
+            return null;
+        }
+        return [
+            {
+                key: {
+                    classes: "govuk-!-width-one-half",
+                    text: "Delivery address"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='deliveryAddressValue'>" + MapUtil.mapDeliveryDetails(deliveryDetails) + "</p>"
+                },
+                actions: {
+                    items: [{
+                        href: "/delivery-details",
+                        text: "Change"
+                    }]
+                }
+            }
+        ];
+    };
 }

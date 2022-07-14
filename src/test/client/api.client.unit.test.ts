@@ -26,7 +26,8 @@ const dummyBasketSDKResponse: Resource<Basket> = {
             postalCode: "CF5 3NB",
             region: "Glamorgan",
             surname: "Smith"
-        }
+        },
+        enrolled: false
     }
 };
 

@@ -1,4 +1,5 @@
-import { CertificateItemOptions, Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order";
+import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates/types"
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { CompanyType } from "../../model/CompanyType";
 
@@ -79,7 +80,6 @@ export const mockDissolvedCertificateItem: Item = {
         deliveryTimescale: "standard",
         directorDetails: {},
         forename: "forename",
-        includeGoodStandingInformation: undefined,
         registeredOfficeAddressDetails: {},
         secretaryDetails: {},
         surname: "surname"
@@ -176,6 +176,8 @@ export const mockCertifiedCopyItem: Item = {
         productType: "certified-copy"
     }],
     itemOptions: {
+        collectionLocation: "cardiff",
+        contactNumber: "0123456789",
         deliveryMethod: "postal",
         deliveryTimescale: "standard",
         filingHistoryDocuments: [{
@@ -199,7 +201,9 @@ export const mockCertifiedCopyItem: Item = {
             filingHistoryType: "AA",
             filingHistoryCost: "15"
         }
-        ]
+        ],
+        forename: "forename",
+        surname: "surname"
     },
     etag: "abcdefg123456",
     kind: "item#certified-copy",
@@ -265,6 +269,9 @@ export const mockMissingImageDeliveryItem: Item = {
         }
     ],
     itemOptions: {
+        filingHistoryBarcode: "barcode",
+        filingHistoryCategory: "category",
+        filingHistoryCost: "cost",
         filingHistoryDate: "2015-05-26",
         filingHistoryDescription: "appoint-person-director-company-with-name",
         filingHistoryDescriptionValues: {

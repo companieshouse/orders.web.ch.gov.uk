@@ -1,4 +1,4 @@
-import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
+import {ItemOptions as CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/certificates";
 import {LPCertificateItemMapper} from "../../service/LPCertificateItemMapper";
 import {expect} from "chai";
 

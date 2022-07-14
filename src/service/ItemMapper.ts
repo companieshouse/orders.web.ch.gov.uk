@@ -1,5 +1,5 @@
 import {DeliveryDetails} from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
-import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/checkout";
+import {ItemOptions as CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/certificates/types";
 import {DISPATCH_DAYS} from "../config/config";
 import {MapUtil} from "./MapUtil";
 
@@ -25,7 +25,7 @@ export abstract class ItemMapper {
 
     getCheckDetailsItem = (itemDetails: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions, deliveryDetails: DeliveryDetails | undefined }): CheckDetailsItem => {
        const whatHappensNextText = itemDetails.itemOptions?.deliveryTimescale === "same-day" ? SAME_DAY_HAPPENS_NEXT_TEXT : DEFAULT_TEXT
-        
+
             return {
                 serviceUrl: `/company/${itemDetails?.companyNumber}/orderable/certificates`,
                 serviceName: SERVICE_NAME_CERTIFICATES,
@@ -58,7 +58,7 @@ export abstract class ItemMapper {
                         html: "<p id='deliveryMethodValue'>" + deliveryMethod + "</p>"
                     }
                 },
-                
+
                 {
                     key: {
                         classes: "govuk-!-width-one-half",

@@ -1,5 +1,5 @@
 import {ItemMapper} from "./ItemMapper";
-import {CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/order";
+import {ItemOptions as CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/certificates/types";
 import {MapUtil} from "./MapUtil";
 
 export class OtherCertificateItemMapper extends ItemMapper {
