@@ -183,34 +183,4 @@ describe("certificate.delivery.details.controller", () => {
             chai.expect(resp.text).to.contain("Found. Redirecting to /basket");
         });
     });
-
-    describe("delivery details back button", () => {
-        it("back button takes the user to the email options page if they selected same-day delivery", async () => {
-            const basketDetails = {} as Basket;
-            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketDetails));
-
-            const resp = await chai.request(testApp)
-                .get(DELIVERY_DETAILS_URL)
-                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
-
-            const $ = cheerio.load(resp.text);
-
-            chai.expect(resp.status).to.equal(200);
-            chai.expect($(".govuk-back-link").attr("href")).to.equal("/basket");
-        });
-
-        it("back button takes the user to the delivery options page if they selected standard delivery", async () => {
-            const basketDetails = {} as Basket;
-            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve(basketDetails));
-
-            const resp = await chai.request(testApp)
-                .get(DELIVERY_DETAILS_URL)
-                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
-
-            const $ = cheerio.load(resp.text);
-
-            chai.expect(resp.status).to.equal(200);
-            chai.expect($(".govuk-back-link").attr("href")).to.equal("/basket");
-        });
-    });
 });

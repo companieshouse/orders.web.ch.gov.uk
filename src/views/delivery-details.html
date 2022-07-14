@@ -16,7 +16,7 @@
 {% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
-    href: backLink
+    href: "javascript:history.back()"
   }) }}
 {% endblock %}
 
@@ -134,7 +134,7 @@
         }) }}
 
           {{ govukButton({
-            text: "Continue"
+            text: "Add to basket"
           }) }}
 
     {% endcall %}

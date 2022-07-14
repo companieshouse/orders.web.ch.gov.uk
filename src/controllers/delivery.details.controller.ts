@@ -6,12 +6,10 @@ import { BASKET } from "../model/page.urls";
 import { DELIVERY_DETAILS } from "../model/template.paths";
 import { createLogger } from "ch-structured-logging";
 import { deliveryDetailsValidationRules, validate } from "../utils/delivery-details-validation";
-import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import { APPLICATION_NAME } from "../config/config";
-const escape = require("escape-html");
 
 const FIRST_NAME_FIELD: string = "firstName";
 const LAST_NAME_FIELD: string = "lastName";
@@ -22,6 +20,7 @@ const ADDRESS_COUNTY_FIELD: string = "addressCounty";
 const ADDRESS_POSTCODE_FIELD: string = "addressPostcode";
 const ADDRESS_COUNTRY_FIELD: string = "addressCountry";
 const PAGE_TITLE: string = "Delivery details - Order a certificate - GOV.UK";
+const HEADING_TEXT: string = "Order a document";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -42,7 +41,7 @@ export const render = async (req: Request, res: Response, next: NextFunction): P
             addressCounty: basket.deliveryDetails?.region,
             templateName: DELIVERY_DETAILS,
             pageTitleText: PAGE_TITLE,
-            backLink: BASKET
+            serviceName: HEADING_TEXT
         });
     } catch (err) {
         logger.error(`${err}`);
@@ -78,7 +77,8 @@ export const route = async (req: Request, res: Response, next: NextFunction) => 
             lastName,
             pageTitleText: PAGE_TITLE,
             templateName: (DELIVERY_DETAILS),
-            backLink: BASKET
+            backLink: BASKET,
+            serviceName: HEADING_TEXT
         });
     }
     try {
