@@ -74,7 +74,6 @@ export abstract class ItemMapper {
             certificateDeliveryDetails = [
                 {
                     key: {
-                        classes: "govuk-!-width-one-half",
                         text: "Delivery method"
                     },
                     value: {
@@ -84,7 +83,6 @@ export abstract class ItemMapper {
                 },
                 {
                     key: {
-                        classes: "govuk-!-width-one-half",
                         text: "Email copy required"
                     },
                     value: {
@@ -95,7 +93,6 @@ export abstract class ItemMapper {
 
                 {
                     key: {
-                        classes: "govuk-!-width-one-half",
                         text: "Delivery details"
                     },
                     value: {
