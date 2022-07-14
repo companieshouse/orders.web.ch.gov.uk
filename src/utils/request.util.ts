@@ -6,7 +6,8 @@ const logger = createLogger(APPLICATION_NAME);
 export const ORDER_CONFIRMATION_RE = /\/orders\/ORD-\d{6}-\d{6}\/confirmation\?ref=orderable_item_ORD-\d{6}-\d{6}&state=[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}&status=[a-z]*/;
 export const ORDERS_RE = /\/orders/;
 export const BASKET_RE = /\/basket/;
-const REDIRECTS_WHITELIST: RegExp[] = [ORDER_CONFIRMATION_RE, ORDERS_RE, BASKET_RE];
+export const DELIVERY_DETAILS_RE = /^\/delivery-details/;
+const REDIRECTS_WHITELIST: RegExp[] = [ORDER_CONFIRMATION_RE, ORDERS_RE, BASKET_RE, DELIVERY_DETAILS_RE];
 
 // getWhitelistedReturnToURL performs checks on the return to URL to be used in a redirect, as it is obtained from the
 // inbound request, and therefore potentially subject to forging attacks.
