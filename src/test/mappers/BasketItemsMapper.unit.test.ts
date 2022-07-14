@@ -6,7 +6,7 @@ import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryIte
 
 describe("BasketItemsMapper", () => {
     describe("mapBasketItems", () => {
-        it("Returns an empty view model with delivery details attached if basket has no items", () => {
+        it("Returns an empty view model if basket has no items", () => {
             // given
             const mapper = new BasketItemsMapper();
             const basket = {
@@ -22,7 +22,7 @@ describe("BasketItemsMapper", () => {
             expect(actual.certificates).to.be.empty;
             expect(actual.certifiedCopies).to.be.empty;
             expect(actual.missingImageDelivery).to.be.empty;
-            expect(actual.deliveryDetailsTable).to.not.be.empty;
+            expect(actual.deliveryDetailsTable).to.be.undefined;
             expect(actual.serviceName).to.equal(SERVICE_NAME_BASKET);
             expect(actual.totalItemCost).to.equal(0);
         });
@@ -131,6 +131,25 @@ describe("BasketItemsMapper", () => {
             ]);
             expect(actual.serviceName).to.equal(SERVICE_NAME_BASKET);
             expect(actual.totalItemCost).to.equal(48);
+        });
+
+        it("Throws an exception if an unrecognised item is mapped", () => {
+            // given
+            const mapper = new BasketItemsMapper();
+            const basket = {
+                deliveryDetails: {
+                    forename: "forename"
+                },
+                items: [{
+                    kind: "item"
+                }]
+            } as Basket;
+
+            // when
+            const execution = () => mapper.mapBasketItems(basket);
+
+            // then
+            expect(execution).to.throw("Unknown item type: [item]");
         });
     })
 });

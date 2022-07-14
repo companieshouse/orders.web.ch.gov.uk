@@ -93,6 +93,22 @@ describe("basket.controller.integration", () => {
             });
     });
 
+    it("renders empty basket if user is enrolled for multi-item baskets and their basket is empty", (done) => {
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: []
+        } as any));
+        chai.request(testApp)
+            .get("/basket")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain("Your basket is empty, find a company to start ordering.");
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
     it("redirects to the order confirmation page if X-Payment-Required is not present", (done) => {
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,

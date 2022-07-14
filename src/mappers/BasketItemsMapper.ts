@@ -7,11 +7,13 @@ import { MapUtil } from "../service/MapUtil";
 export class BasketItemsMapper {
 
     public mapBasketItems(basketResource: Basket): BasketDetailsViewModel {
-        const viewModel = new BasketDetailsViewModel(MapUtil.getDeliveryDetailsTable(basketResource.deliveryDetails));
+        const viewModel = new BasketDetailsViewModel();
 
         if (!basketResource.items) {
             return viewModel;
         }
+
+        viewModel.deliveryDetailsTable = MapUtil.getDeliveryDetailsTable(basketResource.deliveryDetails);
 
         const itemVisitor = new ItemVisitor(viewModel);
 
