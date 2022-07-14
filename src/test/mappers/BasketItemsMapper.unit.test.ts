@@ -2,89 +2,7 @@ import { BasketItemsMapper } from "../../mappers/BasketItemsMapper";
 import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { expect } from "chai";
 import { SERVICE_NAME_BASKET } from "../../config/config";
-import { ItemOptions, LinksResource } from "@companieshouse/api-sdk-node/src/services/order/certificates";
-import { CertifiedCopyItem } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
-import { CertificateItem } from "@companieshouse/api-sdk-node/dist/services/order/certificates";
-import { MidItem } from "@companieshouse/api-sdk-node/dist/services/order/mid";
-
-const certificateItem: CertificateItem = {
-    companyName: "COMPANY LIMITED",
-    companyNumber: "12345678",
-    customerReference: "customerReference",
-    description: "description",
-    descriptionIdentifier: "descriptionIdentifier",
-    descriptionValues: {
-        key: "value"
-    },
-    etag: "etag",
-    id: "CRT-123456-123456",
-    itemCosts: [],
-    itemOptions: {
-        certificateType: "incorporation-with-all-company-name-changes",
-        deliveryTimescale: "standard"
-    } as ItemOptions,
-    kind: "item#certificate",
-    links: {
-        self: "/path/to/certificate"
-    },
-    postageCost: "10",
-    postalDelivery: true,
-    quantity: 1,
-    totalItemCost: "15"
-};
-
-const certifiedCopyItem = {
-    companyName: "COMPANY LIMITED",
-    companyNumber: "12345678",
-    itemOptions: {
-        filingHistoryDocuments: [{
-            filingHistoryType: "AP01",
-            filingHistoryDescriptionValues: {
-                officer_name: "Tom"
-            },
-            filingHistoryDescription: "appoint-person-director-company",
-            filingHistoryDate: "2022-01-01T12:00",
-            filingHistoryCost: "15",
-            filingHistoryId: "id"
-        }],
-        deliveryTimescale: "standard",
-        deliveryMethod: "postal"
-    },
-    totalItemCost: "15",
-    kind: "item#certified-copy"
-} as CertifiedCopyItem;
-
-const missingImageDeliveryItem: MidItem = {
-    companyName: "COMPANY LIMITED",
-    companyNumber: "12345678",
-    customerReference: "customerReference",
-    description: "description",
-    descriptionIdentifier: "descriptionIdentifier",
-    descriptionValues: {
-        key: "value"
-    },
-    etag: "F00DFACE",
-    id: "CCD-123456-123456",
-    itemCosts: [],
-    itemOptions: {
-        filingHistoryType: "CH01",
-        filingHistoryDescriptionValues: {
-            officer_name: "Tom"
-        },
-        filingHistoryDescription: "change-person-director-company",
-        filingHistoryDate: "2022-02-01T12:00",
-        filingHistoryId: "id"
-    },
-    kind: "item#missing-image-delivery",
-    links: {
-        self: "/path/to/missing-image-delivery"
-    },
-    postageCost: "0",
-    postalDelivery: false,
-    quantity: 1,
-    totalItemCost: "3"
-
-};
+import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
 
 describe("BasketItemsMapper", () => {
     describe("mapBasketItems", () => {
@@ -121,7 +39,7 @@ describe("BasketItemsMapper", () => {
                     postalCode: "AB01 1XY",
                     country: "country"
                 },
-                items: [certificateItem, certifiedCopyItem, missingImageDeliveryItem],
+                items: [mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem],
                 enrolled: true
             } as Basket;
 
@@ -134,7 +52,7 @@ describe("BasketItemsMapper", () => {
                     text: "Incorporation with all company name changes"
                 },
                 {
-                    text: "12345678"
+                    text: "00000000"
                 },
                 {
                     text: "Standard delivery (aim to dispatch within 10 working days)"
@@ -151,22 +69,22 @@ describe("BasketItemsMapper", () => {
             ]);
             expect(actual.certifiedCopies).to.deep.contain([
                 {
-                    text: "01 Jan 2022"
+                    text: "12 Feb 2010"
                 },
                 {
-                    text: "AP01"
+                    text: "CH01"
                 },
                 {
-                    text: "Appointment of a director"
+                    text: "Director's details changed for Thomas David Wheare on 12 February 2010"
                 },
                 {
-                    text: "12345678"
+                    text: "00000000"
                 },
                 {
                     text: "Standard delivery (aim to dispatch within 10 working days)"
                 },
                 {
-                    text: "£15"
+                    text: "£30"
                 },
                 {
                     html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
@@ -175,16 +93,16 @@ describe("BasketItemsMapper", () => {
             //Director's details changed
             expect(actual.missingImageDelivery).to.deep.contain([
                 {
-                    text: "01 Feb 2022"
+                    text: "26 May 2015"
                 },
                 {
-                    text: "CH01"
+                    text: "AP01"
                 },
                 {
-                    text: "Director's details changed"
+                    text: "Appointment of Mr Richard John Harris as a director"
                 },
                 {
-                    text: "12345678"
+                    text: "00000000"
                 },
                 {
                     text: "£3"
@@ -212,7 +130,7 @@ describe("BasketItemsMapper", () => {
                 }
             ]);
             expect(actual.serviceName).to.equal(SERVICE_NAME_BASKET);
-            expect(actual.totalItemCost).to.equal(33);
+            expect(actual.totalItemCost).to.equal(48);
         });
     })
 });
