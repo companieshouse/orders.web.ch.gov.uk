@@ -75,7 +75,7 @@ describe("request.util.unit",
 
             it("errors if asked to look up an unknown page URL", () => {
                 const execution = () => getWhitelistedReturnToURL(UNKNOWN_URL);
-                expect(execution).to.throw("/\\/orders\\/ORD-\\d{6}-\\d{6}\\/confirmation\\?ref=orderable_item_ORD-\\d{6}-\\d{6}&state=[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}&status=[a-z]*/,/\\/orders/,/\\/basket/.");
+                expect(execution).to.throw("/\\/orders\\/ORD-\\d{6}-\\d{6}\\/confirmation\\?ref=orderable_item_ORD-\\d{6}-\\d{6}&state=[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}&status=[a-z]*/,/\\/orders/,/\\/basket/,/^\\/delivery-details/.");
             });
         });
     });
