@@ -35,6 +35,8 @@ export const SERVICE_NAME_MISSING_IMAGE_DELIVERIES = "Request a document";
 
 export const SERVICE_NAME_GENERIC = "";
 
+export const SERVICE_NAME_BASKET = "Basket";
+
 export const DISPATCH_DAYS = getEnvironmentValue("DISPATCH_DAYS");
 
 export const DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED = getEnvironmentValue("DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED", "false") === "true";

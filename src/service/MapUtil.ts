@@ -188,7 +188,10 @@ export abstract class MapUtil {
         return MapUtil.mapToHtml(membersMappings);
     }
 
-    static getDeliveryDetailsTable = (deliveryDetails: DeliveryDetails): any => {
+    static getDeliveryDetailsTable = (deliveryDetails: DeliveryDetails | undefined): object[] | null => {
+        if (!deliveryDetails) {
+            return null;
+        }
         return [
             {
                 key: {

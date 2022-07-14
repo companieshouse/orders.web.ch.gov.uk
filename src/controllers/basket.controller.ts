@@ -12,7 +12,7 @@ import { APPLICATION_NAME } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import * as templatePaths from "../model/template.paths";
 import { BASKET } from "../model/template.paths";
-import { BasketSummaryMapper, BasketSummaryViewModel } from "../mappers/BasketSummaryMapper";
+import { BasketItemsMapper } from "../mappers/BasketItemsMapper";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -27,29 +27,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const basketResource: Basket = await getBasket(accessToken);
 
         if (basketResource.enrolled) {
-            res.render(BASKET, basketResource.items?.reduce((prev, curr) => {
-                const basketSummaryMapper = new BasketSummaryMapper(prev, curr, basketResource.deliveryDetails);
-
-                if (curr.kind === "item#certificate") {
-                    basketSummaryMapper.mapCertificateToViewModel();
-                } else if (curr.kind === "item#certified-copy") {
-                    basketSummaryMapper.mapCertifiedCopyToViewModel();
-                } else if (curr.kind === "item#missing-image-delivery") {
-                    basketSummaryMapper.mapMissingImageToViewModel();
-                } else {
-                    throw Error(`Unknown item type: [${curr.kind}]`);
-                }
-                prev.totalItemCost += parseInt(curr.totalItemCost);
-                return prev;
-            }, {
-                certificates: [] as any[][],
-                certifiedCopies: [] as any[][],
-                missingImageDelivery: [] as any[][],
-                totalItemCost: 0,
-                deliveryDetailsTable: null,
-                hasDeliverableItems: false,
-                serviceName: "Basket"
-            } as BasketSummaryViewModel));
+            res.render(BASKET, new BasketItemsMapper().mapBasketItems(basketResource));
         } else {
             await proceedToPayment(req, res, next);
         }
