@@ -60,13 +60,6 @@ export class LPCertificateItemMapper extends ItemMapper {
                 value: {
                     classes: "govuk-!-width-one-half",
                     html: "<p id='generalPartners'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.generalPartnerDetails?.includeBasicInformation) + "</p>"
-                },
-                actions: {
-                    items: [
-                        {
-                            visuallyHiddenText: "current general partners names"
-                        }
-                    ]
                 }
             },
             {
@@ -76,13 +69,6 @@ export class LPCertificateItemMapper extends ItemMapper {
                 value: {
                     classes: "govuk-!-width-one-half",
                     html: "<p id='limitedPartners'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.limitedPartnerDetails?.includeBasicInformation) + "</p>"
-                },
-                actions: {
-                    items: [
-                        {
-                            visuallyHiddenText: "current limited partners names"
-                        }
-                    ]
                 }
             },
             {
@@ -92,13 +78,6 @@ export class LPCertificateItemMapper extends ItemMapper {
                 value: {
                     classes: "govuk-!-width-one-half",
                     html: "<p id='generalNatureOfBusiness'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.includeGeneralNatureOfBusinessInformation) + "</p>"
-                },
-                actions: {
-                    items: [
-                        {
-                            visuallyHiddenText: "general nature of business"
-                        }
-                    ]
                 }
             }
         ];

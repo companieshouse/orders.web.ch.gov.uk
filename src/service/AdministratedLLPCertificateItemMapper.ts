@@ -52,13 +52,6 @@ export class AdministratedLLPCertificateItemMapper extends ItemMapper {
                 value: {
                     classes: "govuk-!-width-one-half",
                     html: "<p id='currentDesignatedMembersNames'>" + MapUtil.mapMembersOptions("Including designated members':", item.itemOptions.designatedMemberDetails) + "</p>"
-                },
-                actions: {
-                    items: [
-                        {
-                            visuallyHiddenText: "current designated members names"
-                        }
-                    ]
                 }
             },
             {
@@ -68,13 +61,6 @@ export class AdministratedLLPCertificateItemMapper extends ItemMapper {
                 value: {
                     classes: "govuk-!-width-one-half",
                     html: "<p id='currentMembersNames'>" + MapUtil.mapMembersOptions("Including members':", item.itemOptions.memberDetails) + "</p>"
-                },
-                actions: {
-                    items: [
-                        {
-                            visuallyHiddenText: "current members names"
-                        }
-                    ]
                 }
             },
             {
@@ -84,13 +70,6 @@ export class AdministratedLLPCertificateItemMapper extends ItemMapper {
                 value: {
                     classes: "govuk-!-width-one-half",
                     html: "<p id='administrators'>" + MapUtil.determineItemOptionsSelectedText(item.itemOptions.administratorsDetails?.includeBasicInformation) + "</p>"
-                },
-                actions: {
-                    items: [
-                        {
-                            visuallyHiddenText: "administrators' details"
-                        }
-                    ]
                 }
             }
         ];
