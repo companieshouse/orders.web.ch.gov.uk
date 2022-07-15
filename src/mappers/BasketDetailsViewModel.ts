@@ -7,10 +7,6 @@ export class BasketDetailsViewModel {
     totalItemCost: number = 0;
     deliveryDetailsTable: object[] | null;
     serviceName: string = SERVICE_NAME_BASKET;
-
-    constructor (deliveryDetailsTable: object[] | null) {
-        this.deliveryDetailsTable = deliveryDetailsTable;
-    }
 }
 
 export class GovUkTableCellView {
