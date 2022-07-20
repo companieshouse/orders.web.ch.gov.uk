@@ -10,18 +10,24 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">Basket</h1>
+      <h1 id="page-heading" class="govuk-heading-l">Basket</h1>
       {% if not missingImageDelivery.length and not certifiedCopies.length and not certificates.length %}
-        <h2 class="govuk-heading-m">Document details</h2>
-        <p class="govuk-body">Your basket is empty, find a company to start ordering.</p>
+        <h2 id="empty-basket-section-heading" class="govuk-heading-m">Document details</h2>
+        <p id="empty-basket-message" class="govuk-body">Your basket is empty, find a company to start ordering.</p>
         {{ govukButton({
+          attributes: {
+            id: "find-company-button"
+          },
           text: "Find a company",
           href: CHS_URL
         }) }}
       {% else %}
         {% if missingImageDelivery.length %}
-          <h2 class="govuk-heading-m">Missing image requests</h2>
+          <h2 id="missing-image-delivery-section-heading" class="govuk-heading-m">Missing image requests</h2>
           {{ govukTable({
+            attributes: {
+              id: "missing-image-delivery-table"
+            },
             head: [
               {
                 text: "Date Filed"
@@ -47,12 +53,15 @@
             We will aim to add it to a company's filing history that day if the request is received between 8:30am and 3pm, Monday to Friday (excluding bank holidays).</p>
           <p class="govuk-body">If you make a request after 3pm, we will add the document the next working day.</p>
         {% endif %}
-        {% if hasDeliverableItems %}
-          <h2 class="govuk-heading-m">For delivery</h2>
+        {% if certifiedCopies.length or certificates.length %}
+          <h2 id="deliverable-items-section-heading" class="govuk-heading-m">For delivery</h2>
         {% endif %}
         {% if certifiedCopies.length %}
-          <h2 class="govuk-heading-m">Certified documents</h2>
+          <h2 id="certified-documents-section-heading" class="govuk-heading-m">Certified documents</h2>
           {{ govukTable({
+            attributes: {
+              id: "certified-documents-table"
+            },
             head: [
               {
                 text: "Date Filed"
@@ -79,8 +88,11 @@
           }) }}
           {% endif %}
         {% if certificates.length %}
-          <h2 class="govuk-heading-m">Certified certificates</h2>
+          <h2 id="certificates-section-heading" class="govuk-heading-m">Certified certificates</h2>
           {{ govukTable({
+            attributes: {
+              id: "certificates-table"
+            },
             head: [
               {
                 text: "Certificate type"
@@ -103,12 +115,18 @@
           }) }}
         {% endif %}
         {% if deliveryDetailsTable %}
-          <h2 class="govuk-heading-m">Delivery details</h2>
+          <h2 id="delivery-details-section-heading" class="govuk-heading-m">Delivery details</h2>
           {{ govukSummaryList({
+            attributes: {
+              id: "delivery-details-list"
+            },
             rows: deliveryDetailsTable
           }) }}
         {% endif %}
         {{ govukSummaryList({
+          attributes: {
+            id: "subtotal-list"
+          },
           rows: [{
             key: {
               text: "Subtotal"
@@ -120,10 +138,13 @@
         }) }}
         <form method="post">
           {{ govukButton({
+            attributes: {
+              id: "submit"
+            },
             text: "Continue to payment"
           }) }}
         </form>
-        <a class="govuk-link" href="{{ CHS_URL }}">Order more</a>
+        <a id="order-more-link" class="govuk-link" href="{{ CHS_URL }}">Order more</a>
       {% endif %}
     </div>
   </div>

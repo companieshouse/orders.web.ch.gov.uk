@@ -27,8 +27,10 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const basketResource: Basket = await getBasket(accessToken);
 
         if (basketResource.enrolled) {
+            logger.debug(`User [${userId}] is enrolled; rendering basket page...`);
             res.render(BASKET, new BasketItemsMapper().mapBasketItems(basketResource));
         } else {
+            logger.debug(`User [${userId}] is not enrolled; proceeding to payment...`);
             await proceedToPayment(req, res, next);
         }
     } catch (err) {
