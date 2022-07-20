@@ -200,10 +200,13 @@ export abstract class MapUtil {
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
-                    html: "<p id='deliveryAddressValue'>" + MapUtil.mapDeliveryDetails(deliveryDetails) + "</p>"
+                    html: "<p id='delivery-address-value'>" + MapUtil.mapDeliveryDetails(deliveryDetails) + "</p>"
                 },
                 actions: {
                     items: [{
+                        attributes: {
+                            id: "change-delivery-details"
+                        },
                         href: "/delivery-details",
                         text: "Change"
                     }]
