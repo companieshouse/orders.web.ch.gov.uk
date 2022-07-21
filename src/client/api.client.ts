@@ -1,5 +1,10 @@
 import { createApiClient } from "@companieshouse/api-sdk-node";
-import { Checkout as BasketCheckout, Basket, CheckoutResource } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import {
+    Checkout as BasketCheckout,
+    Basket,
+    CheckoutResource,
+    ItemUriRequest
+} from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { BasketPatchRequest } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { CreatePaymentRequest, Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
@@ -10,6 +15,7 @@ import createError from "http-errors";
 
 import { API_URL, APPLICATION_NAME, CHS_URL } from "../config/config";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
+import { BasketLinks } from "../../../../../api-sdk-node/src/services/order/basket";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -97,4 +103,24 @@ export const getCheckout = async (oAuth: string, checkoutId: string): Promise<Ap
         logger.info(`Get checkout, status_code=${checkoutResult.value.httpStatusCode}`);
         return checkoutResult.value;
     }
+};
+
+export const getBasketLinks = async (oAuth: string): Promise<BasketLinks> => {
+    const api = createApiClient(undefined, oAuth, API_URL);
+    const basketResource: Resource<BasketLinks> = await api.basket.getBasketLinks();
+    if (basketResource.httpStatusCode !== 200) {
+        throw createError(basketResource.httpStatusCode, basketResource.httpStatusCode.toString());
+    }
+    logger.info(`Get basket links, status_code=${basketResource.httpStatusCode}`);
+    return basketResource.resource as BasketLinks;
+};
+
+export const removeBasketItem = async (itemUri: ItemUriRequest, oAuth: string): Promise<any> => {
+    const api = createApiClient(undefined, oAuth, API_URL);
+    const response: ApiResponse<any> = await api.basket.removeBasketItem(itemUri);
+    if (response.httpStatusCode !== 200) {
+        throw createError(response.httpStatusCode, response.httpStatusCode.toString());
+    }
+    logger.info(`Remove basket item, status code=${response.httpStatusCode}`);
+    return response;
 };

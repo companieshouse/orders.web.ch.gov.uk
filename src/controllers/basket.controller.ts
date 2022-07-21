@@ -6,13 +6,14 @@ import { Basket, Checkout } from "@companieshouse/api-sdk-node/dist/services/ord
 import { createLogger } from "ch-structured-logging";
 import { HttpError } from "http-errors";
 
-import { checkoutBasket, createPayment, getBasket } from "../client/api.client";
+import { checkoutBasket, createPayment, getBasket, getBasketLinks, removeBasketItem } from "../client/api.client";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
 import { APPLICATION_NAME } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import * as templatePaths from "../model/template.paths";
 import { BASKET } from "../model/template.paths";
 import { BasketItemsMapper } from "../mappers/BasketItemsMapper";
+import { BasketLinks } from "../../../../../api-sdk-node/src/services/order/basket";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -96,11 +97,18 @@ export const handleRemovePostback = async (req: Request, res: Response, next: Ne
     const signInInfo = req.session?.data[SessionKey.SignInInfo];
     const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
     const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
-    
-    const urlArray = req.url.split('/');
-    const itemId = urlArray[urlArray.length-1];
 
-    const checkoutApiResponse: ApiResponse<Checkout> = await checkoutBasket(accessToken);
-    
-    const basketLinksResponse: ApiResponse<Basket> = await getBasketLinks(accessToken)
-}; 
+    const urlArray = req.url.split("/");
+    const itemId = urlArray[urlArray.length - 1];
+
+    const basketLinksResponse: BasketLinks = await getBasketLinks(accessToken);
+
+    const itemUri = basketLinksResponse.data.items?.find(itemUri => itemUri.itemUri === itemId);
+
+    if (!itemUri) {
+        logger.info(`Could not find a match for itemId and itemUri, user_id=${userId}`);
+    } else {
+        await removeBasketItem(itemUri, accessToken);
+        res.redirect(BASKET);
+    }
+};
