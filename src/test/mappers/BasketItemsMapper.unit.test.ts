@@ -64,7 +64,9 @@ describe("BasketItemsMapper", () => {
                     html: `<a class="govuk-link" href="javascript:void(0)">View/Change certificate options</a>`
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
+                    html: `<form action="/basket/remove/${mockCertificateItem.id}" method="put">
+                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                            </form>`
                 }
             ]);
             expect(actual.certifiedCopies).to.deep.contain([
@@ -87,7 +89,9 @@ describe("BasketItemsMapper", () => {
                     text: "£30"
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
+                    html: `<form action="/basket/remove/${mockCertifiedCopyItem.id}" method="put">
+                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                            </form>`
                 }
             ]);
             //Director's details changed
@@ -108,7 +112,9 @@ describe("BasketItemsMapper", () => {
                     text: "£3"
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
+                    html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="put">
+                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                            </form>`
                 }
             ]);
             expect(actual.deliveryDetailsTable).to.deep.equal([

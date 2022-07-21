@@ -13,7 +13,7 @@ import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/sessio
 import * as templatePaths from "../model/template.paths";
 import { BASKET } from "../model/template.paths";
 import { BasketItemsMapper } from "../mappers/BasketItemsMapper";
-import { BasketLinks } from "../../../../../api-sdk-node/src/services/order/basket";
+import { BasketLinks } from "@companieshouse/api-sdk-node/src/services/order/basket";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -103,12 +103,13 @@ export const handleRemovePostback = async (req: Request, res: Response, next: Ne
 
     const basketLinksResponse: BasketLinks = await getBasketLinks(accessToken);
 
-    const itemUri = basketLinksResponse.data.items?.find(itemUri => itemUri.itemUri === itemId);
+    const itemUri = basketLinksResponse.data.items?.find(item => item.itemUri.includes(itemId));
 
     if (!itemUri) {
         logger.info(`Could not find a match for itemId and itemUri, user_id=${userId}`);
     } else {
-        await removeBasketItem(itemUri, accessToken);
-        res.redirect(BASKET);
+        const response: ApiResponse<any> = await removeBasketItem(itemUri, accessToken);
+        logger.info(`Remove basket item response status=${response.httpStatusCode}, user_id=${userId}`);
     }
+    res.redirect(BASKET);
 };

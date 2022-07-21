@@ -30,10 +30,9 @@ export class ItemVisitor {
                     html: `<a class="govuk-link" href="javascript:void(0)">View/Change certificate options</a>`
                 },
                 {
-                    html: 
-                    `<form action="/basket/remove/${item.item.id}" method="put">
-                        <button type="submit" class="govuk-button" value="Remove">Remove</button>
-                    </form>`
+                    html: `<form action="/basket/remove/${item.item.id}" method="put">
+                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                            </form>`
                 }
             ]);
         } else if (item.item.kind === "item#certified-copy") {
@@ -59,7 +58,9 @@ export class ItemVisitor {
                     text: `£${item.item.totalItemCost}`
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
+                    html: `<form action="/basket/remove/${item.item.id}" method="put">
+                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                            </form>`
                 }
             ]);
         } else if (item.item.kind === "item#missing-image-delivery") {
@@ -82,7 +83,9 @@ export class ItemVisitor {
                     text: `£${item.item.totalItemCost}`
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
+                    html: `<form action="/basket/remove/${item.item.id}" method="put">
+                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                            </form>`
                 }
             ]);
         } else {

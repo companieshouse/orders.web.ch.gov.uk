@@ -15,7 +15,7 @@ import createError from "http-errors";
 
 import { API_URL, APPLICATION_NAME, CHS_URL } from "../config/config";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
-import { BasketLinks } from "../../../../../api-sdk-node/src/services/order/basket";
+import { BasketLinks } from "@companieshouse/api-sdk-node/src/services/order/basket";
 
 const logger = createLogger(APPLICATION_NAME);
 
