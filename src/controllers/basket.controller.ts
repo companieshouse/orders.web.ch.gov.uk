@@ -91,3 +91,16 @@ const proceedToPayment = async (req: Request, res: Response, next: NextFunction)
         res.redirect(replaceOrderId(ORDER_COMPLETE, checkoutApiResponse.resource?.reference!));
     }
 };
+
+export const handleRemovePostback = async (req: Request, res: Response, next: NextFunction) => {
+    const signInInfo = req.session?.data[SessionKey.SignInInfo];
+    const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
+    const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
+    
+    const urlArray = req.url.split('/');
+    const itemId = urlArray[urlArray.length-1];
+
+    const checkoutApiResponse: ApiResponse<Checkout> = await checkoutBasket(accessToken);
+    
+    const basketLinksResponse: ApiResponse<Basket> = await getBasketLinks(accessToken)
+}; 
