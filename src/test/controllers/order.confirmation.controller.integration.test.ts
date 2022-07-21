@@ -104,6 +104,7 @@ describe("order.confirmation.controller.integration", () => {
                         certificateType: "incorporation-with-all-name-changes",
                         deliveryMethod: "postal",
                         deliveryTimescale: "standard",
+                        includeEmailCopy: false,
                         forename: "forename",
                         includeGoodStandingInformation: true,
                         registeredOfficeAddressDetails: {
@@ -151,6 +152,7 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                     chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
                     chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
+                    chai.expect($("#emailCopyRequiredValue").text()).to.equal("Email only available for express delivery method");
                     chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                     chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                     chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
@@ -175,6 +177,7 @@ describe("order.confirmation.controller.integration", () => {
                     certificateType: "incorporation-with-all-name-changes",
                     deliveryMethod: "postal",
                     deliveryTimescale: "standard",
+                    includeEmailCopy: false,
                     forename: "forename",
                     includeGoodStandingInformation: true,
                     principalPlaceOfBusinessDetails: {
@@ -215,6 +218,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#certificateTypeValue").text()).to.equal("Incorporation with all company name changes");
                 chai.expect($("#statementOfGoodStandingValue").html()).to.equal("Yes");
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
+                chai.expect($("#emailCopyRequiredValue").text()).to.equal("Email only available for express delivery method");
                 chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
                 chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
@@ -250,6 +254,7 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#companyNameValue").text()).to.equal(mockDissolvedCertificateCheckoutResponse.items[0].companyName);
                 chai.expect($("#companyNumberValue").text()).to.equal(mockDissolvedCertificateCheckoutResponse.items[0].companyNumber);
                 chai.expect($("#certificateTypeValue").text()).to.equal("Dissolution with all company name changes");
+                chai.expect($("#emailCopyRequiredValue").text()).to.equal("Email only available for express delivery method");
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard delivery (aim to dispatch within 10 working days)");
                 chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");

@@ -78,6 +78,7 @@ export const mockDissolvedCertificateItem: Item = {
         certificateType: "dissolution",
         deliveryMethod: "postal",
         deliveryTimescale: "standard",
+        includeEmailCopy: false,
         directorDetails: {},
         forename: "forename",
         registeredOfficeAddressDetails: {},

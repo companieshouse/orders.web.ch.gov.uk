@@ -43,70 +43,41 @@ export abstract class ItemMapper {
         const deliveryMethod = this.mapDeliveryMethod(item?.itemOptions);
         const emailCopyRequired = this.mapEmailCopyRequired(item?.itemOptions);
 
-
-        let certificateDeliveryDetails;
-        // temp check to hide email section upcoming work will allow lp companies to request email
-        if (item.itemOptions.companyType as string === "limited-partnership" ) {
-            certificateDeliveryDetails = [
-                {
-                    key: {
-                        classes: "govuk-!-width-one-half",
-                        text: "Delivery method"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='deliveryMethodValue'>" + deliveryMethod + "</p>"
-                    }
+        const  certificateDeliveryDetails = [
+            {
+                key: {
+                    classes: "govuk-!-width-one-half",
+                    text: "Delivery method"
                 },
-
-                {
-                    key: {
-                        classes: "govuk-!-width-one-half",
-                        text: "Delivery details"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='deliveryAddressValue'>" + address + "</p>"
-                    }
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='deliveryMethodValue'>" + deliveryMethod + "</p>"
                 }
-            ]
-        } else {
-            certificateDeliveryDetails = [
-                {
-                    key: {
-                        classes: "govuk-!-width-one-half",
-                        text: "Delivery method"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='deliveryMethodValue'>" + deliveryMethod + "</p>"
-                    }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-half",
+                    text: "Email copy required"
                 },
-                {
-                    key: {
-                        classes: "govuk-!-width-one-half",
-                        text: "Email copy required"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='emailCopyRequiredValue'>" + emailCopyRequired + "</p>"
-                    }
-                },
-
-                {
-                    key: {
-                        classes: "govuk-!-width-one-half",
-                        text: "Delivery details"
-                    },
-                    value: {
-                        classes: "govuk-!-width-one-half",
-                        html: "<p id='deliveryAddressValue'>" + address + "</p>"
-                    }
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='emailCopyRequiredValue'>" + emailCopyRequired + "</p>"
                 }
-            ]
-        }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-half",
+                    text: "Delivery details"
+                },
+                value: {
+                    classes: "govuk-!-width-one-half",
+                    html: "<p id='deliveryAddressValue'>" + address + "</p>"
+                }
+            }
+        ]
         return certificateDeliveryDetails;
-    }
+    };
+
     abstract getOrdersDetailTable(item: { companyName: string, companyNumber: string, itemOptions: CertificateItemOptions }): any;
 
     mapDeliveryDetails = (deliveryDetails: DeliveryDetails | undefined): string => {
