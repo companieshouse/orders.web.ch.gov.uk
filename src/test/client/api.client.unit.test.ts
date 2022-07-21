@@ -2,13 +2,14 @@ import sinon from "sinon";
 import chai from "chai";
 import BasketService from "@companieshouse/api-sdk-node/dist/services/order/basket/service";
 import PaymentService from "@companieshouse/api-sdk-node/dist/services/payment/service";
-import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { BasketLinks, Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import Resource, { ApiResponse, ApiErrorResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 import { success, failure } from "@companieshouse/api-sdk-node/dist/services/result";
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import { Basket, BasketPatchRequest } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
 
-import { checkoutBasket, createPayment, patchBasket } from "../../client/api.client";
+import { checkoutBasket, createPayment, getBasketLinks, patchBasket, removeBasketItem } from "../../client/api.client";
+import { NotFound } from "http-errors";
 const O_AUTH_TOKEN = "oauth";
 
 const sandbox = sinon.createSandbox();
@@ -109,6 +110,41 @@ describe("api.client", () => {
             sandbox.stub(BasketService.prototype, "patchBasket").returns(Promise.resolve(dummyBasketSDKResponse));
             const patchBasketDetails = await patchBasket("oauth", basketPatchRequest);
             chai.expect(patchBasketDetails).to.equal(dummyBasketSDKResponse.resource);
+        });
+    });
+
+    describe("getBasketLinks", () => {
+        it("should return a basket successfully", async function () {
+            const mockBasket: Resource<BasketLinks> = {
+                httpStatusCode: 200,
+                resource: {
+                    id: "id",
+                    createdAt: "createdAt",
+                    updatedAt: "updatedAt",
+                    data: {
+                        items: [
+                            {
+                                itemUri: "/orderable/certificate/12345678"
+                            }
+                        ],
+                        enrolled: true
+                    }
+                }
+            };
+            sandbox.stub(BasketService.prototype, "getBasketLinks").returns(Promise.resolve(mockBasket));
+            const basketLinks = await getBasketLinks("oauth");
+            chai.expect(basketLinks).to.equal(mockBasket.resource);
+        });
+    });
+
+    describe("removeBasketItem", () => {
+        it("should return success 200 ok", async function () {
+            const response: Resource<any> = {
+                httpStatusCode: 200
+            };
+            sandbox.stub(BasketService.prototype, "removeBasketItem").returns(Promise.resolve(response));
+            const basketLinks = await removeBasketItem({ itemUri: "/orderable/certificates/12345678" }, "oauth");
+            chai.expect(basketLinks.httpStatusCode).to.equal(response.httpStatusCode);
         });
     });
 });
