@@ -9,6 +9,7 @@ import createError from "http-errors";
 
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
+import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -69,15 +70,9 @@ describe("basket.controller.integration", () => {
         const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
             enrolled: true,
             items: [
-                {
-                    kind: "item#certificate"
-                },
-                {
-                    kind: "item#certified-copy"
-                },
-                {
-                    kind: "item#missing-image-delivery"
-                }
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem
             ]
         } as any));
         chai.request(testApp)
