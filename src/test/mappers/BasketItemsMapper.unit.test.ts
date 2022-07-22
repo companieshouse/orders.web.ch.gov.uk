@@ -125,10 +125,13 @@ describe("BasketItemsMapper", () => {
                     },
                     value: {
                         classes: "govuk-!-width-one-half",
-                        html: `<p id='deliveryAddressValue'>forename surname<br>address line 1<br>locality<br>AB01 1XY<br>country<br></p>`
+                        html: `<p id='delivery-address-value'>forename surname<br>address line 1<br>locality<br>AB01 1XY<br>country<br></p>`
                     },
                     actions: {
                         items: [{
+                            attributes: {
+                                id: "change-delivery-details"
+                            },
                             href: "/delivery-details",
                             text: "Change"
                         }]
