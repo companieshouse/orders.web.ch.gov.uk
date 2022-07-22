@@ -2,18 +2,17 @@ import { NextFunction, Request, Response } from "express";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
-import { Basket, Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { Basket, Checkout, BasketLinks } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { createLogger } from "ch-structured-logging";
 import { HttpError } from "http-errors";
 
 import { checkoutBasket, createPayment, getBasket, getBasketLinks, removeBasketItem } from "../client/api.client";
-import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
+import { ORDER_COMPLETE, replaceOrderId, BASKET as BASKET_URL } from "../model/page.urls";
 import { APPLICATION_NAME } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import * as templatePaths from "../model/template.paths";
 import { BASKET } from "../model/template.paths";
 import { BasketItemsMapper } from "../mappers/BasketItemsMapper";
-import { BasketLinks } from "@companieshouse/api-sdk-node/src/services/order/basket";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -113,5 +112,5 @@ export const handleRemovePostback = async (req: Request, res: Response, next: Ne
         const response: ApiResponse<any> = await removeBasketItem(itemUri, accessToken);
         logger.info(`Remove basket item response status=${response.httpStatusCode}, user_id=${userId}`);
     }
-    res.redirect(BASKET);
+    return res.redirect(BASKET_URL);
 };

@@ -30,7 +30,7 @@ export class ItemVisitor {
                     html: `<a class="govuk-link" href="javascript:void(0)">View/Change certificate options</a>`
                 },
                 {
-                    html: `<form action="/basket/remove/${item.item.id}" method="put">
+                    html: `<form action="/basket/remove/${item.item.id}" method="post">
                                 <button type="submit" class="govuk-button" value="Remove">Remove</button>
                             </form>`
                 }
@@ -58,7 +58,7 @@ export class ItemVisitor {
                     text: `£${item.item.totalItemCost}`
                 },
                 {
-                    html: `<form action="/basket/remove/${item.item.id}" method="put">
+                    html: `<form action="/basket/remove/${item.item.id}" method="post">
                                 <button type="submit" class="govuk-button" value="Remove">Remove</button>
                             </form>`
                 }
@@ -83,7 +83,7 @@ export class ItemVisitor {
                     text: `£${item.item.totalItemCost}`
                 },
                 {
-                    html: `<form action="/basket/remove/${item.item.id}" method="put">
+                    html: `<form action="/basket/remove/${item.item.id}" method="post">
                                 <button type="submit" class="govuk-button" value="Remove">Remove</button>
                             </form>`
                 }

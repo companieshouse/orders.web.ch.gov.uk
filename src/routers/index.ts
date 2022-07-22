@@ -16,7 +16,7 @@ router.get(pageUrls.ORDERS, renderTemplate(templatePaths.BLANK));
 router.get(pageUrls.ORDER_COMPLETE, renderOrderConfirmation);
 router.get(pageUrls.BASKET, renderBasket);
 router.post(pageUrls.BASKET, handleBasketPostback);
-router.put(pageUrls.BASKET_REMOVE, handleRemovePostback);
+router.post(pageUrls.BASKET_REMOVE, handleRemovePostback);
 
 router.get(pageUrls.DELIVERY_DETAILS, renderDeliveryDetails);
 router.post(pageUrls.DELIVERY_DETAILS, deliveryDetailsController);

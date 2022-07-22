@@ -2,8 +2,8 @@ import { createApiClient } from "@companieshouse/api-sdk-node";
 import {
     Checkout as BasketCheckout,
     Basket,
-    CheckoutResource,
-    ItemUriRequest
+    ItemUriRequest,
+    BasketLinks
 } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { BasketPatchRequest } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
@@ -15,7 +15,6 @@ import createError from "http-errors";
 
 import { API_URL, APPLICATION_NAME, CHS_URL } from "../config/config";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
-import { BasketLinks } from "@companieshouse/api-sdk-node/src/services/order/basket";
 
 const logger = createLogger(APPLICATION_NAME);
 
