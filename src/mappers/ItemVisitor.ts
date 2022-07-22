@@ -27,7 +27,7 @@ export class ItemVisitor {
                     text: `£${item.item.totalItemCost}`
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">View/Change certificate options</a>`
+                    html: `<a class="govuk-link" href="${this.getViewChangeCertOptionsLink(item.item.id, itemOptions.companyType)}">View/Change certificate options</a>`
                 },
                 {
                     html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
@@ -86,5 +86,15 @@ export class ItemVisitor {
             throw Error(`Unknown item type: [${item.item.kind}]`);
         }
         this.viewModel.totalItemCost += parseInt(item.item.totalItemCost);
+    }
+
+    private getViewChangeCertOptionsLink(certificateId: string, companyType: string): string {
+        if (companyType === "llp") {
+            return `/orderable/llp-certificates/${certificateId}/view-change-options`;
+        } else if (companyType === "limited-partnership") {
+            return `/orderable/lp-certificates/${certificateId}/view-change-options`;
+        } else {
+            return `/orderable/certificates/${certificateId}/view-change-options`;
+        }
     }
 }
