@@ -31,14 +31,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input id="remove-item-${item.item.id}" type="submit" class="govuk-!-font-size-19"
-                                    style="background: none!important;
-                                        border: none;
-                                        padding: 0!important;
-                                        color: #069;
-                                        text-decoration: underline;
-                                        cursor: pointer;"
-                                    value="Remove">
+                                <input id="remove-item-${item.item.id}" type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]);
@@ -66,14 +59,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input id="remove-item-${item.item.id}" type="submit" class="govuk-!-font-size-19"
-                                    style="background: none!important;
-                                        border: none;
-                                        padding: 0!important;
-                                        color: #069;
-                                        text-decoration: underline;
-                                        cursor: pointer;"
-                                    value="Remove">
+                                <input id="remove-item-${item.item.id}" type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]);
@@ -98,14 +84,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input id="remove-item-${item.item.id}" type="submit" class="govuk-!-font-size-19"
-                                    style="background: none!important;
-                                        border: none;
-                                        padding: 0!important;
-                                        color: #069;
-                                        text-decoration: underline;
-                                        cursor: pointer;"
-                                    value="Remove">
+                                <input id="remove-item-${item.item.id}" type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]);
@@ -115,7 +94,7 @@ export class ItemVisitor {
         this.viewModel.totalItemCost += parseInt(item.item.totalItemCost);
     }
 
-    private getViewChangeCertOptionsLink(certificateId: string, companyType: string): string {
+    private getViewChangeCertOptionsLink (certificateId: string, companyType: string): string {
         if (companyType === "llp") {
             return `/orderable/llp-certificates/${certificateId}/view-change-options`;
         } else if (companyType === "limited-partnership") {

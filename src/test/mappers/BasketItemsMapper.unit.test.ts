@@ -70,14 +70,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="govuk-!-font-size-19"
-                                    style="background: none!important;
-                                        border: none;
-                                        padding: 0!important;
-                                        color: #069;
-                                        text-decoration: underline;
-                                        cursor: pointer;"
-                                    value="Remove">
+                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ], [
@@ -98,14 +91,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="govuk-!-font-size-19"
-                                    style="background: none!important;
-                                        border: none;
-                                        padding: 0!important;
-                                        color: #069;
-                                        text-decoration: underline;
-                                        cursor: pointer;"
-                                    value="Remove">
+                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ], [
@@ -126,14 +112,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="govuk-!-font-size-19"
-                                    style="background: none!important;
-                                        border: none;
-                                        padding: 0!important;
-                                        color: #069;
-                                        text-decoration: underline;
-                                        cursor: pointer;"
-                                    value="Remove">
+                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]]);
@@ -158,14 +137,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertifiedCopyItem.id}" method="post">
-                                <input id="remove-item-${mockCertifiedCopyItem.id}" type="submit" class="govuk-!-font-size-19"
-                                    style="background: none!important;
-                                        border: none;
-                                        padding: 0!important;
-                                        color: #069;
-                                        text-decoration: underline;
-                                        cursor: pointer;"
-                                    value="Remove">
+                                <input id="remove-item-${mockCertifiedCopyItem.id}" type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]);
@@ -188,14 +160,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
-                                <input id="remove-item-${mockMissingImageDeliveryItem.id}" type="submit" class="govuk-!-font-size-19"
-                                    style="background: none!important;
-                                        border: none;
-                                        padding: 0!important;
-                                        color: #069;
-                                        text-decoration: underline;
-                                        cursor: pointer;"
-                                    value="Remove">
+                                <input id="remove-item-${mockMissingImageDeliveryItem.id}" type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]);
