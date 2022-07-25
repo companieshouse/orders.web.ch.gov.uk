@@ -10,7 +10,7 @@ export class ItemVisitor {
     constructor(private viewModel: BasketDetailsViewModel) {
     }
 
-    visit(item: VisitableItem) {
+    visit (item: VisitableItem) {
         if (item.item.kind === "item#certificate") {
             const itemOptions = item.item.itemOptions as CertificateItemOptions;
             this.viewModel.certificates.push([
@@ -27,11 +27,11 @@ export class ItemVisitor {
                     text: `£${item.item.totalItemCost}`
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">View/Change certificate options</a>`
+                    html: `<a class="govuk-link" href="${this.getViewChangeCertOptionsLink(item.item.id, itemOptions.companyType)}">View/Change certificate options</a>`
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" class="govuk-!-font-size-19"
+                                <input id="remove-item-${item.item.id}" type="submit" class="govuk-!-font-size-19"
                                     style="background: none!important;
                                         border: none;
                                         padding: 0!important;
@@ -66,7 +66,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" class="govuk-!-font-size-19"
+                                <input id="remove-item-${item.item.id}" type="submit" class="govuk-!-font-size-19"
                                     style="background: none!important;
                                         border: none;
                                         padding: 0!important;
@@ -98,7 +98,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" class="govuk-!-font-size-19"
+                                <input id="remove-item-${item.item.id}" type="submit" class="govuk-!-font-size-19"
                                     style="background: none!important;
                                         border: none;
                                         padding: 0!important;
@@ -113,5 +113,15 @@ export class ItemVisitor {
             throw Error(`Unknown item type: [${item.item.kind}]`);
         }
         this.viewModel.totalItemCost += parseInt(item.item.totalItemCost);
+    }
+
+    private getViewChangeCertOptionsLink(certificateId: string, companyType: string): string {
+        if (companyType === "llp") {
+            return `/orderable/llp-certificates/${certificateId}/view-change-options`;
+        } else if (companyType === "limited-partnership") {
+            return `/orderable/lp-certificates/${certificateId}/view-change-options`;
+        } else {
+            return `/orderable/certificates/${certificateId}/view-change-options`;
+        }
     }
 }

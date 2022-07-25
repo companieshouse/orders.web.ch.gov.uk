@@ -1,16 +1,15 @@
 import chai from "chai";
 import sinon from "sinon";
 import ioredis from "ioredis";
-import nock, {isDone} from "nock";
-import { Basket, Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import nock from "nock";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import createError from "http-errors";
-
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
-import {response} from "express";
-import {removeBasketItem} from "../../client/api.client";
+import { removeBasketItem } from "../../client/api.client";
+import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -71,15 +70,9 @@ describe("basket.controller.integration", () => {
         const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
             enrolled: true,
             items: [
-                {
-                    kind: "item#certificate"
-                },
-                {
-                    kind: "item#certified-copy"
-                },
-                {
-                    kind: "item#missing-image-delivery"
-                }
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem
             ]
         } as any));
         chai.request(testApp)
@@ -190,7 +183,7 @@ describe("basket.controller.integration", () => {
         }));
 
         chai.request(testApp)
-            .put("/basket/remove/12345678")
+            .post("/basket/remove/12345678")
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
             .end((err, resp) => {
                 if (err) return done(err);
@@ -218,7 +211,7 @@ describe("basket.controller.integration", () => {
         const removeBasketItem = sandbox.stub(apiClient, "removeBasketItem");
 
         chai.request(testApp)
-            .put("/basket/remove/87654321")
+            .post("/basket/remove/87654321")
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
             .end((err, resp) => {
                 if (err) return done(err);

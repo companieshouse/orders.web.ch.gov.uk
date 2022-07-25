@@ -2,7 +2,12 @@ import { BasketItemsMapper } from "../../mappers/BasketItemsMapper";
 import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { expect } from "chai";
 import { SERVICE_NAME_BASKET } from "../../config/config";
-import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
+import {
+    CERTIFICATE_ID,
+    mockCertificateItem,
+    mockCertifiedCopyItem,
+    mockMissingImageDeliveryItem
+} from "../__mocks__/order.mocks";
 
 describe("BasketItemsMapper", () => {
     describe("mapBasketItems", () => {
@@ -39,7 +44,7 @@ describe("BasketItemsMapper", () => {
                     postalCode: "AB01 1XY",
                     country: "country"
                 },
-                items: [mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem],
+                items: [{ ...mockCertificateItem, itemOptions: { ...mockCertificateItem.itemOptions, companyType: "ltd" } }, { ...mockCertificateItem, itemOptions: { ...mockCertificateItem.itemOptions, companyType: "llp" } }, { ...mockCertificateItem, itemOptions: { ...mockCertificateItem.itemOptions, companyType: "limited-partnership" } }, mockCertifiedCopyItem, mockMissingImageDeliveryItem],
                 enrolled: true
             } as Basket;
 
@@ -47,7 +52,7 @@ describe("BasketItemsMapper", () => {
             const actual = mapper.mapBasketItems(basket);
 
             // then
-            expect(actual.certificates).to.deep.contain([
+            expect(actual.certificates).to.deep.equal([[
                 {
                     text: "Incorporation with all company name changes"
                 },
@@ -61,14 +66,77 @@ describe("BasketItemsMapper", () => {
                     text: "£15"
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">View/Change certificate options</a>`
+                    html: `<a class="govuk-link" href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
                 },
                 {
-                    html: `<form action="/basket/remove/${mockCertificateItem.id}" method="put">
-                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                    html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
+                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="govuk-!-font-size-19"
+                                    style="background: none!important;
+                                        border: none;
+                                        padding: 0!important;
+                                        color: #069;
+                                        text-decoration: underline;
+                                        cursor: pointer;"
+                                    value="Remove">
                             </form>`
                 }
-            ]);
+            ], [
+                {
+                    text: "Incorporation with all company name changes"
+                },
+                {
+                    text: "00000000"
+                },
+                {
+                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                },
+                {
+                    text: "£15"
+                },
+                {
+                    html: `<a class="govuk-link" href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
+                },
+                {
+                    html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
+                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="govuk-!-font-size-19"
+                                    style="background: none!important;
+                                        border: none;
+                                        padding: 0!important;
+                                        color: #069;
+                                        text-decoration: underline;
+                                        cursor: pointer;"
+                                    value="Remove">
+                            </form>`
+                }
+            ], [
+                {
+                    text: "Incorporation with all company name changes"
+                },
+                {
+                    text: "00000000"
+                },
+                {
+                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                },
+                {
+                    text: "£15"
+                },
+                {
+                    html: `<a class="govuk-link" href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
+                },
+                {
+                    html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
+                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="govuk-!-font-size-19"
+                                    style="background: none!important;
+                                        border: none;
+                                        padding: 0!important;
+                                        color: #069;
+                                        text-decoration: underline;
+                                        cursor: pointer;"
+                                    value="Remove">
+                            </form>`
+                }
+            ]]);
             expect(actual.certifiedCopies).to.deep.contain([
                 {
                     text: "12 Feb 2010"
@@ -89,12 +157,19 @@ describe("BasketItemsMapper", () => {
                     text: "£30"
                 },
                 {
-                    html: `<form action="/basket/remove/${mockCertifiedCopyItem.id}" method="put">
-                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                    html: `<form action="/basket/remove/${mockCertifiedCopyItem.id}" method="post">
+                                <input id="remove-item-${mockCertifiedCopyItem.id}" type="submit" class="govuk-!-font-size-19"
+                                    style="background: none!important;
+                                        border: none;
+                                        padding: 0!important;
+                                        color: #069;
+                                        text-decoration: underline;
+                                        cursor: pointer;"
+                                    value="Remove">
                             </form>`
                 }
             ]);
-            //Director's details changed
+            // Director's details changed
             expect(actual.missingImageDelivery).to.deep.contain([
                 {
                     text: "26 May 2015"
@@ -112,8 +187,15 @@ describe("BasketItemsMapper", () => {
                     text: "£3"
                 },
                 {
-                    html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="put">
-                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                    html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
+                                <input id="remove-item-${mockMissingImageDeliveryItem.id}" type="submit" class="govuk-!-font-size-19"
+                                    style="background: none!important;
+                                        border: none;
+                                        padding: 0!important;
+                                        color: #069;
+                                        text-decoration: underline;
+                                        cursor: pointer;"
+                                    value="Remove">
                             </form>`
                 }
             ]);
@@ -139,7 +221,7 @@ describe("BasketItemsMapper", () => {
                 }
             ]);
             expect(actual.serviceName).to.equal(SERVICE_NAME_BASKET);
-            expect(actual.totalItemCost).to.equal(48);
+            expect(actual.totalItemCost).to.equal(78);
         });
 
         it("Throws an exception if an unrecognised item is mapped", () => {
@@ -160,5 +242,5 @@ describe("BasketItemsMapper", () => {
             // then
             expect(execution).to.throw("Unknown item type: [item]");
         });
-    })
+    });
 });
