@@ -31,7 +31,14 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                                <input type="submit" class="govuk-!-font-size-19"
+                                    style="background: none!important;
+                                        border: none;
+                                        padding: 0!important;
+                                        color: #069;
+                                        text-decoration: underline;
+                                        cursor: pointer;"
+                                    value="Remove">
                             </form>`
                 }
             ]);
@@ -59,7 +66,14 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                                <input type="submit" class="govuk-!-font-size-19"
+                                    style="background: none!important;
+                                        border: none;
+                                        padding: 0!important;
+                                        color: #069;
+                                        text-decoration: underline;
+                                        cursor: pointer;"
+                                    value="Remove">
                             </form>`
                 }
             ]);
@@ -84,7 +98,14 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <button type="submit" class="govuk-button" value="Remove">Remove</button>
+                                <input type="submit" class="govuk-!-font-size-19"
+                                    style="background: none!important;
+                                        border: none;
+                                        padding: 0!important;
+                                        color: #069;
+                                        text-decoration: underline;
+                                        cursor: pointer;"
+                                    value="Remove">
                             </form>`
                 }
             ]);
