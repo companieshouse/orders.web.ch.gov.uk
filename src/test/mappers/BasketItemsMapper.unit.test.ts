@@ -70,7 +70,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ], [
@@ -91,7 +91,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ], [
@@ -112,7 +112,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input id="remove-item-${mockCertificateItem.id}" type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]]);
@@ -137,7 +137,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertifiedCopyItem.id}" method="post">
-                                <input id="remove-item-${mockCertifiedCopyItem.id}" type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]);
@@ -160,7 +160,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
-                                <input id="remove-item-${mockMissingImageDeliveryItem.id}" type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]);

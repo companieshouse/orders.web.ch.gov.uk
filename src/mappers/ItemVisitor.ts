@@ -31,7 +31,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input id="remove-item-${item.item.id}" type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]);
@@ -59,7 +59,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input id="remove-item-${item.item.id}" type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]);
@@ -84,7 +84,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input id="remove-item-${item.item.id}" type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove">
                             </form>`
                 }
             ]);
