@@ -2,13 +2,13 @@ import chai from "chai";
 import sinon from "sinon";
 import ioredis from "ioredis";
 import nock from "nock";
-import { Basket, Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import createError from "http-errors";
-
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
+import { removeBasketItem } from "../../client/api.client";
 import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
 
 const sandbox = sinon.createSandbox();
@@ -161,5 +161,63 @@ describe("basket.controller.integration", () => {
 
         chai.expect(resp.status).to.equal(409);
         chai.expect(resp.text).to.contains("If you pasted the web address to order a document, you'll need to start the order again.");
+    });
+
+    it("handles remove postback successfully", (done) => {
+        sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            id: "1234",
+            createdAt: "created at",
+            updatedAt: "updated at",
+            data: {
+                items: [
+                    {
+                        itemUri: "/orderable/certificate/12345678"
+                    }
+                ],
+                enrolled: true
+            }
+        }));
+
+        const removeBasketItem = sandbox.stub(apiClient, "removeBasketItem").returns(Promise.resolve({
+            httpStatusCode: 200
+        }));
+
+        chai.request(testApp)
+            .post("/basket/remove/12345678")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(removeBasketItem).to.have.been.called;
+                chai.expect(resp.redirects[0]).to.include("basket");
+                done();
+            });
+    });
+
+    it("handles remove postback successfully itemId no match", (done) => {
+        sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            id: "1234",
+            createdAt: "created at",
+            updatedAt: "updated at",
+            data: {
+                items: [
+                    {
+                        itemUri: "/orderable/certificate/12345678"
+                    }
+                ],
+                enrolled: true
+            }
+        }));
+
+        const removeBasketItem = sandbox.stub(apiClient, "removeBasketItem");
+
+        chai.request(testApp)
+            .post("/basket/remove/87654321")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(removeBasketItem).to.not.have.been.called;
+                chai.expect(resp.redirects[0]).to.include("basket");
+                done();
+            });
     });
 });

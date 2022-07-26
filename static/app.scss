@@ -3,3 +3,17 @@
 
 // the govuk frontend
 @import "../node_modules/govuk-frontend/govuk/all";
+
+.removeItem {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    color: #1d70b8;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+.removeItem:hover {
+    color: #003078;
+}

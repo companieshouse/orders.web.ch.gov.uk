@@ -44,7 +44,7 @@ describe("BasketItemsMapper", () => {
                     postalCode: "AB01 1XY",
                     country: "country"
                 },
-                items: [{...mockCertificateItem, itemOptions: {...mockCertificateItem.itemOptions, companyType: "ltd"}}, {...mockCertificateItem, itemOptions: {...mockCertificateItem.itemOptions, companyType: "llp"}}, {...mockCertificateItem, itemOptions: {...mockCertificateItem.itemOptions, companyType: "limited-partnership"}}, mockCertifiedCopyItem, mockMissingImageDeliveryItem],
+                items: [{ ...mockCertificateItem, itemOptions: { ...mockCertificateItem.itemOptions, companyType: "ltd" } }, { ...mockCertificateItem, itemOptions: { ...mockCertificateItem.itemOptions, companyType: "llp" } }, { ...mockCertificateItem, itemOptions: { ...mockCertificateItem.itemOptions, companyType: "limited-partnership" } }, mockCertifiedCopyItem, mockMissingImageDeliveryItem],
                 enrolled: true
             } as Basket;
 
@@ -69,7 +69,9 @@ describe("BasketItemsMapper", () => {
                     html: `<a class="govuk-link" href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
+                    html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
+                                <input type="submit" class="removeItem" value="Remove">
+                            </form>`
                 }
             ], [
                 {
@@ -88,7 +90,9 @@ describe("BasketItemsMapper", () => {
                     html: `<a class="govuk-link" href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
+                    html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
+                                <input type="submit" class="removeItem" value="Remove">
+                            </form>`
                 }
             ], [
                 {
@@ -107,7 +111,9 @@ describe("BasketItemsMapper", () => {
                     html: `<a class="govuk-link" href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
+                    html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
+                                <input type="submit" class="removeItem" value="Remove">
+                            </form>`
                 }
             ]]);
             expect(actual.certifiedCopies).to.deep.contain([
@@ -130,10 +136,12 @@ describe("BasketItemsMapper", () => {
                     text: "£30"
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
+                    html: `<form action="/basket/remove/${mockCertifiedCopyItem.id}" method="post">
+                                <input type="submit" class="removeItem" value="Remove">
+                            </form>`
                 }
             ]);
-            //Director's details changed
+            // Director's details changed
             expect(actual.missingImageDelivery).to.deep.contain([
                 {
                     text: "26 May 2015"
@@ -151,7 +159,9 @@ describe("BasketItemsMapper", () => {
                     text: "£3"
                 },
                 {
-                    html: `<a class="govuk-link" href="javascript:void(0)">Remove</a>`
+                    html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
+                                <input type="submit" class="removeItem" value="Remove">
+                            </form>`
                 }
             ]);
             expect(actual.deliveryDetailsTable).to.deep.equal([
@@ -197,5 +207,5 @@ describe("BasketItemsMapper", () => {
             // then
             expect(execution).to.throw("Unknown item type: [item]");
         });
-    })
+    });
 });
