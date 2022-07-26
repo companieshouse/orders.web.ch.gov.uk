@@ -99,8 +99,7 @@ export const handleRemovePostback = async (req: Request, res: Response, next: Ne
     const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
     const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
 
-    const urlArray = req.url.split("/");
-    const itemId = urlArray[urlArray.length - 1];
+    const itemId = req.params.itemId;
 
     const basketLinksResponse: BasketLinks = await getBasketLinks(accessToken);
 
