@@ -17,9 +17,12 @@ import {MapUtil} from "./MapUtil";
 import {CheckDetailsItem} from "./ItemMapper";
 import {ITEM_MAPPER_FACTORY_CONFIG} from "./ItemMapperFactoryConfig";
 
-const dispatchDays: string = DISPATCH_DAYS;
-const SAME_DAY_HAPPENS_NEXT_TEXT = "We'll prepare the certificate and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.";
-const DEFAULT_TEXT = "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.";
+const whatHappensNextTextOptions = {
+    sameDayCertificate: "We'll prepare the certificate and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.",
+    sameDayCertifiedCopy: "We'll prepare the certified document and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.",
+    defaultCertificate: "We'll prepare the certificate and aim to dispatch it within " + DISPATCH_DAYS + " working days.",
+    defaultCertifiedCopy: "We'll prepare your order and aim to dispatch it within " + DISPATCH_DAYS + " working days.",
+};
 
 export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | undefined,
                         itemMapperFactory: ItemMapperFactory = ITEM_MAPPER_FACTORY_CONFIG.getInstance()): CheckDetailsItem => {
@@ -36,7 +39,7 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
             const certificateDetails = {
                 certificateType: MapUtil.mapCertificateType(itemOptions.certificateType)
             };
-            const whatHappensNextText = itemOptions.deliveryTimescale === "same-day" ? SAME_DAY_HAPPENS_NEXT_TEXT : DEFAULT_TEXT;
+            const whatHappensNextText = itemOptions.deliveryTimescale === "same-day" ? whatHappensNextTextOptions.sameDayCertificate : whatHappensNextTextOptions.defaultCertificate;
             const dissolvedCertificatesOrderDetails = [
                 {
                     key: {
@@ -101,7 +104,7 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
                 serviceName: SERVICE_NAME_CERTIFICATES,
                 titleText: "Certificate ordered",
                 pageTitle: "Certificate ordered confirmation",
-                happensNext: whatHappensNextText,
+                whatHappensNextText: whatHappensNextText,
                 orderDetailsTable: dissolvedCertificatesOrderDetails
             };
         }
@@ -110,6 +113,7 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
         const address = MapUtil.mapDeliveryDetails(deliveryDetails);
 
         const itemOptionsCertifiedCopy = item.itemOptions as CertifiedCopyItemOptions;
+        const whatHappensNextText = itemOptionsCertifiedCopy.deliveryTimescale === "same-day" ? whatHappensNextTextOptions.sameDayCertifiedCopy : whatHappensNextTextOptions.defaultCertifiedCopy;
         const certifiedCopiesOrderDetails = [
             {
                 key: {
@@ -154,7 +158,7 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
             serviceName: SERVICE_NAME_CERTIFIED_COPIES,
             titleText: "Certified document order confirmed",
             pageTitle: "Certified document order confirmation",
-            happensNext: "We'll prepare your order and aim to dispatch it within " + dispatchDays + " working days.",
+            whatHappensNextText: whatHappensNextText,
             orderDetailsTable: certifiedCopiesOrderDetails,
             filingHistoryDocuments: mapFilingHistoriesDocuments(itemOptionsCertifiedCopy.filingHistoryDocuments),
             documentDetailsTable: 1
@@ -218,7 +222,7 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
             orderDetailsTable: missingImageDeliveryOrderDetails,
             titleText: "Document Requested",
             pageTitle: "Document Requested",
-            happensNext: `<p class="govuk-body">It can take us several hours to check the availability of a document. We will aim to add it to the <a href="/company/${item.companyNumber}/filing-history" class="govuk-link govuk-link--no-visited-state">company’s filing history </a>
+            whatHappensNextText: `<p class="govuk-body">It can take us several hours to check the availability of a document. We will aim to add it to the <a href="/company/${item.companyNumber}/filing-history" class="govuk-link govuk-link--no-visited-state">company’s filing history </a>
             that day if the request is received between 8:30am and 3pm, Monday to Friday (excluding bank holidays).</p>
 
             <p class="govuk-body">If you make the request after 3pm, we will add the document the next working day.</p>

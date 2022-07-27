@@ -19,7 +19,7 @@
         html: "Your order reference number<br><strong id='orderReference' aria-label='"+ orderDetails.referenceNumberAriaLabel + "'>" + orderDetails.referenceNumber + "</strong>"
       }) }}
       <h1 class="govuk-heading-m">What happens next</h1>
-      <p class="govuk-body">{{ happensNext | safe}}</p>
+      <p class="govuk-body">{{ whatHappensNextText | safe}}</p>
       {% if piwikLink === "certificates" %}
         {{ govukInsetText({
           html: "<ul class='govuk-list'>
