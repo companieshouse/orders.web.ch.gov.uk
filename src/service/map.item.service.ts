@@ -17,6 +17,7 @@ import {MapUtil} from "./MapUtil";
 import {CheckDetailsItem} from "./ItemMapper";
 import {ITEM_MAPPER_FACTORY_CONFIG} from "./ItemMapperFactoryConfig";
 
+const sameDayDeliveryTimescale = "same-day";
 const whatHappensNextTextOptions = {
     sameDayCertificate: "We'll prepare the certificate and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.",
     sameDayCertifiedCopy: "We'll prepare the certified document and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.",
@@ -39,7 +40,7 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
             const certificateDetails = {
                 certificateType: MapUtil.mapCertificateType(itemOptions.certificateType)
             };
-            const whatHappensNextText = itemOptions.deliveryTimescale === "same-day" ? whatHappensNextTextOptions.sameDayCertificate : whatHappensNextTextOptions.defaultCertificate;
+            const whatHappensNextText = itemOptions.deliveryTimescale === sameDayDeliveryTimescale ? whatHappensNextTextOptions.sameDayCertificate : whatHappensNextTextOptions.defaultCertificate;
             const dissolvedCertificatesOrderDetails = [
                 {
                     key: {
@@ -113,7 +114,7 @@ export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | u
         const address = MapUtil.mapDeliveryDetails(deliveryDetails);
 
         const itemOptionsCertifiedCopy = item.itemOptions as CertifiedCopyItemOptions;
-        const whatHappensNextText = itemOptionsCertifiedCopy.deliveryTimescale === "same-day" ? whatHappensNextTextOptions.sameDayCertifiedCopy : whatHappensNextTextOptions.defaultCertifiedCopy;
+        const whatHappensNextText = itemOptionsCertifiedCopy.deliveryTimescale === sameDayDeliveryTimescale ? whatHappensNextTextOptions.sameDayCertifiedCopy : whatHappensNextTextOptions.defaultCertifiedCopy;
         const certifiedCopiesOrderDetails = [
             {
                 key: {
