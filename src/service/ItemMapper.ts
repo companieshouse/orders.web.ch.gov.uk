@@ -13,7 +13,7 @@ export interface CheckDetailsItem {
     serviceName?: string;
     titleText?: string;
     pageTitle?: string;
-    happensNext?: string;
+    whatHappensNextText?: string;
     filingHistoryDocuments?: any[];
     orderDetailsTable?: any[];
     documentDetailsTable?: number;
@@ -31,7 +31,7 @@ export abstract class ItemMapper {
                 serviceName: SERVICE_NAME_CERTIFICATES,
                 titleText: "Certificate ordered",
                 pageTitle: "Certificate ordered confirmation",
-                happensNext: whatHappensNextText,
+                whatHappensNextText: whatHappensNextText,
                 orderDetailsTable: this.getOrdersDetailTable(itemDetails),
                 certificateDetailsTable: 1,
                 deliveryDetailsTable: this.getDeliveryDetailsTable(itemDetails)
