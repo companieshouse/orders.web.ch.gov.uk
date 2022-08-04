@@ -6,10 +6,10 @@ import {
 import {
     CERTIFICATE_PAGE_TITLE,
     CERTIFIED_COPY_PAGE_TITLE, MID_PAGE_TITLE,
-    SingleItemTemplateMapper
 } from "../../controllers/ConfirmationTemplateMapper";
 import { expect } from "chai";
 import { ORDER_COMPLETE } from "../../model/template.paths";
+import {SingleItemTemplateMapper} from "../../controllers/SingleItemTemplateMapper";
 
 describe("SingleItemTemplateMapper", () => {
     describe("map", () => {
