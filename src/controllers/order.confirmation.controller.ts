@@ -14,7 +14,6 @@ import { APPLICATION_NAME, RETRY_CHECKOUT_NUMBER, RETRY_CHECKOUT_DELAY } from ".
 import { mapItem } from "../service/map.item.service";
 import { mapDate } from "../utils/date.util";
 import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
-import { getWhitelistedReturnToURL } from "../utils/request.util";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -23,7 +22,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const orderId = req.params.orderId;
         const status = req.query.status;
         const ref = req.query.ref;
-        const itemType = req.query.itemType;
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
@@ -31,7 +29,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const CERTIFIED_COPY_PAGE_TITLE = "Certified document order confirmed - Order a certified document - GOV.UK";
         const MID_PAGE_TITLE = "Document Requested - Request a document - GOV.UK";
 
-        logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, itemType=${itemType}, user_id=${userId}`);
+        logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, user_id=${userId}`);
         if (status === "cancelled" || status === "failed") {
             const basket: Basket = await getBasket(accessToken);
             const item = basket?.items?.[0];
@@ -42,10 +40,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         };
 
         const checkout = (await getCheckout(accessToken, orderId)).resource as Checkout;
-        if (itemType === undefined || itemType === "") {
-            const item = checkout?.items?.[0];
-            return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + getItemTypeUrlParam(item));
-        }
 
         logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);
 
@@ -101,26 +95,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-export const getItemTypeUrlParam = (item: CheckoutItem):string => {
-    if (item?.kind === "item#certificate") {
-        const itemOptions = item.itemOptions as CertificateItemOptions;
-        if (itemOptions?.certificateType === "dissolution") {
-            return "&itemType=dissolved-certificate";
-        }
-        return "&itemType=certificate";
-    }
-
-    if (item?.kind === "item#certified-copy") {
-        return "&itemType=certified-copy";
-    }
-
-    if (item?.kind === "item#missing-image-delivery") {
-        return "&itemType=missing-image-delivery";
-    }
-
-    return "";
-};
-
+// TODO: rename method
 export const getPiwikURL = (item: CheckoutItem):string => {
 
 
@@ -135,6 +110,7 @@ export const getPiwikURL = (item: CheckoutItem):string => {
     return "";
 };
 
+// TODO: refactor using factory method pattern
 export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | undefined):string => {
     if (item?.kind === "item#certificate") {
         const itemOptions = item?.itemOptions as CertificateItemOptions;
