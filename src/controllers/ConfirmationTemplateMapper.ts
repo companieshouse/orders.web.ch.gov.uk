@@ -1,6 +1,5 @@
-import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
-import {mapDate} from "../utils/date.util";
+import { mapDate } from "../utils/date.util";
 
 export const CERTIFICATE_PAGE_TITLE = "Certificate ordered - Order a certificate - GOV.UK";
 export const CERTIFIED_COPY_PAGE_TITLE = "Certified document order confirmed - Order a certified document - GOV.UK";
@@ -18,11 +17,12 @@ export type OrderDetails = {
 };
 
 export interface ConfirmationTemplateMapper {
-    map(item: Checkout): Record<string, any>;
+    map (checkout: Checkout): Record<string, any>;
 }
 
 export abstract class AbstractTemplateMapper implements ConfirmationTemplateMapper {
-    abstract map (item: Checkout): Record<string, any>;
+    abstract map (checkout: Checkout): Record<string, any>;
+
     protected getPaymentDetails (checkout: Checkout): PaymentDetails {
         return {
             amount: "£" + checkout?.totalOrderCost,

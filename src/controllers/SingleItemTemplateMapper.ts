@@ -1,6 +1,5 @@
 import {Checkout} from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import {mapItem} from "../service/map.item.service";
-import {mapDate} from "../utils/date.util";
 import {ORDER_COMPLETE} from "../model/template.paths";
 import {Item} from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import {
