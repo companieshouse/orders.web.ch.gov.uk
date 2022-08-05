@@ -1,14 +1,19 @@
 import chai from "chai";
 import sinon from "sinon";
 import ioredis from "ioredis";
-import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { Basket, BasketLinks } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import cheerio from "cheerio";
 
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 import {
-    ORDER_ID, mockCertificateCheckoutResponse, mockCertifiedCopyCheckoutResponse,
-    mockMissingImageDeliveryCheckoutResponse, mockDissolvedCertificateCheckoutResponse, mockCertificateItem
+    ORDER_ID,
+    mockCertificateCheckoutResponse,
+    mockCertifiedCopyCheckoutResponse,
+    mockMissingImageDeliveryCheckoutResponse,
+    mockDissolvedCertificateCheckoutResponse,
+    mockCertificateItem,
+    mockMissingImageDeliveryItem
 } from "../__mocks__/order.mocks";
 import { MapUtil } from "../../service/MapUtil";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout"
@@ -54,6 +59,194 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     describe("Certificate order confirmation page integration tests", () => {
+        it("Renders order summary page if the user is enrolled and missing image delivery requested", (done) => {
+            const certificateCheckoutResponse = {
+                ...mockMissingImageDeliveryCheckoutResponse
+            } as Checkout;
+
+            const checkoutResponse: ApiResponse<Checkout> = {
+                httpStatusCode: 200,
+                resource: certificateCheckoutResponse
+            }
+
+            getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                data: {
+                    enrolled: true
+                }
+            } as BasketLinks));
+
+            chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+                .end((err, resp) => {
+                    if (err) return done(err);
+                    const $ = cheerio.load(resp.text);
+
+                    chai.expect(resp.status).to.equal(200);
+                    chai.expect($("#orderReference").text()).to.equal(mockMissingImageDeliveryCheckoutResponse.reference);
+                    chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
+                    chai.expect($("#hasMissingImageDeliveryItems").length).equals(1);
+                    chai.expect($("#hasExpressDeliveryItems").length).equals(0);
+                    chai.expect($("#hasStandardDeliveryItems").length).equals(0);
+                    chai.expect($("#deliveryAddressValue").length).equals(0);
+                    chai.expect($("#paymentAmountValue").text()).to.equal("£3");
+                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockMissingImageDeliveryCheckoutResponse.paymentReference);
+                    chai.expect($("#paymentTimeValue").text()).to.equal("07 October 2020 - 11:09:46");
+
+                    chai.expect(getOrderStub).to.have.been.called;
+                    chai.expect(getBasketStub).to.have.been.called;
+                    chai.expect(resp.text).to.contain("Order received");
+                    done();
+                });
+        });
+        it("Renders order summary page if the user is enrolled and standard delivery requested", (done) => {
+            const certificateCheckoutResponse = {
+                ...mockCertificateCheckoutResponse
+            } as Checkout;
+
+            const checkoutResponse: ApiResponse<Checkout> = {
+                httpStatusCode: 200,
+                resource: certificateCheckoutResponse
+            }
+
+            getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                data: {
+                    enrolled: true
+                }
+            } as BasketLinks));
+
+            chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+                .end((err, resp) => {
+                    if (err) return done(err);
+                    const $ = cheerio.load(resp.text);
+
+                    chai.expect(resp.status).to.equal(200);
+                    chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
+                    chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
+                    chai.expect($("#hasMissingImageDeliveryItems").length).equals(0);
+                    chai.expect($("#hasExpressDeliveryItems").length).equals(0);
+                    chai.expect($("#hasStandardDeliveryItems").length).equals(1);
+                    chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
+                    chai.expect($("#paymentAmountValue").text()).to.equal("£15");
+                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
+                    chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
+
+                    chai.expect(getOrderStub).to.have.been.called;
+                    chai.expect(getBasketStub).to.have.been.called;
+                    chai.expect(resp.text).to.contain("Order received");
+                    done();
+                });
+        });
+        it("Renders order summary page if the user is enrolled and express delivery requested", (done) => {
+            const certificateCheckoutResponse = {
+                ...mockCertificateCheckoutResponse,
+                items: [
+                    {
+                        ...mockCertificateCheckoutResponse.items[0],
+                        itemOptions: {
+                            ...mockCertificateCheckoutResponse.items[0].itemOptions,
+                            deliveryTimescale: "same-day"
+                        }
+                    }
+                ]
+            } as Checkout;
+
+            const checkoutResponse: ApiResponse<Checkout> = {
+                httpStatusCode: 200,
+                resource: certificateCheckoutResponse
+            }
+
+            getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                data: {
+                    enrolled: true
+                }
+            } as BasketLinks));
+
+            chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+                .end((err, resp) => {
+                    if (err) return done(err);
+                    const $ = cheerio.load(resp.text);
+
+                    chai.expect(resp.status).to.equal(200);
+                    chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
+                    chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
+                    chai.expect($("#hasMissingImageDeliveryItems").length).equals(0);
+                    chai.expect($("#hasExpressDeliveryItems").length).equals(1);
+                    chai.expect($("#hasStandardDeliveryItems").length).equals(0);
+                    chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
+                    chai.expect($("#paymentAmountValue").text()).to.equal("£15");
+                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
+                    chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
+
+                    chai.expect(getOrderStub).to.have.been.called;
+                    chai.expect(getBasketStub).to.have.been.called;
+                    chai.expect(resp.text).to.contain("Order received");
+                    done();
+                });
+        });
+        it("Renders order summary page if the user is enrolled, items with express and standard delivery requested and missing image delivery requested", (done) => {
+            const certificateCheckoutResponse = {
+                ...mockCertificateCheckoutResponse,
+                items: [
+                    {
+                        ...mockCertificateCheckoutResponse.items[0],
+                        itemOptions: {
+                            ...mockCertificateCheckoutResponse.items[0].itemOptions,
+                            deliveryTimescale: "same-day"
+                        }
+                    },
+                    {
+                        ...mockCertificateCheckoutResponse.items[0],
+                    },
+                    {
+                        ...mockMissingImageDeliveryItem
+                    }
+                ]
+            } as Checkout;
+
+            const checkoutResponse: ApiResponse<Checkout> = {
+                httpStatusCode: 200,
+                resource: certificateCheckoutResponse
+            }
+
+            getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                data: {
+                    enrolled: true
+                }
+            } as BasketLinks));
+
+            chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+                .end((err, resp) => {
+                    if (err) return done(err);
+                    const $ = cheerio.load(resp.text);
+
+                    chai.expect(resp.status).to.equal(200);
+                    chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
+                    chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
+                    chai.expect($("#hasMissingImageDeliveryItems").length).equals(1);
+                    chai.expect($("#hasExpressDeliveryItems").length).equals(1);
+                    chai.expect($("#hasStandardDeliveryItems").length).equals(1);
+                    chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
+                    chai.expect($("#paymentAmountValue").text()).to.equal("£15");
+                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
+                    chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
+
+                    chai.expect(getOrderStub).to.have.been.called;
+                    chai.expect(getBasketStub).to.have.been.called;
+                    chai.expect(resp.text).to.contain("Order received");
+                    done();
+                });
+        });
         it("Correctly renders order confirmation page on for a limited company certificate order", (done) => {
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse
@@ -65,6 +258,11 @@ describe("order.confirmation.controller.integration", () => {
             }
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                data: {
+                    enrolled: false
+                }
+            } as BasketLinks));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -136,6 +334,11 @@ describe("order.confirmation.controller.integration", () => {
             }
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                data: {
+                    enrolled: false
+                }
+            } as BasketLinks));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -202,6 +405,11 @@ describe("order.confirmation.controller.integration", () => {
         }
 
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+        getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            data: {
+                enrolled: false
+            }
+        } as BasketLinks));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -240,6 +448,11 @@ describe("order.confirmation.controller.integration", () => {
         }
 
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+        getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            data: {
+                enrolled: false
+            }
+        } as BasketLinks));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -273,6 +486,11 @@ describe("order.confirmation.controller.integration", () => {
         }
 
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+        getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            data: {
+                enrolled: false
+            }
+        } as BasketLinks));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certified-copy`)
@@ -309,6 +527,11 @@ describe("order.confirmation.controller.integration", () => {
             resource: mockMissingImageDeliveryCheckoutResponse
         }
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+        getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            data: {
+                enrolled: false
+            }
+        } as BasketLinks));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=missing-image-delivery`)
@@ -330,19 +553,6 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect(resp.text).to.not.contain("certificateTypeValue");
         chai.expect(resp.text).to.not.contain("includedOnCertificateValue");
         chai.expect(getOrderStub).to.have.been.called;
-    });
-
-    it("redirects and applies the itemType query param", async () => {
-        const checkoutResponse: ApiResponse<Checkout> = {
-            httpStatusCode: 200,
-            resource: mockCertificateCheckoutResponse
-        }
-        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-        const resp = await chai.request(testApp)
-            .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid`)
-            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
-            .redirects(0);
-        chai.expect(resp).to.redirectTo(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid&itemType=certificate`);
     });
 
     it("renders an error page if get order fails", (done) => {

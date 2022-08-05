@@ -24,6 +24,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasMissingImageDeliveryItems).is.true;
             expect(actual.hasExpressDeliveryItems).is.false;
             expect(actual.hasStandardDeliveryItems).is.false;
+            expect(actual.deliveryDetailsTable).to.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
         });
 
@@ -51,6 +52,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasMissingImageDeliveryItems).is.false;
             expect(actual.hasExpressDeliveryItems).is.true;
             expect(actual.hasStandardDeliveryItems).is.false;
+            expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
         });
 
@@ -78,6 +80,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasMissingImageDeliveryItems).is.false;
             expect(actual.hasExpressDeliveryItems).is.true;
             expect(actual.hasStandardDeliveryItems).is.false;
+            expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
         });
 
@@ -97,6 +100,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasMissingImageDeliveryItems).is.false;
             expect(actual.hasExpressDeliveryItems).is.false;
             expect(actual.hasStandardDeliveryItems).is.true;
+            expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
         });
 
@@ -116,6 +120,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasMissingImageDeliveryItems).is.false;
             expect(actual.hasExpressDeliveryItems).is.false;
             expect(actual.hasStandardDeliveryItems).is.true;
+            expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
         });
 
@@ -139,6 +144,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasMissingImageDeliveryItems).is.true;
             expect(actual.hasExpressDeliveryItems).is.true;
             expect(actual.hasStandardDeliveryItems).is.true;
+            expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
         });
     });

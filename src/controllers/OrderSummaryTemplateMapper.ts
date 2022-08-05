@@ -1,11 +1,12 @@
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
-import { AbstractTemplateMapper } from "./ConfirmationTemplateMapper";
-import { ItemOptions as CertificateItemOptions} from "@companieshouse/api-sdk-node/dist/services/order/certificates";
-import { ItemOptions as CertifiedCopyItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
 import { ORDER_COMPLETE_ABBREVIATED } from "../model/template.paths";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+import { MapUtil } from "../service/MapUtil";
+import { ConfirmationTemplateMapper } from "./ConfirmationTemplateMapper";
+import { ItemOptionsDeliveryTimescaleConfigurable } from "@companieshouse/api-sdk-node/dist/services/order/types";
 
 export const PAGE_TITLE = "Order received - GOV.UK";
+export const PANEL_TITLE = "Order received";
 
 type OrderStatus = {
     hasMissingImageDeliveryItems: boolean,
@@ -13,18 +14,21 @@ type OrderStatus = {
     hasStandardDeliveryItems: boolean
 };
 
-export class OrderSummaryTemplateMapper extends AbstractTemplateMapper {
+export class OrderSummaryTemplateMapper implements ConfirmationTemplateMapper {
     map (checkout: Checkout): Record<string, any> {
-        const orderDetails = this.getOrderDetails(checkout);
-        const paymentDetails = this.getPaymentDetails(checkout);
-        const orderStatus = this.buildOrderStatus(checkout.items);
-        return {
+        const orderStatus = this.buildOrderStatus(checkout.items)
+        const view = {
             pageTitleText: PAGE_TITLE,
-            orderDetails,
-            paymentDetails,
-            ...orderStatus,
+            titleText: PANEL_TITLE,
+            orderDetails: MapUtil.getOrderDetails(checkout),
+            paymentDetails: MapUtil.getPaymentDetails(checkout),
+            ...this.buildOrderStatus(checkout.items),
             templateName: ORDER_COMPLETE_ABBREVIATED
         };
+        if (orderStatus.hasStandardDeliveryItems || orderStatus.hasExpressDeliveryItems) {
+            view["deliveryDetailsTable"] = this.buildDeliveryDetails(MapUtil.mapDeliveryDetails(checkout.deliveryDetails));
+        }
+        return view;
     }
 
     private buildOrderStatus(items: Item[]): OrderStatus {
@@ -34,18 +38,13 @@ export class OrderSummaryTemplateMapper extends AbstractTemplateMapper {
         for (const item of items) {
             if (item.kind === "item#missing-image-delivery") {
                 hasMissingImageDeliveryItems = true;
-            } else if (item.kind === "item#certificate") {
-                if ((item.itemOptions as CertificateItemOptions).deliveryTimescale === "same-day") {
+            } else if ((item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable).deliveryTimescale === "same-day") {
                     hasExpressDeliveryItems = true;
-                } else {
-                    hasStandardDeliveryItems = true;
-                }
-            } else if (item.kind === "item#certified-copy") {
-                if ((item.itemOptions as CertifiedCopyItemOptions).deliveryTimescale === "same-day") {
-                    hasExpressDeliveryItems = true;
-                } else {
-                    hasStandardDeliveryItems = true;
-                }
+            } else {
+                hasStandardDeliveryItems = true;
+            }
+            if (hasMissingImageDeliveryItems && hasExpressDeliveryItems && hasStandardDeliveryItems) {
+                break;
             }
         }
         return {
@@ -53,5 +52,18 @@ export class OrderSummaryTemplateMapper extends AbstractTemplateMapper {
             hasExpressDeliveryItems,
             hasStandardDeliveryItems
         };
+    }
+
+    private buildDeliveryDetails(address: string): object {
+        return {
+            key: {
+                classes: "govuk-!-width-one-half",
+                text: "Delivery address"
+            },
+            value: {
+                classes: "govuk-!-width-one-half",
+                html: "<p id='deliveryAddressValue'>" + address + "</p>"
+            }
+        }
     }
 }

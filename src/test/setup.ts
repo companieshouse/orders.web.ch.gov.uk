@@ -20,8 +20,8 @@ process.env.PIWIK_URL = "test";
 process.env.DISPATCH_DAYS = "10";
 process.env.DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED = "true";
 process.env.DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED = "true";
-process.env.RETRY_CHECKOUT_NUMBER= "5";
-process.env.RETRY_CHECKOUT_DELAY="1500";
+process.env.RETRY_CHECKOUT_NUMBER= "1";
+process.env.RETRY_CHECKOUT_DELAY="100";
 
 
 

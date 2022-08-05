@@ -7,6 +7,9 @@ import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-n
 import { createLogger } from "ch-structured-logging";
 import { AddressRecordsType } from "model/AddressRecordsType";
 import { APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
+import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
+import { mapDate } from "../utils/date.util";
+import { OrderDetails, PaymentDetails } from "../controllers/ConfirmationTemplateMapper";
 
 const escape = require("escape-html");
 const logger = createLogger(APPLICATION_NAME);
@@ -214,4 +217,19 @@ export abstract class MapUtil {
             }
         ];
     };
+
+    static getPaymentDetails = (checkout: Checkout): PaymentDetails => {
+        return {
+            amount: "£" + checkout?.totalOrderCost,
+            paymentReference: checkout.paymentReference || "",
+            orderedAt: checkout.paidAt ? mapDate(checkout.paidAt) : ""
+        };
+    }
+
+    static getOrderDetails = (checkout: Checkout): OrderDetails => {
+        return {
+            referenceNumber: checkout.reference,
+            referenceNumberAriaLabel: checkout.reference.replace(/-/g, " hyphen ")
+        };
+    }
 }
