@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block pageTitle %}
+    {{ pageTitleText }}
+{% endblock %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back to search",
+        href: CHS_URL
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ govukPanel({
+                titleText: titleText,
+                html: "Your order reference number<br><strong id='orderReference' aria-label='"+ orderDetails.referenceNumberAriaLabel + "'>" + orderDetails.referenceNumber + "</strong>"
+            }) }}
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <h1 class="govuk-heading-m">What happens next</h1>
+                    {% if hasMissingImageDeliveryItems %}
+                        <div id="hasMissingImageDeliveryItems" class="govuk-grid-row">
+                            <div class="govuk-grid-column-full">
+                                <p class="govuk-body">It can take us several hours to check the availability of a document.
+                                    We will aim to add it to a company's filing history that day if the request is received between 8:30am and 3pm, Monday to Friday (excluding bank holidays).</p>
+                                <p class="govuk-body">If you make a request after 3pm, we will add the document the next working day.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if hasExpressDeliveryItems %}
+                        <div id="hasExpressDeliveryItems" class="govuk-grid-row">
+                            <div class="govuk-grid-column-full">
+                                <p class="govuk-body">Express orders received before 11am will be dispatched the same day.
+                                    Orders received after 11am will be dispatched the next working day.
+                                    We aim to dispatch standard delivery items within 10 working days.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if hasStandardDeliveryItems %}
+                        <div id="hasStandardDeliveryItems" class="govuk-grid-row">
+                            <div class="govuk-grid-column-full">
+                                <p class="govuk-body">We aim to dispatch standard delivery items within 10 working days.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    {{ govukInsetText({
+                        html: "<ul class='govuk-list'>
+                            <li id='print-page-link'>
+                                <img src='/orders-assets/static/images/print-icon.png'  alt='print icon'/>
+                                <a class='govuk-link' href='javascript:window.print()' data-event-id='order-confirmed-summary'>
+                                    Print your order confirmation
+                                </a>
+                            </li>
+                        </ul>"
+                    }) }}
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    {% if deliveryDetailsTable %}
+                        <h2 class="govuk-heading-m">Delivery details</h2>
+                        {{ govukSummaryList({
+                            rows: [deliveryDetailsTable]
+                        }) }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <h2 class="govuk-heading-m">Your payment details</h2>
+                    {{ govukSummaryList({
+                        rows: [
+                            {
+                                key: {
+                                    text: "Amount paid",
+                                    classes: 'govuk-!-width-one-half'
+                                },
+                                value: {
+                                    classes: 'govuk-!-width-one-half',
+                                    html: "<p id='paymentAmountValue'>" + paymentDetails.amount + "</p>"
+                                }
+                            },
+                            {
+                                key: {
+                                    text: "Payment reference"
+                                },
+                                value: {
+                                    classes: 'govuk-!-width-one-half',
+                                    html: "<p id='paymentReferenceValue'>" + paymentDetails.paymentReference + "</p>"
+                                }
+                            },
+                            {
+                                key: {
+                                    text: "Date and time of payment"
+                                },
+                                value: {
+                                    classes: 'govuk-!-width-one-half',
+                                    html: "<p id='paymentTimeValue'>" + paymentDetails.orderedAt + "</p>"
+                                }
+                            }
+                        ]
+                    }) }}
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <h2 class="govuk-heading-m">How to contact us</h2>
+                    <p class="govuk-body">Email <a href="mailto:enquiries@companieshouse.gov.uk" class="govuk-link">enquiries@companieshouse.gov.uk</a> if you have questions about your order.</p>
+                    <p class="govuk-body">Include your order reference number when you contact us.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
