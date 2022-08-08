@@ -3,6 +3,13 @@
     {{ pageTitleText }}
 {% endblock %}
 
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back to search",
+        href: CHS_URL
+    }) }}
+{% endblock %}
+
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
