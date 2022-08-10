@@ -1,4 +1,5 @@
 export const ORDERS: string = "/orders";
+export const ORDER_SUMMARY: string = "/orders/:orderId";
 // ORDER_COMPLETE is currently a dummy url
 export const ORDER_COMPLETE: string = "/orders/:orderId/confirmation";
 export const BASKET: string = "/basket";

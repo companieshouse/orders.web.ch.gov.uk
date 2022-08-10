@@ -1,28 +1,10 @@
+import { GovUkTableCellView } from "../mappers/BasketDetailsViewModel";
+
 export class OrderSummary {
     orderReference: string;
-    itemSummary: ItemSummary[] = [];
-    deliveryAddress: DeliveryAddress;
+    itemSummary: GovUkTableCellView[][] = [];
+    deliveryAddress: object;
     paymentDetails: PaymentDetails;
-}
-
-export class DeliveryAddress {
-    forename: string;
-    surname: string;
-    addressLine1: string;
-    addressLine2: string;
-    country: string;
-    locality: string;
-    poBox: string;
-    postalCode: string;
-    region: string;
-}
-
-export class ItemSummary {
-    itemNumber: string;
-    orderType: string;
-    companyNumber: string;
-    deliveryMethod: string;
-    fee: string;
 }
 
 export class PaymentDetails {

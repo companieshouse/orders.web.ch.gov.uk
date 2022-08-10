@@ -1,6 +1,7 @@
 import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import { OrderSummary } from "./OrderSummary";
 import { ItemOptionsDeliveryTimescaleConfigurable } from "@companieshouse/api-sdk-node/dist/services/order/types";
+import { MapUtil } from "../service/MapUtil";
 
 export class OrderSummaryConverter {
 
@@ -29,27 +30,26 @@ export class OrderSummaryConverter {
     }
 
     private mapItem(item: Item, itemType: string, deliveryMethod: string): void {
-        this.orderSummary.itemSummary.push({
-            itemNumber: item.id,
-            companyNumber: item.companyNumber,
-            orderType: itemType,
-            deliveryMethod: deliveryMethod,
-            fee: `£${item.totalItemCost}`
-        });
+        this.orderSummary.itemSummary.push([
+            { text: item.id },
+            { text: item.companyNumber },
+            { text: itemType },
+            { text: deliveryMethod },
+            { text: `£${item.totalItemCost}` }
+        ]);
     }
 
     private mapDeliveryAddress(order: Order) {
         this.orderSummary.deliveryAddress = {
-            forename: order.deliveryDetails?.forename || "",
-            surname: order.deliveryDetails?.surname || "",
-            addressLine1: order.deliveryDetails?.addressLine1 || "",
-            addressLine2: order.deliveryDetails?.addressLine2 || "",
-            country: order.deliveryDetails?.country || "",
-            locality: order.deliveryDetails?.locality || "",
-            poBox: order.deliveryDetails?.poBox || "",
-            postalCode: order.deliveryDetails?.postalCode || "",
-            region: order.deliveryDetails?.region || "",
-        };
+            key: {
+                classes: "govuk-!-width-one-half",
+                text: "Delivery address"
+            },
+            value: {
+                classes: "govuk-!-width-one-half",
+                html: `<p id='delivery-address-value'>${MapUtil.mapDeliveryDetails(order.deliveryDetails)}</p>`
+            }
+        }
     }
 
     private mapPaymentDetails(order: Order) {

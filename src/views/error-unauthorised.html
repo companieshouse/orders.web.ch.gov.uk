@@ -1,0 +1,24 @@
+
+{% extends "layout.html" %}
+
+{% block header %}
+{% include "includes/cookie-banner.html" %}
+ {{ govukHeader({
+    homepageUrl: "http://gov.uk/"
+  }) }}
+{% endblock %}
+
+{% block pageTitle %}
+  Unauthorised - Request a document - GOV.UK
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 id="errorTitle" class="govuk-heading-xl">
+        Unauthorised
+      </h1>
+      <p id="errorDescription" class="govuk-body">You are not authorised to view this order.</p>
+    </div>
+  </div>
+{% endblock %}
