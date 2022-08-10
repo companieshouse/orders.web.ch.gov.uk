@@ -9,7 +9,7 @@ import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 import * as apiClient from "../../client/api.client";
 import chai from "chai";
 import cheerio from "cheerio";
-import { InternalServerError, Unauthorized } from "http-errors";
+import { InternalServerError, NotFound, Unauthorized } from "http-errors";
 
 let testApp;
 let sandbox = sinon.createSandbox();
@@ -76,6 +76,20 @@ describe("OrderSummaryController", () => {
             chai.expect(response.status).to.equal(401);
             chai.expect($("#errorTitle").text()).to.contain("Unauthorised");
             chai.expect($("#errorDescription").text()).to.equal("You are not authorised to view this order.");
+        });
+        it("Renders Not Found if getOrder endpoint returns HTTP 404 Not Found", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrder").throws(NotFound);
+
+            // when
+            const response = await chai.request(testApp)
+                .get("/orders/ORD-123456-123456")
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            // then
+            const $ = cheerio.load(response.text);
+            chai.expect(response.status).to.equal(404);
+            chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
         });
         it("Renders Service Unavailable if getOrder endpoint returns other error response codes", async () => {
             // given
