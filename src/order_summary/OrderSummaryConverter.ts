@@ -32,8 +32,8 @@ export class OrderSummaryConverter {
     private mapItem(item: Item, itemType: string, deliveryMethod: string): void {
         this.orderSummary.itemSummary.push([
             { html: `<a class="govuk-link" href="javascript:void(0)">${item.id}</a>` },
-            { text: item.companyNumber },
             { text: itemType },
+            { text: item.companyNumber },
             { text: deliveryMethod },
             { text: `£${item.totalItemCost}` }
         ]);

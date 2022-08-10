@@ -7,62 +7,78 @@
     Order summary - Order a certificate - GOV.UK
 {% endblock %}
 
+{% block beforeContent %}
+    {% include "includes/navbar.html" %}
+{% endblock %}
+
 {% block content %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <h1 id="order-reference" class="govuk-heading-xl">{{ orderReference }}</h1>
-        <h2 class="govuk-heading-m">Order details</h2>
-        {{ govukTable({
-            attributes: {
-                id: "itemSummary"
-            },
-            head: [
-                {
-                    text: "Item number"
-                },
-                {
-                    text: "Order type"
-                },
-                {
-                    text: "Company number"
-                },
-                {
-                    text: "Delivery method"
-                },
-                {
-                    text: "Fee"
-                }
-            ],
-            rows: itemSummary
-        }) }}
-        {{ govukSummaryList({
-            attributes: {
-                id: "delivery-address-list"
-            },
-            rows: [deliveryAddress]
-        }) }}
-        <h2 class="govuk-heading-m">Payment details</h2>
-        {{ govukSummaryList({
-            attributes: {
-                id: "subtotal-list"
-            },
-            rows: [{
-                key: {
-                    text: "Payment reference"
-                },
-                value: {
-                    text: paymentDetails.paymentReference
-                }
-            },
-            {
-                key: {
-                    text: "Fee"
-                },
-                value: {
-                    text: paymentDetails.amountPaid
-                }
-            }]
-        }) }}
+    <div class="govuk-grid-column-full">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h1 id="order-reference" class="govuk-heading-xl">{{ orderReference }}</h1>
+                <h2 class="govuk-heading-m">Order details</h2>
+                {{ govukTable({
+                    attributes: {
+                        id: "itemSummary"
+                    },
+                    head: [
+                        {
+                            text: "Item number"
+                        },
+                        {
+                            text: "Order type"
+                        },
+                        {
+                            text: "Company number"
+                        },
+                        {
+                            text: "Delivery method"
+                        },
+                        {
+                            text: "Fee"
+                        }
+                    ],
+                    rows: itemSummary
+                }) }}
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                {{ govukSummaryList({
+                    attributes: {
+                        id: "delivery-address-list"
+                    },
+                    rows: [deliveryAddress]
+                }) }}
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Payment details</h2>
+                {{ govukSummaryList({
+                    attributes: {
+                        id: "subtotal-list"
+                    },
+                    rows: [{
+                        key: {
+                            text: "Payment reference"
+                        },
+                        value: {
+                            text: paymentDetails.paymentReference
+                        }
+                    },
+                    {
+                        key: {
+                            text: "Fee"
+                        },
+                        value: {
+                            text: paymentDetails.amountPaid
+                        }
+                    }]
+                }) }}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
