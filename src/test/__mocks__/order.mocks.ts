@@ -100,6 +100,34 @@ export const mockDissolvedCertificateItem: Item = {
     satisfiedAt: "2020-05-15T08:41:05.798Z"
 };
 
+export const mockOrderResponse: Order = {
+    orderedAt: "2019-12-16T09:16:17.791Z",
+    orderedBy: {
+        id: "123456",
+        email: "email@examlpe.come"
+    },
+    links: {
+        self: `/orders/${ORDER_ID}`
+    },
+    paymentReference: "1234567",
+    etag: "abcdefghijk123456789",
+    deliveryDetails: {
+        addressLine1: "address line 1",
+        addressLine2: "address line 2",
+        country: "country",
+        forename: "forename",
+        locality: "locality",
+        postalCode: "postal code",
+        region: "region",
+        surname: "surname",
+        poBox: "po box"
+    },
+    items: [],
+    kind: "order",
+    totalOrderCost: "15",
+    reference: ORDER_ID
+};
+
 export const mockCertificateCheckoutResponse: Checkout = {
     paidAt: "2019-12-16T09:16:17.791Z",
     status: "pending",
@@ -161,7 +189,7 @@ export const mockDissolvedCertificateCheckoutResponse: Checkout = {
 };
 
 export const mockCertifiedCopyItem: Item = {
-    id: CERTIFICATE_ID,
+    id: CERTIFIED_COPY_ID,
     companyName: "Company Name",
     companyNumber: "00000000",
     description: "certified-copy for company 00000000",

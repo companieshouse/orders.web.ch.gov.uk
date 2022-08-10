@@ -3,13 +3,26 @@ import chai from "chai";
 import BasketService from "@companieshouse/api-sdk-node/dist/services/order/basket/service";
 import PaymentService from "@companieshouse/api-sdk-node/dist/services/payment/service";
 import { BasketLinks, Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
-import Resource, { ApiResponse, ApiErrorResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
-import { success, failure } from "@companieshouse/api-sdk-node/dist/services/result";
+import Resource, {
+    ApiResponse,
+    ApiErrorResponse,
+    ApiResult
+} from "@companieshouse/api-sdk-node/dist/services/resource";
+import { success, failure, Success, Failure } from "@companieshouse/api-sdk-node/dist/services/result";
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import { Basket, BasketPatchRequest } from "@companieshouse/api-sdk-node/dist/services/order/basket/types";
 
-import { checkoutBasket, createPayment, getBasketLinks, patchBasket, removeBasketItem } from "../../client/api.client";
+import {
+    checkoutBasket,
+    createPayment,
+    getBasketLinks,
+    getOrder,
+    patchBasket,
+    removeBasketItem
+} from "../../client/api.client";
 import { NotFound } from "http-errors";
+import { OrderService } from "@companieshouse/api-sdk-node/dist/services/order";
+import { Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 const O_AUTH_TOKEN = "oauth";
 
 const sandbox = sinon.createSandbox();
@@ -145,6 +158,22 @@ describe("api.client", () => {
             sandbox.stub(BasketService.prototype, "removeBasketItem").returns(Promise.resolve(response));
             const basketLinks = await removeBasketItem({ itemUri: "/orderable/certificates/12345678" }, "oauth");
             chai.expect(basketLinks.httpStatusCode).to.equal(response.httpStatusCode);
+        });
+    });
+
+    describe("getOrder", () => {
+        it("should return success 200 ok", async () => {
+            sandbox.stub(OrderService.prototype, "getOrder").returns(Promise.resolve(new Success<any, ApiErrorResponse>({
+                reference: "ORD-123456-123456"
+            })));
+            const order = await getOrder("ORD-123456-123456", "oauth");
+            chai.expect(order.reference).to.equal("ORD-123456-123456");
+        });
+        it("should throw an error if error returned by getOrder endpoint", async () => {
+            sandbox.stub(OrderService.prototype, "getOrder").returns(Promise.resolve(new Failure<any, ApiErrorResponse>({
+                httpStatusCode: 404
+            })));
+            await chai.expect(getOrder("ORD-123456-123456", "oauth")).to.be.rejectedWith(NotFound);
         });
     });
 });

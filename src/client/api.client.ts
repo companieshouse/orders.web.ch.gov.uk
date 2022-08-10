@@ -15,6 +15,7 @@ import createError from "http-errors";
 
 import { API_URL, APPLICATION_NAME, CHS_URL } from "../config/config";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
+import { Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -122,4 +123,16 @@ export const removeBasketItem = async (itemUri: ItemUriRequest, oAuth: string): 
     }
     logger.info(`Remove basket item, status code=${response.httpStatusCode}`);
     return response;
+};
+
+export const getOrder = async (orderId: string, oAuth: string): Promise<Order> => {
+    const api = createApiClient(undefined, oAuth, API_URL);
+    const orderResource = await api.order.getOrder(orderId);
+    if (orderResource.isSuccess()) {
+        return orderResource.value;
+    } else {
+        logger.info(`Get order, status_code=${orderResource.value.httpStatusCode}`);
+        const responseCode = orderResource.value.httpStatusCode || 500;
+        throw createError(responseCode, responseCode.toString());
+    }
 };
