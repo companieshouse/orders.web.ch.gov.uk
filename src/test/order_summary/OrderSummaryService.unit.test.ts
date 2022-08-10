@@ -55,35 +55,35 @@ describe("OrderSummaryService", () => {
                 },
                 itemSummary: [
                     [
-                        {text: CERTIFICATE_ID},
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${CERTIFICATE_ID}</a>`},
                         {text: "00000000"},
                         {text: "Certificate"},
                         {text: "Standard"},
                         {text: "£15"}
                     ],
                     [
-                        {text: CERTIFICATE_ID},
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${CERTIFICATE_ID}</a>`},
                         {text: "00000000"},
                         {text: "Certificate"},
                         {text: "Express"},
                         {text: "£15"}
                     ],
                     [
-                        {text: CERTIFIED_COPY_ID},
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${CERTIFIED_COPY_ID}</a>`},
                         {text: "00000000"},
                         {text: "Certified document"},
                         {text: "Standard"},
                         {text: "£30"}
                     ],
                     [
-                        {text: CERTIFIED_COPY_ID},
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${CERTIFIED_COPY_ID}</a>`},
                         {text: "00000000"},
                         {text: "Certified document"},
                         {text: "Express"},
                         {text: "£30"}
                     ],
                     [
-                        {text: MISSING_IMAGE_DELIVERY_ID},
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${MISSING_IMAGE_DELIVERY_ID}</a>`},
                         {text: "00000000"},
                         {text: "Missing image"},
                         {text: "N/A"},
