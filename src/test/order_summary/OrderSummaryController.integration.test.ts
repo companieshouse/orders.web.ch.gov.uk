@@ -62,6 +62,33 @@ describe("OrderSummaryController", () => {
             chai.expect($("#subtotal-list").text()).to.contain("1234567");
             chai.expect($("#subtotal-list").text()).to.contain("£15");
         });
+
+        it("Hides delivery details if no items with postal delivery requested", async() => {
+            // given
+            sandbox.stub(apiClient, "getOrder").returns(Promise.resolve({
+                ...mockOrderResponse,
+                items: [
+                    { ...mockMissingImageDeliveryItem },
+                    { ...mockMissingImageDeliveryItem }
+                ]
+            }));
+
+            // when
+            const response = await chai.request(testApp)
+                .get("/orders/ORD-123456-123456")
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            chai.expect(response.status).to.equal(200);
+            chai.expect($("#itemSummary tbody tr").length).to.equal(2);
+            chai.expect($("#order-reference").text()).to.equal("ORD-123456-123456");
+            chai.expect($("#delivery-address-value").length).to.equal(0);
+            chai.expect($("#subtotal-list").text()).to.contain("1234567");
+            chai.expect($("#subtotal-list").text()).to.contain("£15");
+        });
+
         it("Renders Not Found if getOrder endpoint returns HTTP 401 Unauthorized", async () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(Unauthorized);

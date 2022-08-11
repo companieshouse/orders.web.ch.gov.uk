@@ -43,16 +43,18 @@
                 }) }}
             </div>
         </div>
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                {{ govukSummaryList({
-                    attributes: {
-                        id: "delivery-address-list"
-                    },
-                    rows: [deliveryAddress]
-                }) }}
+        {% if hasDeliverableItems %}
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    {{ govukSummaryList({
+                        attributes: {
+                            id: "delivery-address-list"
+                        },
+                        rows: [deliveryAddress]
+                    }) }}
+                </div>
             </div>
-        </div>
+        {% endif %}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <h2 class="govuk-heading-m">Payment details</h2>

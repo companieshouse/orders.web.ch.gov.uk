@@ -15,10 +15,12 @@ export class OrderSummaryConverter {
 
     mapCertificate(item: Item): void {
         this.mapItem(item, "Certificate", this.mapDeliveryMethod(item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
+        this.orderSummary.hasDeliverableItems = true;
     }
 
     mapCertifiedCopy(item: Item): void {
         this.mapItem(item, "Certified document", this.mapDeliveryMethod(item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
+        this.orderSummary.hasDeliverableItems = true;
     }
 
     mapMissingImageDelivery(item: Item): void {
