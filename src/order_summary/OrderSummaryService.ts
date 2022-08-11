@@ -3,7 +3,11 @@ import { getOrder } from "../client/api.client";
 import { OrderSummaryDirector } from "./OrderSummaryDirector";
 import { OrderSummaryConverter } from "./OrderSummaryConverter";
 
-export class OrderSummaryService {
+export interface OrderSummaryFetchable {
+    fetchOrderSummary(orderId: string, token: string): Promise<OrderSummary>;
+}
+
+export class OrderSummaryService implements OrderSummaryFetchable {
     async fetchOrderSummary(orderId: string, token: string): Promise<OrderSummary> {
         const order = await getOrder(orderId, token);
         const converter = new OrderSummaryConverter();

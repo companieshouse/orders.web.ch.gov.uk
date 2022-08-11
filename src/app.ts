@@ -12,6 +12,7 @@ import { PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, COOKIE_DOMAIN, CACHE_SERVER, A
 import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
 import { ERROR_SUMMARY_TITLE } from "./model/error.messages";
+import { ORDER_SUMMARY } from "./model/page.urls";
 
 const app = express();
 
@@ -40,7 +41,7 @@ const env = nunjucks.configure([
 const cookieConfig: CookieConfig = { cookieName: "__SID", cookieSecret: COOKIE_SECRET, cookieDomain: COOKIE_DOMAIN };
 const sessionStore = new SessionStore(new Redis(`redis://${CACHE_SERVER}`));
 
-const PROTECTED_PATHS = [pageUrls.BASKET_REMOVE, pageUrls.BASKET, pageUrls.ORDERS, pageUrls.DELIVERY_DETAILS];
+const PROTECTED_PATHS = [pageUrls.BASKET_REMOVE, pageUrls.BASKET, pageUrls.ORDER_SUMMARY, pageUrls.ORDERS, pageUrls.DELIVERY_DETAILS];
 app.use(PROTECTED_PATHS, createLoggerMiddleware(APPLICATION_NAME));
 app.use(PROTECTED_PATHS, SessionMiddleware(cookieConfig, sessionStore));
 app.use(PROTECTED_PATHS, authMiddleware);

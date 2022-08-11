@@ -1,8 +1,11 @@
 import * as apiClient from "../../client/api.client";
 import {
-    CERTIFICATE_ID, CERTIFIED_COPY_ID, MISSING_IMAGE_DELIVERY_ID,
+    CERTIFICATE_ID,
+    CERTIFIED_COPY_ID,
+    MISSING_IMAGE_DELIVERY_ID,
     mockCertificateItem,
-    mockCertifiedCopyItem, mockMissingImageDeliveryItem,
+    mockCertifiedCopyItem,
+    mockMissingImageDeliveryItem,
     mockOrderResponse,
     ORDER_ID
 } from "../__mocks__/order.mocks";
@@ -16,6 +19,7 @@ const sandbox = sinon.createSandbox();
 describe("OrderSummaryService", () => {
     afterEach(() => {
         sandbox.reset();
+        sandbox.restore();
     });
     describe("fetchOrderSummary", () => {
         it("Returns a mapped order summary object", async () => {
@@ -37,55 +41,106 @@ describe("OrderSummaryService", () => {
             expect(actual).to.deep.equal({
                 orderReference: ORDER_ID,
                 deliveryAddress: {
-                    addressLine1: "address line 1",
-                    addressLine2: "address line 2",
-                    country: "country",
-                    forename: "forename",
-                    locality: "locality",
-                    postalCode: "postal code",
-                    region: "region",
-                    surname: "surname",
-                    poBox: "po box"
+                    key: {
+                        classes: "govuk-!-width-one-half",
+                        text: "Delivery address"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='delivery-address-value'>forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country<br></p>"
+                    }
                 },
                 paymentDetails: {
                     paymentReference: "1234567",
                     amountPaid: "£15"
                 },
-                itemSummary: [{
-                    itemNumber: CERTIFICATE_ID,
-                    companyNumber: "00000000",
-                    orderType: "Certificate",
-                    deliveryMethod: "Standard",
-                    fee: "£15"
+                hasDeliverableItems: true,
+                itemSummary: [
+                    [
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${CERTIFICATE_ID}</a>`},
+                        {text: "Certificate"},
+                        {text: "00000000"},
+                        {text: "Standard"},
+                        {text: "£15"}
+                    ],
+                    [
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${CERTIFICATE_ID}</a>`},
+                        {text: "Certificate"},
+                        {text: "00000000"},
+                        {text: "Express"},
+                        {text: "£15"}
+                    ],
+                    [
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${CERTIFIED_COPY_ID}</a>`},
+                        {text: "Certified document"},
+                        {text: "00000000"},
+                        {text: "Standard"},
+                        {text: "£30"}
+                    ],
+                    [
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${CERTIFIED_COPY_ID}</a>`},
+                        {text: "Certified document"},
+                        {text: "00000000"},
+                        {text: "Express"},
+                        {text: "£30"}
+                    ],
+                    [
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${MISSING_IMAGE_DELIVERY_ID}</a>`},
+                        {text: "Missing image"},
+                        {text: "00000000"},
+                        {text: "N/A"},
+                        {text: "£3"}
+                    ]]
+            } as OrderSummary);
+        });
+
+        it("Hides delivery details if no deliverable items ordered", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrder").returns(Promise.resolve({
+                ...mockOrderResponse,
+                items: [
+                    {...mockMissingImageDeliveryItem},
+                    {...mockMissingImageDeliveryItem}
+                ]
+            }));
+            const service = new OrderSummaryService();
+
+            // when
+            const actual = await service.fetchOrderSummary(ORDER_ID, "F00DFACE");
+
+            // then
+            expect(actual).to.deep.equal({
+                orderReference: ORDER_ID,
+                deliveryAddress: {
+                    key: {
+                        classes: "govuk-!-width-one-half",
+                        text: "Delivery address"
+                    },
+                    value: {
+                        classes: "govuk-!-width-one-half",
+                        html: "<p id='delivery-address-value'>forename surname<br>address line 1<br>address line 2<br>locality<br>region<br>postal code<br>country<br></p>"
+                    }
                 },
-                {
-                    itemNumber: CERTIFICATE_ID,
-                    companyNumber: "00000000",
-                    orderType: "Certificate",
-                    deliveryMethod: "Express",
-                    fee: "£15"
+                paymentDetails: {
+                    paymentReference: "1234567",
+                    amountPaid: "£15"
                 },
-                {
-                    itemNumber: CERTIFIED_COPY_ID,
-                    companyNumber: "00000000",
-                    orderType: "Certified document",
-                    deliveryMethod: "Standard",
-                    fee: "£30"
-                },
-                {
-                    itemNumber: CERTIFIED_COPY_ID,
-                    companyNumber: "00000000",
-                    orderType: "Certified document",
-                    deliveryMethod: "Express",
-                    fee: "£30"
-                },
-                {
-                    itemNumber: MISSING_IMAGE_DELIVERY_ID,
-                    companyNumber: "00000000",
-                    orderType: "Missing image",
-                    deliveryMethod: "N/A",
-                    fee: "£3"
-                }]
+                hasDeliverableItems: false,
+                itemSummary: [
+                    [
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${MISSING_IMAGE_DELIVERY_ID}</a>`},
+                        {text: "Missing image"},
+                        {text: "00000000"},
+                        {text: "N/A"},
+                        {text: "£3"}
+                    ],
+                    [
+                        {html: `<a class="govuk-link" href="javascript:void(0)">${MISSING_IMAGE_DELIVERY_ID}</a>`},
+                        {text: "Missing image"},
+                        {text: "00000000"},
+                        {text: "N/A"},
+                        {text: "£3"}
+                    ]]
             } as OrderSummary);
         });
     });
