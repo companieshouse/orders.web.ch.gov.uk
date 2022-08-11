@@ -13,6 +13,7 @@ import sinon from "sinon";
 import { OrderSummaryService } from "../../order_summary/OrderSummaryService";
 import { expect } from "chai";
 import { OrderSummary } from "../../order_summary/OrderSummary";
+import { CHS_URL } from "../../config/config";
 
 const sandbox = sinon.createSandbox();
 
@@ -39,6 +40,7 @@ describe("OrderSummaryService", () => {
 
             // then
             expect(actual).to.deep.equal({
+                backLinkUrl: CHS_URL,
                 orderReference: ORDER_ID,
                 deliveryAddress: {
                     key: {
@@ -110,6 +112,7 @@ describe("OrderSummaryService", () => {
 
             // then
             expect(actual).to.deep.equal({
+                backLinkUrl: CHS_URL,
                 orderReference: ORDER_ID,
                 deliveryAddress: {
                     key: {

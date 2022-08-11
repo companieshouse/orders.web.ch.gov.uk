@@ -6,6 +6,7 @@ export class OrderSummary {
     deliveryAddress: object;
     hasDeliverableItems: boolean = false;
     paymentDetails: PaymentDetails;
+    backLinkUrl: string;
 }
 
 export class PaymentDetails {
