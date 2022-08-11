@@ -31,8 +31,7 @@ export class OrderSummaryController {
         } catch (error) {
             if (error instanceof Unauthorized) {
                 logger.info(`User [${userId}] is not authorised to retrieve summary for order [${orderId}]`);
-                res.status(401);
-                return res.render(ERROR_UNAUTHORISED);
+                next();
             } else if (error instanceof NotFound) {
                 logger.info(`Order [${orderId}] does not exist`);
                 next();

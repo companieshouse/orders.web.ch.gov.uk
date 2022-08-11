@@ -62,7 +62,7 @@ describe("OrderSummaryController", () => {
             chai.expect($("#subtotal-list").text()).to.contain("1234567");
             chai.expect($("#subtotal-list").text()).to.contain("£15");
         });
-        it("Renders Unauthorised if getOrder endpoint returns HTTP 401 Unauthorized", async () => {
+        it("Renders Not Found if getOrder endpoint returns HTTP 401 Unauthorized", async () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(Unauthorized);
 
@@ -73,9 +73,8 @@ describe("OrderSummaryController", () => {
 
             // then
             const $ = cheerio.load(response.text);
-            chai.expect(response.status).to.equal(401);
-            chai.expect($("#errorTitle").text()).to.contain("Unauthorised");
-            chai.expect($("#errorDescription").text()).to.equal("You are not authorised to view this order.");
+            chai.expect(response.status).to.equal(404);
+            chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
         });
         it("Renders Not Found if getOrder endpoint returns HTTP 404 Not Found", async () => {
             // given
