@@ -2,6 +2,7 @@ import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/or
 import { OrderSummary } from "./OrderSummary";
 import { ItemOptionsDeliveryTimescaleConfigurable } from "@companieshouse/api-sdk-node/dist/services/order/types";
 import { MapUtil } from "../service/MapUtil";
+import { CHS_URL } from "../config/config";
 
 export class OrderSummaryConverter {
 
@@ -11,6 +12,7 @@ export class OrderSummaryConverter {
         this.orderSummary.orderReference = order.reference;
         this.mapDeliveryAddress(order);
         this.mapPaymentDetails(order);
+        this.orderSummary.backLinkUrl = CHS_URL;
     }
 
     mapCertificate(item: Item): void {
