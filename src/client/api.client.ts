@@ -15,7 +15,7 @@ import createError from "http-errors";
 
 import { API_URL, APPLICATION_NAME, CHS_URL } from "../config/config";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
-import { Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -133,6 +133,18 @@ export const getOrder = async (orderId: string, oAuth: string): Promise<Order> =
     } else {
         logger.info(`Get order, status_code=${orderResource.value.httpStatusCode}`);
         const responseCode = orderResource.value.httpStatusCode || 500;
+        throw createError(responseCode, responseCode.toString());
+    }
+};
+
+export const getOrderItem = async (orderId: string, itemId: string, oAuth: string): Promise<Item> => {
+    const api = createApiClient(undefined, oAuth, API_URL);
+    const orderItemResource = await api.orderItem.getOrderItem(orderId, itemId);
+    if (orderItemResource.isSuccess()) {
+        return orderItemResource.value;
+    } else {
+        logger.info(`Get order, status_code=${orderItemResource.value.httpStatusCode}`);
+        const responseCode = orderItemResource.value.httpStatusCode || 500;
         throw createError(responseCode, responseCode.toString());
     }
 };

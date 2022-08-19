@@ -16,13 +16,14 @@ import {
     checkoutBasket,
     createPayment,
     getBasketLinks,
-    getOrder,
+    getOrder, getOrderItem,
     patchBasket,
     removeBasketItem
 } from "../../client/api.client";
 import { NotFound } from "http-errors";
 import { OrderService } from "@companieshouse/api-sdk-node/dist/services/order";
 import { Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+import OrderItemService from "@companieshouse/api-sdk-node/dist/services/order/order-item/service";
 const O_AUTH_TOKEN = "oauth";
 
 const sandbox = sinon.createSandbox();
@@ -174,6 +175,22 @@ describe("api.client", () => {
                 httpStatusCode: 404
             })));
             await chai.expect(getOrder("ORD-123456-123456", "oauth")).to.be.rejectedWith(NotFound);
+        });
+    });
+
+    describe("getOrderItem", () => {
+        it("should return success 200 ok", async () => {
+            sandbox.stub(OrderItemService.prototype, "getOrderItem").returns(Promise.resolve(new Success<any, ApiErrorResponse>({
+                id: "MID-123456-123456"
+            })));
+            const item = await getOrderItem("ORD-123456-123456", "MID-123456-123456", "oauth");
+            chai.expect(item.id).to.equal("MID-123456-123456");
+        });
+        it("should throw an error if error returned by getOrder endpoint", async () => {
+            sandbox.stub(OrderItemService.prototype, "getOrderItem").returns(Promise.resolve(new Failure<any, ApiErrorResponse>({
+                httpStatusCode: 404
+            })));
+            await chai.expect(getOrderItem("ORD-123456-123456", "MID-123456-123456", "oauth")).to.be.rejectedWith(NotFound);
         });
     });
 });
