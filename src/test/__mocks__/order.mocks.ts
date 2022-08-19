@@ -1,7 +1,8 @@
 import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
-import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates/types"
+import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates/types";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { CompanyType } from "../../model/CompanyType";
+import { GovUkOrderItemSummaryView } from "../../order_item_summary/GovUkOrderItemSummaryView";
 
 export const CERTIFICATE_ID = "CRT-123456-123456";
 export const CERTIFIED_COPY_ID = "CCD-123456-123456";
@@ -339,4 +340,74 @@ export const mockMissingImageDeliveryCheckoutResponse: Checkout = {
         self: "/orders/" + ORDER_ID,
         payment: `"/basket/checkouts/${ORDER_ID}/payment"`
     }
+};
+
+export const mockMidOrderItemView: GovUkOrderItemSummaryView = {
+    orderId: "ORD-123123-123123",
+    itemId: MISSING_IMAGE_DELIVERY_ID,
+    itemDetails: {
+        entries: [
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company name",
+                    html: ""
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "The Company",
+                    html: ""
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company number",
+                    html: ""
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "00000000",
+                    html: ""
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Date",
+                    html: ""
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "26 May 2015",
+                    html: ""
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Type",
+                    html: ""
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "AP01",
+                    html: ""
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Description",
+                    html: ""
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Appointment of Mr Richard John Harris as a director",
+                    html: ""
+                }
+            }
+        ]
+    },
+    fee: "£3"
 };

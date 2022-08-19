@@ -11,7 +11,7 @@ export class OrderItemSummaryService {
     async getOrderItem (request: OrderItemRequest): Promise<OrderItemView> {
         const orderItem = await getOrderItem(request.orderId, request.itemId, request.apiToken);
         const mapper = this.factory.getMapper(orderItem);
-        mapper.map();
+        mapper.map(request.orderId);
         return mapper.getMappedOrder();
     }
 }

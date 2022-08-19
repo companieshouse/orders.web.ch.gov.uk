@@ -21,7 +21,7 @@ describe("OrderItemSummaryService", () => {
             const mapper = {
                 map: sandbox.spy(),
                 getMappedOrder: sandbox.stub().returns(mappedOrder)
-            }
+            };
             const factory = {
                 getMapper: sandbox.stub().returns(mapper)
             };
@@ -37,6 +37,7 @@ describe("OrderItemSummaryService", () => {
             // then
             expect(actual).to.equal(mappedOrder);
             expect(apiClient.getOrderItem).to.be.calledOnceWith("ORD-123456-123456", "MID-123456-123456");
+            expect(mapper.map).to.be.calledOnceWith("ORD-123456-123456");
             expect(mapper.getMappedOrder).to.be.calledOnce;
             expect(factory.getMapper).to.be.calledOnceWith(mockCertificateItem);
         });
@@ -50,7 +51,7 @@ describe("OrderItemSummaryService", () => {
             const mapper = {
                 map: sandbox.spy(),
                 getMappedOrder: sandbox.stub().returns(mappedOrder)
-            }
+            };
             const factory = {
                 getMapper: sandbox.stub().returns(mapper)
             };
@@ -63,6 +64,7 @@ describe("OrderItemSummaryService", () => {
             })).to.be.rejectedWith(expectedError);
             expect(apiClient.getOrderItem).to.be.calledOnceWith("ORD-123456-123456", "MID-123456-123456");
             expect(mapper.getMappedOrder).to.not.be.called;
+            expect(mapper.map).to.not.be.called;
             expect(factory.getMapper).to.not.be.called;
         });
     });
