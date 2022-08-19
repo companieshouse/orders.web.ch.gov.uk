@@ -2,8 +2,10 @@ import { OrderItemMapper } from "./OrderItemMapper";
 import { OrderItemView } from "./OrderItemView";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import { GovUkOrderItemSummaryView } from "./GovUkOrderItemSummaryView";
-import {GovSummaryListObject, GovUkSummaryListEntry} from "../govuk/GovUkSummaryList";
-import {mapFilingHistoryDate} from "../utils/date.util";
+import { GovSummaryListObject, GovUkSummaryList, GovUkSummaryListEntry } from "../govuk/GovUkSummaryList";
+import { ItemOptions as MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/mid";
+import { mapFilingHistoryDate } from "../utils/date.util";
+import { mapFilingHistory } from "../service/filing.history.service";
 
 export class MissingImageDeliveryMapper implements OrderItemMapper {
     private data: GovUkOrderItemSummaryView
@@ -14,16 +16,20 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
     map (orderId: string): void {
         this.data.orderId = orderId;
         this.data.itemId = this.item.id;
-        this.mapItemDetails(this.item);
+        this.mapItemDetails();
+        this.data.fee = this.item.totalItemCost;
     }
 
     getMappedOrder (): OrderItemView {
-        return undefined as any;
+        return {
+            template: "order-item-summary-mid.html",
+            data: this.data
+        };
     }
 
-    private mapItemDetails(item: Item) : void {
-
-       this.data.itemDetails.entries.push(
+    private mapItemDetails (): void {
+        const itemOptions = this.item.itemOptions as MissingImageDeliveryItemOptions;
+        this.data.itemDetails.entries.push(
            {
                key: {
                    classes: "govuk-!-width-one-third",
@@ -56,34 +62,34 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
                } as GovSummaryListObject,
                value: {
                    classes: "govuk-!-width-two-thirds",
-                   text: this.item.companyNumber,
+                   text: mapFilingHistoryDate(itemOptions.filingHistoryDate),
                    html: ""
                } as GovSummaryListObject
            } as GovUkSummaryListEntry,
            {
                key: {
                    classes: "govuk-!-width-one-third",
-                   text: "Company number",
+                   text: "Type",
                    html: ""
                } as GovSummaryListObject,
                value: {
                    classes: "govuk-!-width-two-thirds",
-                   text: this.item.companyNumber,
+                   text: itemOptions.filingHistoryType,
                    html: ""
                } as GovSummaryListObject
            } as GovUkSummaryListEntry,
            {
                key: {
                    classes: "govuk-!-width-one-third",
-                   text: "Company number",
+                   text: "Description",
                    html: ""
                } as GovSummaryListObject,
                value: {
                    classes: "govuk-!-width-two-thirds",
-                   text: this.item.companyNumber,
+                   text: mapFilingHistory(itemOptions.filingHistoryDescription, itemOptions.filingHistoryDescriptionValues),
                    html: ""
                } as GovSummaryListObject
-           } as GovUkSummaryListEntry,
-       )
+           } as GovUkSummaryListEntry
+        );
     }
 }
