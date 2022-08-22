@@ -4,6 +4,11 @@ import { ItemOptionsDeliveryTimescaleConfigurable } from "@companieshouse/api-sd
 import { MapUtil } from "../service/MapUtil";
 import { CHS_URL } from "../config/config";
 
+export type ItemMapRequest = {
+    orderId: string;
+    item: Item;
+};
+
 export class OrderSummaryConverter {
 
     private orderSummary: OrderSummary = new OrderSummary();
@@ -15,31 +20,31 @@ export class OrderSummaryConverter {
         this.orderSummary.backLinkUrl = CHS_URL;
     }
 
-    mapCertificate(item: Item): void {
-        this.mapItem(item, "Certificate", this.mapDeliveryMethod(item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
+    mapCertificate(request: ItemMapRequest): void {
+        this.mapItem(request, "Certificate", this.mapDeliveryMethod(request.item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
         this.orderSummary.hasDeliverableItems = true;
     }
 
-    mapCertifiedCopy(item: Item): void {
-        this.mapItem(item, "Certified document", this.mapDeliveryMethod(item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
+    mapCertifiedCopy(request: ItemMapRequest): void {
+        this.mapItem(request, "Certified document", this.mapDeliveryMethod(request.item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
         this.orderSummary.hasDeliverableItems = true;
     }
 
-    mapMissingImageDelivery(item: Item): void {
-        this.mapItem(item, "Missing image", "N/A");
+    mapMissingImageDelivery(request: ItemMapRequest): void {
+        this.mapItem(request, "Missing image", "N/A");
     }
 
     getOrderSummary(): OrderSummary {
         return this.orderSummary;
     }
 
-    private mapItem(item: Item, itemType: string, deliveryMethod: string): void {
+    private mapItem(request: ItemMapRequest, itemType: string, deliveryMethod: string): void {
         this.orderSummary.itemSummary.push([
-            { html: `<a class="govuk-link" href="javascript:void(0)">${item.id}</a>` },
+            { html: `<a class="govuk-link" href="/orders/${request.orderId}/items/${request.item.id}">${request.item.id}</a>` },
             { text: itemType },
-            { text: item.companyNumber },
+            { text: request.item.companyNumber },
             { text: deliveryMethod },
-            { text: `£${item.totalItemCost}` }
+            { text: `£${request.item.totalItemCost}` }
         ]);
     }
 

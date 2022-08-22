@@ -51,12 +51,12 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("Description");
             expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Appointment of Mr Richard John Harris as a director");
             expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("Fee");
-            expect($($("#item-details-list .govuk-summary-list__value")[6]).text()).to.contain("£3");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("£3");
         });
 
         it("Renders page not found if user not resource owner", async () => {
             // given
-            sandbox.stub(apiClient, "getOrderItem").returns(Promise.reject(Unauthorized));
+            sandbox.stub(apiClient, "getOrderItem").throws(Unauthorized);
 
             // when
             const response = await chai.request(testApp)
@@ -71,7 +71,7 @@ describe("OrderItemSummaryController", () => {
 
         it("Renders page not found if item does not exist", async () => {
             // given
-            sandbox.stub(apiClient, "getOrderItem").returns(Promise.reject(NotFound));
+            sandbox.stub(apiClient, "getOrderItem").throws(NotFound);
 
             // when
             const response = await chai.request(testApp)
@@ -86,7 +86,7 @@ describe("OrderItemSummaryController", () => {
 
         it("Renders error page if resource unavailable", async () => {
             // given
-            sandbox.stub(apiClient, "getOrderItem").returns(Promise.reject(InternalServerError));
+            sandbox.stub(apiClient, "getOrderItem").throws(InternalServerError);
 
             // when
             const response = await chai.request(testApp)
