@@ -37,15 +37,16 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
         const itemType = req.query.itemType;
 
-        const basket: Basket = await getBasket(accessToken);
+        const basketLinks = await getBasketLinks(accessToken);
 
-        if (basket.enrolled) {
+        if (basketLinks.data.enrolled) {
             logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, user_id=${userId}`);
         } else {
             logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, itemType=${itemType}, user_id=${userId}`);
         }
 
         if (status === "cancelled" || status === "failed") {
+            const basket: Basket = await getBasket(accessToken);
             if (basket.enrolled) {
                 return res.redirect("/basket");
             } else {
@@ -60,7 +61,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const checkout = (await getCheckout(accessToken, orderId)).resource as Checkout;
 
         // required to capture order type in matomo
-        if (!basket.enrolled && (itemType === undefined || itemType === "")) {
+        if (!basketLinks.data.enrolled && (itemType === undefined || itemType === "")) {
             const item = checkout?.items?.[0];
             return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + getItemTypeUrlParam(item));
         }
@@ -79,7 +80,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             }
         }
 
-        const mappedItem = factory.getMapper(basket).map(checkout);
+        const mappedItem = factory.getMapper(basketLinks.data).map(checkout);
         res.render(mappedItem.templateName, mappedItem);
     } catch (err) {
         console.log(err);
