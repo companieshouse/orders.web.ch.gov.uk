@@ -2,7 +2,6 @@ import { OrderItemMapper } from "./OrderItemMapper";
 import { OrderItemView } from "./OrderItemView";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import { GovUkOrderItemSummaryView } from "./GovUkOrderItemSummaryView";
-import { GovSummaryListObject, GovUkSummaryList, GovUkSummaryListEntry } from "../govuk/GovUkSummaryList";
 import { ItemOptions as MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/mid";
 import { mapFilingHistoryDate } from "../utils/date.util";
 import { mapFilingHistory } from "../service/filing.history.service";
@@ -30,66 +29,66 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
     private mapItemDetails (): void {
         const itemOptions = this.item.itemOptions as MissingImageDeliveryItemOptions;
         this.data.itemDetails.entries.push(
-           {
-               key: {
-                   classes: "govuk-!-width-one-third",
-                   text: "Company name",
-                   html: ""
-               } as GovSummaryListObject,
-               value: {
-                   classes: "govuk-!-width-two-thirds",
-                   text: this.item.companyName,
-                   html: ""
-               } as GovSummaryListObject
-           } as GovUkSummaryListEntry,
-           {
-               key: {
-                   classes: "govuk-!-width-one-third",
-                   text: "Company number",
-                   html: ""
-               } as GovSummaryListObject,
-               value: {
-                   classes: "govuk-!-width-two-thirds",
-                   text: this.item.companyNumber,
-                   html: ""
-               } as GovSummaryListObject
-           } as GovUkSummaryListEntry,
-           {
-               key: {
-                   classes: "govuk-!-width-one-third",
-                   text: "Date",
-                   html: ""
-               } as GovSummaryListObject,
-               value: {
-                   classes: "govuk-!-width-two-thirds",
-                   text: mapFilingHistoryDate(itemOptions.filingHistoryDate),
-                   html: ""
-               } as GovSummaryListObject
-           } as GovUkSummaryListEntry,
-           {
-               key: {
-                   classes: "govuk-!-width-one-third",
-                   text: "Type",
-                   html: ""
-               } as GovSummaryListObject,
-               value: {
-                   classes: "govuk-!-width-two-thirds",
-                   text: itemOptions.filingHistoryType,
-                   html: ""
-               } as GovSummaryListObject
-           } as GovUkSummaryListEntry,
-           {
-               key: {
-                   classes: "govuk-!-width-one-third",
-                   text: "Description",
-                   html: ""
-               } as GovSummaryListObject,
-               value: {
-                   classes: "govuk-!-width-two-thirds",
-                   text: mapFilingHistory(itemOptions.filingHistoryDescription, itemOptions.filingHistoryDescriptionValues),
-                   html: ""
-               } as GovSummaryListObject
-           } as GovUkSummaryListEntry
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company name",
+                    html: ""
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: this.item.companyName,
+                    html: ""
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company number",
+                    html: ""
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: this.item.companyNumber,
+                    html: ""
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Date",
+                    html: ""
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: mapFilingHistoryDate(itemOptions.filingHistoryDate),
+                    html: ""
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Type",
+                    html: ""
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: itemOptions.filingHistoryType,
+                    html: ""
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Description",
+                    html: ""
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: mapFilingHistory(itemOptions.filingHistoryDescription, itemOptions.filingHistoryDescriptionValues),
+                    html: ""
+                }
+            }
         );
     }
 }
