@@ -8,7 +8,7 @@ import { MapperRequest } from "./MapperRequest";
 import { ORDER_ITEM_SUMMARY_MID } from "../model/template.paths";
 
 export class MissingImageDeliveryMapper implements OrderItemMapper {
-    private data: GovUkOrderItemSummaryView
+    private readonly data: GovUkOrderItemSummaryView
 
     constructor (private mapperRequest: MapperRequest) {
         this.data = new GovUkOrderItemSummaryView();

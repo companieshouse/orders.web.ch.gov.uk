@@ -3,6 +3,9 @@ import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-n
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { CompanyType } from "../../model/CompanyType";
 import { GovUkOrderItemSummaryView } from "../../order_item_summary/GovUkOrderItemSummaryView";
+import {
+    GovUkOrderCertifiedCopyItemSummaryView
+} from "../../order_item_summary/GovUkOrderCertifiedCopyItemSummaryView";
 
 export const CERTIFICATE_ID = "CRT-123456-123456";
 export const CERTIFIED_COPY_ID = "CCD-123456-123456";
@@ -409,4 +412,59 @@ export const mockMidOrderItemView: GovUkOrderItemSummaryView = {
             }
         ]
     }
+};
+
+export const mockCertCopyOrderItemView: GovUkOrderCertifiedCopyItemSummaryView = {
+    orderId: "ORD-123123-123123",
+    itemId: CERTIFIED_COPY_ID,
+    itemDetails: {
+        entries: [
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company name"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "The Company"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company number"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "00000000"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Delivery method"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                }
+            }
+        ]
+    },
+    documentDetails: [
+        [
+            {
+                text: "12 Feb 2010"
+            },
+            {
+                text: "CH01"
+            },
+            {
+                text: "Director's details changed for Thomas David Wheare on 12 February 2010"
+            },
+            {
+                text: "£15"
+            }
+        ]
+    ]
 };
