@@ -1,7 +1,7 @@
 import chai from "chai";
 import sinon from "sinon";
 import ioredis from "ioredis";
-import { Basket, BasketLinks } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import cheerio from "cheerio";
 
 import * as apiClient from "../../client/api.client";
@@ -70,11 +70,9 @@ describe("order.confirmation.controller.integration", () => {
             }
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-                data: {
-                    enrolled: true
-                }
-            } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+                enrolled: true
+            } as Basket));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -111,11 +109,9 @@ describe("order.confirmation.controller.integration", () => {
             }
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-                data: {
-                    enrolled: true
-                }
-            } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+                enrolled: true
+            } as Basket));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -161,11 +157,9 @@ describe("order.confirmation.controller.integration", () => {
             }
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-                data: {
-                    enrolled: true
-                }
-            } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+                enrolled: true
+            } as Basket));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -217,11 +211,9 @@ describe("order.confirmation.controller.integration", () => {
             }
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-                data: {
-                    enrolled: true
-                }
-            } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+                enrolled: true
+            } as Basket));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -258,11 +250,9 @@ describe("order.confirmation.controller.integration", () => {
             }
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-                data: {
-                    enrolled: false
-                }
-            } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+                enrolled: false
+            } as Basket));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -334,11 +324,9 @@ describe("order.confirmation.controller.integration", () => {
             }
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-            getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-                data: {
-                    enrolled: false
-                }
-            } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+                enrolled: false
+            } as Basket));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -405,11 +393,9 @@ describe("order.confirmation.controller.integration", () => {
         }
 
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-        getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-            data: {
-                enrolled: false
-            }
-        } as BasketLinks));
+        getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: false
+        } as Basket));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -448,11 +434,9 @@ describe("order.confirmation.controller.integration", () => {
         }
 
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-        getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-            data: {
-                enrolled: false
-            }
-        } as BasketLinks));
+        getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: false
+        } as Basket));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -486,11 +470,9 @@ describe("order.confirmation.controller.integration", () => {
         }
 
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-        getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-            data: {
-                enrolled: false
-            }
-        } as BasketLinks));
+        getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: false
+        } as Basket));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certified-copy`)
@@ -527,11 +509,9 @@ describe("order.confirmation.controller.integration", () => {
             resource: mockMissingImageDeliveryCheckoutResponse
         }
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
-        getBasketStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-            data: {
-                enrolled: false
-            }
-        } as BasketLinks));
+        getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: false
+        } as Basket));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=missing-image-delivery`)
@@ -553,6 +533,24 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect(resp.text).to.not.contain("certificateTypeValue");
         chai.expect(resp.text).to.not.contain("includedOnCertificateValue");
         chai.expect(getOrderStub).to.have.been.called;
+    });
+
+    it("redirects and applies the itemType query param if user disenrolled", async () => {
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockCertificateCheckoutResponse
+        }
+
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+        getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: false
+        } as Basket));
+
+        const resp = await chai.request(testApp)
+            .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid`)
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .redirects(0);
+        chai.expect(resp).to.redirectTo(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid&itemType=certificate`);
     });
 
     it("renders an error page if get order fails", (done) => {
