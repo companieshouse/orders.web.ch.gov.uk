@@ -6,7 +6,6 @@ import {
 import { OrderItemView } from "../../order_item_summary/OrderItemView";
 import { expect } from "chai";
 import { CertifiedCopyMapper } from "../../order_item_summary/CertifiedCopyMapper";
-import { OrderItemMapper } from "../../order_item_summary/OrderItemMapper";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import { ORDER_ITEM_SUMMARY_CERTIFIED_COPY } from "../../model/template.paths";
 import { MapperRequest } from "../../mappers/MapperRequest";
@@ -19,7 +18,7 @@ describe("CertifiedCopyMapper", () => {
         sandbox.restore();
     });
     describe("map", () => {
-        it("Maps a mapper request for a certified copy item to a GovUkOrderItemSummaryView ", async () => {
+        it("Maps a mapper request for a certified copy item to a GovUkOrderCertifiedCopyItemSummaryView ", async () => {
             // given
             const mockItem: Item = {
                 ...mockCertifiedCopyItem,
@@ -39,7 +38,7 @@ describe("CertifiedCopyMapper", () => {
                 },
                 totalItemCost: "15"
             };
-            const mapper: OrderItemMapper = new CertifiedCopyMapper(new MapperRequest("ORD-123123-123123", mockItem));
+            const mapper: CertifiedCopyMapper = new CertifiedCopyMapper(new MapperRequest("ORD-123123-123123", mockItem));
             // when
             mapper.map();
             const actual: OrderItemView = mapper.getMappedOrder();

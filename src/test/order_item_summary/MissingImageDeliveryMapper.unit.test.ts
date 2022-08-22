@@ -5,7 +5,6 @@ import { OrderItemView } from "../../order_item_summary/OrderItemView";
 import { expect } from "chai";
 import { MapperRequest } from "../../mappers/MapperRequest";
 import { ORDER_ITEM_SUMMARY_MID } from "../../model/template.paths";
-import { OrderItemMapper } from "../../order_item_summary/OrderItemMapper";
 
 const sandbox = sinon.createSandbox();
 
@@ -17,7 +16,7 @@ describe("MissingImageDeliveryMapper", () => {
     describe("map", () => {
         it("Maps a mapper request for a missing image delivery item to a GovUkOrderItemSummaryView ", async () => {
             // given
-            const mapper: OrderItemMapper = new MissingImageDeliveryMapper(new MapperRequest("ORD-123123-123123", mockMissingImageDeliveryItem));
+            const mapper: MissingImageDeliveryMapper = new MissingImageDeliveryMapper(new MapperRequest("ORD-123123-123123", mockMissingImageDeliveryItem));
             // when
             mapper.map();
             const actual: OrderItemView = mapper.getMappedOrder();
