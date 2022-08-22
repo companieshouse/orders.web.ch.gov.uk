@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "http://gov.uk/",
+    serviceName: "Order - " + orderDetails.orderId,
+    serviceUrl: orderDetails.backLinkUrl
+  }) }}
+{% endblock %}
+
+{% block pageTitle %}
+  Summary of item {{ itemId }} in order {{ orderId }} - Order a certificate - GOV.UK
+{% endblock %}
+
+{% block beforeContent %}
+<nav>
+  {{ govukBackLink({
+    text: "Back",
+    href: orderDetails.backLinkUrl
+  }) }}
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 id="item-reference" class="govuk-heading-xl">{{ orderDetails.itemId }}</h1>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m">Item details</h2>
+        {{ govukSummaryList({
+          attributes: {
+            id: "item-details-list"
+          },
+          rows: orderDetails.itemDetails.entries
+        }) }}
+      </div>
+      <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m">Document details</h2>
+      {{ govukTable({
+        attributes: {
+          id: "document-details-table"
+        },
+        head: [
+          {
+            classes: "govuk-!-width-one-quarter",
+            text: "Date filed"
+          },
+          {
+            text: "Type"
+          },
+          {
+            text: "Description"
+          },
+          {
+            text: "Fee"
+          }
+        ],
+        rows: documentDetails
+      }) }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
