@@ -350,64 +350,63 @@ export const mockMidOrderItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Company name",
-                    html: ""
+                    text: "Company name"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "The Company",
-                    html: ""
+                    text: "The Company"
                 }
             },
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Company number",
-                    html: ""
+                    text: "Company number"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "00000000",
-                    html: ""
+                    text: "00000000"
                 }
             },
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Date",
-                    html: ""
+                    text: "Date"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "26 May 2015",
-                    html: ""
+                    text: "26 May 2015"
                 }
             },
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Type",
-                    html: ""
+                    text: "Type"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "AP01",
-                    html: ""
+                    text: "AP01"
                 }
             },
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Description",
-                    html: ""
+                    text: "Description"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Appointment of Mr Richard John Harris as a director",
-                    html: ""
+                    text: "Appointment of Mr Richard John Harris as a director"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Fee"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "£3"
                 }
             }
         ]
-    },
-    fee: "£3"
+    }
 };

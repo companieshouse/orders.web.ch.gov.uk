@@ -1,5 +1,5 @@
 export class GovUkSummaryList {
-    entries: GovUkSummaryListEntry[];
+    entries: GovUkSummaryListEntry[] = [];
 }
 
 export class GovUkSummaryListEntry {
@@ -9,6 +9,6 @@ export class GovUkSummaryListEntry {
 
 export class GovSummaryListObject {
     classes: string;
-    text: string;
-    html: string;
+    text?: string;
+    html?: string;
 }

@@ -10,13 +10,13 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
     private data: GovUkOrderItemSummaryView
 
     constructor (private item: Item) {
+        this.data = new GovUkOrderItemSummaryView();
     }
 
     map (orderId: string): void {
         this.data.orderId = orderId;
         this.data.itemId = this.item.id;
         this.mapItemDetails();
-        this.data.fee = this.item.totalItemCost;
     }
 
     getMappedOrder (): OrderItemView {
@@ -32,61 +32,61 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Company name",
-                    html: ""
+                    text: "Company name"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: this.item.companyName,
-                    html: ""
+                    text: this.item.companyName
                 }
             },
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Company number",
-                    html: ""
+                    text: "Company number"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: this.item.companyNumber,
-                    html: ""
+                    text: this.item.companyNumber
                 }
             },
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Date",
-                    html: ""
+                    text: "Date"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: mapFilingHistoryDate(itemOptions.filingHistoryDate),
-                    html: ""
+                    text: mapFilingHistoryDate(itemOptions.filingHistoryDate)
                 }
             },
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Type",
-                    html: ""
+                    text: "Type"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: itemOptions.filingHistoryType,
-                    html: ""
+                    text: itemOptions.filingHistoryType
                 }
             },
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Description",
-                    html: ""
+                    text: "Description"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: mapFilingHistory(itemOptions.filingHistoryDescription, itemOptions.filingHistoryDescriptionValues),
-                    html: ""
+                    text: mapFilingHistory(itemOptions.filingHistoryDescription, itemOptions.filingHistoryDescriptionValues)
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Fee"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "£" + this.item.totalItemCost
                 }
             }
         );
