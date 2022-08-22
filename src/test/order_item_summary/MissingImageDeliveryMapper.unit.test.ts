@@ -4,6 +4,7 @@ import { mockMidOrderItemView, mockMissingImageDeliveryItem } from "../__mocks__
 import { OrderItemView } from "../../order_item_summary/OrderItemView";
 import { expect } from "chai";
 import { MapperRequest } from "../../order_item_summary/MapperRequest";
+import { ORDER_ITEM_SUMMARY_MID } from "../../model/template.paths";
 
 const sandbox = sinon.createSandbox();
 
@@ -21,7 +22,7 @@ describe("MissingImageDeliveryMapper", () => {
             const actual: OrderItemView = mapper.getMappedOrder();
             // then
             expect(actual.data).to.deep.equal(mockMidOrderItemView);
-            expect(actual.template).to.equal("order-item-summary-mid.html");
+            expect(actual.template).to.equal(ORDER_ITEM_SUMMARY_MID);
         });
     });
 });
