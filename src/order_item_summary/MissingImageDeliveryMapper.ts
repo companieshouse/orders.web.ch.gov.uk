@@ -5,6 +5,7 @@ import { ItemOptions as MissingImageDeliveryItemOptions } from "@companieshouse/
 import { mapFilingHistoryDate } from "../utils/date.util";
 import { mapFilingHistory } from "../service/filing.history.service";
 import { MapperRequest } from "./MapperRequest";
+import { ORDER_ITEM_SUMMARY_MID } from "../model/template.paths";
 
 export class MissingImageDeliveryMapper implements OrderItemMapper {
     private data: GovUkOrderItemSummaryView
@@ -21,7 +22,7 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
 
     getMappedOrder (): OrderItemView {
         return {
-            template: "order-item-summary-mid.html",
+            template: ORDER_ITEM_SUMMARY_MID,
             data: this.data
         };
     }
