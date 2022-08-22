@@ -470,3 +470,433 @@ export const mockCertCopyOrderItemView: GovUkOrderCertifiedCopyItemSummaryView =
         ]
     ]
 };
+
+export const mockActiveLtdCertificateItemView: GovUkOrderItemSummaryView = {
+    orderId: ORDER_ID,
+    itemId: CERTIFICATE_ID,
+    itemDetails: {
+        entries: [
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company name"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Company Name"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company number"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "00000000"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Certificate type"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Incorporation with all company name changes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Statement of good standing"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Registered office address"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Current address and the one previous"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "The names of all current company directors"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    html: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "The names of all current secretaries"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    html: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company objects"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "No"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Delivery method"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Email copy required"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Email only available for express delivery method"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Fee"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "£15"
+                }
+            }
+        ]
+    },
+    backLinkUrl: `/orders/${ORDER_ID}`
+};
+
+export const mockAdministratedLtdCertificateItemView: GovUkOrderItemSummaryView = {
+    orderId: ORDER_ID,
+    itemId: CERTIFICATE_ID,
+    itemDetails: {
+        entries: [
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company name"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Company Name"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company number"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "00000000"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Certificate type"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Incorporation with all company name changes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Registered office address"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Current address and the one previous"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "The names of all current company directors"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    html: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "The names of all current secretaries"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    html: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company objects"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "No"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Administrators' details"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "No"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Delivery method"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Email copy required"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Email only available for express delivery method"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Fee"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "£15"
+                }
+            }
+        ]
+    },
+    backLinkUrl: `/orders/${ORDER_ID}`
+};
+
+export const mockLiquidatedLtdCertificateItemView: GovUkOrderItemSummaryView = {
+    orderId: ORDER_ID,
+    itemId: CERTIFICATE_ID,
+    itemDetails: {
+        entries: [
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company name"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Company Name"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company number"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "00000000"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Certificate type"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Incorporation with all company name changes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Registered office address"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Current address and the one previous"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "The names of all current company directors"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    html: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "The names of all current secretaries"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    html: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company objects"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "No"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Liquidators' details"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Delivery method"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Email copy required"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Email only available for express delivery method"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Fee"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "£15"
+                }
+            }
+        ]
+    },
+    backLinkUrl: `/orders/${ORDER_ID}`
+};
+
+export const mockDissolvedLtdCertificateItemView: GovUkOrderItemSummaryView = {
+    orderId: ORDER_ID,
+    itemId: CERTIFICATE_ID,
+    itemDetails: {
+        entries: [
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company name"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Company Name"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company number"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "00000000"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Certificate type"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Dissolution with all company name changes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Delivery method"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Email copy required"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Email only available for express delivery method"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Fee"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "£15"
+                }
+            }
+        ]
+    },
+    backLinkUrl: `/orders/${ORDER_ID}`
+};
