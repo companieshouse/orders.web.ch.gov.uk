@@ -3,11 +3,11 @@ export class GovUkSummaryList {
 }
 
 export class GovUkSummaryListEntry {
-    key: GovSummaryListObject;
-    value: GovSummaryListObject;
+    key: GovUkSummaryListObject;
+    value: GovUkSummaryListObject;
 }
 
-export class GovSummaryListObject {
+export class GovUkSummaryListObject {
     classes: string;
     text?: string;
     html?: string;

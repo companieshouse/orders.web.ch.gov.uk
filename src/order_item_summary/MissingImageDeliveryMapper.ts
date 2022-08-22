@@ -87,7 +87,7 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "£" + this.mapperRequest.item.totalItemCost
+                    text: `£${this.mapperRequest.item.totalItemCost}`
                 }
             }
         );

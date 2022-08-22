@@ -1,10 +1,7 @@
-import { MissingImageDeliveryMapper } from "../../order_item_summary/MissingImageDeliveryMapper";
 import sinon from "sinon";
 import {
     mockCertCopyOrderItemView,
-    mockCertifiedCopyItem,
-    mockMidOrderItemView,
-    mockMissingImageDeliveryItem
+    mockCertifiedCopyItem
 } from "../__mocks__/order.mocks";
 import { OrderItemView } from "../../order_item_summary/OrderItemView";
 import { expect } from "chai";
@@ -12,7 +9,7 @@ import { MapperRequest } from "../../order_item_summary/MapperRequest";
 import { CertifiedCopyMapper } from "../../order_item_summary/CertifiedCopyMapper";
 import { OrderItemMapper } from "../../order_item_summary/OrderItemMapper";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
-import { CertifiedCopyItem } from "@companieshouse/api-sdk-node/dist/services/order/certified-copies";
+import { ORDER_ITEM_SUMMARY_CERTIFIED_COPY } from "../../model/template.paths";
 
 const sandbox = sinon.createSandbox();
 
@@ -39,7 +36,8 @@ describe("CertifiedCopyMapper", () => {
                         filingHistoryType: "CH01",
                         filingHistoryCost: "15"
                     }]
-                }
+                },
+                totalItemCost: "15"
             };
             const mapper: OrderItemMapper = new CertifiedCopyMapper(new MapperRequest("ORD-123123-123123", mockItem));
             // when
@@ -47,7 +45,7 @@ describe("CertifiedCopyMapper", () => {
             const actual: OrderItemView = mapper.getMappedOrder();
             // then
             expect(actual.data).to.deep.equal(mockCertCopyOrderItemView);
-            expect(actual.template).to.equal("order-item-summary-ccd.html");
+            expect(actual.template).to.equal(ORDER_ITEM_SUMMARY_CERTIFIED_COPY);
         });
     });
 });

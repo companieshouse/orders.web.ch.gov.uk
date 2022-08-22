@@ -427,7 +427,7 @@ export const mockCertCopyOrderItemView: GovUkOrderCertifiedCopyItemSummaryView =
                     },
                     value: {
                         classes: "govuk-!-width-two-thirds",
-                        text: "The Company"
+                        text: "Company Name"
                     }
                 },
                 {
