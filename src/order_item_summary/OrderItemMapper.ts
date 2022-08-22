@@ -1,6 +1,6 @@
 import { OrderItemView } from "./OrderItemView";
 
 export interface OrderItemMapper {
-    map(orderId: string): void;
+    map(): void;
     getMappedOrder(): OrderItemView;
 }

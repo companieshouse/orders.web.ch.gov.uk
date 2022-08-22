@@ -1,21 +1,21 @@
 import { OrderItemMapper } from "./OrderItemMapper";
 import { OrderItemView } from "./OrderItemView";
-import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import { GovUkOrderItemSummaryView } from "./GovUkOrderItemSummaryView";
 import { ItemOptions as MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/mid";
 import { mapFilingHistoryDate } from "../utils/date.util";
 import { mapFilingHistory } from "../service/filing.history.service";
+import { MapperRequest } from "./MapperRequest";
 
 export class MissingImageDeliveryMapper implements OrderItemMapper {
     private data: GovUkOrderItemSummaryView
 
-    constructor (private item: Item) {
+    constructor (private mapperRequest: MapperRequest) {
         this.data = new GovUkOrderItemSummaryView();
     }
 
-    map (orderId: string): void {
-        this.data.orderId = orderId;
-        this.data.itemId = this.item.id;
+    map (): void {
+        this.data.orderId = this.mapperRequest.orderId;
+        this.data.itemId = this.mapperRequest.item.id;
         this.mapItemDetails();
     }
 
@@ -27,7 +27,7 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
     }
 
     private mapItemDetails (): void {
-        const itemOptions = this.item.itemOptions as MissingImageDeliveryItemOptions;
+        const itemOptions = this.mapperRequest.item.itemOptions as MissingImageDeliveryItemOptions;
         this.data.itemDetails.entries.push(
             {
                 key: {
@@ -36,7 +36,7 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: this.item.companyName
+                    text: this.mapperRequest.item.companyName
                 }
             },
             {
@@ -46,7 +46,7 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: this.item.companyNumber
+                    text: this.mapperRequest.item.companyNumber
                 }
             },
             {
@@ -86,7 +86,7 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "£" + this.item.totalItemCost
+                    text: "£" + this.mapperRequest.item.totalItemCost
                 }
             }
         );

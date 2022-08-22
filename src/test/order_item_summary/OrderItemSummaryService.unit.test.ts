@@ -4,6 +4,7 @@ import { mockCertificateItem } from "../__mocks__/order.mocks";
 import { OrderItemSummaryService } from "../../order_item_summary/OrderItemSummaryService";
 import { expect } from "chai";
 import { InternalServerError } from "http-errors";
+import { MapperRequest } from "../../order_item_summary/MapperRequest";
 
 const sandbox = sinon.createSandbox();
 
@@ -37,9 +38,9 @@ describe("OrderItemSummaryService", () => {
             // then
             expect(actual).to.equal(mappedOrder);
             expect(apiClient.getOrderItem).to.be.calledOnceWith("ORD-123456-123456", "MID-123456-123456");
-            expect(mapper.map).to.be.calledOnceWith("ORD-123456-123456");
+            expect(mapper.map).to.be.calledOnce;
             expect(mapper.getMappedOrder).to.be.calledOnce;
-            expect(factory.getMapper).to.be.calledOnceWith(mockCertificateItem);
+            expect(factory.getMapper).to.be.calledOnceWith(new MapperRequest("ORD-123456-123456", mockCertificateItem));
         });
 
         it("Propagates exception thrown by API client", async () => {

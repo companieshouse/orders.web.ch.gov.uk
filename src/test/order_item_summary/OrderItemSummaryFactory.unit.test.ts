@@ -6,6 +6,7 @@ import { mockCertificateItem, mockMissingImageDeliveryItem } from "../__mocks__/
 import { expect } from "chai";
 import { MissingImageDeliveryMapper } from "../../order_item_summary/MissingImageDeliveryMapper";
 import { NullOrderItemMapper } from "../../order_item_summary/NullOrderItemMapper";
+import { MapperRequest } from "../../order_item_summary/MapperRequest";
 
 const sandbox = sinon.createSandbox();
 
@@ -19,7 +20,7 @@ describe("OrderItemSummaryFactory", () => {
             // given
             const factory = new OrderItemSummaryFactory();
             // when
-            const mapper: OrderItemMapper = factory.getMapper(mockMissingImageDeliveryItem);
+            const mapper: OrderItemMapper = factory.getMapper(new MapperRequest("ORD-123123-123123", mockMissingImageDeliveryItem));
             // then
             expect(mapper).be.an.instanceOf(MissingImageDeliveryMapper);
         });
@@ -32,7 +33,7 @@ describe("OrderItemSummaryFactory", () => {
                 kind: "unknown"
             };
             // when
-            const mapper: OrderItemMapper = factory.getMapper(unknownCert);
+            const mapper: OrderItemMapper = factory.getMapper(new MapperRequest("ORD-123123-123123", unknownCert));
             // then
             expect(mapper).be.an.instanceOf(NullOrderItemMapper);
         });
