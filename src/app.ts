@@ -13,12 +13,18 @@ import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
 import { ERROR_SUMMARY_TITLE } from "./model/error.messages";
 import { ORDER_SUMMARY } from "./model/page.urls";
+import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
+import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(function(req, res, next) { 
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+     next();
+});
 
 
 // set some app variables from the environment
@@ -55,6 +61,14 @@ env.addGlobal("PIWIK_URL", PIWIK_URL);
 env.addGlobal("PIWIK_SITE_ID", PIWIK_SITE_ID);
 env.addGlobal("CHS_URL", CHS_URL);
 env.addGlobal("ERROR_SUMMARY_TITLE", ERROR_SUMMARY_TITLE);
+env.addGlobal("ACCOUNT_URL", process.env.ACCOUNT_URL);
+env.addGlobal("CHS_MONITOR_GUI_URL", process.env.CHS_MONITOR_GUI_URL);
+
+app.use((req, res, next) => {
+    env.addGlobal("signedIn", req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1);
+    env.addGlobal("userEmail", req.session?.data?.signin_info?.user_profile?.email);
+    next();
+});
 
 // serve static assets in development.
 // this will execute in production for now, but we will host these else where in the future.
