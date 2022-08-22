@@ -10,3 +10,4 @@ export const BASKET: string = "basket";
 export const DELIVERY_DETAILS: string = "delivery-details";
 export const EMAIL_OPTIONS: string = "email-options";
 export const ORDER_ITEM_SUMMARY_MID = "order-item-summary-mid";
+export const ORDER_ITEM_SUMMARY_CERTIFIED_COPY = "order-item-summary-ccd";

@@ -1,8 +1,8 @@
-import { GovUkTableCellView } from "../mappers/BasketDetailsViewModel";
+import { GovUkTableCell } from "../govuk/GovUkTableCell";
 
 export class OrderSummary {
     orderReference: string;
-    itemSummary: GovUkTableCellView[][] = [];
+    itemSummary: GovUkTableCell[][] = [];
     deliveryAddress: object;
     hasDeliverableItems: boolean = false;
     paymentDetails: PaymentDetails;

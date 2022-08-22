@@ -8,7 +8,7 @@ import { MapperRequest } from "../mappers/MapperRequest";
 import { ORDER_ITEM_SUMMARY_MID } from "../model/template.paths";
 
 export class MissingImageDeliveryMapper implements OrderItemMapper {
-    private data: GovUkOrderItemSummaryView
+    private readonly data: GovUkOrderItemSummaryView
 
     constructor (private mapperRequest: MapperRequest) {
         this.data = new GovUkOrderItemSummaryView();
@@ -17,8 +17,8 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
     map (): void {
         this.data.orderId = this.mapperRequest.orderId;
         this.data.itemId = this.mapperRequest.item.id;
-        this.data.backLinkUrl = `/orders/${this.mapperRequest.orderId}`
         this.mapItemDetails();
+        this.data.backLinkUrl = `/orders/${this.mapperRequest.orderId}`;
     }
 
     getMappedOrder (): OrderItemView {
@@ -88,7 +88,7 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "£" + this.mapperRequest.item.totalItemCost
+                    text: `£${this.mapperRequest.item.totalItemCost}`
                 }
             }
         );
