@@ -6,7 +6,8 @@
 {% block header %}
   {{ govukHeader({
     homepageUrl: "http://gov.uk/",
-    serviceName: "Order - " + orderId
+    serviceName: "Order - " + orderId,
+    serviceUrl: backLinkUrl
   }) }}
 {% endblock %}
 
