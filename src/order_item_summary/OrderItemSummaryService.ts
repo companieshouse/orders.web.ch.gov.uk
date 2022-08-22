@@ -2,7 +2,7 @@ import { OrderItemRequest } from "./OrderItemRequest";
 import { OrderItemView } from "./OrderItemView";
 import { OrderItemSummaryFactory } from "./OrderItemSummaryFactory";
 import { getOrderItem } from "../client/api.client";
-import { MapperRequest } from "./MapperRequest";
+import { MapperRequest } from "../mappers/MapperRequest";
 
 export class OrderItemSummaryService {
     constructor(private factory: OrderItemSummaryFactory = new OrderItemSummaryFactory()) {

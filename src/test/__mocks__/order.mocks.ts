@@ -345,6 +345,7 @@ export const mockMissingImageDeliveryCheckoutResponse: Checkout = {
 export const mockMidOrderItemView: GovUkOrderItemSummaryView = {
     orderId: "ORD-123123-123123",
     itemId: MISSING_IMAGE_DELIVERY_ID,
+    backLinkUrl: "/orders/ORD-123123-123123",
     itemDetails: {
         entries: [
             {

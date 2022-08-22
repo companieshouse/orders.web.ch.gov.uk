@@ -4,7 +4,7 @@ import { GovUkOrderItemSummaryView } from "./GovUkOrderItemSummaryView";
 import { ItemOptions as MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/mid";
 import { mapFilingHistoryDate } from "../utils/date.util";
 import { mapFilingHistory } from "../service/filing.history.service";
-import { MapperRequest } from "./MapperRequest";
+import { MapperRequest } from "../mappers/MapperRequest";
 import { ORDER_ITEM_SUMMARY_MID } from "../model/template.paths";
 
 export class MissingImageDeliveryMapper implements OrderItemMapper {
@@ -17,6 +17,7 @@ export class MissingImageDeliveryMapper implements OrderItemMapper {
     map (): void {
         this.data.orderId = this.mapperRequest.orderId;
         this.data.itemId = this.mapperRequest.item.id;
+        this.data.backLinkUrl = `/orders/${this.mapperRequest.orderId}`
         this.mapItemDetails();
     }
 

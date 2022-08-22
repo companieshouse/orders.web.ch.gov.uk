@@ -2,15 +2,16 @@ import {
     BASKET_RE,
     extractValueFromRequestField, extractValueIfPresentFromRequestField,
     getWhitelistedReturnToURL,
-    ORDER_CONFIRMATION_RE, ORDER_SUMMARY_RE,
+    ORDER_CONFIRMATION_RE, ORDER_ITEM_SUMMARY_RE, ORDER_SUMMARY_RE,
     ORDERS_RE
 } from "../../utils/request.util";
 import { expect } from "chai";
 import { ORDER_CONFIRMATION } from "./constants";
-import { BASKET, ORDER_SUMMARY, ORDERS } from "../../model/page.urls";
+import { BASKET, ORDERS } from "../../model/page.urls";
 
 const UNKNOWN_URL = "/unknown";
 const ORDER_SUMMARY_URL = "/orders/ORD-123123-123123";
+const ORDER_ITEM_SUMMARY_URL = "/orders/ORD-123123-123123/items/MID-123123-123123";
 
 describe("request.util.unit",
     () => {
@@ -23,6 +24,11 @@ describe("request.util.unit",
             it("gets correct return to URL for order summary page", () => {
                 const returnToUrl = extractValueFromRequestField(ORDER_SUMMARY_URL, ORDER_SUMMARY_RE);
                 expect(returnToUrl).to.equal(ORDER_SUMMARY_URL);
+            });
+
+            it("gets correct return to URL for order item summary page", () => {
+                const returnToUrl = extractValueFromRequestField(ORDER_ITEM_SUMMARY_URL, ORDER_ITEM_SUMMARY_RE);
+                expect(returnToUrl).to.equal(ORDER_ITEM_SUMMARY_URL);
             });
 
             it("gets correct return to URL for order complete page", () => {
@@ -52,6 +58,11 @@ describe("request.util.unit",
                 expect(returnToUrl).to.equal(ORDER_SUMMARY_URL);
             });
 
+            it("gets correct return to URL for order item summary page", () => {
+                const returnToUrl = extractValueIfPresentFromRequestField(ORDER_ITEM_SUMMARY_URL, ORDER_ITEM_SUMMARY_RE);
+                expect(returnToUrl).to.equal(ORDER_ITEM_SUMMARY_URL);
+            });
+
             it("gets correct return to URL for order complete page", () => {
                 const returnToUrl = extractValueIfPresentFromRequestField(ORDER_CONFIRMATION, ORDER_CONFIRMATION_RE);
                 expect(returnToUrl).to.equal(ORDER_CONFIRMATION);
@@ -77,6 +88,11 @@ describe("request.util.unit",
             it("gets correct return to URL for order summary page", () => {
                 const returnToUrl = getWhitelistedReturnToURL(ORDER_SUMMARY_URL);
                 expect(returnToUrl).to.equal(ORDER_SUMMARY_URL);
+            });
+
+            it("gets correct return to URL for order item summary page", () => {
+                const returnToUrl = getWhitelistedReturnToURL(ORDER_ITEM_SUMMARY_URL);
+                expect(returnToUrl).to.equal(ORDER_ITEM_SUMMARY_URL);
             });
 
             it("gets correct return to URL for order complete page", () => {

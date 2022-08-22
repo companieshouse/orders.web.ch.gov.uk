@@ -3,7 +3,7 @@ import sinon from "sinon";
 import { mockMidOrderItemView, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
 import { OrderItemView } from "../../order_item_summary/OrderItemView";
 import { expect } from "chai";
-import { MapperRequest } from "../../order_item_summary/MapperRequest";
+import { MapperRequest } from "../../mappers/MapperRequest";
 import { ORDER_ITEM_SUMMARY_MID } from "../../model/template.paths";
 
 const sandbox = sinon.createSandbox();

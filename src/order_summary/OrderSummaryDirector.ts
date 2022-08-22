@@ -12,11 +12,20 @@ export class OrderSummaryDirector {
     mapOrderSummary(order: Order): void {
         for (const item of order.items) {
             if (item.kind === "item#certificate") {
-                this.converter.mapCertificate(item);
+                this.converter.mapCertificate({
+                    orderId: order.reference,
+                    item: item
+                });
             } else if (item.kind === "item#certified-copy") {
-                this.converter.mapCertifiedCopy(item);
+                this.converter.mapCertifiedCopy({
+                    orderId: order.reference,
+                    item: item
+                });
             } else if (item.kind === "item#missing-image-delivery") {
-                this.converter.mapMissingImageDelivery(item);
+                this.converter.mapMissingImageDelivery({
+                    orderId: order.reference,
+                    item: item
+                });
             }
         }
         this.converter.mapOrderDetails(order);
