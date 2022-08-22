@@ -1,13 +1,9 @@
-import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+import { Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import { OrderSummary } from "./OrderSummary";
 import { ItemOptionsDeliveryTimescaleConfigurable } from "@companieshouse/api-sdk-node/dist/services/order/types";
 import { MapUtil } from "../service/MapUtil";
 import { CHS_URL } from "../config/config";
-
-export type ItemMapRequest = {
-    orderId: string;
-    item: Item;
-};
+import { MapperRequest } from "../mappers/MapperRequest";
 
 export class OrderSummaryConverter {
 
@@ -20,17 +16,17 @@ export class OrderSummaryConverter {
         this.orderSummary.backLinkUrl = CHS_URL;
     }
 
-    mapCertificate(request: ItemMapRequest): void {
+    mapCertificate(request: MapperRequest): void {
         this.mapItem(request, "Certificate", this.mapDeliveryMethod(request.item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
         this.orderSummary.hasDeliverableItems = true;
     }
 
-    mapCertifiedCopy(request: ItemMapRequest): void {
+    mapCertifiedCopy(request: MapperRequest): void {
         this.mapItem(request, "Certified document", this.mapDeliveryMethod(request.item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
         this.orderSummary.hasDeliverableItems = true;
     }
 
-    mapMissingImageDelivery(request: ItemMapRequest): void {
+    mapMissingImageDelivery(request: MapperRequest): void {
         this.mapItem(request, "Missing image", "N/A");
     }
 
@@ -38,7 +34,7 @@ export class OrderSummaryConverter {
         return this.orderSummary;
     }
 
-    private mapItem(request: ItemMapRequest, itemType: string, deliveryMethod: string): void {
+    private mapItem(request: MapperRequest, itemType: string, deliveryMethod: string): void {
         this.orderSummary.itemSummary.push([
             { html: `<a class="govuk-link" href="/orders/${request.orderId}/items/${request.item.id}">${request.item.id}</a>` },
             { text: itemType },
