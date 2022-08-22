@@ -415,41 +415,43 @@ export const mockMidOrderItemView: GovUkOrderItemSummaryView = {
 };
 
 export const mockCertCopyOrderItemView: GovUkOrderCertifiedCopyItemSummaryView = {
-    orderId: "ORD-123123-123123",
-    itemId: CERTIFIED_COPY_ID,
-    itemDetails: {
-        entries: [
-            {
-                key: {
-                    classes: "govuk-!-width-one-third",
-                    text: "Company name"
+    orderDetails: {
+        orderId: "ORD-123123-123123",
+        itemId: CERTIFIED_COPY_ID,
+        itemDetails: {
+            entries: [
+                {
+                    key: {
+                        classes: "govuk-!-width-one-third",
+                        text: "Company name"
+                    },
+                    value: {
+                        classes: "govuk-!-width-two-thirds",
+                        text: "The Company"
+                    }
                 },
-                value: {
-                    classes: "govuk-!-width-two-thirds",
-                    text: "The Company"
-                }
-            },
-            {
-                key: {
-                    classes: "govuk-!-width-one-third",
-                    text: "Company number"
+                {
+                    key: {
+                        classes: "govuk-!-width-one-third",
+                        text: "Company number"
+                    },
+                    value: {
+                        classes: "govuk-!-width-two-thirds",
+                        text: "00000000"
+                    }
                 },
-                value: {
-                    classes: "govuk-!-width-two-thirds",
-                    text: "00000000"
+                {
+                    key: {
+                        classes: "govuk-!-width-one-third",
+                        text: "Delivery method"
+                    },
+                    value: {
+                        classes: "govuk-!-width-two-thirds",
+                        text: "Standard delivery (aim to dispatch within 10 working days)"
+                    }
                 }
-            },
-            {
-                key: {
-                    classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
-                },
-                value: {
-                    classes: "govuk-!-width-two-thirds",
-                    text: "Standard delivery (aim to dispatch within 10 working days)"
-                }
-            }
-        ]
+            ]
+        }
     },
     documentDetails: [
         [

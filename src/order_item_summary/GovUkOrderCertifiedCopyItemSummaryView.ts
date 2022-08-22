@@ -1,6 +1,7 @@
 import { GovUkOrderItemSummaryView } from "./GovUkOrderItemSummaryView";
-import { GovUkTableCellView } from "../mappers/BasketDetailsViewModel";
+import { GovUkTableCell } from "../govuk/GovUkTableCell";
 
-export class GovUkOrderCertifiedCopyItemSummaryView extends GovUkOrderItemSummaryView {
-    documentDetails: GovUkTableCellView[][] = []
+export class GovUkOrderCertifiedCopyItemSummaryView {
+    orderDetails: GovUkOrderItemSummaryView = new GovUkOrderItemSummaryView();
+    documentDetails: GovUkTableCell[][] = [];
 }
