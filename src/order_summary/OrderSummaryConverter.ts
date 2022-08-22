@@ -1,8 +1,9 @@
-import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+import { Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import { OrderSummary } from "./OrderSummary";
 import { ItemOptionsDeliveryTimescaleConfigurable } from "@companieshouse/api-sdk-node/dist/services/order/types";
 import { MapUtil } from "../service/MapUtil";
 import { CHS_URL } from "../config/config";
+import { MapperRequest } from "../mappers/MapperRequest";
 
 export class OrderSummaryConverter {
 
@@ -15,31 +16,31 @@ export class OrderSummaryConverter {
         this.orderSummary.backLinkUrl = CHS_URL;
     }
 
-    mapCertificate(item: Item): void {
-        this.mapItem(item, "Certificate", this.mapDeliveryMethod(item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
+    mapCertificate(request: MapperRequest): void {
+        this.mapItem(request, "Certificate", this.mapDeliveryMethod(request.item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
         this.orderSummary.hasDeliverableItems = true;
     }
 
-    mapCertifiedCopy(item: Item): void {
-        this.mapItem(item, "Certified document", this.mapDeliveryMethod(item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
+    mapCertifiedCopy(request: MapperRequest): void {
+        this.mapItem(request, "Certified document", this.mapDeliveryMethod(request.item.itemOptions as ItemOptionsDeliveryTimescaleConfigurable));
         this.orderSummary.hasDeliverableItems = true;
     }
 
-    mapMissingImageDelivery(item: Item): void {
-        this.mapItem(item, "Missing image", "N/A");
+    mapMissingImageDelivery(request: MapperRequest): void {
+        this.mapItem(request, "Missing image", "N/A");
     }
 
     getOrderSummary(): OrderSummary {
         return this.orderSummary;
     }
 
-    private mapItem(item: Item, itemType: string, deliveryMethod: string): void {
+    private mapItem(request: MapperRequest, itemType: string, deliveryMethod: string): void {
         this.orderSummary.itemSummary.push([
-            { html: `<a class="govuk-link" href="javascript:void(0)">${item.id}</a>` },
+            { html: `<a class="govuk-link" href="/orders/${request.orderId}/items/${request.item.id}">${request.item.id}</a>` },
             { text: itemType },
-            { text: item.companyNumber },
+            { text: request.item.companyNumber },
             { text: deliveryMethod },
-            { text: `£${item.totalItemCost}` }
+            { text: `£${request.item.totalItemCost}` }
         ]);
     }
 

@@ -5,11 +5,11 @@ import {
 } from "../__mocks__/order.mocks";
 import { OrderItemView } from "../../order_item_summary/OrderItemView";
 import { expect } from "chai";
-import { MapperRequest } from "../../order_item_summary/MapperRequest";
 import { CertifiedCopyMapper } from "../../order_item_summary/CertifiedCopyMapper";
 import { OrderItemMapper } from "../../order_item_summary/OrderItemMapper";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import { ORDER_ITEM_SUMMARY_CERTIFIED_COPY } from "../../model/template.paths";
+import { MapperRequest } from "../../mappers/MapperRequest";
 
 const sandbox = sinon.createSandbox();
 

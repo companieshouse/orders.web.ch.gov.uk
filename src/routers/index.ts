@@ -7,6 +7,7 @@ import { render as renderOrderConfirmation } from "../controllers/order.confirma
 import deliveryDetailsController, { render as renderDeliveryDetails } from "../controllers/delivery.details.controller";
 import { OrderSummaryController } from "../order_summary/OrderSummaryController";
 import { OrderSummaryService } from "../order_summary/OrderSummaryService";
+import { OrderItemSummaryController } from "../order_item_summary/OrderItemSummaryController";
 
 const renderTemplate = (template: string) => (req: Request, res: Response, next: NextFunction) => {
     return res.render(template, { templateName: template });
@@ -18,6 +19,8 @@ router.get(pageUrls.ORDERS, renderTemplate(templatePaths.BLANK));
 router.get(pageUrls.ORDER_COMPLETE, renderOrderConfirmation);
 const orderSummaryController = new OrderSummaryController(new OrderSummaryService());
 router.get(pageUrls.ORDER_SUMMARY, orderSummaryController.readOrder.bind(orderSummaryController))
+const orderItemSummaryController = new OrderItemSummaryController();
+router.get(pageUrls.ORDER_ITEM_SUMMARY, orderItemSummaryController.viewSummary.bind(orderItemSummaryController));
 router.get(pageUrls.BASKET, renderBasket);
 router.post(pageUrls.BASKET, handleBasketPostback);
 router.post(pageUrls.BASKET_REMOVE, handleRemovePostback);

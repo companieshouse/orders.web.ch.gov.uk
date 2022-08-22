@@ -4,7 +4,7 @@ import { mockCertificateItem } from "../__mocks__/order.mocks";
 import { OrderItemSummaryService } from "../../order_item_summary/OrderItemSummaryService";
 import { expect } from "chai";
 import { InternalServerError } from "http-errors";
-import { MapperRequest } from "../../order_item_summary/MapperRequest";
+import { MapperRequest } from "../../mappers/MapperRequest";
 
 const sandbox = sinon.createSandbox();
 

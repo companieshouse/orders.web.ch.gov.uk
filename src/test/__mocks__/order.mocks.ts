@@ -3,9 +3,7 @@ import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-n
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { CompanyType } from "../../model/CompanyType";
 import { GovUkOrderItemSummaryView } from "../../order_item_summary/GovUkOrderItemSummaryView";
-import {
-    GovUkOrderCertifiedCopyItemSummaryView
-} from "../../order_item_summary/GovUkOrderCertifiedCopyItemSummaryView";
+import { GovUkOrderCertifiedCopyItemSummaryView } from "../../order_item_summary/GovUkOrderCertifiedCopyItemSummaryView";
 
 export const CERTIFICATE_ID = "CRT-123456-123456";
 export const CERTIFIED_COPY_ID = "CCD-123456-123456";
@@ -411,7 +409,8 @@ export const mockMidOrderItemView: GovUkOrderItemSummaryView = {
                 }
             }
         ]
-    }
+    },
+    backLinkUrl: "/orders/ORD-123123-123123"
 };
 
 export const mockCertCopyOrderItemView: GovUkOrderCertifiedCopyItemSummaryView = {
@@ -451,7 +450,8 @@ export const mockCertCopyOrderItemView: GovUkOrderCertifiedCopyItemSummaryView =
                     }
                 }
             ]
-        }
+        },
+        backLinkUrl: "/orders/ORD-123123-123123"
     },
     documentDetails: [
         [

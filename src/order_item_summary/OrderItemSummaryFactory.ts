@@ -1,7 +1,7 @@
 import { OrderItemMapper } from "./OrderItemMapper";
 import { MissingImageDeliveryMapper } from "./MissingImageDeliveryMapper";
 import { NullOrderItemMapper } from "./NullOrderItemMapper";
-import { MapperRequest } from "./MapperRequest";
+import { MapperRequest } from "../mappers/MapperRequest";
 import { CertifiedCopyMapper } from "./CertifiedCopyMapper";
 
 export class OrderItemSummaryFactory {

@@ -6,7 +6,7 @@ import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryIte
 import { expect } from "chai";
 import { MissingImageDeliveryMapper } from "../../order_item_summary/MissingImageDeliveryMapper";
 import { NullOrderItemMapper } from "../../order_item_summary/NullOrderItemMapper";
-import { MapperRequest } from "../../order_item_summary/MapperRequest";
+import { MapperRequest } from "../../mappers/MapperRequest";
 import { CertifiedCopyMapper } from "../../order_item_summary/CertifiedCopyMapper";
 
 const sandbox = sinon.createSandbox();
