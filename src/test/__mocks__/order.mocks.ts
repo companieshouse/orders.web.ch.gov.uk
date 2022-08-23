@@ -1300,3 +1300,123 @@ export const mockDissolvedLLPCertificateItemView: GovUkOrderItemSummaryView = {
     },
     backLinkUrl: `/orders/${ORDER_ID}`
 };
+
+export const mockActiveLPCertificateItemView: GovUkOrderItemSummaryView = {
+    orderId: ORDER_ID,
+    itemId: CERTIFICATE_ID,
+    itemDetails: {
+        entries: [
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company name"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Company Name"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Company number"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "00000000"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Certificate type"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Incorporation with all company name changes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Statement of good standing"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Principal place of business"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Current address and the one previous"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "The names of all current general partners"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "The names of all current limited partners"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "General nature of business"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Yes"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Delivery method"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Email copy required"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "Email only available for express delivery method"
+                }
+            },
+            {
+                key: {
+                    classes: "govuk-!-width-one-third",
+                    text: "Fee"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                    text: "£15"
+                }
+            }
+        ]
+    },
+    backLinkUrl: `/orders/${ORDER_ID}`
+};
