@@ -10,6 +10,7 @@ import { MapperRequest } from "../../mappers/MapperRequest";
 import { CertifiedCopyMapper } from "../../order_item_summary/CertifiedCopyMapper";
 import { OtherCompanyTypesCertificateMapper } from "../../order_item_summary/OtherCompanyTypesCertificateMapper";
 import { LLPCertificateMapper } from "../../order_item_summary/LLPCertificateMapper";
+import { LPCertificateMapper } from "../../order_item_summary/LPCertificateMapper";
 
 const sandbox = sinon.createSandbox();
 
@@ -53,6 +54,15 @@ describe("OrderItemSummaryFactory", () => {
             const mapper: OrderItemMapper = factory.getMapper(new MapperRequest("ORD-123123-123123", {...mockCertificateItem, itemOptions: {...mockCertificateItem.itemOptions, companyType: "llp"}}));
             // then
             expect(mapper).be.an.instanceOf(LLPCertificateMapper);
+        });
+
+        it("Returns a limited partnership certificate mapper for certificate item kind for limited partnership company", async () => {
+            // given
+            const factory = new OrderItemSummaryFactory();
+            // when
+            const mapper: OrderItemMapper = factory.getMapper(new MapperRequest("ORD-123123-123123", {...mockCertificateItem, itemOptions: {...mockCertificateItem.itemOptions, companyType: "limited-partnership"}}));
+            // then
+            expect(mapper).be.an.instanceOf(LPCertificateMapper);
         });
 
         it("Returns a null item mapper for unknown item kind", async () => {

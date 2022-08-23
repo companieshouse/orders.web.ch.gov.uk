@@ -7,6 +7,7 @@ import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-n
 import { CompanyType } from "../model/CompanyType";
 import { OtherCompanyTypesCertificateMapper } from "./OtherCompanyTypesCertificateMapper";
 import { LLPCertificateMapper } from "./LLPCertificateMapper";
+import { LPCertificateMapper } from "./LPCertificateMapper";
 
 export class OrderItemSummaryFactory {
     getMapper (mapperRequest: MapperRequest): OrderItemMapper {
@@ -14,6 +15,8 @@ export class OrderItemSummaryFactory {
             const itemOptions = mapperRequest.item.itemOptions as CertificateItemOptions;
             if (itemOptions.companyType === CompanyType.LIMITED_LIABILITY_PARTNERSHIP) {
                 return new LLPCertificateMapper(mapperRequest);
+            } else if (itemOptions.companyType === CompanyType.LIMITED_PARTNERSHIP) {
+                return new LPCertificateMapper(mapperRequest);
             } else {
                 return new OtherCompanyTypesCertificateMapper(mapperRequest);
             }
