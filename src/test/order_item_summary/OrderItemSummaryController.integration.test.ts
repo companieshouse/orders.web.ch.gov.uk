@@ -2,10 +2,17 @@ import ioredis from "ioredis";
 import sinon from "sinon";
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
-import { MISSING_IMAGE_DELIVERY_ID, mockMissingImageDeliveryItem, ORDER_ID } from "../__mocks__/order.mocks";
+import {
+    CERTIFIED_COPY_ID,
+    MISSING_IMAGE_DELIVERY_ID,
+    mockCertifiedCopyItem,
+    mockMissingImageDeliveryItem,
+    ORDER_ID
+} from "../__mocks__/order.mocks";
 import chai, { expect } from "chai";
 import cheerio from "cheerio";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
+import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 
 let testApp;
 let sandbox = sinon.createSandbox();
@@ -53,6 +60,59 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("£3");
         });
+
+        it("Renders a summary of a certified copy order", async () => {
+            const mockItem: Item = {
+                ...mockCertifiedCopyItem,
+                itemOptions: {
+                    ...mockCertifiedCopyItem.itemOptions,
+                    filingHistoryDocuments: [{
+                        filingHistoryDate: "2010-02-12",
+                        filingHistoryDescription: "change-person-director-company-with-change-date",
+                        filingHistoryDescriptionValues: {
+                            change_date: "2010-02-12",
+                            officer_name: "Thomas David Wheare"
+                        },
+                        filingHistoryId: "MzAwOTM2MDg5OWFkaXF6a2N4",
+                        filingHistoryType: "CH01",
+                        filingHistoryCost: "15"
+                    }]
+                },
+                totalItemCost: "15"
+            };
+
+            // given
+            sandbox.stub(apiClient, "getOrderItem")
+                .returns(Promise.resolve(mockItem));
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${CERTIFIED_COPY_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            expect(response.status).to.equal(200);
+            expect($("#item-reference").text()).to.contain(CERTIFIED_COPY_ID);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(3);
+            expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
+            expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
+            expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
+            expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
+            expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Delivery method");
+            expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Standard delivery (aim to dispatch within 10 working days)");
+
+            expect($($("#document-details-table .govuk-table__header")[0]).text()).to.contain("Date filed");
+            expect($($("#document-details-table .govuk-table__cell")[0]).text()).to.contain("12 Feb 2010");
+            expect($($("#document-details-table .govuk-table__header")[1]).text()).to.contain("Type");
+            expect($($("#document-details-table .govuk-table__cell")[1]).text()).to.contain("CH01");
+            expect($($("#document-details-table .govuk-table__header")[2]).text()).to.contain("Description");
+            expect($($("#document-details-table .govuk-table__cell")[2]).text()).to.contain("Director's details changed for Thomas David Wheare on 12 February 2010");
+            expect($($("#document-details-table .govuk-table__header")[3]).text()).to.contain("Fee");
+            expect($($("#document-details-table .govuk-table__cell")[3]).text()).to.contain("£15");
+        });
+
 
         it("Renders page not found if user not resource owner", async () => {
             // given
