@@ -6,15 +6,16 @@ import { CertifiedCopyMapper } from "./CertifiedCopyMapper";
 import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates";
 import { CompanyType } from "../model/CompanyType";
 import { OtherCompanyTypesCertificateMapper } from "./OtherCompanyTypesCertificateMapper";
+import { LLPCertificateMapper } from "./LLPCertificateMapper";
 
 export class OrderItemSummaryFactory {
     getMapper (mapperRequest: MapperRequest): OrderItemMapper {
         if (mapperRequest.item.kind === "item#certificate") {
             const itemOptions = mapperRequest.item.itemOptions as CertificateItemOptions;
-            if (itemOptions.companyType !== CompanyType.LIMITED_LIABILITY_PARTNERSHIP && itemOptions.companyType !== CompanyType.LIMITED_PARTNERSHIP) {
-                return new OtherCompanyTypesCertificateMapper(mapperRequest);
+            if (itemOptions.companyType === CompanyType.LIMITED_LIABILITY_PARTNERSHIP) {
+                return new LLPCertificateMapper(mapperRequest);
             } else {
-                return new NullOrderItemMapper();
+                return new OtherCompanyTypesCertificateMapper(mapperRequest);
             }
         } else if (mapperRequest.item.kind === "item#certified-copy") {
             return new CertifiedCopyMapper(mapperRequest);
