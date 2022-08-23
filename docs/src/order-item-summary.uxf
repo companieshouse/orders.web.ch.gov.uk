@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.3.0">
-  <zoom_level>5</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>630</x>
-      <y>870</y>
-      <w>230</w>
-      <h>35</h>
+      <x>776</x>
+      <y>1056</y>
+      <w>368</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>OrderItemSummaryController
 --
@@ -17,10 +17,10 @@ viewSummary(Request, Response, NextFunction): Promise&lt;void&gt;</panel_attribu
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>670</x>
-      <y>790</y>
-      <w>140</w>
-      <h>35</h>
+      <x>840</x>
+      <y>928</y>
+      <w>224</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>OrderItemSummaryService
 --
@@ -31,10 +31,10 @@ getOrderItem(req: OrderItemRequest):
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>855</x>
-      <y>780</y>
-      <w>140</w>
-      <h>55</h>
+      <x>1136</x>
+      <y>912</y>
+      <w>224</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>ApiClient
 --
@@ -47,10 +47,10 @@ getOrderItem(
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>805</x>
-      <y>805</y>
-      <w>60</w>
-      <h>15</h>
+      <x>1056</x>
+      <y>952</y>
+      <w>96</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
@@ -58,10 +58,10 @@ getOrderItem(
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>870</x>
-      <y>650</y>
-      <w>110</w>
-      <h>65</h>
+      <x>1160</x>
+      <y>704</y>
+      <w>176</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>Item
 --
@@ -75,10 +75,10 @@ totalItemCost: string</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>920</x>
-      <y>710</y>
-      <w>15</w>
-      <h>80</h>
+      <x>1240</x>
+      <y>800</y>
+      <w>24</w>
+      <h>128</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;140.0</additional_attributes>
@@ -86,10 +86,10 @@ totalItemCost: string</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
-      <y>820</y>
-      <w>15</w>
-      <h>60</h>
+      <x>944</x>
+      <y>976</y>
+      <w>24</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
@@ -97,10 +97,10 @@ totalItemCost: string</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>675</x>
-      <y>720</y>
-      <w>135</w>
-      <h>40</h>
+      <x>848</x>
+      <y>816</y>
+      <w>216</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>OrderItemSummaryFactory
 --
@@ -111,10 +111,10 @@ getMapper(item: Item): Mapper
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>665</x>
-      <y>375</y>
-      <w>145</w>
-      <h>30</h>
+      <x>832</x>
+      <y>264</y>
+      <w>232</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>GovUkSummaryList
 --
@@ -124,10 +124,10 @@ entries: GovUkSummaryListEntry[]</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>665</x>
-      <y>235</y>
-      <w>145</w>
-      <h>45</h>
+      <x>832</x>
+      <y>40</y>
+      <w>232</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>GovUkSummaryListObject
 --
@@ -139,10 +139,10 @@ html: string</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>665</x>
-      <y>310</y>
-      <w>150</w>
-      <h>35</h>
+      <x>832</x>
+      <y>160</y>
+      <w>240</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>GovUkSummaryListEntry
 --
@@ -153,10 +153,10 @@ value: GovUkSummaryListObject</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>730</x>
-      <y>275</y>
-      <w>15</w>
-      <h>45</h>
+      <x>936</x>
+      <y>104</y>
+      <w>24</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
@@ -164,10 +164,10 @@ value: GovUkSummaryListObject</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>730</x>
-      <y>340</y>
-      <w>15</w>
-      <h>45</h>
+      <x>936</x>
+      <y>208</y>
+      <w>24</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
@@ -175,10 +175,10 @@ value: GovUkSummaryListObject</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>670</x>
-      <y>430</y>
-      <w>135</w>
-      <h>55</h>
+      <x>840</x>
+      <y>352</y>
+      <w>216</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>GovUkOrderItemSummaryView
 --
@@ -191,10 +191,10 @@ fee: string</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>730</x>
-      <y>400</y>
-      <w>15</w>
-      <h>40</h>
+      <x>936</x>
+      <y>304</y>
+      <w>24</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
@@ -202,10 +202,10 @@ fee: string</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>505</x>
-      <y>785</y>
-      <w>100</w>
-      <h>45</h>
+      <x>576</x>
+      <y>920</y>
+      <w>160</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>OrderItemRequest
 --
@@ -217,10 +217,10 @@ itemId: string</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>600</x>
-      <y>805</y>
-      <w>80</w>
-      <h>15</h>
+      <x>728</x>
+      <y>952</y>
+      <w>128</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
@@ -228,10 +228,10 @@ itemId: string</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>550</x>
-      <y>825</y>
-      <w>90</w>
-      <h>65</h>
+      <x>648</x>
+      <y>984</y>
+      <w>144</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;110.0;160.0;110.0</additional_attributes>
@@ -239,10 +239,10 @@ itemId: string</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
-      <y>755</y>
-      <w>15</w>
-      <h>45</h>
+      <x>944</x>
+      <y>872</y>
+      <w>24</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
@@ -250,21 +250,10 @@ itemId: string</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>300</x>
-      <y>605</y>
-      <w>160</w>
-      <h>15</h>
-    </coordinates>
-    <panel_attributes>DefaultCompanyCertificateMapper</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>675</x>
-      <y>655</y>
-      <w>135</w>
-      <h>35</h>
+      <x>848</x>
+      <y>712</y>
+      <w>216</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>OrderItemMapper
 --
@@ -275,32 +264,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>480</x>
-      <y>605</y>
-      <w>160</w>
-      <h>15</h>
-    </coordinates>
-    <panel_attributes>LLPCertificateMapper</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>660</x>
-      <y>605</y>
-      <w>160</w>
-      <h>15</h>
-    </coordinates>
-    <panel_attributes>LPCertificateMapper</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>840</x>
-      <y>605</y>
-      <w>160</w>
-      <h>15</h>
+      <x>1112</x>
+      <y>632</y>
+      <w>256</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>CertifiedCopyMapper</panel_attributes>
     <additional_attributes/>
@@ -308,10 +275,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1025</x>
-      <y>605</y>
-      <w>160</w>
-      <h>15</h>
+      <x>1408</x>
+      <y>632</y>
+      <w>256</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>MissingImageDeliveryMapper</panel_attributes>
     <additional_attributes/>
@@ -319,43 +286,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>375</x>
-      <y>550</y>
-      <w>375</w>
-      <h>65</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>730.0;10.0;730.0;70.0;10.0;70.0;10.0;110.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>565</x>
-      <y>550</y>
-      <w>185</w>
-      <h>65</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>350.0;10.0;350.0;70.0;10.0;70.0;10.0;110.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>735</x>
-      <y>550</y>
-      <w>15</w>
-      <h>65</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>735</x>
-      <y>550</y>
-      <w>200</w>
-      <h>65</h>
+      <x>944</x>
+      <y>544</y>
+      <w>320</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0;380.0;70.0;380.0;110.0</additional_attributes>
@@ -363,10 +297,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
-      <y>550</y>
-      <w>385</w>
-      <h>65</h>
+      <x>944</x>
+      <y>544</y>
+      <w>616</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0;750.0;70.0;750.0;110.0</additional_attributes>
@@ -374,43 +308,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>375</x>
-      <y>615</y>
-      <w>375</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>730.0;80.0;730.0;40.0;10.0;40.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>555</x>
-      <y>615</y>
-      <w>195</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>370.0;80.0;370.0;40.0;10.0;40.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>735</x>
-      <y>615</y>
-      <w>15</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>735</x>
-      <y>685</y>
-      <w>15</w>
-      <h>45</h>
+      <x>944</x>
+      <y>760</y>
+      <w>24</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
@@ -418,10 +319,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
-      <y>615</y>
-      <w>200</w>
-      <h>50</h>
+      <x>944</x>
+      <y>648</y>
+      <w>320</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;40.0;380.0;40.0;380.0;10.0</additional_attributes>
@@ -429,10 +330,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
-      <y>615</y>
-      <w>385</w>
-      <h>50</h>
+      <x>944</x>
+      <y>648</y>
+      <w>616</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;40.0;750.0;40.0;750.0;10.0</additional_attributes>
@@ -440,10 +341,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>250</x>
-      <y>530</y>
-      <w>445</w>
-      <h>375</h>
+      <x>168</x>
+      <y>512</y>
+      <w>712</w>
+      <h>600</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>870.0;10.0;10.0;10.0;10.0;730.0;760.0;730.0</additional_attributes>
@@ -451,10 +352,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>805</x>
-      <y>670</y>
-      <w>75</w>
-      <h>15</h>
+      <x>1056</x>
+      <y>736</y>
+      <w>120</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
@@ -462,10 +363,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>805</x>
-      <y>690</y>
-      <w>75</w>
-      <h>55</h>
+      <x>1056</x>
+      <y>768</y>
+      <w>120</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>130.0;10.0;60.0;10.0;60.0;90.0;10.0;90.0</additional_attributes>
@@ -473,32 +374,10 @@ getMappedOrder(): object</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>305</x>
-      <y>665</y>
-      <w>160</w>
-      <h>15</h>
-    </coordinates>
-    <panel_attributes>DissolvedCertificateMapper</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>375</x>
-      <y>630</y>
-      <w>375</w>
-      <h>45</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>730.0;50.0;730.0;10.0;10.0;10.0;10.0;70.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>685</x>
-      <y>520</y>
-      <w>115</w>
-      <h>35</h>
+      <x>864</x>
+      <y>496</y>
+      <w>184</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>OrderItemView
 --
@@ -509,10 +388,10 @@ data: object</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
-      <y>480</y>
-      <w>15</w>
-      <h>50</h>
+      <x>944</x>
+      <y>432</y>
+      <w>24</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
@@ -520,10 +399,10 @@ data: object</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>635</x>
-      <y>210</y>
-      <w>200</w>
-      <h>205</h>
+      <x>784</x>
+      <y>0</y>
+      <w>320</w>
+      <h>328</h>
     </coordinates>
     <panel_attributes>govuk</panel_attributes>
     <additional_attributes/>
@@ -531,34 +410,138 @@ data: object</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>590</x>
-      <y>650</y>
-      <w>70</w>
-      <h>35</h>
+      <x>496</x>
+      <y>600</y>
+      <w>112</w>
+      <h>56</h>
     </coordinates>
-    <panel_attributes>Abstract factory</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLNote</id>
-    <coordinates>
-      <x>590</x>
-      <y>625</y>
-      <w>70</w>
-      <h>20</h>
-    </coordinates>
-    <panel_attributes>TemplateMethod?</panel_attributes>
+    <panel_attributes>Template method
+pattern</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>245</x>
-      <y>415</y>
-      <w>960</w>
-      <h>510</h>
+      <x>160</x>
+      <y>328</y>
+      <w>1536</w>
+      <h>816</h>
     </coordinates>
     <panel_attributes>order_item_summary</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>536</x>
+      <y>704</y>
+      <w>240</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>/AbstractCertificateMapper/
+--
+mapCertificateDetails(): void
+addText(key: string, value: string): void
+addHtml(key: string, value: string): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>768</x>
+      <y>736</y>
+      <w>96</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>224</x>
+      <y>664</y>
+      <w>240</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>OtherCompanyTypesCertificateMapper</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>224</x>
+      <y>728</y>
+      <w>240</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>LLPCertificateMapper</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>224</x>
+      <y>808</y>
+      <w>240</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>LPCertificateMapper</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>632</x>
+      <y>544</y>
+      <w>336</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>400.0;10.0;400.0;70.0;10.0;70.0;10.0;200.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>456</x>
+      <y>664</y>
+      <w>96</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;100.0;70.0;100.0;70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>456</x>
+      <y>736</y>
+      <w>96</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>456</x>
+      <y>736</y>
+      <w>96</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;10.0;70.0;10.0;70.0;110.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>728</x>
+      <y>816</y>
+      <w>112</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Abstract factory</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
