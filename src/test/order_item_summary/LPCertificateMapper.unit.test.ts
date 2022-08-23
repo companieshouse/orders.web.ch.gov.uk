@@ -1,6 +1,7 @@
 import { LPCertificateMapper } from "../../order_item_summary/LPCertificateMapper";
 import { mockActiveLPCertificateItemView, mockCertificateItem, ORDER_ID } from "../__mocks__/order.mocks";
 import { expect } from "chai";
+import { ORDER_ITEM_SUMMARY_CERTIFICATE } from "../../model/template.paths";
 
 describe("LPCertificateMapper", () => {
     describe("map", () => {
@@ -33,7 +34,7 @@ describe("LPCertificateMapper", () => {
 
            // then
            expect(actual).to.deep.equal({
-               template: "order-item-summary-certificate",
+               template: ORDER_ITEM_SUMMARY_CERTIFICATE,
                data: mockActiveLPCertificateItemView
            });
        });

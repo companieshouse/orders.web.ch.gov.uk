@@ -8,6 +8,7 @@ import {
 } from "../__mocks__/order.mocks";
 import { expect } from "chai";
 import { LLPCertificateMapper } from "../../order_item_summary/LLPCertificateMapper";
+import { ORDER_ITEM_SUMMARY_CERTIFICATE } from "../../model/template.paths";
 
 describe("LLPCertificateMapper", () => {
     describe("map", () => {
@@ -43,7 +44,7 @@ describe("LLPCertificateMapper", () => {
 
             // then
             expect(actual).to.deep.equal({
-                template: "order-item-summary-certificate",
+                template: ORDER_ITEM_SUMMARY_CERTIFICATE,
                 data: mockActiveLLPCertificateItemView
             });
         });
@@ -84,7 +85,7 @@ describe("LLPCertificateMapper", () => {
 
             // then
             expect(actual).to.deep.equal({
-                template: "order-item-summary-certificate",
+                template: ORDER_ITEM_SUMMARY_CERTIFICATE,
                 data: mockAdministratedLLPCertificateItemView
             });
         });
@@ -116,7 +117,7 @@ describe("LLPCertificateMapper", () => {
 
             // then
             expect(actual).to.deep.equal({
-                template: "order-item-summary-certificate",
+                template: ORDER_ITEM_SUMMARY_CERTIFICATE,
                 data: mockLiquidatedLLPCertificateItemView
             });
         });
@@ -140,7 +141,7 @@ describe("LLPCertificateMapper", () => {
 
             // then
             expect(actual).to.deep.equal({
-                template: "order-item-summary-certificate",
+                template: ORDER_ITEM_SUMMARY_CERTIFICATE,
                 data: mockDissolvedLLPCertificateItemView
             });
         });
