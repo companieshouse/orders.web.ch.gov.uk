@@ -9,6 +9,7 @@ import {
     ORDER_ID
 } from "../__mocks__/order.mocks";
 import { expect } from "chai";
+import { ORDER_ITEM_SUMMARY_CERTIFICATE } from "../../model/template.paths";
 
 describe("OtherCompanyTypesCertificateMapper", () => {
     describe("map", () => {
@@ -31,7 +32,7 @@ describe("OtherCompanyTypesCertificateMapper", () => {
 
             // then
             expect(actual).to.deep.equal({
-                template: "order-item-summary-certificate",
+                template: ORDER_ITEM_SUMMARY_CERTIFICATE,
                 data: mockActiveLtdCertificateItemView
             });
         });
@@ -57,7 +58,7 @@ describe("OtherCompanyTypesCertificateMapper", () => {
 
             // then
             expect(actual).to.deep.equal({
-                template: "order-item-summary-certificate",
+                template: ORDER_ITEM_SUMMARY_CERTIFICATE,
                 data: mockAdministratedLtdCertificateItemView
             });
         });
@@ -84,7 +85,7 @@ describe("OtherCompanyTypesCertificateMapper", () => {
 
             // then
             expect(actual).to.deep.equal({
-                template: "order-item-summary-certificate",
+                template: ORDER_ITEM_SUMMARY_CERTIFICATE,
                 data: mockLiquidatedLtdCertificateItemView
             });
         });
@@ -102,7 +103,7 @@ describe("OtherCompanyTypesCertificateMapper", () => {
 
             // then
             expect(actual).to.deep.equal({
-                template: "order-item-summary-certificate",
+                template: ORDER_ITEM_SUMMARY_CERTIFICATE,
                 data: mockDissolvedLtdCertificateItemView
             });
         });

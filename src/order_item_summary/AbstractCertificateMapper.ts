@@ -4,6 +4,7 @@ import { GovUkOrderItemSummaryView } from "./GovUkOrderItemSummaryView";
 import { MapperRequest } from "../mappers/MapperRequest";
 import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates";
 import { MapUtil } from "../service/MapUtil";
+import { ORDER_ITEM_SUMMARY_CERTIFICATE } from "../model/template.paths";
 
 export abstract class AbstractCertificateMapper implements OrderItemMapper {
 
@@ -25,7 +26,7 @@ export abstract class AbstractCertificateMapper implements OrderItemMapper {
 
     getMappedOrder (): OrderItemView {
         return {
-            template: "order-item-summary-certificate",
+            template: ORDER_ITEM_SUMMARY_CERTIFICATE,
             data: this.data
         };
     }

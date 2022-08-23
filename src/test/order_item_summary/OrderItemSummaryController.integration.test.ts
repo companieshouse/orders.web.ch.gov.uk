@@ -3,8 +3,10 @@ import sinon from "sinon";
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 import {
+    CERTIFICATE_ID,
     CERTIFIED_COPY_ID,
     MISSING_IMAGE_DELIVERY_ID,
+    mockCertificateItem,
     mockCertifiedCopyItem,
     mockMissingImageDeliveryItem,
     ORDER_ID
@@ -113,6 +115,507 @@ describe("OrderItemSummaryController", () => {
             expect($($("#document-details-table .govuk-table__cell")[3]).text()).to.contain("£15");
         });
 
+
+        it("Renders a summary of a certificate order for an active limited company", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem")
+                .returns(Promise.resolve({
+                    ...mockCertificateItem,
+                    itemOptions: {
+                        ...mockCertificateItem.itemOptions,
+                        companyStatus: "active"
+                    }
+                }));
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${CERTIFICATE_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            expect(response.status).to.equal(200);
+            expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
+            expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
+            expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
+            expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
+            expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
+            expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
+            expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Incorporation with all company name changes");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Statement of good standing");
+            expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("Registered office address");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Current address and the one previous");
+            expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("The names of all current company directors");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[6]).text()).to.contain("The names of all current secretaries");
+            expect($($("#item-details-list .govuk-summary-list__value")[6]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[7]).text()).to.contain("Company objects");
+            expect($($("#item-details-list .govuk-summary-list__value")[7]).text()).to.contain("No");
+            expect($($("#item-details-list .govuk-summary-list__key")[8]).text()).to.contain("Delivery method");
+            expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("Standard delivery (aim to dispatch within 10 working days)");
+            expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Email copy required");
+            expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Email only available for express delivery method");
+            expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
+            expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+        });
+
+        it("Renders a summary of a certificate order for an administrated limited company", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem")
+                .returns(Promise.resolve({
+                    ...mockCertificateItem,
+                    itemOptions: {
+                        ...mockCertificateItem.itemOptions,
+                        registeredOfficeAddressDetails: {
+                            includeAddressRecordsType: "current"
+                        },
+                        directorDetails: {
+                        },
+                        secretaryDetails: {
+                        },
+                        companyStatus: "administration",
+                        administratorsDetails: {
+                            includeBasicInformation: true
+                        },
+                        deliveryTimescale: "same-day",
+                        includeEmailCopy: true
+                    }
+                }));
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${CERTIFICATE_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            expect(response.status).to.equal(200);
+            expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
+            expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
+            expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
+            expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
+            expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
+            expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
+            expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Incorporation with all company name changes");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Registered office address");
+            expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Current address");
+            expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("The names of all current company directors");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("No");
+            expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("The names of all current secretaries");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("No");
+            expect($($("#item-details-list .govuk-summary-list__key")[6]).text()).to.contain("Company objects");
+            expect($($("#item-details-list .govuk-summary-list__value")[6]).text()).to.contain("No");
+            expect($($("#item-details-list .govuk-summary-list__key")[7]).text()).to.contain("Administrators' details");
+            expect($($("#item-details-list .govuk-summary-list__value")[7]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[8]).text()).to.contain("Delivery method");
+            expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("Express (Orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day)");
+            expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Email copy required");
+            expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
+            expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+        });
+
+        it("Renders a summary of a certificate order for a liquidated limited company", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem")
+                .returns(Promise.resolve({
+                    ...mockCertificateItem,
+                    itemOptions: {
+                        ...mockCertificateItem.itemOptions,
+                        registeredOfficeAddressDetails: {
+                            includeAddressRecordsType: "current-previous-and-prior"
+                        },
+                        directorDetails: {
+                            includeBasicInformation: true,
+                            includeAddress: true,
+                            includeAppointmentDate: true,
+                            includeCountryOfResidence: true,
+                            includeDobType: "partial",
+                            includeNationality: true,
+                            includeOccupation: true
+                        },
+                        secretaryDetails: {
+                            includeBasicInformation: true,
+                            includeAddress: true,
+                            includeAppointmentDate: true
+                        },
+                        companyStatus: "liquidation",
+                        liquidatorsDetails: {
+                            includeBasicInformation: true
+                        },
+                        includeCompanyObjectsInformation: true
+                    }
+                }));
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${CERTIFICATE_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            expect(response.status).to.equal(200);
+            expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
+            expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
+            expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
+            expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
+            expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
+            expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
+            expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Incorporation with all company name changes");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Registered office address");
+            expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Current address and the two previous");
+            expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("The names of all current company directors");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Including directors':");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Correspondence address");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Occupation");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Date of birth (month and year)");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Appointment date");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Nationality");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Country of residence");
+            expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("The names of all current secretaries");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Including secretaries':");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Correspondence address");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Appointment date");
+            expect($($("#item-details-list .govuk-summary-list__key")[6]).text()).to.contain("Company objects");
+            expect($($("#item-details-list .govuk-summary-list__value")[6]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[7]).text()).to.contain("Liquidators' details");
+            expect($($("#item-details-list .govuk-summary-list__value")[7]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[8]).text()).to.contain("Delivery method");
+            expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("Standard delivery (aim to dispatch within 10 working days)");
+            expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Email copy required");
+            expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Email only available for express delivery method");
+            expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
+            expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+        });
+
+        it("Renders a summary of a certificate order for a dissolved limited company", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem")
+                .returns(Promise.resolve({
+                    ...mockCertificateItem,
+                    itemOptions: {
+                        ...mockCertificateItem.itemOptions,
+                        certificateType: "dissolution",
+                        companyStatus: "dissolved"
+                    }
+                }));
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${CERTIFICATE_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            expect(response.status).to.equal(200);
+            expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(6);
+            expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
+            expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
+            expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
+            expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
+            expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
+            expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Dissolution with all company name changes");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Delivery method");
+            expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Standard delivery (aim to dispatch within 10 working days)");
+            expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("Email copy required");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Email only available for express delivery method");
+            expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("Fee");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("£15");
+        });
+
+        it("Renders a summary of a certificate order for an active LLP", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem")
+                .returns(Promise.resolve({
+                    ...mockCertificateItem,
+                    itemOptions: {
+                        ...mockCertificateItem.itemOptions,
+                        registeredOfficeAddressDetails: {
+                            includeAddressRecordsType: "all"
+                        },
+                        designatedMemberDetails: {
+                            includeBasicInformation: true,
+                            includeAddress: false,
+                            includeAppointmentDate: false,
+                            includeCountryOfResidence: false
+                        },
+                        memberDetails: {
+                            includeBasicInformation: true,
+                            includeAddress: false,
+                            includeAppointmentDate: false,
+                            includeCountryOfResidence: false
+                        },
+                        companyStatus: "active",
+                        companyType: "llp"
+                    }
+                }));
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${CERTIFICATE_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            expect(response.status).to.equal(200);
+            expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(10);
+            expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
+            expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
+            expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
+            expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
+            expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
+            expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Incorporation with all company name changes");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Statement of good standing");
+            expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("Registered office address");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("All current and previous addresses");
+            expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("The names of all current designated members");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[6]).text()).to.contain("The names of all current members");
+            expect($($("#item-details-list .govuk-summary-list__value")[6]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[7]).text()).to.contain("Delivery method");
+            expect($($("#item-details-list .govuk-summary-list__value")[7]).text()).to.contain("Standard delivery (aim to dispatch within 10 working days)");
+            expect($($("#item-details-list .govuk-summary-list__key")[8]).text()).to.contain("Email copy required");
+            expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("Email only available for express delivery method");
+            expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Fee");
+            expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("£15");
+        });
+
+        it("Renders a summary of a certificate order for an administrated LLP", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem")
+                .returns(Promise.resolve({
+                    ...mockCertificateItem,
+                    itemOptions: {
+                        ...mockCertificateItem.itemOptions,
+                        registeredOfficeAddressDetails: {
+                            includeAddressRecordsType: "current"
+                        },
+                        designatedMemberDetails: {
+                        },
+                        memberDetails: {
+                        },
+                        companyStatus: "administration",
+                        companyType: "llp",
+                        administratorsDetails: {
+                            includeBasicInformation: true
+                        },
+                        deliveryTimescale: "same-day",
+                        includeEmailCopy: false
+                    }
+                }));
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${CERTIFICATE_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            expect(response.status).to.equal(200);
+            expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(10);
+            expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
+            expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
+            expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
+            expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
+            expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
+            expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Incorporation with all company name changes");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Registered office address");
+            expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Current address");
+            expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("The names of all current designated members");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("No");
+            expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("The names of all current members");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("No");
+            expect($($("#item-details-list .govuk-summary-list__key")[6]).text()).to.contain("Administrators' details");
+            expect($($("#item-details-list .govuk-summary-list__value")[6]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[7]).text()).to.contain("Delivery method");
+            expect($($("#item-details-list .govuk-summary-list__value")[7]).text()).to.contain("Express (Orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day)");
+            expect($($("#item-details-list .govuk-summary-list__key")[8]).text()).to.contain("Email copy required");
+            expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("No");
+            expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Fee");
+            expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("£15");
+        });
+
+        it("Renders a summary of a certificate order for a liquidated LLP", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem")
+                .returns(Promise.resolve({
+                    ...mockCertificateItem,
+                    itemOptions: {
+                        ...mockCertificateItem.itemOptions,
+                        registeredOfficeAddressDetails: {
+                            includeAddressRecordsType: "current-previous-and-prior"
+                        },
+                        designatedMemberDetails: {
+                            includeBasicInformation: true,
+                            includeDobType: "partial",
+                            includeCountryOfResidence: true,
+                            includeAppointmentDate: true,
+                            includeAddress: true
+                        },
+                        memberDetails: {
+                            includeBasicInformation: true,
+                            includeDobType: "partial",
+                            includeCountryOfResidence: true,
+                            includeAppointmentDate: true,
+                            includeAddress: true
+                        },
+                        companyStatus: "liquidation",
+                        companyType: "llp",
+                        liquidatorsDetails: {
+                            includeBasicInformation: true
+                        }
+                    }
+                }));
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${CERTIFICATE_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            expect(response.status).to.equal(200);
+            expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(10);
+            expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
+            expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
+            expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
+            expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
+            expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
+            expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Incorporation with all company name changes");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Registered office address");
+            expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Current address and the two previous");
+            expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("The names of all current designated members");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Including designated members':");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Correspondence address");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Appointment date");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Country of residence");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Date of birth (month and year)");
+            expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("The names of all current members");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Including members':");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Correspondence address");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Appointment date");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Country of residence");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Date of birth (month and year)");
+            expect($($("#item-details-list .govuk-summary-list__key")[6]).text()).to.contain("Liquidators' details");
+            expect($($("#item-details-list .govuk-summary-list__value")[6]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[7]).text()).to.contain("Delivery method");
+            expect($($("#item-details-list .govuk-summary-list__value")[7]).text()).to.contain("Standard delivery (aim to dispatch within 10 working days)");
+            expect($($("#item-details-list .govuk-summary-list__key")[8]).text()).to.contain("Email copy required");
+            expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("Email only available for express delivery method");
+            expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Fee");
+            expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("£15");
+        });
+
+        it("Renders a summary of a certificate order for a dissolved LLP", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem")
+                .returns(Promise.resolve({
+                    ...mockCertificateItem,
+                    itemOptions: {
+                        ...mockCertificateItem.itemOptions,
+                        certificateType: "dissolution",
+                        companyStatus: "dissolved",
+                        companyType: "llp"
+                    }
+                }));
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${CERTIFICATE_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            expect(response.status).to.equal(200);
+            expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(6);
+            expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
+            expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
+            expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
+            expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
+            expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
+            expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Dissolution with all company name changes");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Delivery method");
+            expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Standard delivery (aim to dispatch within 10 working days)");
+            expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("Email copy required");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Email only available for express delivery method");
+            expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("Fee");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("£15");
+        });
+
+        it("Renders a summary of a certificate order for an active limited partnership", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem")
+                .returns(Promise.resolve({
+                    ...mockCertificateItem,
+                    itemOptions: {
+                        ...mockCertificateItem.itemOptions,
+                        principalPlaceOfBusinessDetails: {
+                            includeAddressRecordsType: "current"
+                        },
+                        generalPartnerDetails: {
+                            includeBasicInformation: true
+                        },
+                        limitedPartnerDetails: {
+                            includeBasicInformation: true
+                        },
+                        includeGeneralNatureOfBusinessInformation: true,
+                        companyStatus: "active",
+                        companyType: "limited-partnership"
+                    }
+                }));
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${CERTIFICATE_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            const $ = cheerio.load(response.text);
+
+            // then
+            expect(response.status).to.equal(200);
+            expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
+            expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
+            expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
+            expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
+            expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
+            expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
+            expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Incorporation with all company name changes");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Statement of good standing");
+            expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("Principal place of business");
+            expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Current address");
+            expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("The names of all current general partners");
+            expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[6]).text()).to.contain("The names of all current limited partners");
+            expect($($("#item-details-list .govuk-summary-list__value")[6]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[7]).text()).to.contain("General nature of business");
+            expect($($("#item-details-list .govuk-summary-list__value")[7]).text()).to.contain("Yes");
+            expect($($("#item-details-list .govuk-summary-list__key")[8]).text()).to.contain("Delivery method");
+            expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("Standard delivery (aim to dispatch within 10 working days)");
+            expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Email copy required");
+            expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Email only available for express delivery method");
+            expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
+            expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+        });
 
         it("Renders page not found if user not resource owner", async () => {
             // given
