@@ -145,10 +145,10 @@ export const getOrderItem = async (orderId: string, itemId: string, oAuth: strin
     } else {
         logger.info(`Get order, status_code=${orderItemResource.value.httpStatusCode}`);
         const responseCode = orderItemResource.value.httpStatusCode || 500;
-        if (orderItemResource.value.error) {
-            throw createError(responseCode, responseCode.toString());
-        } else {
+        if (!orderItemResource.value.error && responseCode == 404) {
             throw new InternalServerError("Unknown error");
+        } else {
+            throw createError(responseCode, responseCode.toString());
         }
     }
 };

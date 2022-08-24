@@ -5,8 +5,7 @@ import PaymentService from "@companieshouse/api-sdk-node/dist/services/payment/s
 import { BasketLinks, Checkout } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import Resource, {
     ApiResponse,
-    ApiErrorResponse,
-    ApiResult
+    ApiErrorResponse
 } from "@companieshouse/api-sdk-node/dist/services/resource";
 import { success, failure, Success, Failure } from "@companieshouse/api-sdk-node/dist/services/result";
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
@@ -22,7 +21,6 @@ import {
 } from "../../client/api.client";
 import { InternalServerError, NotFound } from "http-errors";
 import { OrderService } from "@companieshouse/api-sdk-node/dist/services/order";
-import { Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
 import OrderItemService, { OrderItemErrorResponse } from "@companieshouse/api-sdk-node/dist/services/order/order-item/service";
 const O_AUTH_TOKEN = "oauth";
 
@@ -193,7 +191,7 @@ describe("api.client", () => {
             })));
             await chai.expect(getOrderItem("ORD-123456-123456", "MID-123456-123456", "oauth")).to.be.rejectedWith(NotFound);
         });
-        it("should throw InternalServerError if error message not returned by endpoint", async () => {
+        it("should throw InternalServerError if response code HTTP 404 Not Found and no error message returned by endpoint", async () => {
             sandbox.stub(OrderItemService.prototype, "getOrderItem").returns(Promise.resolve(new Failure<any, OrderItemErrorResponse>({
                 httpStatusCode: 404
             })));
