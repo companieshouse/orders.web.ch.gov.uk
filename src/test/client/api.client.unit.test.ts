@@ -20,10 +20,10 @@ import {
     patchBasket,
     removeBasketItem
 } from "../../client/api.client";
-import { NotFound } from "http-errors";
+import { InternalServerError, NotFound } from "http-errors";
 import { OrderService } from "@companieshouse/api-sdk-node/dist/services/order";
 import { Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
-import OrderItemService from "@companieshouse/api-sdk-node/dist/services/order/order-item/service";
+import OrderItemService, { OrderItemErrorResponse } from "@companieshouse/api-sdk-node/dist/services/order/order-item/service";
 const O_AUTH_TOKEN = "oauth";
 
 const sandbox = sinon.createSandbox();
@@ -180,17 +180,24 @@ describe("api.client", () => {
 
     describe("getOrderItem", () => {
         it("should return success 200 ok", async () => {
-            sandbox.stub(OrderItemService.prototype, "getOrderItem").returns(Promise.resolve(new Success<any, ApiErrorResponse>({
+            sandbox.stub(OrderItemService.prototype, "getOrderItem").returns(Promise.resolve(new Success<any, OrderItemErrorResponse>({
                 id: "MID-123456-123456"
             })));
             const item = await getOrderItem("ORD-123456-123456", "MID-123456-123456", "oauth");
             chai.expect(item.id).to.equal("MID-123456-123456");
         });
-        it("should throw an error if error returned by getOrder endpoint", async () => {
-            sandbox.stub(OrderItemService.prototype, "getOrderItem").returns(Promise.resolve(new Failure<any, ApiErrorResponse>({
-                httpStatusCode: 404
+        it("should throw error with response code attached if error message returned by endpoint", async () => {
+            sandbox.stub(OrderItemService.prototype, "getOrderItem").returns(Promise.resolve(new Failure<any, OrderItemErrorResponse>({
+                httpStatusCode: 404,
+                error: "Not found"
             })));
             await chai.expect(getOrderItem("ORD-123456-123456", "MID-123456-123456", "oauth")).to.be.rejectedWith(NotFound);
+        });
+        it("should throw InternalServerError if error message not returned by endpoint", async () => {
+            sandbox.stub(OrderItemService.prototype, "getOrderItem").returns(Promise.resolve(new Failure<any, OrderItemErrorResponse>({
+                httpStatusCode: 404
+            })));
+            await chai.expect(getOrderItem("ORD-123456-123456", "MID-123456-123456", "oauth")).to.be.rejectedWith(InternalServerError);
         });
     });
 });
