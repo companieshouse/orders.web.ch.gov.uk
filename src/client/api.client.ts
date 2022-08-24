@@ -11,7 +11,7 @@ import { CreatePaymentRequest, Payment } from "@companieshouse/api-sdk-node/dist
 import Resource, { ApiResponse, ApiResult } from "@companieshouse/api-sdk-node/dist/services/resource";
 import { createLogger } from "ch-structured-logging";
 import { v4 as uuidv4 } from "uuid";
-import createError from "http-errors";
+import createError, { InternalServerError } from "http-errors";
 
 import { API_URL, APPLICATION_NAME, CHS_URL } from "../config/config";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
@@ -145,6 +145,10 @@ export const getOrderItem = async (orderId: string, itemId: string, oAuth: strin
     } else {
         logger.info(`Get order, status_code=${orderItemResource.value.httpStatusCode}`);
         const responseCode = orderItemResource.value.httpStatusCode || 500;
-        throw createError(responseCode, responseCode.toString());
+        if (orderItemResource.value.error) {
+            throw createError(responseCode, responseCode.toString());
+        } else {
+            throw new InternalServerError("Unknown error");
+        }
     }
 };
