@@ -15,10 +15,9 @@ const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const errorHandler = (err: unknown, req: Request, res: Response, next: NextFunction) => {
-    const errorStatusCode = err instanceof HttpError ? err?.statusCode : 500;
     const errorName = err instanceof HttpError ? err?.name : "Error";
     logger.error("Error: " + `${req.path}`);
-    res.status(errorStatusCode).render(templatePaths.ERROR, { errorMessage: errorName, serviceName, serviceUrl });
+    res.status(500).render(templatePaths.ERROR, { errorMessage: errorName, serviceName, serviceUrl });
 };
 
 export default [notFoundHandler, errorHandler];
