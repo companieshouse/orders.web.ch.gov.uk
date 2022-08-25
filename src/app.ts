@@ -20,11 +20,10 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(function(req, res, next) {
-    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-     next();
+app.use(function (req, res, next) {
+    res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
+    next();
 });
-
 
 // set some app variables from the environment
 app.set("port", process.env.PORT || "3000");
