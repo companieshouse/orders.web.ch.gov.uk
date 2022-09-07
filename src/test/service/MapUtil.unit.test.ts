@@ -55,6 +55,7 @@ describe("MapUtil unit tests", () => {
     describe("mapAddress", () => {
         it("maps full delivery details correctly", () => {
             const deliveryDetails = {
+                companyName: "company name",
                 addressLine1: "address line 1",
                 addressLine2: "address line 2",
                 country: "country",
@@ -66,7 +67,7 @@ describe("MapUtil unit tests", () => {
                 poBox: "po box"
             };
             const result = MapUtil.mapDeliveryDetails(deliveryDetails);
-            expect(result).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
+            expect(result).to.equal(MapUtil.mapToHtml(["company name", "forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
         });
 
         it("maps full delivery details correctly", () => {

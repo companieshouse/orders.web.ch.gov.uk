@@ -39,6 +39,10 @@ export abstract class MapUtil {
             return "";
         }
 
+        if (deliveryDetails.companyName !== "" && deliveryDetails.companyName !== undefined) {
+            mappings.push(deliveryDetails.companyName);
+        };
+
         mappings.push(deliveryDetails.forename + " " + deliveryDetails.surname);
         mappings.push(deliveryDetails.addressLine1);
 
@@ -72,14 +76,14 @@ export abstract class MapUtil {
     }
 
     static mapEmailCopyRequired = (itemOptions: CertificateItemOptions): string => {
-        if(itemOptions?.deliveryTimescale === "same-day") {
+        if (itemOptions?.deliveryTimescale === "same-day") {
             if (itemOptions?.includeEmailCopy === true) {
-                return "Yes"
+                return "Yes";
             } else {
-                return "No"
+                return "No";
             }
         } else {
-            return "Email only available for express delivery method"
+            return "Email only available for express delivery method";
         }
     }
 
@@ -104,21 +108,21 @@ export abstract class MapUtil {
             return "No";
         }
         switch (addressDetails.includeAddressRecordsType) {
-            case AddressRecordsType.CURRENT:
-                return "Current address";
+        case AddressRecordsType.CURRENT:
+            return "Current address";
 
-            case AddressRecordsType.CURRENT_AND_PREVIOUS:
-                return "Current address and the one previous";
+        case AddressRecordsType.CURRENT_AND_PREVIOUS:
+            return "Current address and the one previous";
 
-            case AddressRecordsType.CURRENT_PREVIOUS_AND_PRIOR:
-                return "Current address and the two previous";
+        case AddressRecordsType.CURRENT_PREVIOUS_AND_PRIOR:
+            return "Current address and the two previous";
 
-            case AddressRecordsType.ALL:
-                return "All current and previous addresses";
+        case AddressRecordsType.ALL:
+            return "All current and previous addresses";
 
-            default:
-                logger.error(`Unable to map value for registered office address options: ${addressDetails.includeAddressRecordsType}`);
-                return "";
+        default:
+            logger.error(`Unable to map value for registered office address options: ${addressDetails.includeAddressRecordsType}`);
+            return "";
         }
     }
 
