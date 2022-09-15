@@ -133,7 +133,11 @@ export const getOrder = async (orderId: string, oAuth: string): Promise<Order> =
     } else {
         logger.info(`Get order, status_code=${orderResource.value.httpStatusCode}`);
         const responseCode = orderResource.value.httpStatusCode || 500;
-        throw createError(responseCode, responseCode.toString());
+        if (!orderResource.value.errors && responseCode === 404) {
+            throw new InternalServerError("Unknown error");
+        } else {
+            throw createError(responseCode, responseCode.toString());
+        }
     }
 };
 
@@ -145,7 +149,7 @@ export const getOrderItem = async (orderId: string, itemId: string, oAuth: strin
     } else {
         logger.info(`Get order, status_code=${orderItemResource.value.httpStatusCode}`);
         const responseCode = orderItemResource.value.httpStatusCode || 500;
-        if (!orderItemResource.value.error && responseCode == 404) {
+        if (!orderItemResource.value.error && responseCode === 404) {
             throw new InternalServerError("Unknown error");
         } else {
             throw createError(responseCode, responseCode.toString());
