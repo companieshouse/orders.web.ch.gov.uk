@@ -170,9 +170,18 @@ describe("api.client", () => {
         });
         it("should throw an error if error returned by getOrder endpoint", async () => {
             sandbox.stub(OrderService.prototype, "getOrder").returns(Promise.resolve(new Failure<any, ApiErrorResponse>({
-                httpStatusCode: 404
+                httpStatusCode: 404,
+                errors: [{
+                    error: "an error occurred"
+                }]
             })));
             await chai.expect(getOrder("ORD-123456-123456", "oauth")).to.be.rejectedWith(NotFound);
+        });
+        it("should throw an internal server error if no error message and HTTP 404 returned by getOrder endpoint", async () => {
+            sandbox.stub(OrderService.prototype, "getOrder").returns(Promise.resolve(new Failure<any, ApiErrorResponse>({
+                httpStatusCode: 404
+            })));
+            await chai.expect(getOrder("ORD-123456-123456", "oauth")).to.be.rejectedWith(InternalServerError);
         });
     });
 
