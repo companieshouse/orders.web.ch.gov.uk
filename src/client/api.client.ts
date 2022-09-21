@@ -133,7 +133,7 @@ export const getOrder = async (orderId: string, oAuth: string): Promise<Order> =
     } else {
         logger.info(`Get order, status_code=${orderResource.value.httpStatusCode}`);
         const responseCode = orderResource.value.httpStatusCode || 500;
-        if (!orderResource.value.errors && responseCode === 404) {
+        if (!orderResource.value.error && responseCode === 404) {
             throw new InternalServerError("Unknown error");
         } else {
             throw createError(responseCode, responseCode.toString());

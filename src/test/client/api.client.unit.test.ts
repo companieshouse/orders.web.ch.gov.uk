@@ -22,6 +22,7 @@ import {
 import { InternalServerError, NotFound } from "http-errors";
 import { OrderService } from "@companieshouse/api-sdk-node/dist/services/order";
 import OrderItemService, { OrderItemErrorResponse } from "@companieshouse/api-sdk-node/dist/services/order/order-item/service";
+import { OrderErrorResponse } from "../../../../../../api-sdk-node/dist/services/order/order/service";
 const O_AUTH_TOKEN = "oauth";
 
 const sandbox = sinon.createSandbox();
@@ -169,11 +170,9 @@ describe("api.client", () => {
             chai.expect(order.reference).to.equal("ORD-123456-123456");
         });
         it("should throw an error if error returned by getOrder endpoint", async () => {
-            sandbox.stub(OrderService.prototype, "getOrder").returns(Promise.resolve(new Failure<any, ApiErrorResponse>({
+            sandbox.stub(OrderService.prototype, "getOrder").returns(Promise.resolve(new Failure<any, OrderErrorResponse>({
                 httpStatusCode: 404,
-                errors: [{
-                    error: "an error occurred"
-                }]
+                error: "an error occurred"
             })));
             await chai.expect(getOrder("ORD-123456-123456", "oauth")).to.be.rejectedWith(NotFound);
         });
