@@ -22,7 +22,7 @@ import {
 import { InternalServerError, NotFound } from "http-errors";
 import { OrderService } from "@companieshouse/api-sdk-node/dist/services/order";
 import OrderItemService, { OrderItemErrorResponse } from "@companieshouse/api-sdk-node/dist/services/order/order-item/service";
-import { OrderErrorResponse } from "../../../../../../api-sdk-node/dist/services/order/order/service";
+import { OrderErrorResponse } from "@companieshouse/api-sdk-node/dist/services/order/order/service";
 const O_AUTH_TOKEN = "oauth";
 
 const sandbox = sinon.createSandbox();
