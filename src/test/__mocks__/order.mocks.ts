@@ -442,11 +442,11 @@ export const mockCertCopyOrderItemView: GovUkOrderCertifiedCopyItemSummaryView =
                 {
                     key: {
                         classes: "govuk-!-width-one-third",
-                        text: "Delivery method"
+                        text: "Dispatch method"
                     },
                     value: {
                         classes: "govuk-!-width-two-thirds",
-                        text: "Standard delivery (aim to dispatch within 10 working days)"
+                        text: "Standard (aim to send out within 10 working days)"
                     }
                 }
             ]
@@ -559,11 +559,11 @@ export const mockActiveLtdCertificateItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                    text: "Standard (aim to send out within 10 working days)"
                 }
             },
             {
@@ -573,7 +573,7 @@ export const mockActiveLtdCertificateItemView: GovUkOrderItemSummaryView = {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Email only available for express delivery method"
+                    text: "Email only available for express dispatch"
                 }
             },
             {
@@ -679,11 +679,11 @@ export const mockAdministratedLtdCertificateItemView: GovUkOrderItemSummaryView 
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                    text: "Standard (aim to send out within 10 working days)"
                 }
             },
             {
@@ -693,7 +693,7 @@ export const mockAdministratedLtdCertificateItemView: GovUkOrderItemSummaryView 
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Email only available for express delivery method"
+                    text: "Email only available for express dispatch"
                 }
             },
             {
@@ -799,11 +799,11 @@ export const mockLiquidatedLtdCertificateItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                    text: "Standard (aim to send out within 10 working days)"
                 }
             },
             {
@@ -813,7 +813,7 @@ export const mockLiquidatedLtdCertificateItemView: GovUkOrderItemSummaryView = {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Email only available for express delivery method"
+                    text: "Email only available for express dispatch"
                 }
             },
             {
@@ -869,11 +869,11 @@ export const mockDissolvedLtdCertificateItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                    text: "Standard (aim to send out within 10 working days)"
                 }
             },
             {
@@ -883,7 +883,7 @@ export const mockDissolvedLtdCertificateItemView: GovUkOrderItemSummaryView = {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Email only available for express delivery method"
+                    text: "Email only available for express dispatch"
                 }
             },
             {
@@ -979,11 +979,11 @@ export const mockActiveLLPCertificateItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                    text: "Standard (aim to send out within 10 working days)"
                 }
             },
             {
@@ -993,7 +993,7 @@ export const mockActiveLLPCertificateItemView: GovUkOrderItemSummaryView = {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Email only available for express delivery method"
+                    text: "Email only available for express dispatch"
                 }
             },
             {
@@ -1089,11 +1089,11 @@ export const mockAdministratedLLPCertificateItemView: GovUkOrderItemSummaryView 
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                    text: "Standard (aim to send out within 10 working days)"
                 }
             },
             {
@@ -1103,7 +1103,7 @@ export const mockAdministratedLLPCertificateItemView: GovUkOrderItemSummaryView 
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Email only available for express delivery method"
+                    text: "Email only available for express dispatch"
                 }
             },
             {
@@ -1199,11 +1199,11 @@ export const mockLiquidatedLLPCertificateItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                    text: "Standard (aim to send out within 10 working days)"
                 }
             },
             {
@@ -1213,7 +1213,7 @@ export const mockLiquidatedLLPCertificateItemView: GovUkOrderItemSummaryView = {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Email only available for express delivery method"
+                    text: "Email only available for express dispatch"
                 }
             },
             {
@@ -1269,11 +1269,11 @@ export const mockDissolvedLLPCertificateItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                    text: "Standard (aim to send out within 10 working days)"
                 }
             },
             {
@@ -1283,7 +1283,7 @@ export const mockDissolvedLLPCertificateItemView: GovUkOrderItemSummaryView = {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Email only available for express delivery method"
+                    text: "Email only available for express dispatch"
                 }
             },
             {
@@ -1389,11 +1389,11 @@ export const mockActiveLPCertificateItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Standard delivery (aim to dispatch within 10 working days)"
+                    text: "Standard (aim to send out within 10 working days)"
                 }
             },
             {
@@ -1403,7 +1403,7 @@ export const mockActiveLPCertificateItemView: GovUkOrderItemSummaryView = {
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
-                    text: "Email only available for express delivery method"
+                    text: "Email only available for express dispatch"
                 }
             },
             {

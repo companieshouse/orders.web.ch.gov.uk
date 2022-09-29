@@ -29,7 +29,7 @@ describe("map.item.service.unit", () => {
             expect(result.serviceName).to.equal("Order a certificate");
             expect(result.titleText).to.equal("Certificate ordered");
             expect(result.pageTitle).to.equal("Certificate ordered confirmation");
-            expect(result.whatHappensNextText).to.equal("We'll prepare the certificate and aim to dispatch it within " + DISPATCH_DAYS + " working days.");
+            expect(result.whatHappensNextText).to.equal("We aim to send out standard orders within " + DISPATCH_DAYS + " working days. We send UK orders by Royal Mail 2nd Class post and international orders by Royal Mail International Standard post.");
             expect(result.orderDetailsTable).to.not.be.empty;
         });
 
@@ -39,7 +39,7 @@ describe("map.item.service.unit", () => {
             expect(result.serviceName).to.equal("Order a certificate");
             expect(result.titleText).to.equal("Certificate ordered");
             expect(result.pageTitle).to.equal("Certificate ordered confirmation");
-            expect(result.whatHappensNextText).to.equal("We'll prepare the certificate and aim to dispatch it within " + DISPATCH_DAYS + " working days.");
+            expect(result.whatHappensNextText).to.equal("We aim to send out standard orders within " + DISPATCH_DAYS + " working days. We send UK orders by Royal Mail 2nd Class post and international orders by Royal Mail International Standard post.");
             expect(result.orderDetailsTable).to.not.be.empty;
         });
 

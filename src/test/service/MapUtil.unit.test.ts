@@ -88,12 +88,12 @@ describe("MapUtil unit tests", () => {
     describe("mapDeliveryMethod", () => {
         it("map standard to Standard delivery (dispatched within the 'dispatch date config value' working days)", () => {
             const result = MapUtil.mapDeliveryMethod({deliveryTimescale: "standard"} as CertificateItemOptions);
-            expect(result).to.equal("Standard delivery (aim to dispatch within " + DISPATCH_DAYS + " working days)");
+            expect(result).to.equal("Standard (aim to send out within " + DISPATCH_DAYS + " working days)");
         });
 
         it("maps same-day to Same Day", () => {
             const result = MapUtil.mapDeliveryMethod({deliveryTimescale: "same-day"} as CertificateItemOptions);
-            expect(result).to.equal("Express (Orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day)");
+            expect(result).to.equal("Express (Orders received before 11am will be sent out the same day. Orders received after 11am will be sent out the next working day)");
         });
     });
 
@@ -282,7 +282,7 @@ describe("MapUtil unit tests", () => {
 
         it("map standard delivery timescale to show email only available for same day delivery", () => {
             const result = MapUtil.mapEmailCopyRequired(itemOptions);
-            expect(result).to.equal("Email only available for express delivery method");
+            expect(result).to.equal("Email only available for express dispatch");
         });
         it("map same day delivery timescale with email required to display yes", () => {
             itemOptions.deliveryTimescale = "same-day";
