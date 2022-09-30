@@ -5,8 +5,8 @@ import {MapUtil} from "./MapUtil";
 
 export const SERVICE_NAME_CERTIFICATES = "Order a certificate";
 const dispatchDays: string = DISPATCH_DAYS;
-const SAME_DAY_HAPPENS_NEXT_TEXT = "We'll prepare the certificate and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.";
-const DEFAULT_TEXT = "We'll prepare the certificate and aim to dispatch it within " + dispatchDays + " working days.";
+const SAME_DAY_HAPPENS_NEXT_TEXT = "Express orders received before 11am will be sent out the same working day. Orders received after 11am will be sent out the next working day. We send UK orders by Royal Mail 1st Class post and international orders by Royal Mail International post.";
+const DEFAULT_TEXT = "We aim to send out standard orders within " + dispatchDays + " working days. We send UK orders by Royal Mail 2nd Class post and international orders by Royal Mail International Standard post.";
 
 export interface CheckDetailsItem {
     serviceUrl?: string;
@@ -47,7 +47,7 @@ export abstract class ItemMapper {
             {
                 key: {
                     classes: "govuk-!-width-one-half",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-one-half",

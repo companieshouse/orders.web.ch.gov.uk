@@ -55,7 +55,7 @@ export class CertifiedCopyMapper implements OrderItemMapper {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Delivery method"
+                    text: "Dispatch method"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",

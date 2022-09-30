@@ -70,7 +70,7 @@ export abstract class AbstractCertificateMapper implements OrderItemMapper {
 
     private mapDeliveryDetails(): void {
         const itemOptions = this.mapperRequest.item.itemOptions as CertificateItemOptions;
-        this.addText("Delivery method", MapUtil.mapDeliveryMethod(itemOptions) || "");
+        this.addText("Dispatch method", MapUtil.mapDeliveryMethod(itemOptions) || "");
         this.addText("Email copy required", MapUtil.mapEmailCopyRequired(itemOptions));
     }
 
