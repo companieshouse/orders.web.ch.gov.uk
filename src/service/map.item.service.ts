@@ -20,9 +20,9 @@ import {ITEM_MAPPER_FACTORY_CONFIG} from "./ItemMapperFactoryConfig";
 const sameDayDeliveryTimescale = "same-day";
 const whatHappensNextTextOptions = {
     sameDayCertificate: "Express orders received before 11am will be sent out the same working day. Orders received after 11am will be sent out the next working day. We send UK orders by Royal Mail 1st Class post and international orders by Royal Mail International post.",
-    sameDayCertifiedCopy: "We'll prepare the certified document and orders received before 11am will be dispatched the same day. Orders received after 11am will be dispatched the next working day.",
+    sameDayCertifiedCopy: "Express orders received before 11am will be sent out the same working day. Orders received after 11am will be sent out the next working day. We send UK orders by Royal Mail Signed For 1st Class post and international orders by Royal Mail International post.",
     defaultCertificate: "We aim to send out standard orders within " + DISPATCH_DAYS + " working days. We send UK orders by Royal Mail 2nd Class post and international orders by Royal Mail International Standard post.",
-    defaultCertifiedCopy: "We'll prepare your order and aim to dispatch it within " + DISPATCH_DAYS + " working days.",
+    defaultCertifiedCopy: "We aim to send out standard orders within " + DISPATCH_DAYS + " working days. We send UK orders by Royal Mail 2nd Class post and international orders by Royal Mail International Standard post.",
 };
 
 export const mapItem = (item: CheckoutItem, deliveryDetails: DeliveryDetails | undefined,
