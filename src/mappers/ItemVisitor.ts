@@ -21,7 +21,7 @@ export class ItemVisitor {
                     text: item.item.companyNumber
                 },
                 {
-                    text: MapUtil.mapDeliveryMethod(itemOptions)
+                    text: MapUtil.mapBasketDeliveryMethod(itemOptions)
                 },
                 {
                     text: `£${item.item.totalItemCost}`

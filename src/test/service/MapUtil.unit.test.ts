@@ -97,6 +97,18 @@ describe("MapUtil unit tests", () => {
         });
     });
 
+    describe("mapBasketDeliveryMethod", () => {
+        it("map standard to Standard", () => {
+            const result = MapUtil.mapBasketDeliveryMethod({deliveryTimescale: "standard"} as CertificateItemOptions);
+            expect(result).to.equal("Standard");
+        });
+
+        it("maps same-day to Express", () => {
+            const result = MapUtil.mapBasketDeliveryMethod({deliveryTimescale: "same-day"} as CertificateItemOptions);
+            expect(result).to.equal("Express");
+        });
+    });
+
     describe("addressMapping unit tests", () => {
         it("correctly handles the case where registeredOfficeAddressDetails are undefined", () => {
             const result = MapUtil.mapAddressOptions(undefined);
