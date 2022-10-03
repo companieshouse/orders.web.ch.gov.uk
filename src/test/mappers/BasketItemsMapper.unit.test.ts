@@ -60,7 +60,7 @@ describe("BasketItemsMapper", () => {
                     text: "00000000"
                 },
                 {
-                    text: "Standard (aim to send out within 10 working days)"
+                    text: "Standard"
                 },
                 {
                     text: "£15"
@@ -81,7 +81,7 @@ describe("BasketItemsMapper", () => {
                     text: "00000000"
                 },
                 {
-                    text: "Standard (aim to send out within 10 working days)"
+                    text: "Standard"
                 },
                 {
                     text: "£15"
@@ -102,7 +102,7 @@ describe("BasketItemsMapper", () => {
                     text: "00000000"
                 },
                 {
-                    text: "Standard (aim to send out within 10 working days)"
+                    text: "Standard"
                 },
                 {
                     text: "£15"
@@ -130,7 +130,7 @@ describe("BasketItemsMapper", () => {
                     text: "00000000"
                 },
                 {
-                    text: "Standard (aim to send out within 10 working days)"
+                    text: "Standard"
                 },
                 {
                     text: "£30"

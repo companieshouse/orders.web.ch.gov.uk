@@ -13,6 +13,7 @@ export class ItemVisitor {
     visit (item: VisitableItem) {
         if (item.item.kind === "item#certificate") {
             const itemOptions = item.item.itemOptions as CertificateItemOptions;
+            this.setDeliveryMethodHelptext(itemOptions);
             this.viewModel.certificates.push([
                 {
                     text: MapUtil.mapCertificateType(itemOptions?.certificateType)
@@ -38,6 +39,7 @@ export class ItemVisitor {
         } else if (item.item.kind === "item#certified-copy") {
             const itemOptions = item.item.itemOptions as CertifiedCopyItemOptions;
             const mappedFilingHistory = mapFilingHistoriesDocuments(itemOptions?.filingHistoryDocuments || []);
+            this.setDeliveryMethodHelptext(itemOptions);
             this.viewModel.certifiedCopies.push([
                 {
                     text: mappedFilingHistory[0]?.filingHistoryDate
@@ -52,7 +54,7 @@ export class ItemVisitor {
                     text: item.item.companyNumber
                 },
                 {
-                    text: MapUtil.mapDeliveryMethod(itemOptions)
+                    text: MapUtil.mapBasketDeliveryMethod(itemOptions)
                 },
                 {
                     text: `£${item.item.totalItemCost}`
@@ -101,6 +103,15 @@ export class ItemVisitor {
             return `/orderable/lp-certificates/${certificateId}/view-change-options`;
         } else {
             return `/orderable/certificates/${certificateId}/view-change-options`;
+        }
+    }
+
+    private setDeliveryMethodHelptext(itemOptions: Record<string, any>) {
+        if (itemOptions?.deliveryTimescale === "standard") {
+            this.viewModel.hasStandardDelivery = true;
+        }
+        if (itemOptions?.deliveryTimescale === "same-day") {
+            this.viewModel.hasSameDayDelivery = true;
         }
     }
 }
