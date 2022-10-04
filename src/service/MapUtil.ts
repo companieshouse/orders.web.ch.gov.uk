@@ -76,6 +76,16 @@ export abstract class MapUtil {
         return null;
     }
 
+    static mapBasketDeliveryMethod = (itemOptions: Record<string, any>): string | null => {
+        if (itemOptions?.deliveryTimescale === "standard") {
+            return "Standard";
+        }
+        if (itemOptions?.deliveryTimescale === "same-day") {
+            return "Express";
+        }
+        return null;
+    }
+
     static mapEmailCopyRequired = (itemOptions: CertificateItemOptions): string => {
         if (itemOptions?.deliveryTimescale === "same-day") {
             if (itemOptions?.includeEmailCopy === true) {

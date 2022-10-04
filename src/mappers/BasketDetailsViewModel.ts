@@ -7,5 +7,7 @@ export class BasketDetailsViewModel {
     missingImageDelivery: GovUkTableCell[][] = [];
     totalItemCost: number = 0;
     deliveryDetailsTable: object[] | null;
+    hasSameDayDelivery: boolean;
+    hasStandardDelivery: boolean;
     serviceName: string = SERVICE_NAME_BASKET;
 }
