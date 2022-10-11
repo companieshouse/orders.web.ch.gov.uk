@@ -5,6 +5,7 @@ import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data"
 
 const FIRST_NAME_FIELD: string = "firstName";
 const LAST_NAME_FIELD: string = "lastName";
+const COMPANY_NAME_FIELD: string = "companyName";
 const ADDRESS_LINE_ONE_FIELD: string = "addressLineOne";
 const ADDRESS_LINE_TWO_FIELD: string = "addressLineTwo";
 const ADDRESS_TOWN_FIELD: string = "addressTown";
@@ -31,6 +32,15 @@ export const deliveryDetailsValidationRules =
                 const invalidChar = validateCharSet(req.body[LAST_NAME_FIELD]);
                 if (invalidChar) {
                     throw Error(errorMessages.LAST_NAME_INVALID_CHARACTERS + invalidChar);
+                }
+                return true;
+            }),
+        check(COMPANY_NAME_FIELD)
+            .isLength({ max: 200 }).withMessage(errorMessages.ORDER_DETAILS_COMPANY_NAME_NAME_MAX_LENGTH)
+            .custom((_companyName, { req }) => {
+                const invalidChar = validateCharSet(req.body[COMPANY_NAME_FIELD]);
+                if (invalidChar) {
+                    throw Error(errorMessages.COMPANY_NAME_INVALID_CHARACTERS + invalidChar);
                 }
                 return true;
             }),

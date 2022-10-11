@@ -69,6 +69,16 @@
 
         {{ govukInput({
           label: {
+            text: "Company name"
+          },
+        id: "companyName",
+        name: "companyName",
+        value: companyName,
+        errorMessage: companyNameError
+        }) }}
+
+        {{ govukInput({
+          label: {
             html: 'Building and street <span class="govuk-visually-hidden">line 1 of 2</span>'
           },
           id: "addressLineOne",
