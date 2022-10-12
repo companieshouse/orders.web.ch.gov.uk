@@ -13,6 +13,7 @@ import { APPLICATION_NAME } from "../config/config";
 
 const FIRST_NAME_FIELD: string = "firstName";
 const LAST_NAME_FIELD: string = "lastName";
+const COMPANY_NAME_FIELD: string = "companyName";
 const ADDRESS_LINE_ONE_FIELD: string = "addressLineOne";
 const ADDRESS_LINE_TWO_FIELD: string = "addressLineTwo";
 const ADDRESS_TOWN_FIELD: string = "addressTown";
@@ -32,6 +33,7 @@ export const render = async (req: Request, res: Response, next: NextFunction): P
         return res.render(DELIVERY_DETAILS, {
             firstName: basket.deliveryDetails?.forename,
             lastName: basket.deliveryDetails?.surname,
+            companyName: basket.deliveryDetails?.companyName,
             addressLineOne: basket.deliveryDetails?.addressLine1,
             addressLineTwo: basket.deliveryDetails?.addressLine2,
             addressCountry: basket.deliveryDetails?.country,
@@ -54,6 +56,7 @@ export const route = async (req: Request, res: Response, next: NextFunction) => 
     const errorList = validate(errors);
     const firstName: string = req.body[FIRST_NAME_FIELD];
     const lastName: string = req.body[LAST_NAME_FIELD];
+    const companyName: string = req.body[COMPANY_NAME_FIELD];
     const addressLineOne: string = req.body[ADDRESS_LINE_ONE_FIELD];
     const addressLineTwo: string = req.body[ADDRESS_LINE_TWO_FIELD];
     const addressTown: string = req.body[ADDRESS_TOWN_FIELD];
@@ -75,6 +78,7 @@ export const route = async (req: Request, res: Response, next: NextFunction) => 
             addressTown,
             firstName,
             lastName,
+            companyName,
             pageTitleText: PAGE_TITLE,
             templateName: (DELIVERY_DETAILS),
             backLink: BASKET,
@@ -86,6 +90,7 @@ export const route = async (req: Request, res: Response, next: NextFunction) => 
             deliveryDetails: {
                 addressLine1: addressLineOne,
                 addressLine2: addressLineTwo || null,
+                companyName: companyName || null,
                 country: addressCountry,
                 forename: firstName,
                 locality: addressTown,

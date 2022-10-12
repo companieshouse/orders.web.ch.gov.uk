@@ -121,6 +121,7 @@ export const validate = (validationErrors) => {
     let addressTownError;
     let firstNameError;
     let lastNameError;
+    let companyNameError;
 
     const validationErrorList = validationErrors.array({ onlyFirstError: true }).map((error) => {
         const govUkErrorData: GovUkErrorData = createGovUkErrorData(error.msg, "#" + error.param, true, "");
@@ -130,6 +131,9 @@ export const validate = (validationErrors) => {
             break;
         case LAST_NAME_FIELD:
             lastNameError = govUkErrorData;
+            break;
+        case COMPANY_NAME_FIELD:
+            companyNameError = govUkErrorData;
             break;
         case ADDRESS_LINE_ONE_FIELD:
             addressLineOneError = govUkErrorData;
@@ -166,6 +170,7 @@ export const validate = (validationErrors) => {
         addressPostcodeError,
         addressTownError,
         firstNameError,
-        lastNameError
+        lastNameError,
+        companyNameError
     };
 };

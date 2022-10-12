@@ -488,7 +488,7 @@ describe("order.confirmation.controller.integration", () => {
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,
             resource: mockCertifiedCopyCheckoutResponse
-        }
+        };
 
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
         getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
@@ -509,7 +509,8 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect($("#companyNameValue").text()).to.equal(mockCertifiedCopyCheckoutResponse.items[0].companyName);
         chai.expect($("#companyNumberValue").text()).to.equal(mockCertifiedCopyCheckoutResponse.items[0].companyNumber);
         chai.expect($("#deliveryMethodValue").text()).to.equal("Standard (aim to send out within 10 working days)");
-        chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
+        chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "company name",
+            "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
         chai.expect($("#filingHistoryDateValue1").text().trim()).to.equal("12 Feb 2010");
         chai.expect($("#filingHistoryTypeValue1").text().trim()).to.equal("CH01");
         chai.expect($("#filingHistoryDescriptionValue1").text().trim()).to.equal("Director's details changed for Thomas David Wheare on 12 February 2010");

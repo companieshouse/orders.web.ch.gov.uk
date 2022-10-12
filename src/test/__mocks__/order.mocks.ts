@@ -273,7 +273,8 @@ export const mockCertifiedCopyCheckoutResponse: Checkout = {
         postalCode: "postal code",
         region: "region",
         surname: "surname",
-        poBox: "po box"
+        poBox: "po box",
+        companyName: "company name"
     },
     items: [mockCertifiedCopyItem],
     kind: "order",
