@@ -9,149 +9,147 @@
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 id="page-heading" class="govuk-heading-l">Basket</h1>
-      {% if not missingImageDelivery.length and not certifiedCopies.length and not certificates.length %}
-        <h2 id="empty-basket-section-heading" class="govuk-heading-m">Document details</h2>
-        <p id="empty-basket-message" class="govuk-body">Your basket is empty, find a company to start ordering.</p>
+    <h1 id="page-heading" class="govuk-heading-l">Basket</h1>
+    {% if not missingImageDelivery.length and not certifiedCopies.length and not certificates.length %}
+      <h2 id="empty-basket-section-heading" class="govuk-heading-m">Document details</h2>
+      <p id="empty-basket-message" class="govuk-body">Your basket is empty, find a company to start ordering.</p>
+      {{ govukButton({
+        attributes: {
+          id: "find-company-button"
+        },
+        text: "Find a company",
+        href: CHS_URL
+      }) }}
+    {% else %}
+      {% if missingImageDelivery.length %}
+        <h2 id="missing-image-delivery-section-heading" class="govuk-heading-m">Missing image requests</h2>
+        {{ govukTable({
+          attributes: {
+            id: "missing-image-delivery-table"
+          },
+          head: [
+            {
+              text: "Date Filed"
+            },
+            {
+              text: "Type"
+            },
+            {
+              text: "Description"
+            },
+            {
+              text: "Company Number"
+            },
+            {
+              text: "Fee"
+            },
+            {
+            }
+          ],
+          rows: missingImageDelivery
+        }) }}
+        <p class="govuk-body">It can take us several hours to check the availability of a document.
+          We will aim to add it to a company's filing history that day if the request is received between 8:30am and 3pm, Monday to Friday (excluding bank holidays).</p>
+        <p class="govuk-body">If you make a request after 3pm, we will add the document the next working day.</p>
+      {% endif %}
+      {% if certifiedCopies.length or certificates.length %}
+        <h2 id="deliverable-items-section-heading" class="govuk-heading-m">For delivery</h2>
+      {% endif %}
+      {% if certifiedCopies.length %}
+        <h2 id="certified-documents-section-heading" class="govuk-heading-m">Certified documents</h2>
+        {{ govukTable({
+          attributes: {
+            id: "certified-documents-table"
+          },
+          head: [
+            {
+              text: "Date Filed"
+            },
+            {
+              text: "Type"
+            },
+            {
+              text: "Description"
+            },
+            {
+              text: "Company Number"
+            },
+            {
+              text: "Dispatch method"
+            },
+            {
+              text: "Fee"
+            },
+            {
+            }
+          ],
+          rows: certifiedCopies
+        }) }}
+        {% endif %}
+      {% if certificates.length %}
+        <h2 id="certificates-section-heading" class="govuk-heading-m">Certified certificates</h2>
+        {{ govukTable({
+          attributes: {
+            id: "certificates-table"
+          },
+          head: [
+            {
+              text: "Certificate type"
+            },
+            {
+              text: "Company number"
+            },
+            {
+              text: "Dispatch method"
+            },
+            {
+              text: "Fee"
+            },
+            {
+            },
+            {
+            }
+          ],
+          rows: certificates
+        }) }}
+      {% endif %}
+      {% if deliveryDetailsTable %}
+        <h2 id="delivery-details-section-heading" class="govuk-heading-m">Delivery details</h2>
+        {{ govukSummaryList({
+          attributes: {
+            id: "delivery-details-list"
+          },
+          rows: deliveryDetailsTable
+        }) }}
+      {% endif %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 id="dispatch-information-heading" class="govuk-heading-m">Dispatch information</h2>
+          {% if hasSameDayDelivery %}
+          <p class="govuk-body">Express orders received before 11am will be sent out the same working day.
+            Orders received after 11am will be sent out the next working day.
+            We send UK orders by Royal Mail 1st Class post and international orders by Royal Mail International post.</p>
+          {% endif %}
+          {% if hasStandardDelivery %}
+          <p class="govuk-body">We aim to send out standard orders within 10 working days.
+            We send UK orders by Royal Mail 2nd Class post and international orders by Royal Mail International Standard post.</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-heading-l">
+          Total £{{ totalItemCost }}
+        </div>
+      </div>
+      <form method="post">
         {{ govukButton({
           attributes: {
-            id: "find-company-button"
+            id: "submit"
           },
-          text: "Find a company",
-          href: CHS_URL
+          text: "Continue to payment"
         }) }}
-      {% else %}
-        {% if missingImageDelivery.length %}
-          <h2 id="missing-image-delivery-section-heading" class="govuk-heading-m">Missing image requests</h2>
-          {{ govukTable({
-            attributes: {
-              id: "missing-image-delivery-table"
-            },
-            head: [
-              {
-                text: "Date Filed"
-              },
-              {
-                text: "Type"
-              },
-              {
-                text: "Description"
-              },
-              {
-                text: "Company Number"
-              },
-              {
-                text: "Fee"
-              },
-              {
-              }
-            ],
-            rows: missingImageDelivery
-          }) }}
-          <p class="govuk-body">It can take us several hours to check the availability of a document.
-            We will aim to add it to a company's filing history that day if the request is received between 8:30am and 3pm, Monday to Friday (excluding bank holidays).</p>
-          <p class="govuk-body">If you make a request after 3pm, we will add the document the next working day.</p>
-        {% endif %}
-        {% if certifiedCopies.length or certificates.length %}
-          <h2 id="deliverable-items-section-heading" class="govuk-heading-m">For delivery</h2>
-        {% endif %}
-        {% if certifiedCopies.length %}
-          <h2 id="certified-documents-section-heading" class="govuk-heading-m">Certified documents</h2>
-          {{ govukTable({
-            attributes: {
-              id: "certified-documents-table"
-            },
-            head: [
-              {
-                text: "Date Filed"
-              },
-              {
-                text: "Type"
-              },
-              {
-                text: "Description"
-              },
-              {
-                text: "Company Number"
-              },
-              {
-                text: "Dispatch method"
-              },
-              {
-                text: "Fee"
-              },
-              {
-              }
-            ],
-            rows: certifiedCopies
-          }) }}
-          {% endif %}
-        {% if certificates.length %}
-          <h2 id="certificates-section-heading" class="govuk-heading-m">Certified certificates</h2>
-          {{ govukTable({
-            attributes: {
-              id: "certificates-table"
-            },
-            head: [
-              {
-                text: "Certificate type"
-              },
-              {
-                text: "Company number"
-              },
-              {
-                text: "Dispatch method"
-              },
-              {
-                text: "Fee"
-              },
-              {
-              },
-              {
-              }
-            ],
-            rows: certificates
-          }) }}
-        {% endif %}
-        {% if deliveryDetailsTable %}
-          <h2 id="delivery-details-section-heading" class="govuk-heading-m">Delivery details</h2>
-          {{ govukSummaryList({
-            attributes: {
-              id: "delivery-details-list"
-            },
-            rows: deliveryDetailsTable
-          }) }}
-        {% endif %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
-            <h2 id="dispatch-information-heading" class="govuk-heading-m">Dispatch information</h2>
-            {% if hasSameDayDelivery %}
-            <p class="govuk-body">Express orders received before 11am will be sent out the same working day.
-              Orders received after 11am will be sent out the next working day.
-              We send UK orders by Royal Mail 1st Class post and international orders by Royal Mail International post.</p>
-            {% endif %}
-            {% if hasStandardDelivery %}
-            <p class="govuk-body">We aim to send out standard orders within 10 working days.
-              We send UK orders by Royal Mail 2nd Class post and international orders by Royal Mail International Standard post.</p>
-            {% endif %}
-          </div>
-        </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full govuk-heading-l">
-            Total £{{ totalItemCost }}
-          </div>
-        </div>
-        <form method="post">
-          {{ govukButton({
-            attributes: {
-              id: "submit"
-            },
-            text: "Continue to payment"
-          }) }}
-        </form>
-        <a id="order-more-link" class="govuk-link" href="{{ CHS_URL }}">Order more</a>
-      {% endif %}
-    </div>
+      </form>
+      <a id="order-more-link" class="govuk-link" href="{{ CHS_URL }}">Order more</a>
+    {% endif %}
   </div>
 {% endblock %}
