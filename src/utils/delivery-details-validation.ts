@@ -36,7 +36,7 @@ export const deliveryDetailsValidationRules =
                 return true;
             }),
         check(COMPANY_NAME_FIELD)
-            .isLength({ max: 200 }).withMessage(errorMessages.ORDER_DETAILS_COMPANY_NAME_NAME_MAX_LENGTH)
+            .isLength({ max: 32 }).withMessage(errorMessages.ORDER_DETAILS_COMPANY_NAME_NAME_MAX_LENGTH)
             .custom((_companyName, { req }) => {
                 const invalidChar = validateCharSet(req.body[COMPANY_NAME_FIELD]);
                 if (invalidChar) {

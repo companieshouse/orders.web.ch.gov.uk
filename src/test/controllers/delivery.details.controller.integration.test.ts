@@ -20,12 +20,6 @@ const ADDRESS_POSTCODE_INVALID_CHARACTERS_ERROR: string = "Postcode cannot inclu
 const ADDRESS_COUNTRY_INVALID_CHARACTERS_ERROR: string = "Country cannot include ";
 const INVALID_CHARACTER = "|";
 const CHARACTER_LENGTH_TEXT_50 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-// TODO BI-11883 Max company name length?
-const CHARACTER_LENGTH_TEXT_201 =
-    CHARACTER_LENGTH_TEXT_50 +
-    CHARACTER_LENGTH_TEXT_50 +
-    CHARACTER_LENGTH_TEXT_50 +
-    CHARACTER_LENGTH_TEXT_50 + "b";
 const POSTCODE: string = "CX14 1BX";
 const COUNTY: string = "county";
 const DELIVERY_DETAILS_URL = "/delivery-details";
@@ -130,7 +124,7 @@ describe("certificate.delivery.details.controller", () => {
                     addressTown: CHARACTER_LENGTH_TEXT_50,
                     firstName: CHARACTER_LENGTH_TEXT_50,
                     lastName: CHARACTER_LENGTH_TEXT_50,
-                    companyName: CHARACTER_LENGTH_TEXT_201
+                    companyName: CHARACTER_LENGTH_TEXT_50
                 })
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
 
