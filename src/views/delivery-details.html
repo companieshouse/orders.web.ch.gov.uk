@@ -49,22 +49,33 @@
           label: {
             text: "First name"
           },
-        classes: "govuk-!-width-two-thirds",
-        id: "firstName",
-        name: "firstName",
-        value: firstName,
-        errorMessage: firstNameError
+          classes: "govuk-!-width-two-thirds",
+          id: "firstName",
+          name: "firstName",
+          value: firstName,
+          errorMessage: firstNameError
         }) }}
 
         {{ govukInput({
           label: {
             text: "Last name"
           },
-        classes: "govuk-!-width-two-thirds",
-        id: "lastName",
-        name: "lastName",
-        value: lastName,
-        errorMessage: lastNameError
+          classes: "govuk-!-width-two-thirds",
+          id: "lastName",
+          name: "lastName",
+          value: lastName,
+          errorMessage: lastNameError
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Company name"
+          },
+          classes: "govuk-!-width-two-thirds",
+          id: "companyName",
+          name: "companyName",
+          value: companyName,
+          errorMessage: companyNameError
         }) }}
 
         {{ govukInput({
@@ -93,49 +104,49 @@
           label: {
             text: "Town or city"
           },
-        classes: "govuk-!-width-two-thirds",
-        id: "addressTown",
-        name: "addressTown",
-        value: addressTown,
-        errorMessage: addressTownError
+          classes: "govuk-!-width-two-thirds",
+          id: "addressTown",
+          name: "addressTown",
+          value: addressTown,
+          errorMessage: addressTownError
         }) }}
 
         {{ govukInput({
           label: {
             text: "County"
           },
-        classes: "govuk-!-width-two-thirds",
-        id: "addressCounty",
-        name: "addressCounty",
-        value: addressCounty,
-        errorMessage: addressCountyError
+          classes: "govuk-!-width-two-thirds",
+          id: "addressCounty",
+          name: "addressCounty",
+          value: addressCounty,
+          errorMessage: addressCountyError
         }) }}
 
         {{ govukInput({
           label: {
             text: "Postcode"
           },
-        classes: "govuk-input--width-10",
-        id: "addressPostcode",
-        name: "addressPostcode",
-        value: addressPostcode,
-        errorMessage: addressPostcodeError
+          classes: "govuk-input--width-10",
+          id: "addressPostcode",
+          name: "addressPostcode",
+          value: addressPostcode,
+          errorMessage: addressPostcodeError
         }) }}
 
         {{ govukInput({
           label: {
             text: "Country"
           },
-        classes: "govuk-!-width-two-thirds",
-        id: "addressCountry",
-        name: "addressCountry",
-        value: addressCountry,
-        errorMessage: addressCountryError
+          classes: "govuk-!-width-two-thirds",
+          id: "addressCountry",
+          name: "addressCountry",
+          value: addressCountry,
+          errorMessage: addressCountryError
         }) }}
 
-          {{ govukButton({
-            text: "Add to basket"
-          }) }}
+        {{ govukButton({
+          text: "Add to basket"
+        }) }}
 
     {% endcall %}
     </form>
