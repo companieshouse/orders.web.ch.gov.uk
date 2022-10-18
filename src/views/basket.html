@@ -142,15 +142,28 @@
           Total £{{ totalItemCost }}
         </div>
       </div>
-      <form method="post">
-        {{ govukButton({
-          attributes: {
-            id: "submit"
-          },
-          text: "Continue to payment"
-        }) }}
-      </form>
-      <a id="order-more-link" class="govuk-link" href="{{ CHS_URL }}">Order more</a>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third override-width">
+          <form method="post">
+            {{ govukButton({
+              attributes: {
+                id: "submit"
+              },
+              text: "Continue to payment"
+            }) }}
+          </form>
+        </div>
+        <div>
+          {{ govukButton({
+            attributes: {
+              id: "add-another-document"
+            },
+            text: "Add another document",
+            classes: "govuk-button--secondary",
+            href: CHS_URL
+          }) }}
+        </div>
+      </div>
     {% endif %}
   </div>
 {% endblock %}
