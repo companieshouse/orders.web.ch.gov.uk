@@ -114,14 +114,16 @@
           rows: certificates
         }) }}
       {% endif %}
-      {% if deliveryDetailsTable %}
-        <h2 id="delivery-details-section-heading" class="govuk-heading-m">Delivery details</h2>
-        {{ govukSummaryList({
-          attributes: {
-            id: "delivery-details-list"
-          },
-          rows: deliveryDetailsTable
-        }) }}
+      {% if certificates.length or certifiedCopies.length %}
+        {% if deliveryDetailsTable %}
+          <h2 id="delivery-details-section-heading" class="govuk-heading-m">Delivery details</h2>
+          {{ govukSummaryList({
+            attributes: {
+              id: "delivery-details-list"
+            },
+            rows: deliveryDetailsTable
+          }) }}
+        {% endif %}
       {% endif %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
