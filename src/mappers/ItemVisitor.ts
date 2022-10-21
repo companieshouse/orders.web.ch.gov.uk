@@ -6,6 +6,8 @@ import { mapFilingHistoriesDocuments } from "../service/map.item.service";
 import { ItemOptions as MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/mid";
 import { BasketDetailsViewModel } from "./BasketDetailsViewModel";
 
+const PUSH_REMOVE_ITEM_EVENT_TO_MATOMO = "javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item' ])";
+
 export class ItemVisitor {
     constructor(private viewModel: BasketDetailsViewModel) {
     }
@@ -32,7 +34,10 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" 
+                                       class="removeItem"
+                                       onclick="${PUSH_REMOVE_ITEM_EVENT_TO_MATOMO}" 
+                                       value="Remove">
                             </form>`
                 }
             ]);
@@ -61,7 +66,10 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" 
+                                       class="removeItem"
+                                       onclick="${PUSH_REMOVE_ITEM_EVENT_TO_MATOMO}" 
+                                       value="Remove">
                             </form>`
                 }
             ]);
@@ -86,7 +94,10 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" 
+                                       class="removeItem"
+                                       onclick="${PUSH_REMOVE_ITEM_EVENT_TO_MATOMO}"
+                                       value="Remove">
                             </form>`
                 }
             ]);
