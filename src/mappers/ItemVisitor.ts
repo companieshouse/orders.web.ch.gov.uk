@@ -6,8 +6,9 @@ import { mapFilingHistoriesDocuments } from "../service/map.item.service";
 import { ItemOptions as MissingImageDeliveryItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/mid";
 import { BasketDetailsViewModel } from "./BasketDetailsViewModel";
 
-const PUSH_REMOVE_ITEM_EVENT_TO_MATOMO = "javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item' ])";
-const PUSH_VIEW_CHANGE_CERTIFICATE_OPTIONS_EVENT_TO_MATOMO = "javascript:_paq.push(['trackEvent', 'view-basket', 'view-change-certificate-options'])";
+const PUSH_REMOVE_ITEM_EVENT_TO_MATOMO = "javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item'])";
+const PUSH_VIEW_CHANGE_CERTIFICATE_OPTIONS_EVENT_TO_MATOMO =
+    "javascript:_paq.push(['trackEvent', 'view-basket', 'view-change-certificate-options'])";
 
 export class ItemVisitor {
     constructor(private viewModel: BasketDetailsViewModel) {
