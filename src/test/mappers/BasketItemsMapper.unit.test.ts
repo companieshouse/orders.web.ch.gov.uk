@@ -70,7 +70,10 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit"
+                                       class="removeItem"
+                                       onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item' ])"
+                                       value="Remove">
                             </form>`
                 }
             ], [
@@ -91,7 +94,10 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit"
+                                       class="removeItem"
+                                       onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item' ])"
+                                       value="Remove">
                             </form>`
                 }
             ], [
@@ -112,7 +118,10 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit"
+                                       class="removeItem"
+                                       onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item' ])"
+                                       value="Remove">
                             </form>`
                 }
             ]]);
@@ -137,7 +146,10 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertifiedCopyItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit"
+                                       class="removeItem"
+                                       onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item' ])"
+                                       value="Remove">
                             </form>`
                 }
             ]);
@@ -160,7 +172,10 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit"
+                                       class="removeItem"
+                                       onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item' ])"
+                                       value="Remove">
                             </form>`
                 }
             ]);

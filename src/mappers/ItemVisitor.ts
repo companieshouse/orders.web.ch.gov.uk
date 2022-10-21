@@ -34,9 +34,9 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" 
+                                <input type="submit"
                                        class="removeItem"
-                                       onclick="${PUSH_REMOVE_ITEM_EVENT_TO_MATOMO}" 
+                                       onclick="${PUSH_REMOVE_ITEM_EVENT_TO_MATOMO}"
                                        value="Remove">
                             </form>`
                 }
@@ -66,9 +66,9 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" 
+                                <input type="submit"
                                        class="removeItem"
-                                       onclick="${PUSH_REMOVE_ITEM_EVENT_TO_MATOMO}" 
+                                       onclick="${PUSH_REMOVE_ITEM_EVENT_TO_MATOMO}"
                                        value="Remove">
                             </form>`
                 }
@@ -94,7 +94,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" 
+                                <input type="submit"
                                        class="removeItem"
                                        onclick="${PUSH_REMOVE_ITEM_EVENT_TO_MATOMO}"
                                        value="Remove">
