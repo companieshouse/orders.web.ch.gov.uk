@@ -66,7 +66,11 @@ describe("BasketItemsMapper", () => {
                     text: "£15"
                 },
                 {
-                    html: `<a class="govuk-link" href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
+                    html: `<a class="govuk-link"
+                              href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options"
+                              onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'view-change-certificate-options'])">
+                              View/Change certificate options
+                           </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
@@ -90,7 +94,11 @@ describe("BasketItemsMapper", () => {
                     text: "£15"
                 },
                 {
-                    html: `<a class="govuk-link" href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
+                    html: `<a class="govuk-link"
+                              href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options"
+                              onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'view-change-certificate-options'])">
+                              View/Change certificate options
+                           </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
@@ -114,7 +122,11 @@ describe("BasketItemsMapper", () => {
                     text: "£15"
                 },
                 {
-                    html: `<a class="govuk-link" href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
+                    html: `<a class="govuk-link"
+                              href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options"
+                              onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'view-change-certificate-options'])">
+                              View/Change certificate options
+                           </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">

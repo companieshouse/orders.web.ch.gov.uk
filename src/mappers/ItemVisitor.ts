@@ -7,6 +7,7 @@ import { ItemOptions as MissingImageDeliveryItemOptions } from "@companieshouse/
 import { BasketDetailsViewModel } from "./BasketDetailsViewModel";
 
 const PUSH_REMOVE_ITEM_EVENT_TO_MATOMO = "javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item' ])";
+const PUSH_VIEW_CHANGE_CERTIFICATE_OPTIONS_EVENT_TO_MATOMO = "javascript:_paq.push(['trackEvent', 'view-basket', 'view-change-certificate-options'])";
 
 export class ItemVisitor {
     constructor(private viewModel: BasketDetailsViewModel) {
@@ -30,7 +31,11 @@ export class ItemVisitor {
                     text: `£${item.item.totalItemCost}`
                 },
                 {
-                    html: `<a class="govuk-link" href="${this.getViewChangeCertOptionsLink(item.item.id, itemOptions.companyType)}">View/Change certificate options</a>`
+                    html: `<a class="govuk-link"
+                              href="${this.getViewChangeCertOptionsLink(item.item.id, itemOptions.companyType)}"
+                              onclick="${PUSH_VIEW_CHANGE_CERTIFICATE_OPTIONS_EVENT_TO_MATOMO}">
+                              View/Change certificate options
+                           </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
