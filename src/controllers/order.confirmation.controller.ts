@@ -12,8 +12,7 @@ import { getCheckout, getBasket, getBasketLinks } from "../client/api.client";
 import {
     APPLICATION_NAME,
     RETRY_CHECKOUT_NUMBER,
-    RETRY_CHECKOUT_DELAY,
-    ORDERS_MATOMO_EVENT_CATEGORY
+    RETRY_CHECKOUT_DELAY
 } from "../config/config";
 import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { ConfirmationTemplateFactory, DefaultConfirmationTemplateFactory } from "./ConfirmationTemplateFactory";
@@ -86,7 +85,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         }
 
         const mappedItem = factory.getMapper(basketLinks.data).map(checkout);
-        res.render(mappedItem.templateName, { ...mappedItem, matomoEventCategory: ORDERS_MATOMO_EVENT_CATEGORY });
+        res.render(mappedItem.templateName, mappedItem);
     } catch (err) {
         console.log(err);
         next(err);

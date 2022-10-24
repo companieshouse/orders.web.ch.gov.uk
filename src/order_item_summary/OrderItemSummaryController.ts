@@ -5,7 +5,7 @@ import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import { NotFound, Unauthorized } from "http-errors";
 import { createLogger } from "ch-structured-logging";
-import { APPLICATION_NAME, ORDERS_MATOMO_EVENT_CATEGORY } from "../config/config";
+import { APPLICATION_NAME } from "../config/config";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -28,8 +28,7 @@ export class OrderItemSummaryController {
                 apiToken
             });
             logger.debug(`Retrieved summary for order/item [${orderId}/${itemId}] for user [${userId}]`);
-            return response.render(viewModel.template,
-                { ...viewModel.data, matomoEventCategory: ORDERS_MATOMO_EVENT_CATEGORY });
+            return response.render(viewModel.template, viewModel.data);
         } catch (error) {
             if (error instanceof Unauthorized) {
                 logger.info(`User [${userId}] is not authorised to retrieve summary for order/item [${orderId}/${itemId}]`);

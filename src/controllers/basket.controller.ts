@@ -30,7 +30,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             logger.debug(`User [${userId}] is enrolled; rendering basket page...`);
             res.render(BASKET, {
                 ...new BasketItemsMapper().mapBasketItems(basketResource),
-                matomoEventCategory: VIEW_BASKET_MATOMO_EVENT_CATEGORY
+                templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY
             });
         } else {
             logger.debug(`User [${userId}] is not enrolled; proceeding to payment...`);
@@ -45,7 +45,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                 template = templatePaths.ERROR_START_AGAIN;
             }
             res.status(statusCode).render(template,
-                { errorMessage, matomoEventCategory: VIEW_BASKET_MATOMO_EVENT_CATEGORY });
+                { errorMessage, templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY });
         } else {
             next(err);
         }
@@ -64,7 +64,7 @@ export const handlePostback = async (req: Request, res: Response, next: NextFunc
                 template = templatePaths.ERROR_START_AGAIN;
             }
             res.status(statusCode).render(template,
-                { errorMessage, matomoEventCategory: VIEW_BASKET_MATOMO_EVENT_CATEGORY });
+                { errorMessage, templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY });
         } else {
             next(err);
         }
