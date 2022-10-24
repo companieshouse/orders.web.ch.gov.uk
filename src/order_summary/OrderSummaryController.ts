@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { OrderSummaryFetchable } from "./OrderSummaryService";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
-import { ERROR_UNAUTHORISED, ORDER_SUMMARY } from "../model/template.paths";
+import { ORDER_SUMMARY } from "../model/template.paths";
 import { NotFound, Unauthorized } from "http-errors";
 import { createLogger } from "ch-structured-logging";
-import { APPLICATION_NAME } from "../config/config";
+import { APPLICATION_NAME, ORDERS_MATOMO_EVENT_CATEGORY } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
 const logger = createLogger(APPLICATION_NAME);
@@ -27,7 +27,7 @@ export class OrderSummaryController {
             logger.debug(`Retrieving summary for order [${orderId}] for user [${userId}]...`);
             const viewModel = await this.service.fetchOrderSummary(orderId, accessToken);
             logger.debug(`Retrieved summary for order [${orderId}] for user [${userId}]`);
-            return res.render(ORDER_SUMMARY, viewModel);
+            return res.render(ORDER_SUMMARY, { ...viewModel, matomoEventCategory: ORDERS_MATOMO_EVENT_CATEGORY });
         } catch (error) {
             if (error instanceof Unauthorized) {
                 logger.info(`User [${userId}] is not authorised to retrieve summary for order [${orderId}]`);

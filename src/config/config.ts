@@ -37,6 +37,10 @@ export const SERVICE_NAME_GENERIC = "";
 
 export const SERVICE_NAME_BASKET = "Basket";
 
+export const ORDERS_MATOMO_EVENT_CATEGORY = "orders";
+
+export const VIEW_BASKET_MATOMO_EVENT_CATEGORY = "view-basket";
+
 export const DISPATCH_DAYS = getEnvironmentValue("DISPATCH_DAYS");
 
 export const DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED = getEnvironmentValue("DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED", "false") === "true";

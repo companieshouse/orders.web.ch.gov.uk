@@ -7,6 +7,7 @@ import { SessionKey } from "@companieshouse/node-session-handler/lib/session/key
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { OrderItemView } from "../../order_item_summary/OrderItemView";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
+import { ORDERS_MATOMO_EVENT_CATEGORY } from "../../config/config";
 
 const request: any = {
     params: {
@@ -60,7 +61,8 @@ describe("OrderItemSummaryController", () => {
             await controller.viewSummary(request, response, nextFunction);
 
             // then
-            expect(response.render).to.be.calledOnceWith("template", viewModelData);
+            expect(response.render).to.be.calledOnceWith("template",
+                { ...viewModelData, matomoEventCategory: ORDERS_MATOMO_EVENT_CATEGORY });
             expect(nextFunction).to.not.be.called;
             mockService.verify();
         });

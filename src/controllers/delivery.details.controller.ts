@@ -9,7 +9,7 @@ import { deliveryDetailsValidationRules, validate } from "../utils/delivery-deta
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
-import { APPLICATION_NAME } from "../config/config";
+import { APPLICATION_NAME, ORDERS_MATOMO_EVENT_CATEGORY } from "../config/config";
 
 const FIRST_NAME_FIELD: string = "firstName";
 const LAST_NAME_FIELD: string = "lastName";
@@ -43,7 +43,8 @@ export const render = async (req: Request, res: Response, next: NextFunction): P
             addressCounty: basket.deliveryDetails?.region,
             templateName: DELIVERY_DETAILS,
             pageTitleText: PAGE_TITLE,
-            serviceName: HEADING_TEXT
+            serviceName: HEADING_TEXT,
+            matomoEventCategory: ORDERS_MATOMO_EVENT_CATEGORY
         });
     } catch (err) {
         logger.error(`${err}`);
@@ -82,7 +83,8 @@ export const route = async (req: Request, res: Response, next: NextFunction) => 
             pageTitleText: PAGE_TITLE,
             templateName: (DELIVERY_DETAILS),
             backLink: BASKET,
-            serviceName: HEADING_TEXT
+            serviceName: HEADING_TEXT,
+            matomoEventCategory: ORDERS_MATOMO_EVENT_CATEGORY
         });
     }
     try {

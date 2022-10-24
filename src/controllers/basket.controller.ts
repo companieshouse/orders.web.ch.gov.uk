@@ -8,7 +8,7 @@ import { HttpError } from "http-errors";
 
 import { checkoutBasket, createPayment, getBasket, getBasketLinks, removeBasketItem } from "../client/api.client";
 import { ORDER_COMPLETE, replaceOrderId, BASKET as BASKET_URL } from "../model/page.urls";
-import { APPLICATION_NAME } from "../config/config";
+import { APPLICATION_NAME, VIEW_BASKET_MATOMO_EVENT_CATEGORY } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import * as templatePaths from "../model/template.paths";
 import { BASKET } from "../model/template.paths";
@@ -28,7 +28,10 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         if (basketResource.enrolled) {
             logger.debug(`User [${userId}] is enrolled; rendering basket page...`);
-            res.render(BASKET, new BasketItemsMapper().mapBasketItems(basketResource));
+            res.render(BASKET, {
+                ...new BasketItemsMapper().mapBasketItems(basketResource),
+                matomoEventCategory: VIEW_BASKET_MATOMO_EVENT_CATEGORY
+            });
         } else {
             logger.debug(`User [${userId}] is not enrolled; proceeding to payment...`);
             await proceedToPayment(req, res, next);
@@ -41,7 +44,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             if (statusCode === 409 && err?.message?.includes("Delivery details missing for postal delivery")) {
                 template = templatePaths.ERROR_START_AGAIN;
             }
-            res.status(statusCode).render(template, { errorMessage });
+            res.status(statusCode).render(template,
+                { errorMessage, matomoEventCategory: VIEW_BASKET_MATOMO_EVENT_CATEGORY });
         } else {
             next(err);
         }
@@ -59,7 +63,8 @@ export const handlePostback = async (req: Request, res: Response, next: NextFunc
             if (statusCode === 409 && err?.message?.includes("Delivery details missing for postal delivery")) {
                 template = templatePaths.ERROR_START_AGAIN;
             }
-            res.status(statusCode).render(template, { errorMessage });
+            res.status(statusCode).render(template,
+                { errorMessage, matomoEventCategory: VIEW_BASKET_MATOMO_EVENT_CATEGORY });
         } else {
             next(err);
         }
