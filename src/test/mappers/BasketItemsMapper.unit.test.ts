@@ -67,8 +67,8 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<a class="govuk-link"
-                              href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options"
-                              onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'view-change-certificate-options'])">
+                              data-event-id="view-change-certificate-options"
+                              href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">
                               View/Change certificate options
                            </a>`
                 },
@@ -76,7 +76,7 @@ describe("BasketItemsMapper", () => {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
-                                       onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item'])"
+                                       data-event-id="remove-item"
                                        value="Remove">
                             </form>`
                 }
@@ -95,8 +95,8 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<a class="govuk-link"
-                              href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options"
-                              onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'view-change-certificate-options'])">
+                              data-event-id="view-change-certificate-options"
+                              href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">
                               View/Change certificate options
                            </a>`
                 },
@@ -104,7 +104,7 @@ describe("BasketItemsMapper", () => {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
-                                       onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item'])"
+                                       data-event-id="remove-item"
                                        value="Remove">
                             </form>`
                 }
@@ -123,8 +123,8 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<a class="govuk-link"
-                              href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options"
-                              onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'view-change-certificate-options'])">
+                              data-event-id="view-change-certificate-options"
+                              href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">
                               View/Change certificate options
                            </a>`
                 },
@@ -132,7 +132,7 @@ describe("BasketItemsMapper", () => {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
-                                       onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item'])"
+                                       data-event-id="remove-item"
                                        value="Remove">
                             </form>`
                 }
@@ -160,7 +160,7 @@ describe("BasketItemsMapper", () => {
                     html: `<form action="/basket/remove/${mockCertifiedCopyItem.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
-                                       onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item'])"
+                                       data-event-id="remove-item"
                                        value="Remove">
                             </form>`
                 }
@@ -186,7 +186,7 @@ describe("BasketItemsMapper", () => {
                     html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
-                                       onclick="javascript:_paq.push(['trackEvent', 'view-basket', 'remove-item'])"
+                                       data-event-id="remove-item"
                                        value="Remove">
                             </form>`
                 }
