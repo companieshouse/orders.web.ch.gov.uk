@@ -66,11 +66,16 @@ describe("BasketItemsMapper", () => {
                     text: "£15"
                 },
                 {
-                    html: `<a class="govuk-link" href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
+                    html: `<a class="govuk-link" href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">
+                                View/Change certificate options
+                                <span class="govuk-visually-hidden">
+                                    ltd for 00000000
+                                </span>
+                            </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove ltd for 00000000">
                             </form>`
                 }
             ], [
@@ -87,11 +92,16 @@ describe("BasketItemsMapper", () => {
                     text: "£15"
                 },
                 {
-                    html: `<a class="govuk-link" href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
+                    html: `<a class="govuk-link" href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">
+                                View/Change certificate options
+                                <span class="govuk-visually-hidden">
+                                    llp for 00000000
+                                </span>
+                            </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove llp for 00000000">
                             </form>`
                 }
             ], [
@@ -108,11 +118,16 @@ describe("BasketItemsMapper", () => {
                     text: "£15"
                 },
                 {
-                    html: `<a class="govuk-link" href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">View/Change certificate options</a>`
+                    html: `<a class="govuk-link" href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">
+                                View/Change certificate options
+                                <span class="govuk-visually-hidden">
+                                    limited-partnership for 00000000
+                                </span>
+                            </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove limited-partnership for 00000000">
                             </form>`
                 }
             ]]);
@@ -137,7 +152,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertifiedCopyItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove Certified Document ${mockCertifiedCopyItem.description} for 00000000">
                             </form>`
                 }
             ]);
@@ -160,7 +175,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove Missing Image Delivery ${mockMissingImageDeliveryItem.description} for 00000000">
                             </form>`
                 }
             ]);
