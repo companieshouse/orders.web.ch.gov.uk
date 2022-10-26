@@ -32,6 +32,9 @@ export class ItemVisitor {
                               data-event-id="view-change-certificate-options"
                               href="${this.getViewChangeCertOptionsLink(item.item.id, itemOptions.companyType)}">
                               View/Change certificate options
+                              <span class="govuk-visually-hidden">
+                                  ${itemOptions.certificateType} for ${item.item.companyNumber}
+                              </span>
                            </a>`
                 },
                 {
@@ -39,7 +42,8 @@ export class ItemVisitor {
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
-                                       value="Remove">
+                                       value="Remove"
+                                       aria-label="Remove ${itemOptions.certificateType} for ${item.item.companyNumber}">
                             </form>`
                 }
             ]);
@@ -71,7 +75,8 @@ export class ItemVisitor {
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
-                                       value="Remove">
+                                       value="Remove"
+                                       aria-label="Remove Certified Document ${item.item.description} for ${item.item.companyNumber}">
                             </form>`
                 }
             ]);
@@ -99,7 +104,8 @@ export class ItemVisitor {
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
-                                       value="Remove">
+                                       value="Remove"
+                                       aria-label="Remove Missing Image Delivery ${item.item.description} for ${item.item.companyNumber}>
                             </form>`
                 }
             ]);
