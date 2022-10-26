@@ -155,6 +155,7 @@
           <form method="post">
             {{ govukButton({
               attributes: {
+                "data-event-id": "continue-to-payment",
                 id: "submit"
               },
               text: "Continue to payment"
@@ -164,6 +165,7 @@
         <div>
           {{ govukButton({
             attributes: {
+              "data-event-id": "add-another-document",
               id: "add-another-document"
             },
             text: "Add another document",

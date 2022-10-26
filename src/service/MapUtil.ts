@@ -223,6 +223,7 @@ export abstract class MapUtil {
                 actions: {
                     items: [{
                         attributes: {
+                            "data-event-id": "change-delivery-address",
                             id: "change-delivery-details"
                         },
                         href: "/delivery-details",

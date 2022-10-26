@@ -66,16 +66,22 @@ describe("BasketItemsMapper", () => {
                     text: "£15"
                 },
                 {
-                    html: `<a class="govuk-link" href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">
-                                View/Change certificate options
-                                <span class="govuk-visually-hidden">
-                                    incorporation-with-all-name-changes for 00000000
-                                </span>
-                            </a>`
+                    html: `<a class="govuk-link"
+                              data-event-id="view-change-certificate-options"
+                              href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">
+                              View/Change certificate options
+                              <span class="govuk-visually-hidden">
+                                  incorporation-with-all-name-changes for 00000000
+                              </span>
+                           </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                                <input type="submit"
+                                       class="removeItem"
+                                       data-event-id="remove-item"
+                                       value="Remove"
+                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
                             </form>`
                 }
             ], [
@@ -92,16 +98,22 @@ describe("BasketItemsMapper", () => {
                     text: "£15"
                 },
                 {
-                    html: `<a class="govuk-link" href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">
-                                View/Change certificate options
-                                <span class="govuk-visually-hidden">
-                                    incorporation-with-all-name-changes for 00000000
-                                </span>
-                            </a>`
+                    html: `<a class="govuk-link"
+                              data-event-id="view-change-certificate-options"
+                              href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">
+                              View/Change certificate options
+                              <span class="govuk-visually-hidden">
+                                  incorporation-with-all-name-changes for 00000000
+                              </span>
+                           </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                                <input type="submit"
+                                       class="removeItem"
+                                       data-event-id="remove-item"
+                                       value="Remove"
+                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
                             </form>`
                 }
             ], [
@@ -118,16 +130,22 @@ describe("BasketItemsMapper", () => {
                     text: "£15"
                 },
                 {
-                    html: `<a class="govuk-link" href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">
-                                View/Change certificate options
-                                <span class="govuk-visually-hidden">
-                                    incorporation-with-all-name-changes for 00000000
-                                </span>
-                            </a>`
+                    html: `<a class="govuk-link"
+                              data-event-id="view-change-certificate-options"
+                              href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">
+                              View/Change certificate options
+                              <span class="govuk-visually-hidden">
+                                  incorporation-with-all-name-changes for 00000000
+                              </span>
+                           </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                                <input type="submit"
+                                       class="removeItem"
+                                       data-event-id="remove-item"
+                                       value="Remove"
+                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
                             </form>`
                 }
             ]]);
@@ -152,7 +170,11 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertifiedCopyItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove Certified Document ${mockCertifiedCopyItem.description} for 00000000">
+                                <input type="submit"
+                                       class="removeItem"
+                                       data-event-id="remove-item"
+                                       value="Remove"
+                                       aria-label="Remove Certified Document ${mockCertifiedCopyItem.description} for 00000000">
                             </form>`
                 }
             ]);
@@ -175,7 +197,11 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove Missing Image Delivery ${mockMissingImageDeliveryItem.description} for 00000000">
+                                <input type="submit"
+                                       class="removeItem"
+                                       data-event-id="remove-item"
+                                       value="Remove"
+                                       aria-label="Remove Missing Image Delivery ${mockMissingImageDeliveryItem.description} for 00000000">
                             </form>`
                 }
             ]);
@@ -192,6 +218,7 @@ describe("BasketItemsMapper", () => {
                     actions: {
                         items: [{
                             attributes: {
+                                "data-event-id": "change-delivery-address",
                                 id: "change-delivery-details"
                             },
                             href: "/delivery-details",

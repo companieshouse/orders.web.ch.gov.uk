@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { OrderSummaryFetchable } from "./OrderSummaryService";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
-import { ERROR_UNAUTHORISED, ORDER_SUMMARY } from "../model/template.paths";
+import { ORDER_SUMMARY } from "../model/template.paths";
 import { NotFound, Unauthorized } from "http-errors";
 import { createLogger } from "ch-structured-logging";
 import { APPLICATION_NAME } from "../config/config";
