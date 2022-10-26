@@ -28,11 +28,16 @@ export class ItemVisitor {
                     text: `£${item.item.totalItemCost}`
                 },
                 {
-                    html: `<a class="govuk-link" href="${this.getViewChangeCertOptionsLink(item.item.id, itemOptions.companyType)}">View/Change certificate options</a>`
+                    html: `<a class="govuk-link" href="${this.getViewChangeCertOptionsLink(item.item.id, itemOptions.companyType)}">
+                                View/Change certificate options
+                                <span class="govuk-visually-hidden">
+                                    ${itemOptions.certificateType} for ${item.item.companyNumber}
+                                </span>
+                            </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove ${itemOptions.certificateType} for ${item.item.companyNumber}">
                             </form>`
                 }
             ]);
@@ -61,7 +66,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove Certified Document ${item.item.description} for ${item.item.companyNumber}">
                             </form>`
                 }
             ]);
@@ -86,7 +91,7 @@ export class ItemVisitor {
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove Missing Image Delivery ${item.item.description} for ${item.item.companyNumber}">
                             </form>`
                 }
             ]);
