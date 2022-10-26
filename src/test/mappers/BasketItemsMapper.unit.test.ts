@@ -69,13 +69,13 @@ describe("BasketItemsMapper", () => {
                     html: `<a class="govuk-link" href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">
                                 View/Change certificate options
                                 <span class="govuk-visually-hidden">
-                                    ltd for 00000000
+                                    incorporation-with-all-name-changes for 00000000
                                 </span>
                             </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove ltd for 00000000">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove incorporation-with-all-name-changes for 00000000">
                             </form>`
                 }
             ], [
@@ -95,13 +95,13 @@ describe("BasketItemsMapper", () => {
                     html: `<a class="govuk-link" href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">
                                 View/Change certificate options
                                 <span class="govuk-visually-hidden">
-                                    llp for 00000000
+                                    incorporation-with-all-name-changes for 00000000
                                 </span>
                             </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove llp for 00000000">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove incorporation-with-all-name-changes for 00000000">
                             </form>`
                 }
             ], [
@@ -121,13 +121,13 @@ describe("BasketItemsMapper", () => {
                     html: `<a class="govuk-link" href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">
                                 View/Change certificate options
                                 <span class="govuk-visually-hidden">
-                                    limited-partnership for 00000000
+                                    incorporation-with-all-name-changes for 00000000
                                 </span>
                             </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${mockCertificateItem.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove limited-partnership for 00000000">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove incorporation-with-all-name-changes for 00000000">
                             </form>`
                 }
             ]]);

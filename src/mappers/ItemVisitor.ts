@@ -31,13 +31,13 @@ export class ItemVisitor {
                     html: `<a class="govuk-link" href="${this.getViewChangeCertOptionsLink(item.item.id, itemOptions.companyType)}">
                                 View/Change certificate options
                                 <span class="govuk-visually-hidden">
-                                    ${itemOptions.companyType} for ${item.item.companyNumber}
+                                    ${itemOptions.certificateType} for ${item.item.companyNumber}
                                 </span>
                             </a>`
                 },
                 {
                     html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove ${itemOptions.companyType} for ${item.item.companyNumber}">
+                                <input type="submit" class="removeItem" value="Remove" aria-label="Remove ${itemOptions.certificateType} for ${item.item.companyNumber}">
                             </form>`
                 }
             ]);
