@@ -174,7 +174,7 @@ describe("BasketItemsMapper", () => {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove Certified Document ${mockCertifiedCopyItem.description} for 00000000">
+                                       aria-label="Remove Certified Document Director's details changed for Thomas David Wheare on 12 February 2010 for 00000000">
                             </form>`
                 }
             ]);
@@ -201,7 +201,7 @@ describe("BasketItemsMapper", () => {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove Missing Image Delivery ${mockMissingImageDeliveryItem.description} for 00000000">
+                                       aria-label="Remove Missing Image Delivery Appointment of Mr Richard John Harris as a director for 00000000">
                             </form>`
                 }
             ]);

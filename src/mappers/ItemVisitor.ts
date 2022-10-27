@@ -76,7 +76,7 @@ export class ItemVisitor {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove Certified Document ${item.item.description} for ${item.item.companyNumber}">
+                                       aria-label="Remove Certified Document ${mappedFilingHistory[0]?.filingHistoryDescription} for ${item.item.companyNumber}">
                             </form>`
                 }
             ]);
@@ -105,7 +105,7 @@ export class ItemVisitor {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove Missing Image Delivery ${item.item.description} for ${item.item.companyNumber}">
+                                       aria-label="Remove Missing Image Delivery ${mappedFilingHistory[0]?.filingHistoryDescription} for ${item.item.companyNumber}">
                             </form>`
                 }
             ]);
