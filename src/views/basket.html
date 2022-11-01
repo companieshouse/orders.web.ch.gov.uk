@@ -9,6 +9,7 @@
 
 {% block content %}
   <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
     <h1 id="page-heading" class="govuk-heading-l">Basket</h1>
     {% if not missingImageDelivery.length and not certifiedCopies.length and not certificates.length %}
       <h2 id="empty-basket-section-heading" class="govuk-heading-m">Document details</h2>
@@ -23,100 +24,116 @@
     {% else %}
       {% if missingImageDelivery.length %}
         <h2 id="missing-image-delivery-section-heading" class="govuk-heading-m">Missing image requests</h2>
-        {{ govukTable({
-          attributes: {
-            id: "missing-image-delivery-table"
-          },
-          head: [
-            {
-              text: "Date Filed"
-            },
-            {
-              text: "Type"
-            },
-            {
-              text: "Description"
-            },
-            {
-              text: "Company Number"
-            },
-            {
-              text: "Fee"
-            },
-            {
-              html: "<span class='govuk-visually-hidden'>Remove item</span>"
-            }
-          ],
-          rows: missingImageDelivery
-        }) }}
-        <p class="govuk-body">It can take us several hours to check the availability of a document.
-          We will aim to add it to a company's filing history that day if the request is received between 8:30am and 3pm, Monday to Friday (excluding bank holidays).</p>
-        <p class="govuk-body">If you make a request after 3pm, we will add the document the next working day.</p>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            {{ govukTable({
+              attributes: {
+                id: "missing-image-delivery-table"
+              },
+              head: [
+                {
+                  text: "Date Filed"
+                },
+                {
+                  text: "Type"
+                },
+                {
+                  text: "Description"
+                },
+                {
+                  text: "Company Number"
+                },
+                {
+                  text: "Fee"
+                },
+                {
+                  html: "<span class='govuk-visually-hidden'>Remove item</span>"
+                }
+              ],
+              rows: missingImageDelivery
+            }) }}
+          </div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <p class="govuk-body">It can take us several hours to check the availability of a document.
+              We will aim to add it to a company's filing history that day if the request is received between 8:30am and 3pm, Monday to Friday (excluding bank holidays).</p>
+            <p class="govuk-body">If you make a request after 3pm, we will add the document the next working day.</p>
+          </div>
+        </div>
       {% endif %}
       {% if certifiedCopies.length or certificates.length %}
         <h2 id="deliverable-items-section-heading" class="govuk-heading-m">For delivery</h2>
       {% endif %}
       {% if certifiedCopies.length %}
         <h2 id="certified-documents-section-heading" class="govuk-heading-m">Certified documents</h2>
-        {{ govukTable({
-          attributes: {
-            id: "certified-documents-table"
-          },
-          head: [
-            {
-              text: "Date Filed"
-            },
-            {
-              text: "Type"
-            },
-            {
-              text: "Description",
-              classes: "govuk-!-width-one-half"
-            },
-            {
-              text: "Company Number"
-            },
-            {
-              text: "Dispatch method"
-            },
-            {
-              text: "Fee"
-            },
-            {
-              html: "<span class='govuk-visually-hidden'>Remove item</span>"
-            }
-          ],
-          rows: certifiedCopies
-        }) }}
-        {% endif %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            {{ govukTable({
+              attributes: {
+                id: "certified-documents-table"
+              },
+              head: [
+                {
+                  text: "Date Filed"
+                },
+                {
+                  text: "Type"
+                },
+                {
+                  text: "Description",
+                  classes: "govuk-!-width-one-half"
+                },
+                {
+                  text: "Company Number"
+                },
+                {
+                  text: "Dispatch method"
+                },
+                {
+                  text: "Fee"
+                },
+                {
+                  html: "<span class='govuk-visually-hidden'>Remove item</span>"
+                }
+              ],
+              rows: certifiedCopies
+            }) }}
+          </div>
+        </div>
+      {% endif %}
       {% if certificates.length %}
         <h2 id="certificates-section-heading" class="govuk-heading-m">Certified certificates</h2>
-        {{ govukTable({
-          attributes: {
-            id: "certificates-table"
-          },
-          head: [
-            {
-              text: "Certificate type"
-            },
-            {
-              text: "Company number"
-            },
-            {
-              text: "Dispatch method"
-            },
-            {
-              text: "Fee"
-            },
-            {
-              html: "<span class='govuk-visually-hidden'>View/Change Certificate</span>"
-            },
-            {
-              html: "<span class='govuk-visually-hidden'>Remove item</span>"
-            }
-          ],
-          rows: certificates
-        }) }}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            {{ govukTable({
+                attributes: {
+                  id: "certificates-table"
+                },
+                head: [
+                  {
+                    text: "Certificate type"
+                  },
+                  {
+                    text: "Company number"
+                  },
+                  {
+                    text: "Dispatch method"
+                  },
+                  {
+                    text: "Fee"
+                  },
+                  {
+                    html: "<span class='govuk-visually-hidden'>View/Change Certificate</span>"
+                  },
+                  {
+                    html: "<span class='govuk-visually-hidden'>Remove item</span>"
+                  }
+                ],
+                rows: certificates
+              }) }}
+          </div>
+        </div>
       {% endif %}
       {% if certificates.length or certifiedCopies.length %}
         {% if deliveryDetailsTable %}
@@ -175,5 +192,6 @@
         </div>
       </div>
     {% endif %}
+    </div>
   </div>
 {% endblock %}
