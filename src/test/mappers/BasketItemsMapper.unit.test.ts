@@ -110,7 +110,7 @@ describe("BasketItemsMapper", () => {
                     html: "<span class=\"responsive-table__cell\" aria-hidden=\"false\"><form action=\"/basket/remove/CRT-123456-123456\" method=\"post\">\n                                <input type=\"submit\"\n                                       class=\"removeItem\"\n                                       data-event-id=\"remove-item\"\n                                       value=\"Remove\"\n                                       aria-label=\"Remove incorporation-with-all-name-changes for 00000000\">\n                         </form></span>"
                 }
             ]]);
-            expect(actual.certifiedCopies).to.deep.contain([
+            expect(actual.certifiedCopies[0]).to.deep.equal([
                 {
                     html: "<span class=\"responsive-table__heading\" aria-hidden=\"false\">Date Filed</span><span class=\"responsive-table__cell\" aria-hidden=\"false\">12 Feb 2010</span>"
                 },
@@ -134,7 +134,7 @@ describe("BasketItemsMapper", () => {
                 }
             ]);
             // Director's details changed
-            expect(actual.missingImageDelivery).to.deep.contain([
+            expect(actual.missingImageDelivery[0]).to.deep.equal([
                 {
                     html: "<span class=\"responsive-table__heading\" aria-hidden=\"false\">Date Filed</span><span class=\"responsive-table__cell\" aria-hidden=\"false\">26 May 2015</span>"
                 },
