@@ -71,7 +71,7 @@ describe("BasketItemsMapper", () => {
                               href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">
                               View/Change certificate options
                               <span class="govuk-visually-hidden">
-                                  incorporation-with-all-name-changes for 00000000
+                                  Incorporation with all company name changes for 00000000
                               </span>
                            </a>`
                 },
@@ -81,7 +81,7 @@ describe("BasketItemsMapper", () => {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                                       aria-label="Remove certificate options Incorporation with all company name changes for 00000000">
                             </form>`
                 }
             ], [
@@ -103,7 +103,7 @@ describe("BasketItemsMapper", () => {
                               href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">
                               View/Change certificate options
                               <span class="govuk-visually-hidden">
-                                  incorporation-with-all-name-changes for 00000000
+                                  Incorporation with all company name changes for 00000000
                               </span>
                            </a>`
                 },
@@ -113,7 +113,7 @@ describe("BasketItemsMapper", () => {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                                       aria-label="Remove certificate options Incorporation with all company name changes for 00000000">
                             </form>`
                 }
             ], [
@@ -135,7 +135,7 @@ describe("BasketItemsMapper", () => {
                               href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">
                               View/Change certificate options
                               <span class="govuk-visually-hidden">
-                                  incorporation-with-all-name-changes for 00000000
+                                  Incorporation with all company name changes for 00000000
                               </span>
                            </a>`
                 },
@@ -145,7 +145,7 @@ describe("BasketItemsMapper", () => {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                                       aria-label="Remove certificate options Incorporation with all company name changes for 00000000">
                             </form>`
                 }
             ]]);
