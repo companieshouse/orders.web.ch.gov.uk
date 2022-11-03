@@ -154,70 +154,207 @@ describe("BasketItemsMapper", () => {
                     )
                 },
                 {
-                    html: `<span class="responsive-table__cell" aria-hidden="false"><a class="govuk-link"\n                              data-event-id="view-change-certificate-options"\n                              href="/orderable/llp-certificates/CRT-123456-123456/view-change-options">\n                              View/Change certificate options\n                              <span class="govuk-visually-hidden">\n                                  incorporation-with-all-name-changes for 00000000\n                              </span>\n                           </a></span>`
+                    html: `<span class="responsive-table__cell" aria-hidden="false"><a class="govuk-link"
+                              data-event-id="view-change-certificate-options"
+                              href="/orderable/llp-certificates/CRT-123456-123456/view-change-options">
+                              View/Change certificate options
+                              <span class="govuk-visually-hidden">
+                                  incorporation-with-all-name-changes for 00000000
+                              </span>
+                           </a></span>`
                 },
                 {
-                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/CRT-123456-123456" method="post">\n                                <input type="submit"\n                                       class="removeItem"\n                                       data-event-id="remove-item"\n                                       value="Remove"\n                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">\n                         </form></span>`
+                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/CRT-123456-123456" method="post">
+                                <input type="submit"
+                                       class="removeItem"
+                                       data-event-id="remove-item"
+                                       value="Remove"
+                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                         </form></span>`
                 }
             ], [
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Certificate type</span><span class="responsive-table__cell" aria-hidden="false">Incorporation with all company name changes</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Certificate type
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            Incorporation with all company name changes
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Company number</span><span class="responsive-table__cell" aria-hidden="false">00000000</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Company number
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            00000000
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Dispatch method</span><span class="responsive-table__cell" aria-hidden="false">Standard</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Dispatch method
+                        </span>
+                        <span class="responsive-table__cell" aria-hidden="false">
+                            Standard
+                        </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Fee</span><span class="responsive-table__cell" aria-hidden="false">£15</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Fee
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            £15
+                         </span>`
+                    )
                 },
                 {
-                    html: `<span class="responsive-table__cell" aria-hidden="false"><a class="govuk-link"\n                              data-event-id="view-change-certificate-options"\n                              href="/orderable/lp-certificates/CRT-123456-123456/view-change-options">\n                              View/Change certificate options\n                              <span class="govuk-visually-hidden">\n                                  incorporation-with-all-name-changes for 00000000\n                              </span>\n                           </a></span>`
+                    html: `<span class="responsive-table__cell" aria-hidden="false"><a class="govuk-link"
+                              data-event-id="view-change-certificate-options"
+                              href="/orderable/lp-certificates/CRT-123456-123456/view-change-options">
+                              View/Change certificate options
+                              <span class="govuk-visually-hidden">
+                                  incorporation-with-all-name-changes for 00000000
+                              </span>
+                           </a></span>`
                 },
                 {
-                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/CRT-123456-123456" method="post">\n                                <input type="submit"\n                                       class="removeItem"\n                                       data-event-id="remove-item"\n                                       value="Remove"\n                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">\n                         </form></span>`
+                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/CRT-123456-123456" method="post">
+                                <input type="submit"
+                                       class="removeItem"
+                                       data-event-id="remove-item"
+                                       value="Remove"
+                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                         </form></span>`
                 }
             ]]);
             expect(actual.certifiedCopies[0]).to.deep.equal([
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Date Filed</span><span class="responsive-table__cell" aria-hidden="false">12 Feb 2010</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Date Filed
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            12 Feb 2010
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Type</span><span class="responsive-table__cell" aria-hidden="false">CH01</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Type
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            CH01
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Description</span><span class="responsive-table__cell" aria-hidden="false">Director's details changed for Thomas David Wheare on 12 February 2010</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Description
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            Director's details changed for Thomas David Wheare on 12 February 2010
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Company Number</span><span class="responsive-table__cell" aria-hidden="false">00000000</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Company Number
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            00000000
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Dispatch method</span><span class="responsive-table__cell" aria-hidden="false">Standard</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Dispatch method
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            Standard
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Fee</span><span class="responsive-table__cell" aria-hidden="false">£30</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Fee
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            £30
+                         </span>`
+                    )
                 },
                 {
-                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/CCD-123456-123456" method="post">\n                                <input type="submit"\n                                       class="removeItem"\n                                       data-event-id="remove-item"\n                                       value="Remove"\n                                       aria-label="Remove Certified Document Director's details changed for Thomas David Wheare on 12 February 2010 for 00000000">\n                            </form></span>`
+                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/CCD-123456-123456" method="post">
+                                <input type="submit"
+                                       class="removeItem"
+                                       data-event-id="remove-item"
+                                       value="Remove"
+                                       aria-label="Remove Certified Document Director's details changed for Thomas David Wheare on 12 February 2010 for 00000000">
+                            </form></span>`
                 }
             ]);
             // Director's details changed
             expect(actual.missingImageDelivery[0]).to.deep.equal([
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Date Filed</span><span class="responsive-table__cell" aria-hidden="false">26 May 2015</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Date Filed
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            26 May 2015
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Type</span><span class="responsive-table__cell" aria-hidden="false">AP01</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Type
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            AP01
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Description</span><span class="responsive-table__cell" aria-hidden="false">Appointment of Mr Richard John Harris as a director</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Description
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            Appointment of Mr Richard John Harris as a director
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Company Number</span><span class="responsive-table__cell" aria-hidden="false">00000000</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Company Number
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            00000000
+                         </span>`
+                    )
                 },
                 {
-                    html: flatten(`<span class="responsive-table__heading" aria-hidden="false">Fee</span><span class="responsive-table__cell" aria-hidden="false">£3</span>`)
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Fee
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            £3
+                         </span>`
+                    )
                 },
                 {
                     html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/MID-123456-123456" method="post">\n                            <input type="submit"\n                                   class="removeItem"\n                                   data-event-id="remove-item"\n                                   value="Remove"\n                                   aria-label="Remove Missing Image Delivery Appointment of Mr Richard John Harris as a director for 00000000">\n                         </form></span>`
