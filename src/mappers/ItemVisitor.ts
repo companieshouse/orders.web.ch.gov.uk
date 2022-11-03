@@ -16,35 +16,41 @@ export class ItemVisitor {
             this.setDeliveryMethodHelptext(itemOptions);
             this.viewModel.certificates.push([
                 {
-                    text: MapUtil.mapCertificateType(itemOptions?.certificateType)
+                    html: ItemVisitor.makeCellResponsive(
+                        "Certificate type", MapUtil.mapCertificateType(itemOptions?.certificateType))
                 },
                 {
-                    text: item.item.companyNumber
+                    html: ItemVisitor.makeCellResponsive("Company number", item.item.companyNumber)
                 },
                 {
-                    text: MapUtil.mapBasketDeliveryMethod(itemOptions)
+                    html: ItemVisitor.makeCellResponsive(
+                        "Dispatch method", MapUtil.mapBasketDeliveryMethod(itemOptions))
                 },
                 {
-                    text: `£${item.item.totalItemCost}`
+                    html: ItemVisitor.makeCellResponsive("Fee", `£${item.item.totalItemCost}`)
                 },
                 {
-                    html: `<a class="govuk-link"
+                    html: ItemVisitor.makeCellResponsive(
+                        null,
+                        `<a class="govuk-link"
                               data-event-id="view-change-certificate-options"
                               href="${this.getViewChangeCertOptionsLink(item.item.id, itemOptions.companyType)}">
                               View/Change certificate options
                               <span class="govuk-visually-hidden">
                                   ${MapUtil.mapCertificateType(itemOptions?.certificateType)} for ${item.item.companyNumber}
                               </span>
-                           </a>`
+                           </a>`)
                 },
                 {
-                    html: `<form action="/basket/remove/${item.item.id}" method="post">
+                    html: ItemVisitor.makeCellResponsive(
+                        null,
+                        `<form action="/basket/remove/${item.item.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
                                        aria-label="Remove ${MapUtil.mapCertificateType(itemOptions?.certificateType)} certificate for ${item.item.companyNumber}">
-                            </form>`
+                         </form>`)
                 }
             ]);
         } else if (item.item.kind === "item#certified-copy") {
@@ -53,31 +59,33 @@ export class ItemVisitor {
             this.setDeliveryMethodHelptext(itemOptions);
             this.viewModel.certifiedCopies.push([
                 {
-                    text: mappedFilingHistory[0]?.filingHistoryDate
+                    html: ItemVisitor.makeCellResponsive("Date Filed", mappedFilingHistory[0]?.filingHistoryDate)
                 },
                 {
-                    text: mappedFilingHistory[0]?.filingHistoryType
+                    html: ItemVisitor.makeCellResponsive("Type", mappedFilingHistory[0]?.filingHistoryType)
                 },
                 {
-                    text: mappedFilingHistory[0]?.filingHistoryDescription
+                    html: ItemVisitor.makeCellResponsive("Description", mappedFilingHistory[0]?.filingHistoryDescription)
                 },
                 {
-                    text: item.item.companyNumber
+                    html: ItemVisitor.makeCellResponsive("Company Number", item.item.companyNumber)
                 },
                 {
-                    text: MapUtil.mapBasketDeliveryMethod(itemOptions)
+                    html: ItemVisitor.makeCellResponsive("Dispatch method", MapUtil.mapBasketDeliveryMethod(itemOptions))
                 },
                 {
-                    text: `£${item.item.totalItemCost}`
+                    html: ItemVisitor.makeCellResponsive("Fee", `£${item.item.totalItemCost}`)
                 },
                 {
-                    html: `<form action="/basket/remove/${item.item.id}" method="post">
+                    html: ItemVisitor.makeCellResponsive(
+                        null,
+                        `<form action="/basket/remove/${item.item.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
                                        aria-label="Remove Certified Document ${mappedFilingHistory[0]?.filingHistoryDescription} for ${item.item.companyNumber}">
-                            </form>`
+                            </form>`)
                 }
             ]);
         } else if (item.item.kind === "item#missing-image-delivery") {
@@ -85,28 +93,30 @@ export class ItemVisitor {
             const mappedFilingHistory = mapFilingHistoriesDocuments([itemOptions]);
             this.viewModel.missingImageDelivery.push([
                 {
-                    text: mappedFilingHistory[0]?.filingHistoryDate
+                    html: ItemVisitor.makeCellResponsive("Date Filed", mappedFilingHistory[0]?.filingHistoryDate)
                 },
                 {
-                    text: mappedFilingHistory[0]?.filingHistoryType
+                    html: ItemVisitor.makeCellResponsive("Type", mappedFilingHistory[0]?.filingHistoryType)
                 },
                 {
-                    text: mappedFilingHistory[0]?.filingHistoryDescription
+                    html: ItemVisitor.makeCellResponsive("Description", mappedFilingHistory[0]?.filingHistoryDescription)
                 },
                 {
-                    text: item.item.companyNumber
+                    html: ItemVisitor.makeCellResponsive("Company Number", item.item.companyNumber)
                 },
                 {
-                    text: `£${item.item.totalItemCost}`
+                    html: ItemVisitor.makeCellResponsive("Fee", `£${item.item.totalItemCost}`)
                 },
                 {
-                    html: `<form action="/basket/remove/${item.item.id}" method="post">
-                                <input type="submit"
-                                       class="removeItem"
-                                       data-event-id="remove-item"
-                                       value="Remove"
-                                       aria-label="Remove Missing Image Delivery ${mappedFilingHistory[0]?.filingHistoryDescription} for ${item.item.companyNumber}">
-                            </form>`
+                    html: ItemVisitor.makeCellResponsive(
+                        null,
+                        `<form action="/basket/remove/${item.item.id}" method="post">
+                            <input type="submit"
+                                   class="removeItem"
+                                   data-event-id="remove-item"
+                                   value="Remove"
+                                   aria-label="Remove Missing Image Delivery ${mappedFilingHistory[0]?.filingHistoryDescription} for ${item.item.companyNumber}">
+                         </form>`)
                 }
             ]);
         } else {
@@ -132,5 +142,12 @@ export class ItemVisitor {
         if (itemOptions?.deliveryTimescale === "same-day") {
             this.viewModel.hasSameDayDelivery = true;
         }
+    }
+
+    static makeCellResponsive (fieldHeading: string | null, fieldValue: string | undefined | null) : string {
+        fieldHeading = fieldHeading === null
+            ? "" : `<span class="responsive-table__heading" aria-hidden="false">${fieldHeading}</span>`;
+        fieldValue = fieldValue === undefined || fieldValue === null ? "" : fieldValue;
+        return fieldHeading + `<span class="responsive-table__cell" aria-hidden="false">${fieldValue}</span>`;
     }
 }
