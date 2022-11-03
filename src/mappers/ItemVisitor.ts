@@ -37,7 +37,7 @@ export class ItemVisitor {
                               href="${this.getViewChangeCertOptionsLink(item.item.id, itemOptions.companyType)}">
                               View/Change certificate options
                               <span class="govuk-visually-hidden">
-                                  ${itemOptions.certificateType} for ${item.item.companyNumber}
+                                  ${MapUtil.mapCertificateType(itemOptions?.certificateType)} for ${item.item.companyNumber}
                               </span>
                            </a>`)
                 },
@@ -49,7 +49,7 @@ export class ItemVisitor {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove ${itemOptions.certificateType} for ${item.item.companyNumber}">
+                                       aria-label="Remove ${MapUtil.mapCertificateType(itemOptions?.certificateType)} certificate for ${item.item.companyNumber}">
                          </form>`)
                 }
             ]);

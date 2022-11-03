@@ -96,20 +96,20 @@ describe("BasketItemsMapper", () => {
                 {
                     html: `<span class="responsive-table__cell" aria-hidden="false"><a class="govuk-link"
                               data-event-id="view-change-certificate-options"
-                              href="/orderable/certificates/CRT-123456-123456/view-change-options">
+                              href="/orderable/certificates/${CERTIFICATE_ID}/view-change-options">
                               View/Change certificate options
                               <span class="govuk-visually-hidden">
-                                  incorporation-with-all-name-changes for 00000000
+                                  Incorporation with all company name changes for 00000000
                               </span>
                            </a></span>`
                 },
                 {
-                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/CRT-123456-123456" method="post">
+                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/${mockCertificateItem.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                                       aria-label="Remove Incorporation with all company name changes certificate for 00000000">
                          </form></span>`
                 }
             ], [
@@ -156,20 +156,20 @@ describe("BasketItemsMapper", () => {
                 {
                     html: `<span class="responsive-table__cell" aria-hidden="false"><a class="govuk-link"
                               data-event-id="view-change-certificate-options"
-                              href="/orderable/llp-certificates/CRT-123456-123456/view-change-options">
+                              href="/orderable/llp-certificates/${CERTIFICATE_ID}/view-change-options">
                               View/Change certificate options
                               <span class="govuk-visually-hidden">
-                                  incorporation-with-all-name-changes for 00000000
+                                  Incorporation with all company name changes for 00000000
                               </span>
                            </a></span>`
                 },
                 {
-                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/CRT-123456-123456" method="post">
+                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/${mockCertificateItem.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                                       aria-label="Remove Incorporation with all company name changes certificate for 00000000">
                          </form></span>`
                 }
             ], [
@@ -216,20 +216,20 @@ describe("BasketItemsMapper", () => {
                 {
                     html: `<span class="responsive-table__cell" aria-hidden="false"><a class="govuk-link"
                               data-event-id="view-change-certificate-options"
-                              href="/orderable/lp-certificates/CRT-123456-123456/view-change-options">
+                              href="/orderable/lp-certificates/${CERTIFICATE_ID}/view-change-options">
                               View/Change certificate options
                               <span class="govuk-visually-hidden">
-                                  incorporation-with-all-name-changes for 00000000
+                                  Incorporation with all company name changes for 00000000
                               </span>
                            </a></span>`
                 },
                 {
-                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/CRT-123456-123456" method="post">
+                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/${mockCertificateItem.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove incorporation-with-all-name-changes for 00000000">
+                                       aria-label="Remove Incorporation with all company name changes certificate for 00000000">
                          </form></span>`
                 }
             ]]);
@@ -295,7 +295,7 @@ describe("BasketItemsMapper", () => {
                     )
                 },
                 {
-                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/CCD-123456-123456" method="post">
+                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/${mockCertifiedCopyItem.id}" method="post">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
@@ -357,7 +357,13 @@ describe("BasketItemsMapper", () => {
                     )
                 },
                 {
-                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/MID-123456-123456" method="post">\n                            <input type="submit"\n                                   class="removeItem"\n                                   data-event-id="remove-item"\n                                   value="Remove"\n                                   aria-label="Remove Missing Image Delivery Appointment of Mr Richard John Harris as a director for 00000000">\n                         </form></span>`
+                    html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
+                                <input type="submit"
+                                       class="removeItem"
+                                       data-event-id="remove-item"
+                                       value="Remove"
+                                       aria-label="Remove Missing Image Delivery Appointment of Mr Richard John Harris as a director for 00000000">
+                            </form>`
                 }
             ]);
             expect(actual.deliveryDetailsTable).to.deep.equal([
