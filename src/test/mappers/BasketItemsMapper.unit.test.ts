@@ -357,13 +357,13 @@ describe("BasketItemsMapper", () => {
                     )
                 },
                 {
-                    html: `<form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
-                                <input type="submit"
-                                       class="removeItem"
-                                       data-event-id="remove-item"
-                                       value="Remove"
-                                       aria-label="Remove Missing Image Delivery Appointment of Mr Richard John Harris as a director for 00000000">
-                            </form>`
+                    html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
+                            <input type="submit"
+                                   class="removeItem"
+                                   data-event-id="remove-item"
+                                   value="Remove"
+                                   aria-label="Remove Missing Image Delivery Appointment of Mr Richard John Harris as a director for 00000000">
+                         </form></span>`
                 }
             ]);
             expect(actual.deliveryDetailsTable).to.deep.equal([
