@@ -144,7 +144,7 @@ export class ItemVisitor {
         }
     }
 
-    private static makeCellResponsive (fieldHeading: string | null, fieldValue: string | undefined | null) : string {
+    static makeCellResponsive (fieldHeading: string | null, fieldValue: string | undefined | null) : string {
         fieldHeading = fieldHeading === null
             ? "" : `<span class="responsive-table__heading" aria-hidden="false">${fieldHeading}</span>`;
         fieldValue = fieldValue === undefined || fieldValue === null ? "" : fieldValue;
