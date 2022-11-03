@@ -81,7 +81,7 @@ describe("BasketItemsMapper", () => {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove certificate options Incorporation with all company name changes for 00000000">
+                                       aria-label="Remove Incorporation with all company name changes certificate for 00000000">
                             </form>`
                 }
             ], [
@@ -113,7 +113,7 @@ describe("BasketItemsMapper", () => {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove certificate options Incorporation with all company name changes for 00000000">
+                                       aria-label="Remove Incorporation with all company name changes certificate for 00000000">
                             </form>`
                 }
             ], [
@@ -145,7 +145,7 @@ describe("BasketItemsMapper", () => {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove certificate options Incorporation with all company name changes for 00000000">
+                                       aria-label="Remove Incorporation with all company name changes certificate for 00000000">
                             </form>`
                 }
             ]]);

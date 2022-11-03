@@ -43,7 +43,7 @@ export class ItemVisitor {
                                        class="removeItem"
                                        data-event-id="remove-item"
                                        value="Remove"
-                                       aria-label="Remove certificate options ${MapUtil.mapCertificateType(itemOptions?.certificateType)} for ${item.item.companyNumber}">
+                                       aria-label="Remove ${MapUtil.mapCertificateType(itemOptions?.certificateType)} certificate for ${item.item.companyNumber}">
                             </form>`
                 }
             ]);
