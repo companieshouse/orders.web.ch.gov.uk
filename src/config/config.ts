@@ -56,3 +56,5 @@ export const RETRY_CHECKOUT_DELAY = getEnvironmentValue("RETRY_CHECKOUT_DELAY");
 export const ACCOUNT_URL = getEnvironmentValue("ACCOUNT_URL");
 
 export const CHS_MONITOR_GUI_URL = getEnvironmentValue("CHS_MONITOR_GUI_URL");
+
+export const BASKET_WEB_URL = `${CHS_URL}/basket`;
