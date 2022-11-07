@@ -9,7 +9,7 @@ const SIGNED_OUT_ID = "2VsqkD1ILMqzO0NyuL+ubx4crUCP";
 const SIGNED_OUT_SIGNATURE = "9L9X4DGu5LOaE2yaGjPk+vGZcMw";
 export const SIGNED_OUT_COOKIE = SIGNED_OUT_ID + SIGNED_OUT_SIGNATURE;
 
-export const signedInSession = Encoding.encode({
+export const signedInSessionData = {
     ".client.signature": SIGNED_IN_SIGNATURE,
     ".id": SIGNED_IN_ID,
     expires: Date.now() + 3600 * 1000,
@@ -22,9 +22,10 @@ export const signedInSession = Encoding.encode({
         },
         signed_in: 1
     }
-});
+};
+export const signedInSession = Encoding.encode(signedInSessionData);
 
-export const signedOutSession = Encoding.encode({
+export const signedOutSessionData = {
     ".client.signature": SIGNED_OUT_SIGNATURE,
     ".id": SIGNED_OUT_ID,
     expires: Date.now() + 3600 * 1000,
@@ -39,4 +40,5 @@ export const signedOutSession = Encoding.encode({
         },
         signed_in: 0
     }
-});
+};
+export const signedOutSession = Encoding.encode(signedOutSessionData);
