@@ -76,6 +76,8 @@ describe("order.confirmation.controller.integration", () => {
                     enrolled: true
                 }
             } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket")
+            .returns(Promise.resolve({ enrolled: true }));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -117,6 +119,8 @@ describe("order.confirmation.controller.integration", () => {
                     enrolled: true
                 }
             } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket")
+            .returns(Promise.resolve({ enrolled: true }));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -167,6 +171,8 @@ describe("order.confirmation.controller.integration", () => {
                     enrolled: true
                 }
             } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket")
+            .returns(Promise.resolve({ enrolled: true }));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -223,6 +229,8 @@ describe("order.confirmation.controller.integration", () => {
                     enrolled: true
                 }
             } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket")
+            .returns(Promise.resolve({ enrolled: true }));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -264,6 +272,8 @@ describe("order.confirmation.controller.integration", () => {
                     enrolled: false
                 }
             } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket")
+            .returns(Promise.resolve({ enrolled: true }));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -341,6 +351,8 @@ describe("order.confirmation.controller.integration", () => {
                     enrolled: false
                 }
             } as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket")
+            .returns(Promise.resolve({ enrolled: true }));
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -413,6 +425,8 @@ describe("order.confirmation.controller.integration", () => {
                 enrolled: false
             }
         } as BasketLinks));
+        getBasketStub = sandbox.stub(apiClient, "getBasket")
+        .returns(Promise.resolve({ enrolled: true }));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -457,6 +471,8 @@ describe("order.confirmation.controller.integration", () => {
                 enrolled: false
             }
         } as BasketLinks));
+        getBasketStub = sandbox.stub(apiClient, "getBasket")
+        .returns(Promise.resolve({ enrolled: true }));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -496,6 +512,8 @@ describe("order.confirmation.controller.integration", () => {
                 enrolled: false
             }
         } as BasketLinks));
+        getBasketStub = sandbox.stub(apiClient, "getBasket")
+        .returns(Promise.resolve({ enrolled: true }));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certified-copy`)
@@ -539,6 +557,8 @@ describe("order.confirmation.controller.integration", () => {
                 enrolled: false
             }
         } as BasketLinks));
+        getBasketStub = sandbox.stub(apiClient, "getBasket")
+        .returns(Promise.resolve({ enrolled: true }));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=missing-image-delivery`)
