@@ -14,6 +14,7 @@ import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket"
 import { ConfirmationTemplateFactory, DefaultConfirmationTemplateFactory } from "./ConfirmationTemplateFactory";
 import { InternalServerError } from "http-errors";
 import { getWhitelistedReturnToURL } from "../utils/request.util";
+import { BasketLink, getBasketLink } from "../utils/basket.util";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -80,7 +81,10 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             }
         }
 
-        const mappedItem = factory.getMapper(basketLinks.data).map(checkout);
+        const basket: Basket = await getBasket(accessToken);
+        const basketLink: BasketLink = await getBasketLink(req, basket);
+
+        const mappedItem = factory.getMapper(basketLinks.data).map(checkout, basketLink);
         res.render(mappedItem.templateName, mappedItem);
     } catch (err) {
         console.log(err);

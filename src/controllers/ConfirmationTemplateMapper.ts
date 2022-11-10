@@ -1,3 +1,4 @@
+import { BasketLink } from "../utils/basket.util";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 
 export const CERTIFICATE_PAGE_TITLE = "Certificate ordered - Order a certificate - GOV.UK";
@@ -16,5 +17,5 @@ export type OrderDetails = {
 };
 
 export interface ConfirmationTemplateMapper {
-    map (checkout: Checkout): Record<string, any>;
+    map (checkout: Checkout, basketLink: BasketLink): Record<string, any>;
 }

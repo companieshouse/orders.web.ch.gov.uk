@@ -5,6 +5,13 @@ import {
     mockMissingImageDeliveryCheckoutResponse, mockMissingImageDeliveryItem
 } from "../__mocks__/order.mocks";
 import {expect} from "chai";
+import { BasketLink } from "utils/basket.util";
+
+const basketLink: BasketLink = {
+    showBasketLink: true,
+    basketWebUrl: "/basket",
+    basketItems: 1
+};
 
 describe("OrderSummaryTemplateMapper", () => {
     describe("map", () => {
@@ -13,7 +20,7 @@ describe("OrderSummaryTemplateMapper", () => {
             const mapper = new OrderSummaryTemplateMapper();
 
             // when
-            const actual = mapper.map(mockMissingImageDeliveryCheckoutResponse);
+            const actual = mapper.map(mockMissingImageDeliveryCheckoutResponse, basketLink);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -41,7 +48,7 @@ describe("OrderSummaryTemplateMapper", () => {
                         ...mockCertificateCheckoutResponse.items[0].itemOptions,
                         deliveryTimescale: "same-day"
                     }
-                }]});
+                }]}, basketLink);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -69,7 +76,7 @@ describe("OrderSummaryTemplateMapper", () => {
                         ...mockCertifiedCopyCheckoutResponse.items[0].itemOptions,
                         deliveryTimescale: "same-day"
                     }
-                }]});
+                }]}, basketLink);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -89,7 +96,7 @@ describe("OrderSummaryTemplateMapper", () => {
             const mapper = new OrderSummaryTemplateMapper();
 
             // when
-            const actual = mapper.map(mockCertificateCheckoutResponse);
+            const actual = mapper.map(mockCertificateCheckoutResponse, basketLink);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -109,7 +116,7 @@ describe("OrderSummaryTemplateMapper", () => {
             const mapper = new OrderSummaryTemplateMapper();
 
             // when
-            const actual = mapper.map(mockCertifiedCopyCheckoutResponse);
+            const actual = mapper.map(mockCertifiedCopyCheckoutResponse, basketLink);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -133,7 +140,7 @@ describe("OrderSummaryTemplateMapper", () => {
                 {...mockCertificateCheckoutResponse.items[0]},
                 {...mockMissingImageDeliveryItem},
                 {...mockCertifiedCopyItem, itemOptions: { ...mockCertifiedCopyItem.itemOptions, deliveryTimescale: "same-day"}}
-            ]});
+            ]}, basketLink);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");

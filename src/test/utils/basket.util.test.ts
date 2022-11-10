@@ -76,25 +76,25 @@ describe("getBasketLink", () => {
         sandbox.restore();
     });
 
-    it.only("should indicate that basket link is not to be rendered where no session present in request", async () => {
+    it("should indicate that basket link is not to be rendered where no session present in request", async () => {
         chai.expect(await getBasketLink({} as Request, {enrolled: false})).to.deep.equal(
             { showBasketLink: false }
         );
     });
 
-    it.only("should indicate that basket link is not to be rendered where no session data present in request", async () => {
+    it("should indicate that basket link is not to be rendered where no session data present in request", async () => {
         chai.expect(await getBasketLink({ session: {} } as Request, {enrolled: false})).to.deep.equal(
             { showBasketLink: false }
         );
     });
 
-    it.only("should indicate that basket link is not to be rendered where no sign in present in request", async () => {
+    it("should indicate that basket link is not to be rendered where no sign in present in request", async () => {
         chai.expect(await getBasketLink({ session: { data: signedOutSessionData } } as Request, {enrolled: false})).to.deep.equal(
             { showBasketLink: false }
         );
     });
 
-    it.only("should indicate that basket link is not to be rendered where the user is not enrolled", async () => {
+    it("should indicate that basket link is not to be rendered where the user is not enrolled", async () => {
         sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(false));
         chai.expect(await getBasketLink({ session: { data: signedInSessionData } } as Request, {enrolled: false, items: [mockItem]})).to.deep.equal(
             {
@@ -105,7 +105,7 @@ describe("getBasketLink", () => {
         );
     });
 
-    it.only("should indicate that basket link is to be rendered where the user is enrolled", async () => {
+    it("should indicate that basket link is to be rendered where the user is enrolled", async () => {
         sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
         chai.expect(await getBasketLink({ session: { data: signedInSessionData } } as Request, {enrolled: true, items: [mockItem]})).to.deep.equal(
             {
