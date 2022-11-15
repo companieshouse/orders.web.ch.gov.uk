@@ -26,6 +26,37 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
 
         const basketResource: Basket = await getBasket(accessToken);
+        let certificateCountString: string = "CERTIFICATES: ";
+        let certifiedCopyCountString: string = "CERTIFIED COPIES: ";
+        let midCountString: string = "MID: ";
+        let certificateCount: number = 0;
+        let certifiedCopyCount: number = 0;
+        let midCount: number = 0;
+        let needDelivery: string = "";
+        if (basketResource.deliveryDetails === undefined || Object.keys(basketResource.deliveryDetails).length === 0) {
+            if (basketResource.items !== undefined) {
+                for (const item of basketResource.items) {
+                    if (item.itemUri.startsWith("/orderable/certificates")) {
+                        certificateCount++;
+                    }
+                    if (item.itemUri.startsWith("/orderable/certified-copies")) {
+                        certifiedCopyCount++;
+                    }
+                    if (item.itemUri.startsWith("/orderable/missing-image-deliveries")) {
+                        midCount++;
+                    }
+                }
+            }
+            certificateCountString = certificateCountString + certificateCount;
+            certifiedCopyCountString = certifiedCopyCountString + certifiedCopyCount;
+            midCountString = midCountString + midCount;
+
+            if (certificateCount > 0 || certifiedCopyCount > 0 ) {
+                needDelivery = "NEED A DELIVERY ADDRESS";
+            }  else {
+                needDelivery = "NO NEED";
+            }
+        }
         const basketLink: BasketLink = await getBasketLink(req, basketResource);
 
         if (basketResource.enrolled) {
@@ -33,7 +64,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             res.render(BASKET, {
                 ...new BasketItemsMapper().mapBasketItems(basketResource),
                 templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY,
-                ...basketLink
+                ...basketLink,
+                certificateCountString, certifiedCopyCountString, midCountString, needDelivery
             });
         } else {
             logger.debug(`User [${userId}] is not enrolled; proceeding to payment...`);
