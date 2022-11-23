@@ -21,6 +21,16 @@
         text: "Find a company",
         href: CHS_URL
       }) }}
+    {% elif isDeliveryAddressPresentForDeliverables %}
+    <h2 id="empty-delivery-details-section-heading" class="govuk-heading-m">Delivery details required</h2>
+    <p id="empty-delivery-details-message" class="govuk-body">You have no delivery details, please add them.</p>
+    {{ govukButton({
+      attributes: {
+        id: "add-delivery-details"
+      },
+      text: "Add delivery details",
+      href: DELIVERY_DETAILS_WEB_URL
+    }) }}
     {% else %}
       {% if missingImageDelivery.length %}
         <h2 id="missing-image-delivery-section-heading" class="govuk-heading-m">Missing image requests</h2>
@@ -194,9 +204,4 @@
     {% endif %}
     </div>
   </div>
-
-  <h1>{{ certificateCountString }}</h1>
-  <h1>{{ certifiedCopyCountString }}</h1>
-  <h1>{{ midCountString }}</h1>
-  <h1>{{ needDelivery }}</h1>
 {% endblock %}

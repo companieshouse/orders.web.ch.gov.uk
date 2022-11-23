@@ -8,7 +8,7 @@ import { createLoggerMiddleware } from "ch-structured-logging";
 
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
-import { PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, COOKIE_DOMAIN, CACHE_SERVER, APPLICATION_NAME, CHS_URL } from "./config/config";
+import { PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, COOKIE_DOMAIN, CACHE_SERVER, APPLICATION_NAME, CHS_URL, DELIVERY_DETAILS_WEB_URL } from "./config/config";
 import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
 import { ERROR_SUMMARY_TITLE } from "./model/error.messages";
@@ -58,6 +58,7 @@ env.addGlobal("CDN_URL", process.env.CDN_HOST);
 env.addGlobal("PIWIK_URL", PIWIK_URL);
 env.addGlobal("PIWIK_SITE_ID", PIWIK_SITE_ID);
 env.addGlobal("CHS_URL", CHS_URL);
+env.addGlobal("DELIVERY_DETAILS_WEB_URL", DELIVERY_DETAILS_WEB_URL);
 env.addGlobal("ERROR_SUMMARY_TITLE", ERROR_SUMMARY_TITLE);
 env.addGlobal("ACCOUNT_URL", process.env.ACCOUNT_URL);
 env.addGlobal("CHS_MONITOR_GUI_URL", process.env.CHS_MONITOR_GUI_URL);
