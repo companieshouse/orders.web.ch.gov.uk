@@ -74,14 +74,14 @@ describe("basket.controller.integration", () => {
                 mockMissingImageDeliveryItem
             ],
             deliveryDetails : {
-                addressLine1 : "17 New Houses,",
-                addressLine2 : "Pant Road,",
-                country : "United Kingdom",
-                forename : "Cai",
-                surname : "Smith",
-                locality : "Merthyr Tydfil",
-                postal_code : "CF48 5AA",
-                region : "Test"
+                addressLine1 : "Silverstone",
+                addressLine2 : "Towcester",
+                country : "England",
+                forename : "Lewis",
+                surname : "Hamilton",
+                locality : "Northamponshire",
+                postal_code : "NN12 8TN",
+                region : "South"
             },
         } as any));
         chai.request(testApp)
