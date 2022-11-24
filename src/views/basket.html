@@ -21,16 +21,6 @@
         text: "Find a company",
         href: CHS_URL
       }) }}
-    {% elif isDeliveryAddressPresentForDeliverables %}
-    <h2 id="empty-delivery-details-section-heading" class="govuk-heading-m">Delivery details required</h2>
-    <p id="empty-delivery-details-message" class="govuk-body">You have no delivery details, please add them.</p>
-    {{ govukButton({
-      attributes: {
-        id: "add-delivery-details"
-      },
-      text: "Add delivery details",
-      href: DELIVERY_DETAILS_WEB_URL
-    }) }}
     {% else %}
       {% if missingImageDelivery.length %}
         <h2 id="missing-image-delivery-section-heading" class="govuk-heading-m">Missing image requests</h2>
@@ -178,6 +168,18 @@
         </div>
       </div>
       <div class="govuk-grid-row">
+        {% if isDeliveryAddressPresentForDeliverables %}
+        <div class="govuk-grid-column-one-quarter">
+            {{ govukButton({
+              attributes: {
+                "data-event-id": "add-delivery-details",
+                id: "submit"
+              },
+              text: "Add delivery details",
+              href: DELIVERY_DETAILS_WEB_URL
+            }) }}
+        </div>
+        {% else %}
         <div class="govuk-grid-column-one-quarter">
           <form method="post">
             {{ govukButton({
@@ -189,6 +191,7 @@
             }) }}
           </form>
         </div>
+        {% endif %}
         <div class="govuk-grid-column-one-quarter">
           {{ govukButton({
             attributes: {
