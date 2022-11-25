@@ -8,8 +8,7 @@ import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import createError from "http-errors";
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
-import { removeBasketItem } from "../../client/api.client";
-import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
+import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem} from "../__mocks__/order.mocks";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -73,7 +72,17 @@ describe("basket.controller.integration", () => {
                 mockCertificateItem,
                 mockCertifiedCopyItem,
                 mockMissingImageDeliveryItem
-            ]
+            ],
+            deliveryDetails : {
+                addressLine1 : "Silverstone",
+                addressLine2 : "Towcester",
+                country : "England",
+                forename : "Lewis",
+                surname : "Hamilton",
+                locality : "Northamponshire",
+                postal_code : "NN12 8TN",
+                region : "South"
+            },
         } as any));
         chai.request(testApp)
             .get("/basket")
@@ -83,6 +92,7 @@ describe("basket.controller.integration", () => {
                 chai.expect(resp.text).to.contain("Missing image requests");
                 chai.expect(resp.text).to.contain("Certified documents");
                 chai.expect(resp.text).to.contain("Certified certificates");
+                chai.expect(resp.text).to.contain("Continue to payment");
                 chai.expect(getBasketStub).to.have.been.called;
                 done();
             });
@@ -99,6 +109,42 @@ describe("basket.controller.integration", () => {
             .end((err, resp) => {
                 if (err) return done(err);
                 chai.expect(resp.text).to.contain("Your basket is empty, find a company to start ordering.");
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
+    it("renders basket details with add delivery details button for enrolled user with deliverables and no delivery details", (done) => {
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: [
+                mockCertificateItem
+            ]
+        } as any));
+        chai.request(testApp)
+            .get("/basket")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain("Add delivery details");
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
+    it("renders basket details with add continue to payment button for enrolled user without deliverables and no delivery details", (done) => {
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: [
+                mockMissingImageDeliveryItem
+            ]
+        } as any));
+        chai.request(testApp)
+            .get("/basket")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain("Continue to payment");
                 chai.expect(getBasketStub).to.have.been.called;
                 done();
             });

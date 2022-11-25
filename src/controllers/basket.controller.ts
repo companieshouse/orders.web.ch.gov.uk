@@ -28,12 +28,15 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const basketResource: Basket = await getBasket(accessToken);
         const basketLink: BasketLink = await getBasketLink(req, basketResource);
 
+        const isDeliveryAddressPresentForDeliverables: boolean = deliverableItemsHaveAddressCheck(basketResource);
+
         if (basketResource.enrolled) {
             logger.debug(`User [${userId}] is enrolled; rendering basket page...`);
             res.render(BASKET, {
                 ...new BasketItemsMapper().mapBasketItems(basketResource),
                 templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY,
-                ...basketLink
+                ...basketLink,
+                isDeliveryAddressPresentForDeliverables
             });
         } else {
             logger.debug(`User [${userId}] is not enrolled; proceeding to payment...`);
@@ -120,4 +123,22 @@ export const handleRemovePostback = async (req: Request, res: Response, next: Ne
         logger.info(`Remove basket item response status=${response.httpStatusCode}, user_id=${userId}`);
     }
     return res.redirect(BASKET_URL);
+};
+
+const deliverableItemsHaveAddressCheck = (basketResource: Basket): boolean => {
+    let certificateCount: number = 0;
+    let certifiedCopyCount: number = 0;
+    if (basketResource.deliveryDetails === undefined || Object.keys(basketResource.deliveryDetails).length === 0) {
+        if (basketResource.items !== undefined) {
+            for (const item of basketResource.items) {
+                if (item.itemUri.startsWith("/orderable/certificates")) {
+                    certificateCount++;
+                }
+                if (item.itemUri.startsWith("/orderable/certified-copies")) {
+                    certifiedCopyCount++;
+                }
+            }
+        }
+    }
+    return certificateCount > 0 || certifiedCopyCount > 0;
 };
