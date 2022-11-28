@@ -11,8 +11,8 @@ const sandbox = sinon.createSandbox();
 import { Session } from "@companieshouse/node-session-handler";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { mockCertificateItem } from "../../test/__mocks__/order.mocks";
-import { BASKET_ITEM_LIMIT } from "config/config";
-import { BasketLimitState } from "model/BasketLimit";
+import { BASKET_ITEM_LIMIT } from "../../config/config";
+import { BasketLimitState } from "../../model/BasketLimit";
 
 const getDummyBasket = (enrolled: boolean): Basket => {
     return {
