@@ -13,7 +13,8 @@ import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/sessio
 import * as templatePaths from "../model/template.paths";
 import { BASKET } from "../model/template.paths";
 import { BasketItemsMapper } from "../mappers/BasketItemsMapper";
-import { BasketLink, getBasketLink } from "../utils/basket.util"
+import { BasketLink, getBasketLimit, getBasketLink } from "../utils/basket.util"
+import { BasketLimit } from "model/BasketLimit";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -27,13 +28,16 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         const basketResource: Basket = await getBasket(accessToken);
         const basketLink: BasketLink = await getBasketLink(req, basketResource);
+        const basketLimit: BasketLimit = getBasketLimit(basketLink);
+
 
         if (basketResource.enrolled) {
             logger.debug(`User [${userId}] is enrolled; rendering basket page...`);
             res.render(BASKET, {
                 ...new BasketItemsMapper().mapBasketItems(basketResource),
                 templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY,
-                ...basketLink
+                ...basketLink,
+                ...basketLimit
             });
         } else {
             logger.debug(`User [${userId}] is not enrolled; proceeding to payment...`);
