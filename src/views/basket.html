@@ -20,13 +20,11 @@
         }
       ]
     }) }}
-    {% elseif basketLimitState == "below-limit" %}
-    {% else %}
+  {% elseif basketLimitState == "below-limit" %}
+  {% else %}
     {% set html %}
-      <p class="govuk-notification-banner__heading">
-        You cannot add more than {{ basketLimit }} items to your order.
-        To add more, you'll need to remove some items first.
-      </p>
+      <p class="govuk-notification-banner__heading">Your basket is full</p>
+      <p class="govuk-body">You cannot add more than {{ basketLimit }} items to your order. To add more, you'll need to remove some items first.</p>
     {% endset %}
     {{ govukNotificationBanner({
       html: html
