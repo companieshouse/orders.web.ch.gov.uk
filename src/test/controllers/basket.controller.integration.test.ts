@@ -9,6 +9,10 @@ import createError from "http-errors";
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem} from "../__mocks__/order.mocks";
+import { BASKET_ITEM_LIMIT } from "../../config/config";
+import { BASKET } from "../../model/template.paths";
+import { ADD_ANOTHER_DOCUMENT_PATH, BASKET as BASKET_URL } from "../../model/page.urls";
+
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -93,6 +97,90 @@ describe("basket.controller.integration", () => {
                 chai.expect(resp.text).to.contain("Certified documents");
                 chai.expect(resp.text).to.contain("Certified certificates");
                 chai.expect(resp.text).to.contain("Continue to payment");
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
+    it ("renders basket details  and warning message if user is enrolled for multi-item baskets and items at the limit", (done) => {
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: [
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem
+            ],
+            deliveryDetails : {
+                addressLine1 : "Silverstone",
+                addressLine2 : "Towcester",
+                country : "England",
+                forename : "Lewis",
+                surname : "Hamilton",
+                locality : "Northamponshire",
+                postal_code : "NN12 8TN",
+                region : "South"
+            },
+        } as any));
+        chai.request(testApp)
+            .get(`${BASKET_URL}`)
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain(`Basket (${BASKET_ITEM_LIMIT})`);
+                chai.expect(resp.text).to.contain("Your basket is full");
+                chai.expect(resp.text).to.contain(`You cannot add more than ${BASKET_ITEM_LIMIT} items to your order.`);
+                chai.expect(resp.text).to.contain("To add more, you'll need to remove some items first.");
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
+    it ("renders basket details, error message  when add another document button is clicked if user is enrolled for multi-item baskets and items over the limit", (done) => {
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: [
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem,
+                mockCertificateItem
+
+            ],
+            deliveryDetails : {
+                addressLine1 : "Silverstone",
+                addressLine2 : "Towcester",
+                country : "England",
+                forename : "Lewis",
+                surname : "Hamilton",
+                locality : "Northamponshire",
+                postal_code : "NN12 8TN",
+                region : "South"
+            },
+        } as any));
+
+        const url : string = `${BASKET_URL}${ADD_ANOTHER_DOCUMENT_PATH}`;
+        chai.request(testApp)
+            .get(url)
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain(`Basket (${BASKET_ITEM_LIMIT + 1})`);
+                chai.expect(resp.text).to.contain("Add another document");
+                chai.expect(resp.text).to.contain("There is a problem");
+                chai.expect(resp.text).to.contain(`Your basket is full. To add more to your order, you&#39;ll need to remove some items first.`);
                 chai.expect(getBasketStub).to.have.been.called;
                 done();
             });

@@ -7,14 +7,14 @@ import { createLogger } from "ch-structured-logging";
 import { HttpError } from "http-errors";
 
 import { checkoutBasket, createPayment, getBasket, getBasketLinks, removeBasketItem } from "../client/api.client";
-import { ORDER_COMPLETE, replaceOrderId, BASKET as BASKET_URL } from "../model/page.urls";
-import { APPLICATION_NAME, VIEW_BASKET_MATOMO_EVENT_CATEGORY } from "../config/config";
+import { ORDER_COMPLETE, replaceOrderId, BASKET as BASKET_URL, ADD_ANOTHER_DOCUMENT_PATH } from "../model/page.urls";
+import { APPLICATION_NAME, CHS_URL, VIEW_BASKET_MATOMO_EVENT_CATEGORY } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import * as templatePaths from "../model/template.paths";
 import { BASKET } from "../model/template.paths";
 import { BasketItemsMapper } from "../mappers/BasketItemsMapper";
 import { BasketLink, getBasketLimit, getBasketLink } from "../utils/basket.util"
-import { BasketLimit } from "model/BasketLimit";
+import { BasketLimit, BasketLimitState } from "../model/BasketLimit";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -25,19 +25,35 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
-
         const basketResource: Basket = await getBasket(accessToken);
         const basketLink: BasketLink = await getBasketLink(req, basketResource);
         const basketLimit: BasketLimit = getBasketLimit(basketLink);
-
-
         const isDeliveryAddressPresentForDeliverables: boolean = deliverableItemsHaveAddressCheck(basketResource);
+        const addAnotherDocumentPath = `${BASKET_URL}${ADD_ANOTHER_DOCUMENT_PATH}`;
+        let addAnotherDocumentUrl = `${CHS_URL}${addAnotherDocumentPath}`;
+        
+        logger.debug(`anotherDocumentUrl = ${addAnotherDocumentUrl}`);
+        logger.debug(`reqUrl = ${req.url}`);
+        logger.debug(`anotherDocumentPath = ${addAnotherDocumentPath}`);
+        
+
+        if (req.url == addAnotherDocumentPath) {
+            logger.debug(`Add another button clicked, req.url = ${req.url}`);
+            if (displayBasketLimitError(req, res, basketLimit)) {
+                logger.debug(`Disable Add another document button.`);
+                addAnotherDocumentUrl = "";
+            } else {
+                return;
+            }
+        }
+
 
         if (basketResource.enrolled) {
             logger.debug(`User [${userId}] is enrolled; rendering basket page...`);
             res.render(BASKET, {
                 ...new BasketItemsMapper().mapBasketItems(basketResource),
                 templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY,
+                addAnotherDocumentUrl,
                 ...basketLink,
                 ...basketLimit,
                 isDeliveryAddressPresentForDeliverables
@@ -146,3 +162,23 @@ const deliverableItemsHaveAddressCheck = (basketResource: Basket): boolean => {
     }
     return certificateCount > 0 || certifiedCopyCount > 0;
 };
+
+
+/**
+ * displayBasketLimitError controls the presentation of a basket limit warning/error as appropriate.
+ * @return whether a basket limit error is to be displayed (<code>true</code>), or not (<code>false</code>)
+ */
+const displayBasketLimitError = (req: Request,
+                                 res: Response,
+                                 basketLimit: BasketLimit): boolean => {
+   if (basketLimit.basketLimitState == BasketLimitState.BELOW_LIMIT) {
+       const nextPage = `${CHS_URL}`;
+       logger.debug(`Basket is not full, redirecting to ${nextPage}`);
+       res.redirect(nextPage);
+       return false;
+    } else {
+        logger.debug(`Basket is full, display error.`);
+        basketLimit.basketLimitState = BasketLimitState.DISPLAY_LIMIT_ERROR; // styles button as disabled
+        return true;
+    }
+}

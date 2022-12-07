@@ -8,6 +8,7 @@ import deliveryDetailsController, { render as renderDeliveryDetails } from "../c
 import { OrderSummaryController } from "../order_summary/OrderSummaryController";
 import { OrderSummaryService } from "../order_summary/OrderSummaryService";
 import { OrderItemSummaryController } from "../order_item_summary/OrderItemSummaryController";
+import { ADD_ANOTHER_DOCUMENT_PATH } from "../model/page.urls";
 
 const renderTemplate = (template: string) => (req: Request, res: Response, next: NextFunction) => {
     return res.render(template, { templateName: template });
@@ -22,6 +23,7 @@ router.get(pageUrls.ORDER_SUMMARY, orderSummaryController.readOrder.bind(orderSu
 const orderItemSummaryController = new OrderItemSummaryController();
 router.get(pageUrls.ORDER_ITEM_SUMMARY, orderItemSummaryController.viewSummary.bind(orderItemSummaryController));
 router.get(pageUrls.BASKET, renderBasket);
+router.get(pageUrls.BASKET + ADD_ANOTHER_DOCUMENT_PATH, renderBasket);
 router.post(pageUrls.BASKET, handleBasketPostback);
 router.post(pageUrls.BASKET_REMOVE, handleRemovePostback);
 
