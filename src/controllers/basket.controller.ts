@@ -168,17 +168,17 @@ const deliverableItemsHaveAddressCheck = (basketResource: Basket): boolean => {
  * displayBasketLimitError controls the presentation of a basket limit warning/error as appropriate.
  * @return whether a basket limit error is to be displayed (<code>true</code>), or not (<code>false</code>)
  */
- const displayBasketLimitError = (req: Request,
-    res: Response,
-    basketLimit: BasketLimit) : boolean => {
-if (basketLimit.basketLimitState == BasketLimitState.BELOW_LIMIT) {
-    const nextPage = `${CHS_URL}`;
-logger.debug(`Basket is not full, redirecting to ${nextPage}`);
-res.redirect(nextPage);
-return false;
-} else {
-logger.debug(`Basket is full, display error.`);
-basketLimit.basketLimitState = BasketLimitState.DISPLAY_LIMIT_ERROR; // styles button as disabled
-return true;
-}
+const displayBasketLimitError = (req: Request,
+                                 res: Response,
+                                 basketLimit: BasketLimit): boolean => {
+   if (basketLimit.basketLimitState == BasketLimitState.BELOW_LIMIT) {
+       const nextPage = `${CHS_URL}`;
+       logger.debug(`Basket is not full, redirecting to ${nextPage}`);
+       res.redirect(nextPage);
+       return false;
+    } else {
+        logger.debug(`Basket is full, display error.`);
+        basketLimit.basketLimitState = BasketLimitState.DISPLAY_LIMIT_ERROR; // styles button as disabled
+        return true;
+    }
 }
