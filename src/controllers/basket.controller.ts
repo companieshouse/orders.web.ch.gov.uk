@@ -15,7 +15,6 @@ import { BASKET } from "../model/template.paths";
 import { BasketItemsMapper } from "../mappers/BasketItemsMapper";
 import { BasketLink, getBasketLimit, getBasketLink } from "../utils/basket.util"
 import { BasketLimit, BasketLimitState } from "../model/BasketLimit";
-import { getWhitelistedReturnToURL } from "../utils/request.util";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -30,7 +29,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const basketLink: BasketLink = await getBasketLink(req, basketResource);
         const basketLimit: BasketLimit = getBasketLimit(basketLink);
         const isDeliveryAddressPresentForDeliverables: boolean = deliverableItemsHaveAddressCheck(basketResource);
-        const addAnotherDocumentPath = `/${BASKET}${ADD_ANOTHER_DOCUMENT_PATH}`;
+        const addAnotherDocumentPath = `${BASKET_URL}${ADD_ANOTHER_DOCUMENT_PATH}`;
         let addAnotherDocumentUrl = `${CHS_URL}${addAnotherDocumentPath}`;
         
         logger.debug(`anotherDocumentUrl = ${addAnotherDocumentUrl}`);
