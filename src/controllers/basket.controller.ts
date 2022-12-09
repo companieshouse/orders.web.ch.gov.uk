@@ -34,7 +34,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         let continueToPaymentPath = `${BASKET_URL}${CONTINUE_TO_PAYMENT_PATH}`;
         let continueToPaymentUrl = `${CHS_URL}${continueToPaymentPath}`;
         
-        if (req.url == addAnotherDocumentPath) {
+        if (req.url === addAnotherDocumentPath) {
             logger.debug(`Add another button clicked, req.url = ${req.url}`);
             if (displayBasketLimitError(req, res, basketLimit)) {
                 logger.debug(`Disable Add another document button.`);
@@ -44,11 +44,10 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             }
         } 
 
-        if (req.url == continueToPaymentPath) {
-                addAnotherDocumentUrl = `${BASKET_URL}`;
-                continueToPaymentUrl = `${await proceedToPayment(req, res, next)}`;
+        if (req.url === continueToPaymentPath) {
+            await proceedToPayment(req, res, next);
         }
-
+        logger.debug(`continueToPayment = ${continueToPaymentUrl}`)
         if (basketResource.enrolled) {
             logger.debug(`User [${userId}] is enrolled; rendering basket page...`);
             res.render(BASKET, {
