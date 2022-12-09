@@ -7,7 +7,7 @@ import { createLogger } from "ch-structured-logging";
 import { HttpError } from "http-errors";
 
 import { checkoutBasket, createPayment, getBasket, getBasketLinks, removeBasketItem } from "../client/api.client";
-import { ORDER_COMPLETE, replaceOrderId, BASKET as BASKET_URL, ADD_ANOTHER_DOCUMENT_PATH } from "../model/page.urls";
+import { ORDER_COMPLETE, replaceOrderId, BASKET as BASKET_URL, ADD_ANOTHER_DOCUMENT_PATH, CONTINUE_TO_PAYMENT_PATH } from "../model/page.urls";
 import { APPLICATION_NAME, CHS_URL, VIEW_BASKET_MATOMO_EVENT_CATEGORY } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import * as templatePaths from "../model/template.paths";
@@ -31,12 +31,9 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const isDeliveryAddressPresentForDeliverables: boolean = deliverableItemsHaveAddressCheck(basketResource);
         const addAnotherDocumentPath = `${BASKET_URL}${ADD_ANOTHER_DOCUMENT_PATH}`;
         let addAnotherDocumentUrl = `${CHS_URL}${addAnotherDocumentPath}`;
+        let continueToPaymentPath = `${BASKET_URL}${CONTINUE_TO_PAYMENT_PATH}`;
+        let continueToPaymentUrl = `${CHS_URL}${continueToPaymentPath}`;
         
-        logger.debug(`anotherDocumentUrl = ${addAnotherDocumentUrl}`);
-        logger.debug(`reqUrl = ${req.url}`);
-        logger.debug(`anotherDocumentPath = ${addAnotherDocumentPath}`);
-        
-
         if (req.url == addAnotherDocumentPath) {
             logger.debug(`Add another button clicked, req.url = ${req.url}`);
             if (displayBasketLimitError(req, res, basketLimit)) {
@@ -45,8 +42,12 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             } else {
                 return;
             }
-        }
+        } 
 
+        if (req.url == continueToPaymentPath) {
+                addAnotherDocumentUrl = `${BASKET_URL}`;
+                continueToPaymentUrl = `${await proceedToPayment(req, res, next)}`;
+        }
 
         if (basketResource.enrolled) {
             logger.debug(`User [${userId}] is enrolled; rendering basket page...`);
@@ -54,6 +55,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                 ...new BasketItemsMapper().mapBasketItems(basketResource),
                 templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY,
                 addAnotherDocumentUrl,
+                continueToPaymentUrl,
                 ...basketLink,
                 ...basketLimit,
                 isDeliveryAddressPresentForDeliverables
