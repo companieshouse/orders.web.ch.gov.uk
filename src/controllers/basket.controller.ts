@@ -46,8 +46,9 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         if (req.url === continueToPaymentPath) {
             await proceedToPayment(req, res, next);
+            return;
         }
-        logger.debug(`continueToPayment = ${continueToPaymentUrl}`)
+
         if (basketResource.enrolled) {
             logger.debug(`User [${userId}] is enrolled; rendering basket page...`);
             res.render(BASKET, {
