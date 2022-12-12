@@ -31,8 +31,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const isDeliveryAddressPresentForDeliverables: boolean = deliverableItemsHaveAddressCheck(basketResource);
         const addAnotherDocumentPath = `${BASKET_URL}${ADD_ANOTHER_DOCUMENT_PATH}`;
         let addAnotherDocumentUrl = `${CHS_URL}${addAnotherDocumentPath}`;
-        let continueToPaymentPath = `${BASKET_URL}${CONTINUE_TO_PAYMENT_PATH}`;
-        let continueToPaymentUrl = `${CHS_URL}${continueToPaymentPath}`;
+        const continueToPaymentPath = `${BASKET_URL}${CONTINUE_TO_PAYMENT_PATH}`;
+        const continueToPaymentUrl = `${CHS_URL}${continueToPaymentPath}`;
         
         if (req.url === addAnotherDocumentPath) {
             logger.debug(`Add another button clicked, req.url = ${req.url}`);
