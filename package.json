@@ -9,8 +9,9 @@
     "build": "NODE_ENV=production tsc && cp -r src/views dist/ && gulp static",
     "lint": "eslint 'src/*.ts' 'src/**/*.ts'",
     "lint:fix": "eslint 'src/*.ts' 'src/**/*.ts' --fix",
-    "sonarqube": "sonar-scanner",
-    "test": "mocha"
+    "test": "mocha",
+    "test:coverage": "nyc npm test",
+    "analyse-code": "sonar-scanner"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +29,7 @@
     "ioredis": "4.16.2",
     "js-yaml": "^3.14.0",
     "nunjucks": "3.2.1",
+    "nyc": "^15.1.0",
     "uuid": "8.0.0",
     "yargs": "15.3.1"
   },
@@ -63,6 +65,7 @@
     "mocha": "7.1.1",
     "nock": "12.0.3",
     "nodemon": "2.0.3",
+    "nyc": "^15.1.0",
     "sinon": "9.0.2",
     "sinon-chai": "3.5.0",
     "sonarqube-scanner": "^2.8.1",
