@@ -8,7 +8,17 @@ import { createLoggerMiddleware } from "ch-structured-logging";
 
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
-import { PIWIK_SITE_ID, PIWIK_URL, COOKIE_SECRET, COOKIE_DOMAIN, CACHE_SERVER, APPLICATION_NAME, CHS_URL, DELIVERY_DETAILS_WEB_URL } from "./config/config";
+import { 
+    PIWIK_SITE_ID,
+    PIWIK_URL,
+    COOKIE_SECRET,
+    COOKIE_DOMAIN,
+    CACHE_SERVER,
+    APPLICATION_NAME,
+    CHS_URL,
+    DELIVERY_DETAILS_WEB_URL,
+    BASKET_WEB_URL
+} from "./config/config";
 import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
 import { ERROR_SUMMARY_TITLE } from "./model/error.messages";
@@ -62,6 +72,10 @@ env.addGlobal("DELIVERY_DETAILS_WEB_URL", DELIVERY_DETAILS_WEB_URL);
 env.addGlobal("ERROR_SUMMARY_TITLE", ERROR_SUMMARY_TITLE);
 env.addGlobal("ACCOUNT_URL", process.env.ACCOUNT_URL);
 env.addGlobal("CHS_MONITOR_GUI_URL", process.env.CHS_MONITOR_GUI_URL);
+env.addGlobal("FEEDBACK_SOURCE", BASKET_WEB_URL);
+
+
+
 
 app.use((req, res, next) => {
     env.addGlobal("signedIn", req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1);
