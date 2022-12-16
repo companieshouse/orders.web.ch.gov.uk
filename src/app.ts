@@ -74,9 +74,6 @@ env.addGlobal("ACCOUNT_URL", process.env.ACCOUNT_URL);
 env.addGlobal("CHS_MONITOR_GUI_URL", process.env.CHS_MONITOR_GUI_URL);
 env.addGlobal("FEEDBACK_SOURCE", BASKET_WEB_URL);
 
-
-
-
 app.use((req, res, next) => {
     env.addGlobal("signedIn", req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1);
     env.addGlobal("userEmail", req.session?.data?.signin_info?.user_profile?.email);
