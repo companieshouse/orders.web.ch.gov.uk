@@ -4,7 +4,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import Redis from "ioredis";
 import { SessionStore, SessionMiddleware, CookieConfig } from "@companieshouse/node-session-handler";
-import { createLoggerMiddleware } from "ch-structured-logging";
+import {createLogger, createLoggerMiddleware} from "ch-structured-logging";
 
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
@@ -26,6 +26,8 @@ import { SessionKey } from "@companieshouse/node-session-handler/lib/session/key
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 
 const app = express();
+
+const logger = createLogger(APPLICATION_NAME);
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -74,11 +76,13 @@ env.addGlobal("ACCOUNT_URL", process.env.ACCOUNT_URL);
 env.addGlobal("CHS_MONITOR_GUI_URL", process.env.CHS_MONITOR_GUI_URL);
 env.addGlobal("FEEDBACK_SOURCE", BASKET_WEB_URL);
 
-app.use((req, res, next) => {
-    env.addGlobal("signedIn", req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1);
-    env.addGlobal("userEmail", req.session?.data?.signin_info?.user_profile?.email);
-    next();
-});
+// TODO GCI-2426 Remove this
+// app.use((req, res, next) => {
+//     logger.debug(`GOT req.session.data = ${JSON.stringify(req.session?.data)}`);
+//     env.addGlobal("signedIn", req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1);
+//     env.addGlobal("userEmail", req.session?.data?.signin_info?.user_profile?.email);
+//     next();
+// });
 
 // serve static assets in development.
 // this will execute in production for now, but we will host these else where in the future.
