@@ -15,6 +15,7 @@ import { ConfirmationTemplateFactory, DefaultConfirmationTemplateFactory } from 
 import { InternalServerError } from "http-errors";
 import { getWhitelistedReturnToURL } from "../utils/request.util";
 import { BasketLink, getBasketLink } from "../utils/basket.util";
+import { mapPageHeader } from "../utils/page.header.utils";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -39,6 +40,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const itemType = req.query.itemType;
 
         const basketLinks = await getBasketLinks(accessToken);
+        const pageHeader = mapPageHeader(req);
 
         if (basketLinks.data.enrolled) {
             logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, user_id=${userId}`);
@@ -84,7 +86,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const basket: Basket = await getBasket(accessToken);
         const basketLink: BasketLink = await getBasketLink(req, basket);
 
-        const mappedItem = factory.getMapper(basketLinks.data).map(checkout, basketLink);
+        const mappedItem = factory.getMapper(basketLinks.data).map(checkout, basketLink, pageHeader);
         res.render(mappedItem.templateName, mappedItem);
     } catch (err) {
         console.log(err);

@@ -6,6 +6,7 @@ import { MapUtil } from "../service/MapUtil";
 import { ConfirmationTemplateMapper } from "./ConfirmationTemplateMapper";
 import { ItemOptionsDeliveryTimescaleConfigurable } from "@companieshouse/api-sdk-node/dist/services/order/types";
 import { BasketLink } from "../utils/basket.util";
+import { PageHeader } from "../model/PageHeader";
 
 export const PAGE_TITLE = "Order received - GOV.UK";
 export const PANEL_TITLE = "Order received";
@@ -17,7 +18,7 @@ type OrderStatus = {
 };
 
 export class OrderSummaryTemplateMapper implements ConfirmationTemplateMapper {
-    map (checkout: Checkout, basketLink: BasketLink): Record<string, any> {
+    map (checkout: Checkout, basketLink: BasketLink, pageHeader: PageHeader): Record<string, any> {
         const orderStatus = this.buildOrderStatus(checkout.items)
         const view = {
             pageTitleText: PAGE_TITLE,
@@ -26,7 +27,8 @@ export class OrderSummaryTemplateMapper implements ConfirmationTemplateMapper {
             paymentDetails: MapUtil.getPaymentDetails(checkout),
             ...this.buildOrderStatus(checkout.items),
             templateName: ORDER_COMPLETE_ABBREVIATED,
-            ...basketLink
+            ...basketLink,
+            ...pageHeader
         };
         if (orderStatus.hasStandardDeliveryItems || orderStatus.hasExpressDeliveryItems) {
             view["deliveryDetailsTable"] = this.buildDeliveryDetails(MapUtil.mapDeliveryDetails(checkout.deliveryDetails));
