@@ -17,7 +17,8 @@ import {
     APPLICATION_NAME,
     CHS_URL,
     DELIVERY_DETAILS_WEB_URL,
-    BASKET_WEB_URL
+    BASKET_WEB_URL,
+    ORDERS_CONFIRMATION_WEB_URL
 } from "./config/config";
 import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
@@ -60,6 +61,17 @@ app.use(PROTECTED_PATHS, createLoggerMiddleware(APPLICATION_NAME));
 app.use(PROTECTED_PATHS, SessionMiddleware(cookieConfig, sessionStore));
 app.use(PROTECTED_PATHS, authMiddleware);
 
+app.use((req, res, next) => {
+    if (req.path.includes("/delivery-details")) {
+        env.addGlobal("FEEDBACK_SOURCE", DELIVERY_DETAILS_WEB_URL);
+    } else if (req.path.includes("/basket")) {
+        env.addGlobal("FEEDBACK_SOURCE", BASKET_WEB_URL);
+    }else if (req.path.includes("/confirmation")) {
+        env.addGlobal("FEEDBACK_SOURCE", ORDERS_CONFIRMATION_WEB_URL);
+    }
+    next();
+});
+
 app.set("views", viewPath);
 app.set("view engine", "html");
 
@@ -72,7 +84,6 @@ env.addGlobal("DELIVERY_DETAILS_WEB_URL", DELIVERY_DETAILS_WEB_URL);
 env.addGlobal("ERROR_SUMMARY_TITLE", ERROR_SUMMARY_TITLE);
 env.addGlobal("ACCOUNT_URL", process.env.ACCOUNT_URL);
 env.addGlobal("CHS_MONITOR_GUI_URL", process.env.CHS_MONITOR_GUI_URL);
-env.addGlobal("FEEDBACK_SOURCE", BASKET_WEB_URL);
 
 app.use((req, res, next) => {
     env.addGlobal("signedIn", req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1);

@@ -62,3 +62,5 @@ export const BASKET_WEB_URL = `${CHS_URL}/basket`;
 export const BASKET_ITEM_LIMIT = Number(getEnvironmentValue("BASKET_ITEM_LIMIT"));
 
 export const DELIVERY_DETAILS_WEB_URL = `${CHS_URL}/delivery-details`;
+
+export const ORDERS_CONFIRMATION_WEB_URL = `${CHS_URL}/order-confirmation`;
