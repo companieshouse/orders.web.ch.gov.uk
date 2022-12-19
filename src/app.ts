@@ -69,7 +69,7 @@ app.use((req, res, next) => {
     }else if (req.path.includes("/confirmation")) {
         env.addGlobal("FEEDBACK_SOURCE", ORDERS_CONFIRMATION_WEB_URL);
     }
-        next();
+    next();
 });
 
 app.set("views", viewPath);
