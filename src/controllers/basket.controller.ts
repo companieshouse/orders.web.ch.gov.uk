@@ -15,6 +15,7 @@ import { BASKET } from "../model/template.paths";
 import { BasketItemsMapper } from "../mappers/BasketItemsMapper";
 import { BasketLink, getBasketLimit, getBasketLink } from "../utils/basket.util"
 import { BasketLimit, BasketLimitState } from "../model/BasketLimit";
+import { mapPageHeader } from "../utils/page.header.utils";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -33,6 +34,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         let addAnotherDocumentUrl = `${CHS_URL}${addAnotherDocumentPath}`;
         const continueToPaymentPath = `${BASKET_URL}${CONTINUE_TO_PAYMENT_PATH}`;
         const continueToPaymentUrl = `${CHS_URL}${continueToPaymentPath}`;
+        const pageHeader = mapPageHeader(req);
         
         if (req.url === addAnotherDocumentPath) {
             logger.debug(`Add another button clicked, req.url = ${req.url}`);
@@ -58,7 +60,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                 continueToPaymentUrl,
                 ...basketLink,
                 ...basketLimit,
-                isDeliveryAddressPresentForDeliverables
+                isDeliveryAddressPresentForDeliverables,
+                ...pageHeader
             });
         } else {
             logger.debug(`User [${userId}] is not enrolled; proceeding to payment...`);

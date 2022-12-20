@@ -1,16 +1,22 @@
-import {OrderSummaryTemplateMapper} from "../../controllers/OrderSummaryTemplateMapper";
+import { OrderSummaryTemplateMapper } from "../../controllers/OrderSummaryTemplateMapper";
 import {
     mockCertificateCheckoutResponse,
     mockCertifiedCopyCheckoutResponse, mockCertifiedCopyItem,
     mockMissingImageDeliveryCheckoutResponse, mockMissingImageDeliveryItem
 } from "../__mocks__/order.mocks";
-import {expect} from "chai";
+import { expect } from "chai";
 import { BasketLink } from "utils/basket.util";
+import { PageHeader } from "../../model/PageHeader";
 
 const basketLink: BasketLink = {
     showBasketLink: true,
     basketWebUrl: "/basket",
     basketItems: 1
+};
+
+const pageHeader: PageHeader = {
+    isSignedIn: true,
+    userEmailAddress: "demo@ch.gov.uk"
 };
 
 describe("OrderSummaryTemplateMapper", () => {
@@ -20,7 +26,7 @@ describe("OrderSummaryTemplateMapper", () => {
             const mapper = new OrderSummaryTemplateMapper();
 
             // when
-            const actual = mapper.map(mockMissingImageDeliveryCheckoutResponse, basketLink);
+            const actual = mapper.map(mockMissingImageDeliveryCheckoutResponse, basketLink, pageHeader);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -33,6 +39,8 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.false;
             expect(actual.deliveryDetailsTable).to.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
+            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
+            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
 
         it("It evaluates hasExpressDeliveryItems to true if order has a certificate with express delivery", () => {
@@ -48,7 +56,8 @@ describe("OrderSummaryTemplateMapper", () => {
                         ...mockCertificateCheckoutResponse.items[0].itemOptions,
                         deliveryTimescale: "same-day"
                     }
-                }]}, basketLink);
+                }]
+            }, basketLink, pageHeader);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -61,6 +70,8 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.false;
             expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
+            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
+            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
 
         it("It evaluates hasExpressDeliveryItems to true if order has a certified copy with express delivery", () => {
@@ -76,7 +87,8 @@ describe("OrderSummaryTemplateMapper", () => {
                         ...mockCertifiedCopyCheckoutResponse.items[0].itemOptions,
                         deliveryTimescale: "same-day"
                     }
-                }]}, basketLink);
+                }]
+            }, basketLink, pageHeader);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -89,6 +101,8 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.false;
             expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
+            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
+            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
 
         it("It evaluates hasStandardDeliveryItems to true if order has a certificate with standard delivery", () => {
@@ -96,7 +110,7 @@ describe("OrderSummaryTemplateMapper", () => {
             const mapper = new OrderSummaryTemplateMapper();
 
             // when
-            const actual = mapper.map(mockCertificateCheckoutResponse, basketLink);
+            const actual = mapper.map(mockCertificateCheckoutResponse, basketLink, pageHeader);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -109,6 +123,8 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.true;
             expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
+            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
+            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
 
         it("It evaluates hasStandardDeliveryItems to true if order has a certified copy with standard delivery", () => {
@@ -116,7 +132,7 @@ describe("OrderSummaryTemplateMapper", () => {
             const mapper = new OrderSummaryTemplateMapper();
 
             // when
-            const actual = mapper.map(mockCertifiedCopyCheckoutResponse, basketLink);
+            const actual = mapper.map(mockCertifiedCopyCheckoutResponse, basketLink, pageHeader);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -129,6 +145,8 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.true;
             expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
+            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
+            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
 
         it("It evaluates hasMissingImageDeliveryItems, hasExpressDeliveryItems and hasStandardDeliveryItems to true if order has missing image deliveries, items with standard, express delivery", () => {
@@ -136,11 +154,14 @@ describe("OrderSummaryTemplateMapper", () => {
             const mapper = new OrderSummaryTemplateMapper();
 
             // when
-            const actual = mapper.map({...mockCertificateCheckoutResponse, items: [
-                {...mockCertificateCheckoutResponse.items[0]},
-                {...mockMissingImageDeliveryItem},
-                {...mockCertifiedCopyItem, itemOptions: { ...mockCertifiedCopyItem.itemOptions, deliveryTimescale: "same-day"}}
-            ]}, basketLink);
+            const actual = mapper.map({
+                ...mockCertificateCheckoutResponse,
+                items: [
+                    { ...mockCertificateCheckoutResponse.items[0] },
+                    { ...mockMissingImageDeliveryItem },
+                    { ...mockCertifiedCopyItem, itemOptions: { ...mockCertifiedCopyItem.itemOptions, deliveryTimescale: "same-day" } }
+                ]
+            }, basketLink, pageHeader);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -153,6 +174,8 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.true;
             expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
+            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
+            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
     });
 });

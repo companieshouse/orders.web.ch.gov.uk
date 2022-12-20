@@ -8,7 +8,7 @@ import { createLoggerMiddleware } from "ch-structured-logging";
 
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
-import { 
+import {
     PIWIK_SITE_ID,
     PIWIK_URL,
     COOKIE_SECRET,
@@ -31,7 +31,7 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(function (req, res, next) {
+app.use(function (_req, res, next) {
     res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
     next();
 });
@@ -84,12 +84,6 @@ env.addGlobal("DELIVERY_DETAILS_WEB_URL", DELIVERY_DETAILS_WEB_URL);
 env.addGlobal("ERROR_SUMMARY_TITLE", ERROR_SUMMARY_TITLE);
 env.addGlobal("ACCOUNT_URL", process.env.ACCOUNT_URL);
 env.addGlobal("CHS_MONITOR_GUI_URL", process.env.CHS_MONITOR_GUI_URL);
-
-app.use((req, res, next) => {
-    env.addGlobal("signedIn", req.session?.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.SignedIn] === 1);
-    env.addGlobal("userEmail", req.session?.data?.signin_info?.user_profile?.email);
-    next();
-});
 
 // serve static assets in development.
 // this will execute in production for now, but we will host these else where in the future.

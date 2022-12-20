@@ -10,7 +10,8 @@ import { SessionKey } from "@companieshouse/node-session-handler/lib/session/key
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import { APPLICATION_NAME } from "../config/config";
-import { BasketLink, getBasketLink } from "../utils/basket.util"
+import { BasketLink, getBasketLink } from "../utils/basket.util";
+import { mapPageHeader } from "../utils/page.header.utils";
 
 const FIRST_NAME_FIELD: string = "firstName";
 const LAST_NAME_FIELD: string = "lastName";
@@ -32,6 +33,7 @@ export const render = async (req: Request, res: Response, next: NextFunction): P
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const basket: Basket = await getBasket(accessToken);
         const basketLink: BasketLink = await getBasketLink(req, basket);
+        const pageHeader = mapPageHeader(req);
         return res.render(DELIVERY_DETAILS, {
             firstName: basket.deliveryDetails?.forename,
             lastName: basket.deliveryDetails?.surname,
@@ -46,7 +48,8 @@ export const render = async (req: Request, res: Response, next: NextFunction): P
             templateName: DELIVERY_DETAILS,
             pageTitleText: PAGE_TITLE,
             serviceName: HEADING_TEXT,
-            ...basketLink
+            ...basketLink,
+            ...pageHeader
         });
     } catch (err) {
         logger.error(`${err}`);
@@ -70,6 +73,7 @@ export const route = async (req: Request, res: Response, next: NextFunction) => 
     const signInInfo = req.session?.data[SessionKey.SignInInfo];
     const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
     const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
+    const pageHeader = mapPageHeader(req);
     if (!errors.isEmpty()) {
         return res.render(DELIVERY_DETAILS, {
             ...errorList,
@@ -85,7 +89,8 @@ export const route = async (req: Request, res: Response, next: NextFunction) => 
             pageTitleText: PAGE_TITLE,
             templateName: (DELIVERY_DETAILS),
             backLink: BASKET,
-            serviceName: HEADING_TEXT
+            serviceName: HEADING_TEXT,
+            ...pageHeader
         });
     }
     try {
