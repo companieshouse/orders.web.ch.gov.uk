@@ -10,7 +10,6 @@ const confirmationPath =
     "/orders/ORD-811516-715265/confirmation?ref=orderable_item_ORD-811516-715265&state=9e307591-45c8-4dcd-b06d-2bf5e7d6c9d0&status=paid";
 const testEmailAddress: string = "test@testemail.com";
 
-// @SuppressWarnings("typescript:S2699")
 describe("mapPageHeader", () => {
     it("should populate the header correctly for the delivery details page", async () => {
         testPageHeader(deliveryDetailsPath);
