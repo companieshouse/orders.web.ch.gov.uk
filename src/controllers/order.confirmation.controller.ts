@@ -86,8 +86,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const basket: Basket = await getBasket(accessToken);
         const basketLink: BasketLink = await getBasketLink(req, basket);
 
-        const mappedItem = factory.getMapper(basketLinks.data).map(checkout, basketLink, pageHeader);
-        res.render(mappedItem.templateName, mappedItem);
+        const mappedItem = factory.getMapper(basketLinks.data).map(checkout);
+        res.render(mappedItem.templateName, { ...mappedItem, ...basketLink, ...pageHeader });
     } catch (err) {
         console.log(err);
         next(err);
