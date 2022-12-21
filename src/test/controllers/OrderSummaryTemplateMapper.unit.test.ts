@@ -5,19 +5,6 @@ import {
     mockMissingImageDeliveryCheckoutResponse, mockMissingImageDeliveryItem
 } from "../__mocks__/order.mocks";
 import { expect } from "chai";
-import { BasketLink } from "utils/basket.util";
-import { PageHeader } from "../../model/PageHeader";
-
-const basketLink: BasketLink = {
-    showBasketLink: true,
-    basketWebUrl: "/basket",
-    basketItems: 1
-};
-
-const pageHeader: PageHeader = {
-    isSignedIn: true,
-    userEmailAddress: "demo@ch.gov.uk"
-};
 
 describe("OrderSummaryTemplateMapper", () => {
     describe("map", () => {
@@ -26,7 +13,7 @@ describe("OrderSummaryTemplateMapper", () => {
             const mapper = new OrderSummaryTemplateMapper();
 
             // when
-            const actual = mapper.map(mockMissingImageDeliveryCheckoutResponse, basketLink, pageHeader);
+            const actual = mapper.map(mockMissingImageDeliveryCheckoutResponse);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -39,8 +26,6 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.false;
             expect(actual.deliveryDetailsTable).to.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
-            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
-            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
 
         it("It evaluates hasExpressDeliveryItems to true if order has a certificate with express delivery", () => {
@@ -57,7 +42,7 @@ describe("OrderSummaryTemplateMapper", () => {
                         deliveryTimescale: "same-day"
                     }
                 }]
-            }, basketLink, pageHeader);
+            });
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -70,8 +55,6 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.false;
             expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
-            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
-            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
 
         it("It evaluates hasExpressDeliveryItems to true if order has a certified copy with express delivery", () => {
@@ -88,7 +71,7 @@ describe("OrderSummaryTemplateMapper", () => {
                         deliveryTimescale: "same-day"
                     }
                 }]
-            }, basketLink, pageHeader);
+            });
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -101,8 +84,6 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.false;
             expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
-            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
-            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
 
         it("It evaluates hasStandardDeliveryItems to true if order has a certificate with standard delivery", () => {
@@ -110,7 +91,7 @@ describe("OrderSummaryTemplateMapper", () => {
             const mapper = new OrderSummaryTemplateMapper();
 
             // when
-            const actual = mapper.map(mockCertificateCheckoutResponse, basketLink, pageHeader);
+            const actual = mapper.map(mockCertificateCheckoutResponse);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -123,8 +104,6 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.true;
             expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
-            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
-            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
 
         it("It evaluates hasStandardDeliveryItems to true if order has a certified copy with standard delivery", () => {
@@ -132,7 +111,7 @@ describe("OrderSummaryTemplateMapper", () => {
             const mapper = new OrderSummaryTemplateMapper();
 
             // when
-            const actual = mapper.map(mockCertifiedCopyCheckoutResponse, basketLink, pageHeader);
+            const actual = mapper.map(mockCertifiedCopyCheckoutResponse);
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -145,8 +124,6 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.true;
             expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
-            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
-            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
 
         it("It evaluates hasMissingImageDeliveryItems, hasExpressDeliveryItems and hasStandardDeliveryItems to true if order has missing image deliveries, items with standard, express delivery", () => {
@@ -161,7 +138,7 @@ describe("OrderSummaryTemplateMapper", () => {
                     { ...mockMissingImageDeliveryItem },
                     { ...mockCertifiedCopyItem, itemOptions: { ...mockCertifiedCopyItem.itemOptions, deliveryTimescale: "same-day" } }
                 ]
-            }, basketLink, pageHeader);
+            });
 
             // then
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
@@ -174,8 +151,6 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.hasStandardDeliveryItems).is.true;
             expect(actual.deliveryDetailsTable).to.not.be.undefined;
             expect(actual.templateName).equals("order-complete-abbreviated");
-            expect(actual.isSignedIn).equals(pageHeader.isSignedIn);
-            expect(actual.userEmailAddress).equals(pageHeader.userEmailAddress);
         });
     });
 });
