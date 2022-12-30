@@ -6,6 +6,7 @@ import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/sessio
 import { NotFound, Unauthorized } from "http-errors";
 import { createLogger } from "ch-structured-logging";
 import { APPLICATION_NAME } from "../config/config";
+import { mapPageHeader } from "../utils/page.header.utils";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -22,13 +23,14 @@ export class OrderItemSummaryController {
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
         try {
             logger.debug(`Retrieving summary for order/item [${orderId}/${itemId}] for user [${userId}]...`);
+            const pageHeader = mapPageHeader(request);
             const viewModel = await this.service.getOrderItem({
                 orderId,
                 itemId,
                 apiToken
             });
             logger.debug(`Retrieved summary for order/item [${orderId}/${itemId}] for user [${userId}]`);
-            return response.render(viewModel.template, viewModel.data);
+            return response.render(viewModel.template,  { ...viewModel.data, ...pageHeader })
         } catch (error) {
             if (error instanceof Unauthorized) {
                 logger.info(`User [${userId}] is not authorised to retrieve summary for order/item [${orderId}/${itemId}]`);
