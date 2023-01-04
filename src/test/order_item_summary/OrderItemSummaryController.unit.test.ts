@@ -26,7 +26,7 @@ const request: any = {
                 }
             }
         }
-        }
+    }
 }
 
 const generateMockRequest = (emailAddress: string, isSignedIn: number):Request => {
