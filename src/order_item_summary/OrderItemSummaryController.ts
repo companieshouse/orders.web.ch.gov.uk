@@ -29,7 +29,8 @@ export class OrderItemSummaryController {
                 itemId,
                 apiToken
             });
-            return response.render(viewModel.template, { ...viewModel.data, ...pageHeader })
+            logger.debug(`Retrieved summary for order/item [${orderId}/${itemId}] for user [${userId}]`);
+            return response.render(viewModel.template,  { ...viewModel.data, ...pageHeader })
         } catch (error) {
             if (error instanceof Unauthorized) {
                 logger.info(`User [${userId}] is not authorised to retrieve summary for order/item [${orderId}/${itemId}]`);
