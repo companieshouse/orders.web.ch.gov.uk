@@ -87,7 +87,7 @@ describe("OrderItemSummaryController", () => {
             await controller.viewSummary(mockRequest, response, nextFunction);
 
             // then
-            expect(response.render).to.be.calledOnceWith("template", {...viewModelData, ...pageHeader});
+            expect(response.render).to.be.calledOnceWith("template", { ...viewModelData, ...pageHeader });
             expect(nextFunction).to.not.be.called;
             mockService.verify();
         });

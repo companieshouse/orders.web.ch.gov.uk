@@ -22,7 +22,6 @@ export class OrderItemSummaryController {
         const apiToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
         const pageHeader = mapPageHeader(request)
-        logger.debug(`req = ${request}`)
         try {
             logger.debug(`Retrieving summary for order/item [${orderId}/${itemId}] for user [${userId}]...`);
             const viewModel = await this.service.getOrderItem({
@@ -30,10 +29,7 @@ export class OrderItemSummaryController {
                 itemId,
                 apiToken
             });
-            logger.debug(`isSignedIn = ${pageHeader.isSignedIn}`)
-            logger.debug(`userEmailAddress = ${pageHeader.userEmailAddress}`)
-            logger.debug(`Retrieved summary for order/item [${orderId}/${itemId}] for user [${userId}]`);
-            return response.render(viewModel.template,  {...viewModel.data, ...pageHeader })
+            return response.render(viewModel.template, { ...viewModel.data, ...pageHeader })
         } catch (error) {
             if (error instanceof Unauthorized) {
                 logger.info(`User [${userId}] is not authorised to retrieve summary for order/item [${orderId}/${itemId}]`);
