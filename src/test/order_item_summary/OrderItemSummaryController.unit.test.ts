@@ -7,6 +7,11 @@ import { SessionKey } from "@companieshouse/node-session-handler/lib/session/key
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { OrderItemView } from "../../order_item_summary/OrderItemView";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
+import { Session } from "@companieshouse/node-session-handler";
+import { Request } from "express";
+import { mapPageHeader } from "../../utils/page.header.utils";
+import { PageHeader } from "../../model/PageHeader";
+
 
 const request: any = {
     params: {
@@ -21,7 +26,27 @@ const request: any = {
                 }
             }
         }
-    },
+        }
+    }
+
+const generateMockRequest = (emailAddress: string, isSignedIn: number):Request => {
+    const mockRequest = {} as Request;
+    mockRequest.params = {
+        orderId: "ORD-123123-123123",
+        itemId: "CRT-123123-123123"
+    }
+    mockRequest.session = new Session(
+        {
+            signin_info: {
+                user_profile: {
+                    email: emailAddress
+                },
+                signed_in: isSignedIn,
+                access_token: {access_token:"F00DFACE"}
+            }
+        }
+    );
+    return mockRequest;
 };
 
 const sandbox = sinon.createSandbox();
@@ -54,13 +79,15 @@ describe("OrderItemSummaryController", () => {
                 render: sandbox.spy()
             }
             const nextFunction = sandbox.spy();
+            const mockRequest = generateMockRequest("demo@ch.gov.uk", 1);
+            const pageHeader: PageHeader = mapPageHeader(mockRequest);
             const controller = new OrderItemSummaryController(service);
 
             // when
-            await controller.viewSummary(request, response, nextFunction);
+            await controller.viewSummary(mockRequest, response, nextFunction);
 
             // then
-            expect(response.render).to.be.calledOnceWith("template", viewModelData);
+            expect(response.render).to.be.calledOnceWith("template", {...viewModelData, ...pageHeader});
             expect(nextFunction).to.not.be.called;
             mockService.verify();
         });
