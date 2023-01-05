@@ -29,7 +29,7 @@ export class OrderSummaryController {
             const pageHeader = mapPageHeader(req);
             const viewModel = await this.service.fetchOrderSummary(orderId, accessToken);
             logger.debug(`Retrieved summary for order [${orderId}] for user [${userId}]`);
-            return res.render(ORDER_SUMMARY, { ...viewModel, ...pageHeader});
+            return res.render(ORDER_SUMMARY, { ...viewModel, ...pageHeader });
         } catch (error) {
             if (error instanceof Unauthorized) {
                 logger.info(`User [${userId}] is not authorised to retrieve summary for order [${orderId}]`);
