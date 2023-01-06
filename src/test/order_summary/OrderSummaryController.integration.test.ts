@@ -10,15 +10,26 @@ import * as apiClient from "../../client/api.client";
 import chai from "chai";
 import cheerio from "cheerio";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
+import { BasketLink } from "../../utils/basket.util";
+import { BasketLinks } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 
 let testApp;
 let sandbox = sinon.createSandbox();
+let getOrderStub;
+let getBasketLinksStub;
+let getBasketStub;
+
+const basketLink: BasketLink = {
+    showBasketLink: true,
+    basketWebUrl: "/basket",
+    basketItems: 1
+};
 
 describe("OrderSummaryController", () => {
     beforeEach((done) => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
-        testApp = require("../../../src/app").default;
+        testApp = require("../../../src/app").default, basketLink;
         done();
     });
 
@@ -39,6 +50,16 @@ describe("OrderSummaryController", () => {
                     { ...mockMissingImageDeliveryItem }
                 ]
             }));
+
+            getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                data: {
+                    showBasketLink: true,
+                    basketWebUrl: "/basket",
+                    basketItems: 1
+                }
+            } as unknown as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket")
+            .returns(Promise.resolve({ enrolled: true }));
 
             // when
             const response = await chai.request(testApp)
@@ -73,6 +94,16 @@ describe("OrderSummaryController", () => {
                 ]
             }));
 
+            getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                data: {
+                    showBasketLink: true,
+                    basketWebUrl: "/basket",
+                    basketItems: 1
+                }
+            } as unknown as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket")
+            .returns(Promise.resolve({ enrolled: true }));
+
             // when
             const response = await chai.request(testApp)
                 .get("/orders/ORD-123456-123456")
@@ -93,6 +124,16 @@ describe("OrderSummaryController", () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(Unauthorized);
 
+            getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                data: {
+                    showBasketLink: true,
+                    basketWebUrl: "/basket",
+                    basketItems: 1
+                }
+            } as unknown as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket")
+            .returns(Promise.resolve({ enrolled: true }));
+
             // when
             const response = await chai.request(testApp)
                 .get("/orders/ORD-123456-123456")
@@ -106,6 +147,16 @@ describe("OrderSummaryController", () => {
         it("Renders Not Found if getOrder endpoint returns HTTP 404 Not Found", async () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(NotFound);
+
+            getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                data: {
+                    showBasketLink: true,
+                    basketWebUrl: "/basket",
+                    basketItems: 1
+                }
+            } as unknown as BasketLinks));
+            getBasketStub = sandbox.stub(apiClient, "getBasket")
+            .returns(Promise.resolve({ enrolled: true }));
 
             // when
             const response = await chai.request(testApp)
