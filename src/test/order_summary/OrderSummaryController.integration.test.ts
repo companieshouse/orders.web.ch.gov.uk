@@ -1,27 +1,24 @@
-import { OrderSummaryController } from "../../order_summary/OrderSummaryController";
 import sinon from "sinon";
 import {
     mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem,
     mockOrderResponse
 } from "../__mocks__/order.mocks";
 import ioredis from "ioredis";
-import { SIGNED_IN_COOKIE, signedInSession, signedInSessionData } from "../__mocks__/redis.mocks";
+import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 import * as apiClient from "../../client/api.client";
 import chai from "chai";
 import cheerio from "cheerio";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
-import { BasketLink, getBasketLink } from "../../utils/basket.util";
-import { Basket, BasketLinks } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { getDummyBasket } from "../utils/basket.util.test"
 
 let testApp;
 let sandbox = sinon.createSandbox();
-let getBasketLinksStub;
 let getBasketStub;
 
 describe("OrderSummaryController", () => {
     beforeEach((done) => {
-        sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
-        sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
+        sandbox.stub(ioredis.prototype, "connect").resolves();
+        sandbox.stub(ioredis.prototype, "get").resolves(signedInSession);
         testApp = require("../../../src/app").default;
         done();
     });
@@ -33,7 +30,7 @@ describe("OrderSummaryController", () => {
     describe("readOrder", () => {
         it("Renders template with order reference, item details, delivery address and payment details", async () => {
             // given
-            sandbox.stub(apiClient, "getOrder").returns(Promise.resolve({
+            sandbox.stub(apiClient, "getOrder").resolves({
                 ...mockOrderResponse,
                 items: [
                     { ...mockCertificateItem },
@@ -42,11 +39,9 @@ describe("OrderSummaryController", () => {
                     { ...mockCertifiedCopyItem, itemOptions: {...mockCertifiedCopyItem.itemOptions, deliveryTimescale: "same-day"} },
                     { ...mockMissingImageDeliveryItem }
                 ]
-            }));
+            });
         
-            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves({ enrolled: true });
-
-            // when
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
             const response = await chai.request(testApp)
                 .get("/orders/ORD-123456-123456")
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
@@ -68,21 +63,21 @@ describe("OrderSummaryController", () => {
             chai.expect($("#subtotal-list").text()).to.contain("1234567");
             chai.expect($("#subtotal-list").text()).to.contain("£15");
             chai.expect(getBasketStub).to.have.been.called;
-            chai.expect(response.text).to.contain("Order details");            
+            chai.expect(response.text).to.contain( "Basket (1)" );
+            
         });
 
         it("Hides delivery details if no items with postal delivery requested", async() => {
             // given
-            sandbox.stub(apiClient, "getOrder").returns(Promise.resolve({
+            sandbox.stub(apiClient, "getOrder").resolves({
                 ...mockOrderResponse,
                 items: [
                     { ...mockMissingImageDeliveryItem },
                     { ...mockMissingImageDeliveryItem }
                 ]
-            }));
+            });
 
-            getBasketStub = sandbox.stub(apiClient, "getBasket")
-            .returns(Promise.resolve({ enrolled: true }));
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -99,14 +94,12 @@ describe("OrderSummaryController", () => {
             chai.expect($("#subtotal-list").text()).to.contain("1234567");
             chai.expect($("#subtotal-list").text()).to.contain("£15");
             chai.expect(getBasketStub).to.have.been.called;
-            chai.expect(response.text).to.contain("Order details");
         });
 
         it("Renders Not Found if getOrder endpoint returns HTTP 401 Unauthorized", async () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(Unauthorized);
-            getBasketStub = sandbox.stub(apiClient, "getBasket")
-            .returns(Promise.resolve({ enrolled: true }));
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -122,8 +115,7 @@ describe("OrderSummaryController", () => {
         it("Renders Not Found if getOrder endpoint returns HTTP 404 Not Found", async () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(NotFound);
-            getBasketStub = sandbox.stub(apiClient, "getBasket")
-            .returns(Promise.resolve({ enrolled: true }));
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -151,3 +143,4 @@ describe("OrderSummaryController", () => {
         });
     });
 })
+
