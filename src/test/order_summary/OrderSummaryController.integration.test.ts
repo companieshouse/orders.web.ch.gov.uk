@@ -1,4 +1,3 @@
-import { OrderSummaryController } from "../../order_summary/OrderSummaryController";
 import sinon from "sinon";
 import {
     mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem,
@@ -10,14 +9,16 @@ import * as apiClient from "../../client/api.client";
 import chai from "chai";
 import cheerio from "cheerio";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
+import { getDummyBasket } from "../utils/basket.util.test"
 
 let testApp;
 let sandbox = sinon.createSandbox();
+let getBasketStub;
 
 describe("OrderSummaryController", () => {
     beforeEach((done) => {
-        sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
-        sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
+        sandbox.stub(ioredis.prototype, "connect").resolves();
+        sandbox.stub(ioredis.prototype, "get").resolves(signedInSession);
         testApp = require("../../../src/app").default;
         done();
     });
@@ -29,7 +30,7 @@ describe("OrderSummaryController", () => {
     describe("readOrder", () => {
         it("Renders template with order reference, item details, delivery address and payment details", async () => {
             // given
-            sandbox.stub(apiClient, "getOrder").returns(Promise.resolve({
+            sandbox.stub(apiClient, "getOrder").resolves({
                 ...mockOrderResponse,
                 items: [
                     { ...mockCertificateItem },
@@ -38,7 +39,9 @@ describe("OrderSummaryController", () => {
                     { ...mockCertifiedCopyItem, itemOptions: {...mockCertifiedCopyItem.itemOptions, deliveryTimescale: "same-day"} },
                     { ...mockMissingImageDeliveryItem }
                 ]
-            }));
+            });
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -61,17 +64,22 @@ describe("OrderSummaryController", () => {
             chai.expect($("#delivery-address-value").text()).to.contain("country");
             chai.expect($("#subtotal-list").text()).to.contain("1234567");
             chai.expect($("#subtotal-list").text()).to.contain("£15");
+            chai.expect(getBasketStub).to.have.been.called;
+            chai.expect(response.text).to.contain( "Basket (1)" );
+            
         });
 
         it("Hides delivery details if no items with postal delivery requested", async() => {
             // given
-            sandbox.stub(apiClient, "getOrder").returns(Promise.resolve({
+            sandbox.stub(apiClient, "getOrder").resolves({
                 ...mockOrderResponse,
                 items: [
                     { ...mockMissingImageDeliveryItem },
                     { ...mockMissingImageDeliveryItem }
                 ]
-            }));
+            });
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -87,11 +95,14 @@ describe("OrderSummaryController", () => {
             chai.expect($("#delivery-address-value").length).to.equal(0);
             chai.expect($("#subtotal-list").text()).to.contain("1234567");
             chai.expect($("#subtotal-list").text()).to.contain("£15");
+            chai.expect(getBasketStub).to.have.been.called;
+            chai.expect(response.text).to.contain( "Basket (1)" );
         });
 
         it("Renders Not Found if getOrder endpoint returns HTTP 401 Unauthorized", async () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(Unauthorized);
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -102,10 +113,12 @@ describe("OrderSummaryController", () => {
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(404);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
+            chai.expect(getBasketStub).to.have.been.called;
         });
         it("Renders Not Found if getOrder endpoint returns HTTP 404 Not Found", async () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(NotFound);
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -116,6 +129,7 @@ describe("OrderSummaryController", () => {
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(404);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
+            chai.expect(getBasketStub).to.have.been.called;
         });
         it("Renders Service Unavailable if getOrder endpoint returns other error response codes", async () => {
             // given
@@ -132,3 +146,4 @@ describe("OrderSummaryController", () => {
         });
     });
 })
+

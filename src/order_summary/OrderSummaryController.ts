@@ -8,6 +8,9 @@ import { createLogger } from "ch-structured-logging";
 import { APPLICATION_NAME } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import { mapPageHeader } from "../utils/page.header.utils";
+import { getBasket } from "../client/api.client";
+import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { BasketLink, getBasketLink } from "../utils/basket.util";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -27,9 +30,11 @@ export class OrderSummaryController {
         try {
             logger.debug(`Retrieving summary for order [${orderId}] for user [${userId}]...`);
             const pageHeader = mapPageHeader(req);
+            const basket: Basket = await getBasket(accessToken);
+            const basketLink: BasketLink = await getBasketLink(req, basket);
             const viewModel = await this.service.fetchOrderSummary(orderId, accessToken);
             logger.debug(`Retrieved summary for order [${orderId}] for user [${userId}]`);
-            return res.render(ORDER_SUMMARY, { ...viewModel, ...pageHeader });
+            return res.render(ORDER_SUMMARY, { ...viewModel, ...pageHeader, ...basketLink });
         } catch (error) {
             if (error instanceof Unauthorized) {
                 logger.info(`User [${userId}] is not authorised to retrieve summary for order [${orderId}]`);
