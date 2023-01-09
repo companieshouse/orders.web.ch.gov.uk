@@ -8,13 +8,12 @@ import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket"
 import { signedInSessionData, signedOutSessionData } from "../__mocks__/redis.mocks";
 const sandbox = sinon.createSandbox();
 // Without this import these tests will not compile.
-import { Session } from "@companieshouse/node-session-handler";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { mockCertificateItem } from "../../test/__mocks__/order.mocks";
 import { BASKET_ITEM_LIMIT } from "../../config/config";
 import { BasketLimitState } from "../../model/BasketLimit";
 
-const getDummyBasket = (enrolled: boolean): Basket => {
+export const getDummyBasket = (enrolled: boolean): Basket => {
     return {
         items: [
             {
