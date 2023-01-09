@@ -40,8 +40,10 @@ describe("OrderSummaryController", () => {
                     { ...mockMissingImageDeliveryItem }
                 ]
             });
-        
+
             getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
+
+            // when
             const response = await chai.request(testApp)
                 .get("/orders/ORD-123456-123456")
                 .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
