@@ -96,6 +96,7 @@ describe("OrderSummaryController", () => {
             chai.expect($("#subtotal-list").text()).to.contain("1234567");
             chai.expect($("#subtotal-list").text()).to.contain("£15");
             chai.expect(getBasketStub).to.have.been.called;
+            chai.expect(response.text).to.contain( "Basket (1)" );
         });
 
         it("Renders Not Found if getOrder endpoint returns HTTP 401 Unauthorized", async () => {
