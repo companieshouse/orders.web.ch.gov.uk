@@ -32,7 +32,6 @@ export class OrderSummaryController {
             const pageHeader = mapPageHeader(req);
             const basket: Basket = await getBasket(accessToken);
             const basketLink: BasketLink = await getBasketLink(req, basket);
-            
             const viewModel = await this.service.fetchOrderSummary(orderId, accessToken);
             logger.debug(`Retrieved summary for order [${orderId}] for user [${userId}]`);
             return res.render(ORDER_SUMMARY, { ...viewModel, ...pageHeader, ...basketLink });

@@ -5,31 +5,24 @@ import {
     mockOrderResponse
 } from "../__mocks__/order.mocks";
 import ioredis from "ioredis";
-import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
+import { SIGNED_IN_COOKIE, signedInSession, signedInSessionData } from "../__mocks__/redis.mocks";
 import * as apiClient from "../../client/api.client";
 import chai from "chai";
 import cheerio from "cheerio";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
-import { BasketLink } from "../../utils/basket.util";
-import { BasketLinks } from "@companieshouse/api-sdk-node/dist/services/order/basket";
+import { BasketLink, getBasketLink } from "../../utils/basket.util";
+import { Basket, BasketLinks } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 
 let testApp;
 let sandbox = sinon.createSandbox();
-let getOrderStub;
 let getBasketLinksStub;
 let getBasketStub;
-
-const basketLink: BasketLink = {
-    showBasketLink: true,
-    basketWebUrl: "/basket",
-    basketItems: 1
-};
 
 describe("OrderSummaryController", () => {
     beforeEach((done) => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
-        testApp = require("../../../src/app").default, basketLink;
+        testApp = require("../../../src/app").default;
         done();
     });
 
@@ -50,16 +43,8 @@ describe("OrderSummaryController", () => {
                     { ...mockMissingImageDeliveryItem }
                 ]
             }));
-
-            getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-                data: {
-                    showBasketLink: true,
-                    basketWebUrl: "/basket",
-                    basketItems: 1
-                }
-            } as unknown as BasketLinks));
-            getBasketStub = sandbox.stub(apiClient, "getBasket")
-            .returns(Promise.resolve({ enrolled: true }));
+        
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves({ enrolled: true });
 
             // when
             const response = await chai.request(testApp)
@@ -82,6 +67,8 @@ describe("OrderSummaryController", () => {
             chai.expect($("#delivery-address-value").text()).to.contain("country");
             chai.expect($("#subtotal-list").text()).to.contain("1234567");
             chai.expect($("#subtotal-list").text()).to.contain("£15");
+            chai.expect(getBasketStub).to.have.been.called;
+            chai.expect(response.text).to.contain("Order details");            
         });
 
         it("Hides delivery details if no items with postal delivery requested", async() => {
@@ -94,13 +81,6 @@ describe("OrderSummaryController", () => {
                 ]
             }));
 
-            getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-                data: {
-                    showBasketLink: true,
-                    basketWebUrl: "/basket",
-                    basketItems: 1
-                }
-            } as unknown as BasketLinks));
             getBasketStub = sandbox.stub(apiClient, "getBasket")
             .returns(Promise.resolve({ enrolled: true }));
 
@@ -118,19 +98,13 @@ describe("OrderSummaryController", () => {
             chai.expect($("#delivery-address-value").length).to.equal(0);
             chai.expect($("#subtotal-list").text()).to.contain("1234567");
             chai.expect($("#subtotal-list").text()).to.contain("£15");
+            chai.expect(getBasketStub).to.have.been.called;
+            chai.expect(response.text).to.contain("Order details");
         });
 
         it("Renders Not Found if getOrder endpoint returns HTTP 401 Unauthorized", async () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(Unauthorized);
-
-            getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-                data: {
-                    showBasketLink: true,
-                    basketWebUrl: "/basket",
-                    basketItems: 1
-                }
-            } as unknown as BasketLinks));
             getBasketStub = sandbox.stub(apiClient, "getBasket")
             .returns(Promise.resolve({ enrolled: true }));
 
@@ -143,18 +117,11 @@ describe("OrderSummaryController", () => {
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(404);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
+            chai.expect(getBasketStub).to.have.been.called;
         });
         it("Renders Not Found if getOrder endpoint returns HTTP 404 Not Found", async () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(NotFound);
-
-            getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
-                data: {
-                    showBasketLink: true,
-                    basketWebUrl: "/basket",
-                    basketItems: 1
-                }
-            } as unknown as BasketLinks));
             getBasketStub = sandbox.stub(apiClient, "getBasket")
             .returns(Promise.resolve({ enrolled: true }));
 
@@ -167,6 +134,7 @@ describe("OrderSummaryController", () => {
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(404);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
+            chai.expect(getBasketStub).to.have.been.called;
         });
         it("Renders Service Unavailable if getOrder endpoint returns other error response codes", async () => {
             // given
