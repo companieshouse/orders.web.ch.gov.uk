@@ -16,6 +16,7 @@ import { BasketItemsMapper } from "../mappers/BasketItemsMapper";
 import { BasketLink, getBasketLimit, getBasketLink } from "../utils/basket.util"
 import { BasketLimit, BasketLimitState } from "../model/BasketLimit";
 import { mapPageHeader } from "../utils/page.header.utils";
+import { PageHeader } from "../model/PageHeader";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -68,6 +69,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             await proceedToPayment(req, res, next);
         }
     } catch (err) {
+        logger.error(`Error: ${err} handling ${req.path}.`);
         if (err instanceof HttpError) {
             const statusCode: number = err?.statusCode || 500;
             let template: string = templatePaths.ERROR;
@@ -75,8 +77,9 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             if (statusCode === 409 && err?.message?.includes("Delivery details missing for postal delivery")) {
                 template = templatePaths.ERROR_START_AGAIN;
             }
+            const pageHeader: PageHeader = mapPageHeader(req);
             res.status(statusCode).render(template,
-                { errorMessage, templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY });
+                { errorMessage, templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY, ...pageHeader });
         } else {
             next(err);
         }
@@ -87,6 +90,7 @@ export const handlePostback = async (req: Request, res: Response, next: NextFunc
     try {
         await proceedToPayment(req, res, next);
     } catch (err) {
+        logger.error(`Error: ${err} handling ${req.path}.`);
         if (err instanceof HttpError) {
             const statusCode: number = err?.statusCode || 500;
             let template: string = templatePaths.ERROR;
@@ -94,8 +98,9 @@ export const handlePostback = async (req: Request, res: Response, next: NextFunc
             if (statusCode === 409 && err?.message?.includes("Delivery details missing for postal delivery")) {
                 template = templatePaths.ERROR_START_AGAIN;
             }
+            const pageHeader: PageHeader = mapPageHeader(req);
             res.status(statusCode).render(template,
-                { errorMessage, templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY });
+                { errorMessage, templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY, ...pageHeader });
         } else {
             next(err);
         }
