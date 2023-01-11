@@ -661,5 +661,31 @@ describe("OrderItemSummaryController", () => {
             chai.expect(response.status).to.equal(500);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
         });
+
+        it("Renders error page with user nav bar if orders API is down", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem").throws(InternalServerError);
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${MISSING_IMAGE_DELIVERY_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            // then
+            const $ = cheerio.load(response.text);
+            chai.expect(response.status).to.equal(500);
+            chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
+            verifyUserNavBarRenderedWithoutBasketLink(response.text);
+        });
     });
+
+    const verifyUserNavBarRenderedWithoutBasketLink = (responseText: string) => {
+        chai.expect(responseText).to.not.contain(`Basket (`);
+        chai.expect(responseText).to.contain(`test@testemail.com`);
+        chai.expect(responseText).to.contain(`Your details`);
+        chai.expect(responseText).to.contain(`Your filings`);
+        chai.expect(responseText).to.contain(`Companies you follow`);
+        chai.expect(responseText).to.contain(`Sign out`);
+    };
+
 });

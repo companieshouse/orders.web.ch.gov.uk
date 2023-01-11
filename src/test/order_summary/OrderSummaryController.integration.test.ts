@@ -1,7 +1,8 @@
 import sinon from "sinon";
 import {
+    MISSING_IMAGE_DELIVERY_ID,
     mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem,
-    mockOrderResponse
+    mockOrderResponse, ORDER_ID
 } from "../__mocks__/order.mocks";
 import ioredis from "ioredis";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
@@ -9,7 +10,7 @@ import * as apiClient from "../../client/api.client";
 import chai from "chai";
 import cheerio from "cheerio";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
-import { getDummyBasket } from "../utils/basket.util.test"
+import { getDummyBasket } from "../utils/basket.util.test";
 
 let testApp;
 let sandbox = sinon.createSandbox();
@@ -131,6 +132,26 @@ describe("OrderSummaryController", () => {
             chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
             chai.expect(getBasketStub).to.have.been.called;
         });
+
+        it("Renders error page with user nav bar if orders API is down", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrder").throws(NotFound);
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
+
+            // when
+            const response = await chai.request(testApp)
+                .get("/orders/ORD-123456-123456")
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            // then
+            const $ = cheerio.load(response.text);
+            chai.expect(response.status).to.equal(404);
+            chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
+            chai.expect(getBasketStub).to.have.been.called;
+
+            verifyUserNavBarRenderedWithoutBasketLink(response.text);
+        });
+
         it("Renders Service Unavailable if getOrder endpoint returns other error response codes", async () => {
             // given
             sandbox.stub(apiClient, "getOrder").throws(InternalServerError);
@@ -145,5 +166,15 @@ describe("OrderSummaryController", () => {
             chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
         });
     });
+
+    const verifyUserNavBarRenderedWithoutBasketLink = (responseText: string) => {
+        chai.expect(responseText).to.not.contain(`Basket (`);
+        chai.expect(responseText).to.contain(`test@testemail.com`);
+        chai.expect(responseText).to.contain(`Your details`);
+        chai.expect(responseText).to.contain(`Your filings`);
+        chai.expect(responseText).to.contain(`Companies you follow`);
+        chai.expect(responseText).to.contain(`Sign out`);
+    };
+
 })
 
