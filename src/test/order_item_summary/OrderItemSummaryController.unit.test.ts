@@ -12,11 +12,10 @@ import { Request } from "express";
 import { mapPageHeader } from "../../utils/page.header.utils";
 import { PageHeader } from "../../model/PageHeader";
 
-
 const request: any = {
     params: {
         orderId: "ORD-123123-123123",
-        itemId: "CRT-123123-123123"
+        itemId: "CRT-123123-123123",
     },
     session: {
         data: {
@@ -26,7 +25,7 @@ const request: any = {
                 }
             }
         }
-    }
+    },
 }
 
 const generateMockRequest = (emailAddress: string, isSignedIn: number):Request => {
