@@ -630,7 +630,7 @@ describe("OrderItemSummaryController", () => {
             // then
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(404);
-            chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
+            chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
         });
 
         it("Renders page not found if item does not exist", async () => {
@@ -645,7 +645,7 @@ describe("OrderItemSummaryController", () => {
             // then
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(404);
-            chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
+            chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
         });
 
         it("Renders error page if resource unavailable", async () => {

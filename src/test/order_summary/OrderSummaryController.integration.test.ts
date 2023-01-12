@@ -114,7 +114,7 @@ describe("OrderSummaryController", () => {
             // then
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(404);
-            chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
+            chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
             chai.expect(getBasketStub).to.have.been.called;
         });
         it("Renders Not Found if getOrder endpoint returns HTTP 404 Not Found", async () => {
@@ -130,7 +130,7 @@ describe("OrderSummaryController", () => {
             // then
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(404);
-            chai.expect($(".govuk-heading-xl").text()).to.contain("Page not found");
+            chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
             chai.expect(getBasketStub).to.have.been.called;
         });
 

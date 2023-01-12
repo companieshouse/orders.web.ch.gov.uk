@@ -92,11 +92,13 @@ if (process.env.NODE_ENV !== "production") {
     env.addGlobal("CSS_URL", "/orders-assets/static/app.css");
     env.addGlobal("FOOTER", "/orders-assets/static/footer.css");
     env.addGlobal("RESPONSIVE_TABLE", "/orders-assets/static/responsive-table.css");
+    env.addGlobal("MOBILE_MENU", "/orders-assets/static/js/mobile-menu.js");
 } else {
     app.use("/orders-assets/static", express.static("static"));
     env.addGlobal("CSS_URL", "/orders-assets/static/app.css");
     env.addGlobal("FOOTER", "/orders-assets/static/footer.css");
     env.addGlobal("RESPONSIVE_TABLE", "/orders-assets/static/responsive-table.css");
+    env.addGlobal("MOBILE_MENU", "/orders-assets/static/js/mobile-menu.js");
 }
 
 // apply our default router to /

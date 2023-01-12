@@ -12,9 +12,9 @@ const serviceName = "Find and update company information";
 const serviceUrl = CHS_URL;
 
 const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
-    logger.error(`Page not found handling ${req.path}.`);
+    logger.error("Page not found: " + `${req.path}`);
     const pageHeader: PageHeader = mapPageHeader(req);
-    return res.status(404).render(templatePaths.ERROR_NOT_FOUND, { ...pageHeader, serviceName, serviceUrl });
+    return res.status(404).render(templatePaths.ERROR, { ...pageHeader, serviceName, serviceUrl });
 };
 
 const errorHandler = (err: unknown, req: Request, res: Response, next: NextFunction) => {
