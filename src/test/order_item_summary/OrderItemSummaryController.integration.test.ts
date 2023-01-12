@@ -663,7 +663,7 @@ describe("OrderItemSummaryController", () => {
             expect(response.text).to.contain( "Basket (1)" )
         });
 
-        it("Renders page not found if user not resource owner", async () => {
+        it("Renders  error page if user not resource owner", async () => {
             // given
             sandbox.stub(apiClient, "getOrderItem").throws(Unauthorized);
             getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
@@ -681,7 +681,7 @@ describe("OrderItemSummaryController", () => {
 
         });
 
-        it("Renders page not found if item does not exist", async () => {
+        it("Renders  error page if item does not exist", async () => {
             // given
             sandbox.stub(apiClient, "getOrderItem").throws(NotFound);
             getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
@@ -703,7 +703,7 @@ describe("OrderItemSummaryController", () => {
             // given
             sandbox.stub(apiClient, "getOrderItem").throws(InternalServerError);
             getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
-            
+
             // when
             const response = await chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/items/${MISSING_IMAGE_DELIVERY_ID}`)
