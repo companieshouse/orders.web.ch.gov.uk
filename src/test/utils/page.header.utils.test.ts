@@ -35,3 +35,12 @@ const generateMockRequest = (emailAddress: string, isSignedIn: number):Request =
     );
     return mockRequest;
 };
+
+export const verifyUserNavBarRenderedWithoutBasketLink = (responseText: string) => {
+    chai.expect(responseText).to.not.contain(`Basket (`);
+    chai.expect(responseText).to.contain(`test@testemail.com`);
+    chai.expect(responseText).to.contain(`Your details`);
+    chai.expect(responseText).to.contain(`Your filings`);
+    chai.expect(responseText).to.contain(`Companies you follow`);
+    chai.expect(responseText).to.contain(`Sign out`);
+};
