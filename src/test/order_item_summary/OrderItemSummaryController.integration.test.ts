@@ -15,6 +15,7 @@ import chai, { expect } from "chai";
 import cheerio from "cheerio";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+import { verifyUserNavBarRenderedWithoutBasketLink } from "../utils/page.header.utils.test";
 
 let testApp;
 let sandbox = sinon.createSandbox();
@@ -678,13 +679,4 @@ describe("OrderItemSummaryController", () => {
             verifyUserNavBarRenderedWithoutBasketLink(response.text);
         });
     });
-
-    const verifyUserNavBarRenderedWithoutBasketLink = (responseText: string) => {
-        chai.expect(responseText).to.not.contain(`Basket (`);
-        chai.expect(responseText).to.contain(`test@testemail.com`);
-        chai.expect(responseText).to.contain(`Your details`);
-        chai.expect(responseText).to.contain(`Your filings`);
-        chai.expect(responseText).to.contain(`Companies you follow`);
-        chai.expect(responseText).to.contain(`Sign out`);
-    };
 });

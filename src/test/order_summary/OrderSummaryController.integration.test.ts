@@ -11,6 +11,7 @@ import chai from "chai";
 import cheerio from "cheerio";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
 import { getDummyBasket } from "../utils/basket.util.test";
+import { verifyUserNavBarRenderedWithoutBasketLink } from "../utils/page.header.utils.test";
 
 let testApp;
 let sandbox = sinon.createSandbox();
@@ -166,13 +167,4 @@ describe("OrderSummaryController", () => {
             chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
         });
     });
-
-    const verifyUserNavBarRenderedWithoutBasketLink = (responseText: string) => {
-        chai.expect(responseText).to.not.contain(`Basket (`);
-        chai.expect(responseText).to.contain(`test@testemail.com`);
-        chai.expect(responseText).to.contain(`Your details`);
-        chai.expect(responseText).to.contain(`Your filings`);
-        chai.expect(responseText).to.contain(`Companies you follow`);
-        chai.expect(responseText).to.contain(`Sign out`);
-    };
 });

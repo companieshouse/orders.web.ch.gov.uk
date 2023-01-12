@@ -12,6 +12,7 @@ import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryIte
 import { BASKET_ITEM_LIMIT } from "../../config/config";
 import { ADD_ANOTHER_DOCUMENT_PATH, BASKET as BASKET_URL } from "../../model/page.urls";
 import cheerio from "cheerio";
+import { verifyUserNavBarRenderedWithoutBasketLink } from "../utils/page.header.utils.test";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -369,13 +370,4 @@ describe("basket.controller.integration", () => {
         chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
         verifyUserNavBarRenderedWithoutBasketLink(resp.text);
     });
-
-    const verifyUserNavBarRenderedWithoutBasketLink = (responseText: string) => {
-        chai.expect(responseText).to.not.contain(`Basket (`);
-        chai.expect(responseText).to.contain(`test@testemail.com`);
-        chai.expect(responseText).to.contain(`Your details`);
-        chai.expect(responseText).to.contain(`Your filings`);
-        chai.expect(responseText).to.contain(`Companies you follow`);
-        chai.expect(responseText).to.contain(`Sign out`);
-    };
 });
