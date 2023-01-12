@@ -175,6 +175,4 @@ describe("OrderSummaryController", () => {
         chai.expect(responseText).to.contain(`Companies you follow`);
         chai.expect(responseText).to.contain(`Sign out`);
     };
-
-})
-
+});
