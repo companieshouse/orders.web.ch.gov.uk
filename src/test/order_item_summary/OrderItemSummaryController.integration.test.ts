@@ -15,6 +15,7 @@ import chai, { expect } from "chai";
 import cheerio from "cheerio";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+import { verifyUserNavBarRenderedWithoutBasketLink } from "../utils/page.header.utils.test";
 
 let testApp;
 let sandbox = sinon.createSandbox();
@@ -660,6 +661,22 @@ describe("OrderItemSummaryController", () => {
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(500);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
+        });
+
+        it("Renders error page with user nav bar if orders API is down", async () => {
+            // given
+            sandbox.stub(apiClient, "getOrderItem").throws(InternalServerError);
+
+            // when
+            const response = await chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/items/${MISSING_IMAGE_DELIVERY_ID}`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+            // then
+            const $ = cheerio.load(response.text);
+            chai.expect(response.status).to.equal(500);
+            chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
+            verifyUserNavBarRenderedWithoutBasketLink(response.text);
         });
     });
 });

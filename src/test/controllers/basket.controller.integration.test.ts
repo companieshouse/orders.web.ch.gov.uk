@@ -8,11 +8,11 @@ import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import createError from "http-errors";
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
-import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem} from "../__mocks__/order.mocks";
+import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
 import { BASKET_ITEM_LIMIT } from "../../config/config";
-import { BASKET } from "../../model/template.paths";
 import { ADD_ANOTHER_DOCUMENT_PATH, BASKET as BASKET_URL } from "../../model/page.urls";
-
+import cheerio from "cheerio";
+import { verifyUserNavBarRenderedWithoutBasketLink } from "../utils/page.header.utils.test";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -353,5 +353,21 @@ describe("basket.controller.integration", () => {
                 chai.expect(resp.redirects[0]).to.include("basket");
                 done();
             });
+    });
+
+    it("renders error page with user nav bar if orders API is down", async () => {
+        // given
+        sandbox.stub(apiClient, "getBasket").throws(createError(404, "Not Found"));
+
+        // when
+        const resp = await chai.request(testApp)
+            .get("/basket")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
+
+        // then
+        chai.expect(resp.status).to.equal(404);
+        const $ = cheerio.load(resp.text);
+        chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
+        verifyUserNavBarRenderedWithoutBasketLink(resp.text);
     });
 });
