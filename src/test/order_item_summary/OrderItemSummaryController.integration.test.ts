@@ -15,9 +15,11 @@ import chai, { expect } from "chai";
 import cheerio from "cheerio";
 import { InternalServerError, NotFound, Unauthorized } from "http-errors";
 import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+import { getDummyBasket } from "../../test/utils/basket.util.test";
 
 let testApp;
 let sandbox = sinon.createSandbox();
+let getBasketStub;
 
 describe("OrderItemSummaryController", () => {
     beforeEach((done) => {
@@ -37,6 +39,8 @@ describe("OrderItemSummaryController", () => {
             // given
             sandbox.stub(apiClient, "getOrderItem")
                 .returns(Promise.resolve(mockMissingImageDeliveryItem));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -61,6 +65,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Appointment of Mr Richard John Harris as a director");
             expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("£3");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
         it("Renders a summary of a certified copy order", async () => {
@@ -86,6 +92,8 @@ describe("OrderItemSummaryController", () => {
             // given
             sandbox.stub(apiClient, "getOrderItem")
                 .returns(Promise.resolve(mockItem));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -113,6 +121,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#document-details-table .govuk-table__cell")[2]).text()).to.contain("Director's details changed for Thomas David Wheare on 12 February 2010");
             expect($($("#document-details-table .govuk-table__header")[3]).text()).to.contain("Fee");
             expect($($("#document-details-table .govuk-table__cell")[3]).text()).to.contain("£15");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
 
@@ -126,6 +136,8 @@ describe("OrderItemSummaryController", () => {
                         companyStatus: "active"
                     }
                 }));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -160,6 +172,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
         it("Renders a summary of a certificate order for an administrated limited company", async () => {
@@ -184,6 +198,8 @@ describe("OrderItemSummaryController", () => {
                         includeEmailCopy: true
                     }
                 }));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -218,6 +234,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Yes");
             expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
         it("Renders a summary of a certificate order for a liquidated limited company", async () => {
@@ -251,6 +269,8 @@ describe("OrderItemSummaryController", () => {
                         includeCompanyObjectsInformation: true
                     }
                 }));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -293,6 +313,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
         it("Renders a summary of a certificate order for a dissolved limited company", async () => {
@@ -306,6 +328,8 @@ describe("OrderItemSummaryController", () => {
                         companyStatus: "dissolved"
                     }
                 }));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -330,6 +354,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("£15");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
         it("Renders a summary of a certificate order for an active LLP", async () => {
@@ -358,6 +384,8 @@ describe("OrderItemSummaryController", () => {
                         companyType: "llp"
                     }
                 }));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -390,6 +418,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("£15");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
         it("Renders a summary of a certificate order for an administrated LLP", async () => {
@@ -415,6 +445,8 @@ describe("OrderItemSummaryController", () => {
                         includeEmailCopy: false
                     }
                 }));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -447,6 +479,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("No");
             expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("£15");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
         it("Renders a summary of a certificate order for a liquidated LLP", async () => {
@@ -480,6 +514,8 @@ describe("OrderItemSummaryController", () => {
                         }
                     }
                 }));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -520,6 +556,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("£15");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
         it("Renders a summary of a certificate order for a dissolved LLP", async () => {
@@ -534,6 +572,8 @@ describe("OrderItemSummaryController", () => {
                         companyType: "llp"
                     }
                 }));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -558,6 +598,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("£15");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
         it("Renders a summary of a certificate order for an active limited partnership", async () => {
@@ -581,6 +623,8 @@ describe("OrderItemSummaryController", () => {
                         companyType: "limited-partnership"
                     }
                 }));
+
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -615,11 +659,14 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+            expect(getBasketStub).to.have.been.called;
+            expect(response.text).to.contain( "Basket (1)" )
         });
 
         it("Renders page not found if user not resource owner", async () => {
             // given
             sandbox.stub(apiClient, "getOrderItem").throws(Unauthorized);
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -630,11 +677,14 @@ describe("OrderItemSummaryController", () => {
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(404);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
+            expect(getBasketStub).to.have.been.called;
+
         });
 
         it("Renders page not found if item does not exist", async () => {
             // given
             sandbox.stub(apiClient, "getOrderItem").throws(NotFound);
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
 
             // when
             const response = await chai.request(testApp)
@@ -645,12 +695,15 @@ describe("OrderItemSummaryController", () => {
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(404);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
+            expect(getBasketStub).to.have.been.called;
+
         });
 
         it("Renders error page if resource unavailable", async () => {
             // given
             sandbox.stub(apiClient, "getOrderItem").throws(InternalServerError);
-
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
+            
             // when
             const response = await chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/items/${MISSING_IMAGE_DELIVERY_ID}`)
@@ -660,6 +713,7 @@ describe("OrderItemSummaryController", () => {
             const $ = cheerio.load(response.text);
             chai.expect(response.status).to.equal(500);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
+            expect(getBasketStub).to.have.been.called;
         });
     });
 });
