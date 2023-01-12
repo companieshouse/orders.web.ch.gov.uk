@@ -2,7 +2,7 @@ import { Router, Response, NextFunction, Request } from "express";
 
 import * as pageUrls from "../model/page.urls";
 import * as templatePaths from "../model/template.paths";
-import { render as renderBasket, handlePostback as handleBasketPostback, handleRemovePostback } from "../controllers/basket.controller";
+import { render as renderBasket, handleRemovePostback } from "../controllers/basket.controller";
 import { render as renderOrderConfirmation } from "../controllers/order.confirmation.controller";
 import deliveryDetailsController, { render as renderDeliveryDetails } from "../controllers/delivery.details.controller";
 import { OrderSummaryController } from "../order_summary/OrderSummaryController";
@@ -25,7 +25,6 @@ router.get(pageUrls.ORDER_ITEM_SUMMARY, orderItemSummaryController.viewSummary.b
 router.get(pageUrls.BASKET, renderBasket);
 router.get(pageUrls.BASKET + ADD_ANOTHER_DOCUMENT_PATH, renderBasket);
 router.get(pageUrls.BASKET + CONTINUE_TO_PAYMENT_PATH, renderBasket);
-router.post(pageUrls.BASKET, handleBasketPostback);
 router.post(pageUrls.BASKET_REMOVE, handleRemovePostback);
 
 router.get(pageUrls.DELIVERY_DETAILS, renderDeliveryDetails);

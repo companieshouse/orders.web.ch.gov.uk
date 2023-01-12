@@ -86,27 +86,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-export const handlePostback = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        await proceedToPayment(req, res, next);
-    } catch (err) {
-        logger.error(`Error: ${err} handling ${req.path}.`);
-        if (err instanceof HttpError) {
-            const statusCode: number = err?.statusCode || 500;
-            let template: string = templatePaths.ERROR;
-            const errorMessage: string = err?.message || "";
-            if (statusCode === 409 && err?.message?.includes("Delivery details missing for postal delivery")) {
-                template = templatePaths.ERROR_START_AGAIN;
-            }
-            const pageHeader: PageHeader = mapPageHeader(req);
-            res.status(statusCode).render(template,
-                { errorMessage, templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY, ...pageHeader });
-        } else {
-            next(err);
-        }
-    }
-};
-
 const proceedToPayment = async (req: Request, res: Response, next: NextFunction) => {
     const signInInfo = req.session?.data[SessionKey.SignInInfo];
     const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
