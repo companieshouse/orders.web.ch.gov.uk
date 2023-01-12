@@ -11,7 +11,7 @@ const serviceUrl = CHS_URL;
 
 const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
     logger.error("Page not found: " + `${req.path}`);
-    return res.status(404).render(templatePaths.ERROR_NOT_FOUND, { serviceName, serviceUrl });
+    return res.status(404).render(templatePaths.ERROR, { serviceName, serviceUrl });
 };
 
 const errorHandler = (err: unknown, req: Request, res: Response, next: NextFunction) => {
