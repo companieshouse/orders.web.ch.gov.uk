@@ -374,6 +374,6 @@ describe("basket.controller.integration", () => {
 });
 
 const verifyServiceLinkRenderedCorrectly = ($: cheerio.Root) => {
-    chai.expect($(".govuk-header__link--service-name").text()).to.contain("Basket");
-    chai.expect($(".govuk-header__link--service-name").attr("href")).to.equal("http://chsurl.co/basket");
+    chai.expect($(".govuk-header__link--service-name").text()).to.contain("Find and update company information");
+    chai.expect($(".govuk-header__link--service-name").attr("href")).to.equal("http://chsurl.co");
 };

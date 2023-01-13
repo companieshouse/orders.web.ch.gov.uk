@@ -22,8 +22,8 @@ const logger = createLogger(APPLICATION_NAME);
 
 const PAYMENT_REQUIRED_HEADER = "X-Payment-Required";
 
-const serviceName = `Basket`;
-const serviceUrl = `${CHS_URL}/basket`;
+const serviceName = "Find and update company information";
+const serviceUrl = CHS_URL;
 
 export const render = async (req: Request, res: Response, next: NextFunction) => {
     try {
