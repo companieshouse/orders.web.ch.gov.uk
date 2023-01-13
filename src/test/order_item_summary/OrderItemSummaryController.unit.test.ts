@@ -11,7 +11,11 @@ import { Session } from "@companieshouse/node-session-handler";
 import { Request } from "express";
 import { mapPageHeader } from "../../utils/page.header.utils";
 import { PageHeader } from "../../model/PageHeader";
+import { getDummyBasket } from "../../test/utils/basket.util.test";
+import * as apiClient from "../../client/api.client";
+import { BasketLink } from "../../utils/basket.util";
 
+let getBasketStub
 
 const request: any = {
     params: {
@@ -49,6 +53,12 @@ const generateMockRequest = (emailAddress: string, isSignedIn: number):Request =
     return mockRequest;
 };
 
+const basketLink: BasketLink = {
+    showBasketLink: true,
+    basketWebUrl: "http://chsurl.co/basket",
+    basketItems: 1
+};
+
 const sandbox = sinon.createSandbox();
 
 describe("OrderItemSummaryController", () => {
@@ -83,11 +93,13 @@ describe("OrderItemSummaryController", () => {
             const pageHeader: PageHeader = mapPageHeader(mockRequest);
             const controller = new OrderItemSummaryController(service);
 
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
             // when
             await controller.viewSummary(mockRequest, response, nextFunction);
 
             // then
-            expect(response.render).to.be.calledOnceWith("template", { ...viewModelData, ...pageHeader });
+            expect(getBasketStub).to.be.called;
+            expect(response.render).to.be.calledOnceWith("template", { ...viewModelData, ...pageHeader, ...basketLink });
             expect(nextFunction).to.not.be.called;
             mockService.verify();
         });
@@ -110,10 +122,13 @@ describe("OrderItemSummaryController", () => {
             const nextFunction = sandbox.spy();
             const controller = new OrderItemSummaryController(service);
 
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
+
             // when
             await controller.viewSummary(request, response, nextFunction);
 
             // then
+            expect(getBasketStub).to.be.called;
             expect(response.render).to.not.be.called;
             expect(nextFunction).to.be.called;
             mockService.verify();
@@ -137,10 +152,13 @@ describe("OrderItemSummaryController", () => {
             const nextFunction = sandbox.spy();
             const controller = new OrderItemSummaryController(service);
 
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
+
             // when
             await controller.viewSummary(request, response, nextFunction);
 
             // then
+            expect(getBasketStub).to.be.called;
             expect(response.render).to.not.be.called;
             expect(nextFunction).to.be.called;
             mockService.verify();
@@ -165,10 +183,13 @@ describe("OrderItemSummaryController", () => {
             const nextFunction = sandbox.spy();
             const controller = new OrderItemSummaryController(service);
 
+            getBasketStub = sandbox.stub(apiClient, "getBasket").resolves(getDummyBasket(true));
+
             // when
             await controller.viewSummary(request, response, nextFunction);
 
             // then
+            expect(getBasketStub).to.be.called;
             expect(response.render).to.not.be.called;
             expect(nextFunction).to.be.calledOnceWith(expectedError);
             mockService.verify();
