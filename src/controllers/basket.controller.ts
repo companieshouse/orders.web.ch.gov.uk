@@ -22,6 +22,9 @@ const logger = createLogger(APPLICATION_NAME);
 
 const PAYMENT_REQUIRED_HEADER = "X-Payment-Required";
 
+const serviceName = `Basket`;
+const serviceUrl = `${CHS_URL}/basket`;
+
 export const render = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
@@ -79,7 +82,13 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             }
             const pageHeader: PageHeader = mapPageHeader(req);
             res.status(statusCode).render(template,
-                { errorMessage, templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY, ...pageHeader });
+                {
+                    errorMessage,
+                    templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY,
+                    ...pageHeader,
+                    serviceName,
+                    serviceUrl
+                });
         } else {
             next(err);
         }
