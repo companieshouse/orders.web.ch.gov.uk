@@ -368,6 +368,12 @@ describe("basket.controller.integration", () => {
         chai.expect(resp.status).to.equal(404);
         const $ = cheerio.load(resp.text);
         chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
+        verifyServiceLinkRenderedCorrectly($);
         verifyUserNavBarRenderedWithoutBasketLink(resp.text);
     });
 });
+
+const verifyServiceLinkRenderedCorrectly = ($: cheerio.Root) => {
+    chai.expect($(".govuk-header__link--service-name").text()).to.contain("Basket");
+    chai.expect($(".govuk-header__link--service-name").attr("href")).to.equal("http://chsurl.co/basket");
+};
