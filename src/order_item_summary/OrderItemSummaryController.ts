@@ -24,11 +24,11 @@ export class OrderItemSummaryController {
         const signInInfo = request.session?.data[SessionKey.SignInInfo];
         const apiToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
-        const pageHeader = mapPageHeader(request);
-        const basket: Basket = await getBasket(apiToken);
-        const basketLink: BasketLink = await getBasketLink(request, basket);
         try {
             logger.debug(`Retrieving summary for order/item [${orderId}/${itemId}] for user [${userId}]...`);
+            const pageHeader = mapPageHeader(request);
+            const basket: Basket = await getBasket(apiToken);
+            const basketLink: BasketLink = await getBasketLink(request, basket);
             const viewModel = await this.service.getOrderItem({
                 orderId,
                 itemId,
