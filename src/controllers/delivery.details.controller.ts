@@ -48,7 +48,6 @@ export const render = async (req: Request, res: Response, next: NextFunction): P
             templateName: DELIVERY_DETAILS,
             pageTitleText: PAGE_TITLE,
             serviceName: HEADING_TEXT,
-            serviceUrl: "hello",
             ...basketLink,
             ...pageHeader
         });
