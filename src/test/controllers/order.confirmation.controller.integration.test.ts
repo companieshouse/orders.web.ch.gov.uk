@@ -86,6 +86,8 @@ describe("order.confirmation.controller.integration", () => {
                     if (err) return done(err);
                     const $ = cheerio.load(resp.text);
 
+                    verifyServiceLinkRenderedCorrectly($);
+
                     chai.expect(resp.status).to.equal(200);
                     chai.expect($("#orderReference").text()).to.equal(mockMissingImageDeliveryCheckoutResponse.reference);
                     chai.expect($("#orderReference").attr("aria-label")).to.equal(ORDER_ID_ARIA_LABEL);
@@ -100,6 +102,7 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect(getOrderStub).to.have.been.called;
                     chai.expect(getBasketLinksStub).to.have.been.called;
                     chai.expect(resp.text).to.contain("Order received");
+
                     done();
                 });
         });
@@ -128,6 +131,7 @@ describe("order.confirmation.controller.integration", () => {
                 .end((err, resp) => {
                     if (err) return done(err);
                     const $ = cheerio.load(resp.text);
+                    verifyServiceLinkRenderedCorrectly($);
 
                     chai.expect(resp.status).to.equal(200);
                     chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
@@ -180,6 +184,7 @@ describe("order.confirmation.controller.integration", () => {
                 .end((err, resp) => {
                     if (err) return done(err);
                     const $ = cheerio.load(resp.text);
+                    verifyServiceLinkRenderedCorrectly($);
 
                     chai.expect(resp.status).to.equal(200);
                     chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
@@ -238,6 +243,7 @@ describe("order.confirmation.controller.integration", () => {
                 .end((err, resp) => {
                     if (err) return done(err);
                     const $ = cheerio.load(resp.text);
+                    verifyServiceLinkRenderedCorrectly($);
 
                     chai.expect(resp.status).to.equal(200);
                     chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
@@ -281,6 +287,7 @@ describe("order.confirmation.controller.integration", () => {
                 .end((err, resp) => {
                     if (err) return done(err);
                     const $ = cheerio.load(resp.text);
+                    verifyServiceLinkRenderedCorrectly($);
 
                     chai.expect(resp.status).to.equal(200);
                     chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
@@ -360,6 +367,7 @@ describe("order.confirmation.controller.integration", () => {
                 .end((err, resp) => {
                     if (err) return done(err);
                     const $ = cheerio.load(resp.text);
+                    verifyServiceLinkRenderedCorrectly($);
 
                     chai.expect(resp.status).to.equal(200);
                     chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
@@ -434,6 +442,7 @@ describe("order.confirmation.controller.integration", () => {
             .end((err, resp) => {
                 if (err) return done(err);
                 const $ = cheerio.load(resp.text);
+                verifyServiceLinkRenderedCorrectly($);
 
                 chai.expect(resp.status).to.equal(200);
                 chai.expect($("#orderReference").text()).to.equal(mockCertificateCheckoutResponse.reference);
@@ -480,6 +489,7 @@ describe("order.confirmation.controller.integration", () => {
             .end((err, resp) => {
                 if (err) return done(err);
                 const $ = cheerio.load(resp.text);
+                verifyServiceLinkRenderedCorrectly($);
 
                 chai.expect(resp.status).to.equal(200);
                 chai.expect($("#orderReference").text()).to.equal(mockDissolvedCertificateCheckoutResponse.reference);
@@ -565,6 +575,7 @@ describe("order.confirmation.controller.integration", () => {
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`]);
 
         const $ = cheerio.load(resp.text);
+        verifyServiceLinkRenderedCorrectly($);
 
         chai.expect(resp.status).to.equal(200);
         chai.expect($("#orderReference").text()).to.equal(mockMissingImageDeliveryCheckoutResponse.reference);
@@ -718,3 +729,8 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect(resp.text).to.include(`/orderable/dissolved-certificates/${dissolvedCertificatebasketCancelledFailedResponse.items?.[0].id}/check-details`);
     });
 });
+
+const verifyServiceLinkRenderedCorrectly = ($: cheerio.Root) => {
+    chai.expect($(".govuk-header__link--service-name").text()).to.contain("Find and update company information");
+    chai.expect($(".govuk-header__link--service-name").attr("href")).to.equal("http://chsurl.co");
+};

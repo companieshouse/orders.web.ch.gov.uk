@@ -9,7 +9,7 @@ import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
 import { getCheckout, getBasket, getBasketLinks } from "../client/api.client";
-import { APPLICATION_NAME, RETRY_CHECKOUT_NUMBER, RETRY_CHECKOUT_DELAY } from "../config/config";
+import { APPLICATION_NAME, RETRY_CHECKOUT_NUMBER, RETRY_CHECKOUT_DELAY, CHS_URL } from "../config/config";
 import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { ConfirmationTemplateFactory, DefaultConfirmationTemplateFactory } from "./ConfirmationTemplateFactory";
 import { InternalServerError } from "http-errors";
@@ -38,6 +38,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
         const itemType = req.query.itemType;
+        const serviceName = "Find and update company information";
+        const serviceUrl = CHS_URL;
 
         const basketLinks = await getBasketLinks(accessToken);
         const pageHeader = mapPageHeader(req);
@@ -87,7 +89,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const basketLink: BasketLink = await getBasketLink(req, basket);
 
         const mappedItem = factory.getMapper(basketLinks.data).map(checkout);
-        res.render(mappedItem.templateName, { ...mappedItem, ...basketLink, ...pageHeader });
+        res.render(mappedItem.templateName, { ...mappedItem, ...basketLink, ...pageHeader, serviceName, serviceUrl });
     } catch (err) {
         console.log(err);
         next(err);
