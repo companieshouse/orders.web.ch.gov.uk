@@ -5,7 +5,7 @@ import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session
 import { ORDER_SUMMARY } from "../model/template.paths";
 import { NotFound, Unauthorized } from "http-errors";
 import { createLogger } from "ch-structured-logging";
-import { APPLICATION_NAME } from "../config/config";
+import { APPLICATION_NAME, CHS_URL } from "../config/config";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import { mapPageHeader } from "../utils/page.header.utils";
 import { getBasket } from "../client/api.client";
@@ -29,12 +29,14 @@ export class OrderSummaryController {
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
         try {
             logger.debug(`Retrieving summary for order [${orderId}] for user [${userId}]...`);
+            const serviceName = "Find and update company information";   
+            const serviceUrl = CHS_URL;
             const pageHeader = mapPageHeader(req);
             const basket: Basket = await getBasket(accessToken);
             const basketLink: BasketLink = await getBasketLink(req, basket);
             const viewModel = await this.service.fetchOrderSummary(orderId, accessToken);
             logger.debug(`Retrieved summary for order [${orderId}] for user [${userId}]`);
-            return res.render(ORDER_SUMMARY, { ...viewModel, ...pageHeader, ...basketLink });
+            return res.render(ORDER_SUMMARY, { ...viewModel, ...pageHeader, ...basketLink, serviceName, serviceUrl });
         } catch (error) {
             if (error instanceof Unauthorized) {
                 logger.info(`User [${userId}] is not authorised to retrieve summary for order [${orderId}]`);

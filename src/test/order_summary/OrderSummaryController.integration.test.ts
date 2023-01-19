@@ -68,7 +68,7 @@ describe("OrderSummaryController", () => {
             chai.expect($("#subtotal-list").text()).to.contain("£15");
             chai.expect(getBasketStub).to.have.been.called;
             chai.expect(response.text).to.contain( "Basket (1)" );
-            
+            verifyServiceLinkRenderedCorrectly($);
         });
 
         it("Hides delivery details if no items with postal delivery requested", async() => {
@@ -99,6 +99,7 @@ describe("OrderSummaryController", () => {
             chai.expect($("#subtotal-list").text()).to.contain("£15");
             chai.expect(getBasketStub).to.have.been.called;
             chai.expect(response.text).to.contain( "Basket (1)" );
+            verifyServiceLinkRenderedCorrectly($);
         });
 
         it("Renders Not Found if getOrder endpoint returns HTTP 401 Unauthorized", async () => {
@@ -149,7 +150,6 @@ describe("OrderSummaryController", () => {
             chai.expect(response.status).to.equal(404);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
             chai.expect(getBasketStub).to.have.been.called;
-
             verifyUserNavBarRenderedWithoutBasketLink(response.text);
         });
 
@@ -165,6 +165,12 @@ describe("OrderSummaryController", () => {
             // then
             const $ = cheerio.load(response.text);
             chai.expect($(".govuk-heading-xl").text()).to.contain("Sorry, there is a problem with the service");
+            verifyServiceLinkRenderedCorrectly($);
         });
     });
 });
+
+const verifyServiceLinkRenderedCorrectly = ($: cheerio.Root) => {
+    chai.expect($(".govuk-header__link--service-name").text()).to.contain("Find and update company information");
+    chai.expect($(".govuk-header__link--service-name").attr("href")).to.equal("http://chsurl.co");
+};
