@@ -74,7 +74,8 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);
 
         // A race condition exists with the payment, therefore it is sometimes required to retry
-        if (checkout?.paidAt === undefined || checkout?.paymentReference === undefined) {
+        if (checkout.totalOrderCost !== "0" &&
+            (checkout?.paidAt === undefined || checkout?.paymentReference === undefined)) {
             logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} order_id=${orderId} - retrying get checkout`);
             const result = await retryGetCheckout(accessToken, orderId);
             if (result.success) {
