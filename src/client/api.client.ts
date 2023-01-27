@@ -156,3 +156,9 @@ export const getOrderItem = async (orderId: string, itemId: string, oAuth: strin
         }
     }
 };
+
+export const processFreeOrder = async (oAuth: string, checkoutId: string) => {
+    const api = createApiClient(undefined, oAuth, API_URL);
+    // TODO BI-12341 Bring back in when available
+    // await api.basket.processFreeOrder(checkoutId);
+};
