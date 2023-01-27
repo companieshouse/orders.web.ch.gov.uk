@@ -8,7 +8,7 @@ import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/check
 import { createLogger } from "ch-structured-logging";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
-import { getCheckout, getBasket, getBasketLinks, processFreeOrder } from "../client/api.client";
+import { getCheckout, getBasket, getBasketLinks } from "../client/api.client";
 import { APPLICATION_NAME, RETRY_CHECKOUT_NUMBER, RETRY_CHECKOUT_DELAY, CHS_URL } from "../config/config";
 import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { ConfirmationTemplateFactory, DefaultConfirmationTemplateFactory } from "./ConfirmationTemplateFactory";
@@ -73,19 +73,16 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);
 
-        if (checkout.totalOrderCost === "0") {
-            await processFreeOrder(accessToken, orderId);
-        } else {
-            // A race condition exists with the payment, therefore it is sometimes required to retry
-            if (checkout?.paidAt === undefined || checkout?.paymentReference === undefined) {
-                logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} order_id=${orderId} - retrying get checkout`);
-                const result = await retryGetCheckout(accessToken, orderId);
-                if (result.success) {
-                    checkout.paidAt = result.data?.paidAt;
-                    checkout.paymentReference = result.data?.paymentReference;
-                } else {
-                    throw new InternalServerError("Error polling checkout " + orderId + " for updated payment info");
-                }
+        // A race condition exists with the payment, therefore it is sometimes required to retry
+        if (checkout.totalOrderCost !== "0" &&
+            (checkout?.paidAt === undefined || checkout?.paymentReference === undefined)) {
+            logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} order_id=${orderId} - retrying get checkout`);
+            const result = await retryGetCheckout(accessToken, orderId);
+            if (result.success) {
+                checkout.paidAt = result.data?.paidAt;
+                checkout.paymentReference = result.data?.paymentReference;
+            } else {
+                throw new InternalServerError("Error polling checkout " + orderId + " for updated payment info");
             }
         }
 
