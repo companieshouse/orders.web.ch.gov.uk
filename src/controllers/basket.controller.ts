@@ -3,7 +3,7 @@ import { SessionKey } from "@companieshouse/node-session-handler/lib/session/key
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 import { Basket, Checkout, BasketLinks } from "@companieshouse/api-sdk-node/dist/services/order/basket";
-import { createLogger } from "ch-structured-logging";
+import { createLogger } from "@companieshouse/structured-logging-node";
 import { HttpError } from "http-errors";
 
 import { checkoutBasket, createPayment, getBasket, getBasketLinks, removeBasketItem } from "../client/api.client";

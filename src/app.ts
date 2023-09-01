@@ -4,7 +4,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import Redis from "ioredis";
 import { SessionStore, SessionMiddleware, CookieConfig } from "@companieshouse/node-session-handler";
-import { createLoggerMiddleware } from "ch-structured-logging";
+import { createLoggerMiddleware } from "@companieshouse/structured-logging-node";
 
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
@@ -85,21 +85,11 @@ env.addGlobal("ERROR_SUMMARY_TITLE", ERROR_SUMMARY_TITLE);
 env.addGlobal("ACCOUNT_URL", process.env.ACCOUNT_URL);
 env.addGlobal("CHS_MONITOR_GUI_URL", process.env.CHS_MONITOR_GUI_URL);
 
-// serve static assets in development.
-// this will execute in production for now, but we will host these else where in the future.
-if (process.env.NODE_ENV !== "production") {
-    app.use("/orders-assets/static", express.static("dist/static"));
-    env.addGlobal("CSS_URL", "/orders-assets/static/app.css");
-    env.addGlobal("FOOTER", "/orders-assets/static/footer.css");
-    env.addGlobal("RESPONSIVE_TABLE", "/orders-assets/static/responsive-table.css");
-    env.addGlobal("MOBILE_MENU", "/orders-assets/static/js/mobile-menu.js");
-} else {
-    app.use("/orders-assets/static", express.static("static"));
-    env.addGlobal("CSS_URL", "/orders-assets/static/app.css");
-    env.addGlobal("FOOTER", "/orders-assets/static/footer.css");
-    env.addGlobal("RESPONSIVE_TABLE", "/orders-assets/static/responsive-table.css");
-    env.addGlobal("MOBILE_MENU", "/orders-assets/static/js/mobile-menu.js");
-}
+app.use("/orders-assets/static", express.static("static"));
+env.addGlobal("CSS_URL", "/orders-assets/static/app.css");
+env.addGlobal("FOOTER", "/orders-assets/static/footer.css");
+env.addGlobal("RESPONSIVE_TABLE", "/orders-assets/static/responsive-table.css");
+env.addGlobal("MOBILE_MENU", "/orders-assets/static/js/mobile-menu.js");
 
 // apply our default router to /
 app.use("/", router);

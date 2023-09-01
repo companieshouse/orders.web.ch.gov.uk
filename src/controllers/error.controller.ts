@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createLogger } from "ch-structured-logging";
+import { createLogger } from "@companieshouse/structured-logging-node";
 import { HttpError } from "http-errors";
 
 import { APPLICATION_NAME, CHS_URL } from "../config/config";
