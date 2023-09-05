@@ -7,3 +7,4 @@ routes:
   2: /basket.*
   3: /orders-assets.*
   4: ^/delivery-details.*
+  5: /orders-web/health
