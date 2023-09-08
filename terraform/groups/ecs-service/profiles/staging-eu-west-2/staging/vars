@@ -1,0 +1,27 @@
+# Account environment variables
+aws_bucket = "staging-eu-west-2.terraform-state.ch.gov.uk"
+remote_state_bucket = "ch-service-staging-terraform-state"
+environment = "staging"
+deploy_to = "staging"
+state_prefix = "env:/staging"
+aws_profile = "staging-eu-west-2"
+kms_alias = "alias/staging-eu-west-2/environment-services-kms"
+
+# scaling configs
+desired_task_count = 2 # use multi instance in staging
+
+
+# Service environment variables
+basket_item_limit = 10
+cookie_name = "__sid"
+default_session_expiration = 3600
+dispatch_days = 10
+human_log = 1
+log_level = "debug"
+tz = "Europe/London"
+dynamic_lp_certificate_orders_enabled = true
+dynamic_llp_certificate_orders_enabled = true
+retry_checkout_number = 5
+retry_checkout_delay = 1500
+liquidated_company_certificates_enabled = true
+administrator_company_certificates_enabled = true
