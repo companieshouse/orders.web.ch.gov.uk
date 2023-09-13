@@ -16,6 +16,7 @@ locals {
   healthcheck_path          = "/orders-web/health" # healthcheck path for orders web
   healthcheck_matcher       = "200"
 
+  kms_alias       = "alias/${var.aws_profile}/environment-services-kms"
   service_secrets = jsondecode(data.vault_generic_secret.service_secrets.data_json)
 
   vpc_name = local.service_secrets["vpc_name"]
@@ -30,8 +31,6 @@ locals {
     "chs_url"             = local.service_secrets["chs_url"]
     "cookie_domain"       = local.service_secrets["cookie_domain"]
     "cookie_secret"       = local.service_secrets["cookie_secret"]
-    "piwik_site_id"       = local.service_secrets["piwik_site_id"]
-    "piwik_url"           = local.service_secrets["piwik_url"]
     "vpc_name"            = local.service_secrets["vpc_name"]
   }
 
@@ -57,8 +56,6 @@ locals {
     { "name" : "CHS_URL", "valueFrom" : "${local.service_secrets_arn_map.chs_url}" },
     { "name" : "COOKIE_DOMAIN", "valueFrom" : "${local.service_secrets_arn_map.cookie_domain}" },
     { "name" : "COOKIE_SECRET", "valueFrom" : "${local.service_secrets_arn_map.cookie_secret}" },
-    { "name" : "PIWIK_SITE_ID", "valueFrom" : "${local.service_secrets_arn_map.piwik_site_id}" },
-    { "name" : "PIWIK_URL", "valueFrom" : "${local.service_secrets_arn_map.piwik_url}" },
     { "name" : "CHS_DEVELOPER_CLIENT_ID", "valueFrom" : "${local.secrets_arn_map.web-oauth2-client-id}" },
     { "name" : "CHS_DEVELOPER_CLIENT_SECRET", "valueFrom" : "${local.secrets_arn_map.web-oauth2-client-secret}" },
     { "name" : "DEVELOPER_OAUTH2_REQUEST_KEY", "valueFrom" : "${local.secrets_arn_map.web-oauth2-request-key}" }
@@ -78,6 +75,8 @@ locals {
     { "name" : "RETRY_CHECKOUT_NUMBER", "value" : "${var.retry_checkout_number}" },
     { "name" : "RETRY_CHECKOUT_DELAY", "value" : "${var.retry_checkout_delay}" },
     { "name" : "LIQUIDATED_COMPANY_CERTIFICATES_ENABLED", "value" : "${var.liquidated_company_certificates_enabled}" },
-    { "name" : "ADMINISTRATOR_COMPANY_CERTIFICATES_ENABLED", "value" : "${var.administrator_company_certificates_enabled}" }
+    { "name" : "ADMINISTRATOR_COMPANY_CERTIFICATES_ENABLED", "value" : "${var.administrator_company_certificates_enabled}" },
+    { "name" : "PIWIK_SITE_ID", "value" : "${var.piwik_site_id}" },
+    { "name" : "PIWIK_URL", "value" : "${var.piwik_url}" }
   ]
 }

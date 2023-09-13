@@ -1,7 +1,6 @@
 # Account environment variables
 aws_profile = "development-eu-west-2"
 environment = "cidev"
-kms_alias = "alias/development-eu-west-2/environment-services-kms"
 
 # Service environment variables
 basket_item_limit = 10
@@ -17,3 +16,5 @@ retry_checkout_number = 5
 retry_checkout_delay = 1500
 liquidated_company_certificates_enabled = true
 administrator_company_certificates_enabled = true
+piwik_site_id = "7"
+piwik_url = "https://matomo.platform.aws.chdev.org"
