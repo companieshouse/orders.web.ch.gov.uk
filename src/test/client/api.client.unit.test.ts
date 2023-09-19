@@ -117,7 +117,7 @@ describe("api.client", () => {
             };
             sandbox.stub(PaymentService.prototype, "createPaymentWithFullUrl").returns(Promise.resolve(failure(checkoutServiceResponse)));
 
-            return chai.expect(checkoutBasket(O_AUTH_TOKEN)).to.be.rejected;
+            return chai.expect(createPayment(O_AUTH_TOKEN, "http://payment-url", "1234")).to.be.rejected;
         });
     });
     describe("patchBasket", () => {

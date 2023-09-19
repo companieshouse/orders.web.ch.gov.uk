@@ -9,7 +9,7 @@ import { BasketPatchRequest } from "@companieshouse/api-sdk-node/dist/services/o
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { CreatePaymentRequest, Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import Resource, { ApiResponse, ApiResult } from "@companieshouse/api-sdk-node/dist/services/resource";
-import { createLogger } from "ch-structured-logging";
+import { createLogger } from "@companieshouse/structured-logging-node";
 import { v4 as uuidv4 } from "uuid";
 import createError, { InternalServerError } from "http-errors";
 

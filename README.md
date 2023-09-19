@@ -69,3 +69,15 @@ TypeScript compiles down the JavaScript code that eventually gets run via NodeJS
 Tests can be found in the directory [src/test](./src/test). The framework used is [Jest](https://jestjs.io) along with [Supertest](https://github.com/visionmedia/supertest) to dispatch handlers that can have assertions made against the responses. Execute the following to run the tests;
 
     npm t
+
+### Health check endpoint
+
+| Path                                | Method | Description                                                         |
+|-------------------------------------|--------|---------------------------------------------------------------------|
+| *`/orders-web/health`* | GET    | Returns HTTP OK (`200`) to indicate a healthy application instance. |
+
+#### Health check implementation note
+
+* The healthcheck endpoint uses the [`express-actuator`](https://www.npmjs.com/package/express-actuator?activeTab=readme)
+package. This means the app also provides `/orders-web/info` and `/orders-web/metrics`
+endpoints. These should probably not be exposed.

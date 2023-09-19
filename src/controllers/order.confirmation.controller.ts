@@ -5,7 +5,7 @@ import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session
 import { Item as CheckoutItem, Item as BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/order";
 import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates/types";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
-import { createLogger } from "ch-structured-logging";
+import { createLogger } from "@companieshouse/structured-logging-node";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
 import { getCheckout, getBasket, getBasketLinks } from "../client/api.client";

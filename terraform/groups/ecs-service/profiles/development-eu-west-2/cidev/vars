@@ -1,0 +1,20 @@
+# Account environment variables
+aws_profile = "development-eu-west-2"
+environment = "cidev"
+
+# Service environment variables
+basket_item_limit = 10
+cookie_name = "__SID"
+default_session_expiration = 3600
+dispatch_days = 10
+human_log = 1
+log_level = "debug"
+tz = "Europe/London"
+dynamic_lp_certificate_orders_enabled = true
+dynamic_llp_certificate_orders_enabled = true
+retry_checkout_number = 5
+retry_checkout_delay = 1500
+liquidated_company_certificates_enabled = true
+administrator_company_certificates_enabled = true
+piwik_site_id = "7"
+piwik_url = "https://matomo.platform.aws.chdev.org"

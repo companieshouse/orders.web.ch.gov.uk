@@ -4,7 +4,7 @@ import {
     MemberDetails
 } from "@companieshouse/api-sdk-node/dist/services/order/certificates";
 import { ItemOptions as CertificateItemOptions } from "@companieshouse/api-sdk-node/dist/services/order/certificates/types";
-import { createLogger } from "ch-structured-logging";
+import { createLogger } from "@companieshouse/structured-logging-node";
 import { AddressRecordsType } from "model/AddressRecordsType";
 import { APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";

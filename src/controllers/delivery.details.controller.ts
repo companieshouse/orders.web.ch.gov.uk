@@ -4,7 +4,7 @@ import { Basket, BasketPatchRequest } from "@companieshouse/api-sdk-node/dist/se
 import { getBasket, patchBasket } from "../client/api.client";
 import { BASKET } from "../model/page.urls";
 import { DELIVERY_DETAILS } from "../model/template.paths";
-import { createLogger } from "ch-structured-logging";
+import { createLogger } from "@companieshouse/structured-logging-node";
 import { deliveryDetailsValidationRules, validate } from "../utils/delivery-details-validation";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";

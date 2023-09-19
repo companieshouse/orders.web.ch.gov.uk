@@ -8,4 +8,5 @@
 !package-lock.json
 !package.json
 !tsconfig.json
-
+!dist
+!docker_start.sh

@@ -4,7 +4,7 @@ import { SessionKey } from "@companieshouse/node-session-handler/lib/session/key
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 import { NotFound, Unauthorized } from "http-errors";
-import { createLogger } from "ch-structured-logging";
+import { createLogger } from "@companieshouse/structured-logging-node";
 import { APPLICATION_NAME } from "../config/config";
 import { mapPageHeader } from "../utils/page.header.utils";
 import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
