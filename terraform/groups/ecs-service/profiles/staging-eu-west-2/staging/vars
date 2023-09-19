@@ -1,19 +1,13 @@
 # Account environment variables
-aws_bucket = "staging-eu-west-2.terraform-state.ch.gov.uk"
-remote_state_bucket = "ch-service-staging-terraform-state"
-environment = "staging"
-deploy_to = "staging"
-state_prefix = "env:/staging"
 aws_profile = "staging-eu-west-2"
-kms_alias = "alias/staging-eu-west-2/environment-services-kms"
+environment = "staging"
 
-# scaling configs
+# Scaling configs
 desired_task_count = 2 # use multi instance in staging
-
 
 # Service environment variables
 basket_item_limit = 10
-cookie_name = "__sid"
+cookie_name = "__SID"
 default_session_expiration = 3600
 dispatch_days = 10
 human_log = 1
@@ -25,3 +19,5 @@ retry_checkout_number = 5
 retry_checkout_delay = 1500
 liquidated_company_certificates_enabled = true
 administrator_company_certificates_enabled = true
+piwik_site_id = "15"
+piwik_url = "https://matomo.platform.aws.chdev.org"
