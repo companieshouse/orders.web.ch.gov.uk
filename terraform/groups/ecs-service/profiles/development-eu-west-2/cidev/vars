@@ -4,7 +4,7 @@ environment = "cidev"
 
 # Service environment variables
 basket_item_limit = 10
-cookie_name = "__sid"
+cookie_name = "__SID"
 default_session_expiration = 3600
 dispatch_days = 10
 human_log = 1
