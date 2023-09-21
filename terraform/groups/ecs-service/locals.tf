@@ -7,11 +7,9 @@ locals {
   docker_repo               = "orders.web.ch.gov.uk"
   lb_listener_rule_priority = 14
   lb_listener_paths         = [
-    "/basket",
-    "/orders",
-    "/orders-assets",
-    "/delivery-details",
-    "/orders-web/health"
+    "/orders*",
+    "/basket*",
+    "/delivery-details*"
   ]
   healthcheck_path          = "/orders-web/health" # healthcheck path for orders web
   healthcheck_matcher       = "200"
