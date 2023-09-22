@@ -1,13 +1,8 @@
 # Account environment variables
-aws_bucket = "live-eu-west-2.terraform-state.ch.gov.uk"
-remote_state_bucket = "ch-service-live-terraform-state"
 environment = "live"
-deploy_to = "live"
-state_prefix = "env:/live"
 aws_profile = "live-eu-west-2"
-kms_alias = "alias/live-eu-west-2/environment-services-kms"
 
-# scaling configs
+# Scaling configs
 desired_task_count = 2 # use multi instance in live
 
 # Service environment variables
@@ -24,3 +19,5 @@ retry_checkout_number = 5
 retry_checkout_delay = 1500
 liquidated_company_certificates_enabled = true
 administrator_company_certificates_enabled = true
+piwik_site_id = "2"
+piwik_url = "https://matomo.platform.aws.chdev.org"
