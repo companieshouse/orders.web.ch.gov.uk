@@ -20,4 +20,4 @@ retry_checkout_delay = 1500
 liquidated_company_certificates_enabled = true
 administrator_company_certificates_enabled = true
 piwik_site_id = "2"
-piwik_url = "https://matomo.platform.aws.chdev.org"
+piwik_url = "https://matomo.companieshouse.gov.uk"
