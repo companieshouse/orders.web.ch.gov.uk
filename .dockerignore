@@ -10,3 +10,4 @@
 !tsconfig.json
 !dist
 !docker_start.sh
+!node_modules
