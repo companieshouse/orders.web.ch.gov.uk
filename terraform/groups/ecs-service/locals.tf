@@ -2,22 +2,30 @@
 locals {
   stack_name                = "order-service" # this must match the stack name the service deploys into
   name_prefix               = "${local.stack_name}-${var.environment}"
+  global_prefix             = "global-${var.environment}"
   service_name              = "orders-web" # testing service name
-  container_port            = "3000"                    # default node port required here until prod docker container is built allowing port change via env var
+  container_port            = "3000"       # default node port required here until prod docker container is built allowing port change via env var
   docker_repo               = "orders.web.ch.gov.uk"
   lb_listener_rule_priority = 14
-  lb_listener_paths         = [
+  lb_listener_paths = [
     "/orders*",
     "/basket*",
     "/delivery-details*"
   ]
-  healthcheck_path          = "/orders-web/health" # healthcheck path for orders web
-  healthcheck_matcher       = "200"
+  healthcheck_path    = "/orders-web/health" # healthcheck path for orders web
+  healthcheck_matcher = "200"
 
   kms_alias       = "alias/${var.aws_profile}/environment-services-kms"
   service_secrets = jsondecode(data.vault_generic_secret.service_secrets.data_json)
 
-  vpc_name = local.service_secrets["vpc_name"]
+  vpc_name                   = local.service_secrets["vpc_name"]
+  s3_config_bucket           = data.vault_generic_secret.shared_s3.data["config_bucket_name"]
+  app_environment_filename   = "orders.web.ch.gov.uk.env"
+  use_set_environment_files  = var.use_set_environment_files
+  application_subnet_ids     = data.aws_subnets.application.ids
+  stack_secrets              = jsondecode(data.vault_generic_secret.stack_secrets.data_json)
+  application_subnet_pattern = local.stack_secrets["application_subnet_pattern"]
+
 
   parameter_store_secrets = {
     "account_url"         = local.service_secrets["account_url"]
@@ -44,37 +52,35 @@ locals {
     trimprefix(sec.name, "/${local.service_name}-${var.environment}/") => sec.arn
   }
 
-  task_secrets = [
-    { "name" : "ACCOUNT_URL", "valueFrom" : "${local.service_secrets_arn_map.account_url}" },
-    { "name" : "API_URL", "valueFrom" : "${local.service_secrets_arn_map.api_url}" },
-    { "name" : "CACHE_SERVER", "valueFrom" : "${local.service_secrets_arn_map.cache_server}" },
-    { "name" : "CDN_HOST", "valueFrom" : "${local.service_secrets_arn_map.cdn_host}" },
-    { "name" : "CHS_API_KEY", "valueFrom" : "${local.service_secrets_arn_map.chs_api_key}" },
-    { "name" : "CHS_MONITOR_GUI_URL", "valueFrom" : "${local.service_secrets_arn_map.chs_monitor_gui_url}" },
-    { "name" : "CHS_URL", "valueFrom" : "${local.service_secrets_arn_map.chs_url}" },
-    { "name" : "COOKIE_DOMAIN", "valueFrom" : "${local.service_secrets_arn_map.cookie_domain}" },
-    { "name" : "COOKIE_SECRET", "valueFrom" : "${local.service_secrets_arn_map.cookie_secret}" },
-    { "name" : "CHS_DEVELOPER_CLIENT_ID", "valueFrom" : "${local.secrets_arn_map.web-oauth2-client-id}" },
-    { "name" : "CHS_DEVELOPER_CLIENT_SECRET", "valueFrom" : "${local.secrets_arn_map.web-oauth2-client-secret}" },
-    { "name" : "DEVELOPER_OAUTH2_REQUEST_KEY", "valueFrom" : "${local.secrets_arn_map.web-oauth2-request-key}" }
+  global_secrets_arn_map = {
+    for sec in data.aws_ssm_parameter.global_secret :
+    trimprefix(sec.name, "/${local.global_prefix}/") => sec.arn
+  }
+
+  global_secret_list = flatten([for key, value in local.global_secrets_arn_map : 
+    { "name" = upper(key), "valueFrom" = value }
+  ])
+
+  ssm_global_version_map = [
+    for sec in data.aws_ssm_parameter.global_secret : {
+      name = "GLOBAL_${var.ssm_version_prefix}${replace(upper(basename(sec.name)), "-", "_")}", value = sec.version
+    }
   ]
 
-  task_environment = [
-    { "name" : "NODE_PORT", "value" : "${local.container_port}" },
-    { "name" : "BASKET_ITEM_LIMIT", "value" : "${var.basket_item_limit}" },
-    { "name" : "COOKIE_NAME", "value" : "${var.cookie_name}" },
-    { "name" : "DEFAULT_SESSION_EXPIRATION", "value" : "${var.default_session_expiration}" },
-    { "name" : "DISPATCH_DAYS", "value" : "${var.dispatch_days}" },
-    { "name" : "HUMAN_LOG", "value" : "${var.human_log}" },
-    { "name" : "LOG_LEVEL", "value" : "${var.log_level}" },
-    { "name" : "TZ", "value" : "${var.tz}" },
-    { "name" : "DYNAMIC_LP_CERTIFICATE_ORDERS_ENABLED", "value" : "${var.dynamic_lp_certificate_orders_enabled}" },
-    { "name" : "DYNAMIC_LLP_CERTIFICATE_ORDERS_ENABLED", "value" : "${var.dynamic_llp_certificate_orders_enabled}" },
-    { "name" : "RETRY_CHECKOUT_NUMBER", "value" : "${var.retry_checkout_number}" },
-    { "name" : "RETRY_CHECKOUT_DELAY", "value" : "${var.retry_checkout_delay}" },
-    { "name" : "LIQUIDATED_COMPANY_CERTIFICATES_ENABLED", "value" : "${var.liquidated_company_certificates_enabled}" },
-    { "name" : "ADMINISTRATOR_COMPANY_CERTIFICATES_ENABLED", "value" : "${var.administrator_company_certificates_enabled}" },
-    { "name" : "PIWIK_SITE_ID", "value" : "${var.piwik_site_id}" },
-    { "name" : "PIWIK_URL", "value" : "${var.piwik_url}" }
+   service_secret_list = flatten([for key, value in local.service_secrets_arn_map : 
+    { "name" = upper(key), "valueFrom" = value }
+  ])
+
+  ssm_service_version_map = [
+    for sec in module.secrets.secrets : {
+      name = "${replace(upper(local.service_name), "-", "_")}_${var.ssm_version_prefix}${replace(upper(basename(sec.name)), "-", "_")}", value = sec.version
+    }
   ]
-}
+
+  # secrets to go in list
+  task_secrets = concat(local.service_secret_list,local.global_secret_list,[])
+
+  task_environment = concat(local.ssm_global_version_map,local.ssm_service_version_map,[
+    { "name" : "PORT", "value" : local.container_port },
+  ])
+  }
