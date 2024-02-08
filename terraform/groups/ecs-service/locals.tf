@@ -26,20 +26,6 @@ locals {
   stack_secrets              = jsondecode(data.vault_generic_secret.stack_secrets.data_json)
   application_subnet_pattern = local.stack_secrets["application_subnet_pattern"]
 
-
-  parameter_store_secrets = {
-    "account_url"         = local.service_secrets["account_url"]
-    "api_url"             = local.service_secrets["api_url"]
-    "cache_server"        = local.service_secrets["cache_server"]
-    "cdn_host"            = local.service_secrets["cdn_host"]
-    "chs_api_key"         = local.service_secrets["chs_api_key"]
-    "chs_monitor_gui_url" = local.service_secrets["chs_monitor_gui_url"]
-    "chs_url"             = local.service_secrets["chs_url"]
-    "cookie_domain"       = local.service_secrets["cookie_domain"]
-    "cookie_secret"       = local.service_secrets["cookie_secret"]
-    "vpc_name"            = local.service_secrets["vpc_name"]
-  }
-
   # create a map of secret name => secret arn to pass into ecs service module
   # using the trimprefix function to remove the prefixed path from the secret name
   secrets_arn_map = {
