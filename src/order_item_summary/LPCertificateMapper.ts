@@ -12,7 +12,7 @@ export class LPCertificateMapper extends AbstractCertificateMapper {
     protected mapCertificateDetails (): void {
         const itemOptions = this.mapperRequest.item.itemOptions as CertificateItemOptions;
         this.addText("Certificate type", MapUtil.mapCertificateType(itemOptions.certificateType) || "");
-        this.addText("Statement of good standing", MapUtil.determineItemOptionsSelectedText(itemOptions.includeGoodStandingInformation));
+        this.addText("Summary statement previously known as statement of good standing", MapUtil.determineItemOptionsSelectedText(itemOptions.includeGoodStandingInformation));
         this.addText("Principal place of business", MapUtil.mapAddressOptions(itemOptions.principalPlaceOfBusinessDetails));
         this.addText("The names of all current general partners", MapUtil.determineItemOptionsSelectedText(itemOptions.generalPartnerDetails?.includeBasicInformation));
         this.addText("The names of all current limited partners", MapUtil.determineItemOptionsSelectedText(itemOptions.limitedPartnerDetails?.includeBasicInformation));

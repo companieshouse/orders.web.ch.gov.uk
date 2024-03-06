@@ -510,7 +510,7 @@ export const mockActiveLtdCertificateItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Statement of good standing"
+                    text: "Summary statement previously known as statement of good standing"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
@@ -940,7 +940,7 @@ export const mockActiveLLPCertificateItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Statement of good standing"
+                    text: "Summary statement previously known as statement of good standing"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",
@@ -1340,7 +1340,7 @@ export const mockActiveLPCertificateItemView: GovUkOrderItemSummaryView = {
             {
                 key: {
                     classes: "govuk-!-width-one-third",
-                    text: "Statement of good standing"
+                    text: "Summary statement previously known as statement of good standing"
                 },
                 value: {
                     classes: "govuk-!-width-two-thirds",

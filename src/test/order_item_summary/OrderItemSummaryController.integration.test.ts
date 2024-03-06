@@ -157,7 +157,7 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
             expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
             expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Incorporation with all company name changes");
-            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Statement of good standing");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Summary statement previously known as statement of good standing");
             expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Yes");
             expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("Registered office address");
             expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Current address and the one previous");
@@ -405,7 +405,7 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
             expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
             expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Incorporation with all company name changes");
-            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Statement of good standing");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Summary statement previously known as statement of good standing");
             expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Yes");
             expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("Registered office address");
             expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("All current and previous addresses");
@@ -644,7 +644,7 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[1]).text()).to.contain("00000000");
             expect($($("#item-details-list .govuk-summary-list__key")[2]).text()).to.contain("Certificate type");
             expect($($("#item-details-list .govuk-summary-list__value")[2]).text()).to.contain("Incorporation with all company name changes");
-            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Statement of good standing");
+            expect($($("#item-details-list .govuk-summary-list__key")[3]).text()).to.contain("Summary statement previously known as statement of good standing");
             expect($($("#item-details-list .govuk-summary-list__value")[3]).text()).to.contain("Yes");
             expect($($("#item-details-list .govuk-summary-list__key")[4]).text()).to.contain("Principal place of business");
             expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Current address");

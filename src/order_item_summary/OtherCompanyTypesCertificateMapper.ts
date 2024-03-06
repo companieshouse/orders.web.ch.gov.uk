@@ -17,7 +17,7 @@ export class OtherCompanyTypesCertificateMapper extends AbstractCertificateMappe
             return;
         }
         if (itemOptions.companyStatus === CompanyStatus.ACTIVE) {
-            this.addText("Statement of good standing", MapUtil.determineItemOptionsSelectedText(itemOptions.includeGoodStandingInformation));
+            this.addText("Summary statement previously known as statement of good standing", MapUtil.determineItemOptionsSelectedText(itemOptions.includeGoodStandingInformation));
         }
         this.addText("Registered office address", MapUtil.mapAddressOptions(itemOptions.registeredOfficeAddressDetails));
         this.addHtml("The names of all current company directors", MapUtil.determineDirectorOrSecretaryOptionsText(itemOptions.directorDetails, "directors"));

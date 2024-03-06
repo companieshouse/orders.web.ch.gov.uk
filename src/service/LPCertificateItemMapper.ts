@@ -37,7 +37,7 @@ export class LPCertificateItemMapper extends ItemMapper {
             },
             {
                 key: {
-                    text: "Statement of good standing"
+                    text: "Summary statement previously known as statement of good standing"
                 },
                 value: {
                     classes: "govuk-!-width-one-half",
