@@ -71,7 +71,9 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + getItemTypeUrlParam(item));
         }
         else if (basketLinks.data.enrolled && req.query.itemTypes === undefined) {
-            return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + getItemTypesUrlParam(checkout?.items));
+            const itemTypes = getItemTypesUrlParam(checkout?.items);
+            logger.info(`ItemTypes=${itemTypes}`)
+            return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + itemTypes);
         }
 
         logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);
