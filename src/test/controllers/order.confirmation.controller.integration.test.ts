@@ -3,7 +3,7 @@ import sinon from "sinon";
 import ioredis from "ioredis";
 import { Basket, BasketLinks } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import cheerio from "cheerio";
-import { createLogger } from "@companieshouse/structured-logging-node";
+
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 import {
@@ -28,8 +28,6 @@ let getBasketLinksStub;
 let getBasketStub;
 
 const ORDER_ID_ARIA_LABEL = "ORD hyphen 123456 hyphen 123456";
-const logger = createLogger("orders.web.ch.gov.uk");
-
 
 const ITEM_KINDS = [{
     kind: "item#certificate",
