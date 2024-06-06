@@ -3,7 +3,7 @@ import * as apiClient from "../../client/api.client";
 import chai, { expect } from "chai";
 import sinon from "sinon";
 
-import { getItemTypeUrlParam, getRedirectUrl, retryGetCheckout } from "../../controllers/order.confirmation.controller";
+import { getItemTypeUrlParam, getItemTypesUrlParam, getRedirectUrl, retryGetCheckout } from "../../controllers/order.confirmation.controller";
 import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem, mockDissolvedCertificateItem, mockCertificateCheckoutResponse, ACCESS_TOKEN, ORDER_ID } from "../__mocks__/order.mocks";
 import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
@@ -29,6 +29,81 @@ describe("order.confirmation.controller.unit", () => {
         it("get itemType for missing-image-delivery correctly", () => {
             const result = getItemTypeUrlParam(mockMissingImageDeliveryItem);
             chai.expect(result).to.equal("&itemType=missing-image-delivery");
+        });
+    });
+
+    describe("getItemTypesUrlParam", () => {
+        it("should return the correct URL parameter for a single certificate item", () => {
+            const items = [{ ...mockCertificateItem }];
+            const result = getItemTypesUrlParam(items);
+            expect(result).to.equal("&itemTypes=1");
+        });
+    
+        it("should return the correct URL parameter for a single certified copy item", () => {
+            const items = [{ ...mockCertifiedCopyItem }];
+            const result = getItemTypesUrlParam(items);
+            expect(result).to.equal("&itemTypes=2");
+        });
+    
+        it("should return the correct URL parameter for a single missing image delivery item", () => {
+            const items = [{ ...mockMissingImageDeliveryItem }];
+            const result = getItemTypesUrlParam(items);
+            expect(result).to.equal("&itemTypes=3");
+        });
+    
+        it("should return the correct URL parameter for a single dissolution item (sub type of Certificate)", () => {
+            const items = [{ ...mockDissolvedCertificateItem }];
+            const result = getItemTypesUrlParam(items);
+            expect(result).to.equal("&itemTypes=4");
+        });
+
+        it("should handle multiple items of the same type without duplicates", () => {
+            const items = [
+                {...mockCertificateItem},
+                {...mockCertificateItem},
+            ];
+            const result = getItemTypesUrlParam(items);
+            expect(result).to.equal("&itemTypes=1");
+        });
+    
+        it("should handle multiple items of different types", () => {
+            const items = [
+                {...mockCertifiedCopyItem},
+                {...mockCertificateItem},
+                {...mockDissolvedCertificateItem},
+                {...mockMissingImageDeliveryItem}
+            ];
+            const result = getItemTypesUrlParam(items);
+            expect(result).to.equal("&itemTypes=1,2,3,4");
+        });
+    
+        it("should handle multiple items with duplicates and sort the result", () => {
+            const items = [
+                {...mockCertificateItem},
+                {...mockCertificateItem},
+                {...mockCertifiedCopyItem},
+                {...mockMissingImageDeliveryItem},
+                {...mockMissingImageDeliveryItem},
+                {...mockDissolvedCertificateItem},
+                {...mockDissolvedCertificateItem},
+            ];
+            const result = getItemTypesUrlParam(items);
+            expect(result).to.equal("&itemTypes=1,2,3,4");
+        });
+    
+        it("should handle a mix of normal and dissolution certificates", () => {
+            const items = [
+                {...mockCertificateItem},
+                {...mockDissolvedCertificateItem}
+            ];
+            const result = getItemTypesUrlParam(items);
+            expect(result).to.equal("&itemTypes=1,4");
+        });
+    
+        it("should return an empty string if there are no items", () => {
+            const items = [];
+            const result = getItemTypesUrlParam(items);
+            expect(result).to.equal("&itemTypes=");
         });
     });
 
