@@ -70,6 +70,11 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             const item = checkout?.items?.[0];
             return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + getItemTypeUrlParam(item));
         }
+        else if (basketLinks.data.enrolled && req.query.itemTypes === undefined) {
+            const itemTypes = getItemTypesUrlParam(checkout?.items);
+            logger.info(`ItemTypes=${itemTypes}`)
+            return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + itemTypes);
+        }
 
         logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);
 
@@ -125,6 +130,40 @@ export const getItemTypeUrlParam = (item: CheckoutItem): string => {
     }
 
     return "";
+};
+
+export const getItemTypesUrlParam = (items: CheckoutItem[]): string => {
+    // Define the mapping of item types to their respective numbers
+    const itemTypeMap: { [key: string]: number } = {
+        'item#certificate': 1,
+        'item#certified-copy': 2,
+        'item#missing-image-delivery': 3,
+        'item#dissolution': 4
+      };
+
+    // Create a Set to store unique item type numbers
+    const uniqueItemTypes = new Set<number>();
+
+    // Loop through each item and add the corresponding number to the Set
+    items.forEach(item => {
+        if (item?.kind === "item#certificate") {
+            //Check certificate type, if it's a dissolution add it as a new type
+            const itemOptions = item.itemOptions as CertificateItemOptions;
+            if (itemOptions?.certificateType === "dissolution") {
+                uniqueItemTypes.add(itemTypeMap['item#dissolution']);
+            } else {
+                uniqueItemTypes.add(itemTypeMap['item#certificate']);
+            }
+        } else {
+            const itemTypeNumber = itemTypeMap[item.kind];
+            if (itemTypeNumber) {
+                uniqueItemTypes.add(itemTypeNumber);
+            }
+        }
+    });
+
+  // Convert the Set to an array, sort it, and join the elements with commas
+  return `&itemTypes=${Array.from(uniqueItemTypes).sort((a, b) => a - b).join(',')}`;
 };
 
 export const retryGetCheckout = async (accessToken, orderId: string) => {

@@ -614,6 +614,26 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect(resp).to.redirectTo(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid&itemType=certificate`);
     });
 
+    it("redirects and applies the itemTypes query param if user enrolled when a certificate is ordered on the confirmation page", async () => {
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockCertificateCheckoutResponse
+        }
+
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+        getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            data: {
+                enrolled: true
+            }
+        } as BasketLinks));
+
+        const resp = await chai.request(testApp)
+            .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid`)
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .redirects(0);
+        chai.expect(resp).to.redirectTo(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=ff7fa274-1556-4495-b7d6-09897d877b8c&status=paid&itemTypes=1`);
+    });
+
     it("renders an error page if get order fails", (done) => {
         getOrderStub = sandbox.stub(apiClient, "checkoutBasket").throws(new Error("ERROR"));
         chai.request(testApp)
