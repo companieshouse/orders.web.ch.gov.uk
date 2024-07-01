@@ -18,6 +18,11 @@ describe("date.util.unit", () => {
             const result = mapDate("2019-12-16T13:06:07.791Z");
             chai.expect(result).to.equal("16 December 2019 - 13:06:07");
         });
+
+        it("maps date/time correctly when BST time", () => {
+            const result = mapDate("2024-06-27T13:06:07.791Z");
+            chai.expect(result).to.equal("27 June 2024 - 14:06:07");
+        });
     });
 
     describe("mapFilingHistoryDate", () => {

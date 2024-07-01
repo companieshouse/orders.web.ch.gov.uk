@@ -1,13 +1,18 @@
+import { createLogger } from "@companieshouse/structured-logging-node";
+import { APPLICATION_NAME } from "../config/config";
+const logger = createLogger(APPLICATION_NAME);
+
+
 
 export const mapDate = (dateString: string): string => {
     const d = new Date(dateString);
-    const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(d);
-    const month = new Intl.DateTimeFormat("en", { month: "long" }).format(d);
-    const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(d);
+    const year = new Intl.DateTimeFormat("en", { year: "numeric", timeZone: "Europe/London" }).format(d);
+    const month = new Intl.DateTimeFormat("en", { month: "long", timeZone: "Europe/London" }).format(d);
+    const day = new Intl.DateTimeFormat("en", { day: "2-digit", timeZone: "Europe/London" }).format(d);
 
-    const hour = new Intl.DateTimeFormat("en", { hour: "2-digit", hour12: false }).format(d);
-    const minute = new Intl.DateTimeFormat("en", { minute: "2-digit" }).format(d);
-    const second = new Intl.DateTimeFormat("en", { second: "numeric" }).format(d);
+    const hour = new Intl.DateTimeFormat("en", { hour: "2-digit", hour12: false, timeZone: "Europe/London" }).format(d);
+    const minute = new Intl.DateTimeFormat("en", { minute: "2-digit", timeZone: "Europe/London" }).format(d);
+    const second = new Intl.DateTimeFormat("en", { second: "2-digit", timeZone: "Europe/London" }).format(d);
 
     const cleanedMinute = mapTimeLessThan10(minute);
     const cleanedSecond = mapTimeLessThan10(second);
