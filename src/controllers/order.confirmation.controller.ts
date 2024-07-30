@@ -65,21 +65,29 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         const checkout = (await getCheckout(accessToken, orderId)).resource as Checkout;
 
-        // required to capture order type in matomo
-        if (!basketLinks.data.enrolled && (itemType === undefined || itemType === "")) {
-            const item = checkout?.items?.[0];
-            return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + getItemTypeUrlParam(item));
-        }
-        else if (basketLinks.data.enrolled && req.query.itemTypes === undefined) {
+        const originalUrl = req.originalUrl;
+        const separator = originalUrl.includes('?') ? '&' : '?';
+
+        const redirectWithItemTypes = (itemTypes: string) => {
+            const redirectUrl = getWhitelistedReturnToURL(originalUrl) + separator + itemTypes;
+            return res.redirect(redirectUrl);
+        };
+
+        // Required to capture order type in matomo
+        if (!basketLinks.data.enrolled && (itemType == undefined || itemType === "")) {
+            const itemTypes = getItemTypeUrlParam(checkout?.items?.[0]);
+            return redirectWithItemTypes(itemTypes);
+        } else if (basketLinks.data.enrolled && req.query.itemTypes === undefined) {
             const itemTypes = getItemTypesUrlParam(checkout?.items);
-            logger.info(`ItemTypes=${itemTypes}`)
-            return res.redirect(getWhitelistedReturnToURL(req.originalUrl) + itemTypes);
+            logger.info(`ItemTypes=${itemTypes}`);
+            return redirectWithItemTypes(itemTypes);
         }
 
         logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);
 
         // A race condition exists with the payment, therefore it is sometimes required to retry
-        if (checkout?.paidAt === undefined || checkout?.paymentReference === undefined) {
+        if (checkout.totalOrderCost !== "0" &&
+            (checkout?.paidAt === undefined || checkout?.paymentReference === undefined)) {
             logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} order_id=${orderId} - retrying get checkout`);
             const result = await retryGetCheckout(accessToken, orderId);
             if (result.success) {
@@ -163,7 +171,7 @@ export const getItemTypesUrlParam = (items: CheckoutItem[]): string => {
     });
 
   // Convert the Set to an array, sort it, and join the elements with commas
-  return `&itemTypes=${Array.from(uniqueItemTypes).sort((a, b) => a - b).join(',')}`;
+  return `itemTypes=${Array.from(uniqueItemTypes).sort((a, b) => a - b).join(',')}`;
 };
 
 export const retryGetCheckout = async (accessToken, orderId: string) => {
