@@ -74,7 +74,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         };
 
         // Required to capture order type in matomo
-        if (!basketLinks.data.enrolled && (itemType == undefined || itemType === "")) {
+        if (!basketLinks.data.enrolled && (itemType === undefined || itemType === "")) {
             const itemTypes = getItemTypeUrlParam(checkout?.items?.[0]);
             return redirectWithItemTypes(itemTypes);
         } else if (basketLinks.data.enrolled && req.query.itemTypes === undefined) {
