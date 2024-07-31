@@ -124,17 +124,17 @@ export const getItemTypeUrlParam = (item: CheckoutItem): string => {
     if (item?.kind === "item#certificate") {
         const itemOptions = item.itemOptions as CertificateItemOptions;
         if (itemOptions?.certificateType === "dissolution") {
-            return "&itemType=dissolved-certificate";
+            return "itemType=dissolved-certificate";
         }
-        return "&itemType=certificate";
+        return "itemType=certificate";
     }
 
     if (item?.kind === "item#certified-copy") {
-        return "&itemType=certified-copy";
+        return "itemType=certified-copy";
     }
 
     if (item?.kind === "item#missing-image-delivery") {
-        return "&itemType=missing-image-delivery";
+        return "itemType=missing-image-delivery";
     }
 
     return "";
