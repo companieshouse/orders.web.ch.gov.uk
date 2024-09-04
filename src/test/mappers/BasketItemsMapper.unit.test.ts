@@ -86,6 +86,16 @@ describe("BasketItemsMapper", () => {
                 {
                     html: flatten(
                         `<span class="responsive-table__heading" aria-hidden="false">
+                            Quantity
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            1
+                         </span>`
+                    )
+                },
+                {
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
                             Fee
                          </span>
                          <span class="responsive-table__cell" aria-hidden="false">
@@ -140,6 +150,16 @@ describe("BasketItemsMapper", () => {
                          </span>
                          <span class="responsive-table__cell" aria-hidden="false">
                             Standard
+                         </span>`
+                    )
+                },
+                {
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Quantity
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            1
                          </span>`
                     )
                 },
@@ -201,6 +221,16 @@ describe("BasketItemsMapper", () => {
                         <span class="responsive-table__cell" aria-hidden="false">
                             Standard
                         </span>`
+                    )
+                },
+                {
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Quantity
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            1
+                         </span>`
                     )
                 },
                 {
@@ -281,6 +311,16 @@ describe("BasketItemsMapper", () => {
                          </span>
                          <span class="responsive-table__cell" aria-hidden="false">
                             Standard
+                         </span>`
+                    )
+                },
+                {
+                    html: flatten(
+                        `<span class="responsive-table__heading" aria-hidden="false">
+                            Quantity
+                         </span>
+                         <span class="responsive-table__cell" aria-hidden="false">
+                            1
                          </span>`
                     )
                 },
