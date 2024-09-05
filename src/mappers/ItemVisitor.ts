@@ -27,6 +27,9 @@ export class ItemVisitor {
                         "Dispatch method", MapUtil.mapBasketDeliveryMethod(itemOptions))
                 },
                 {
+                    html: ItemVisitor.makeCellResponsive("Quantity", `${item.item.quantity}`)
+                },
+                {
                     html: ItemVisitor.makeCellResponsive("Fee", `£${item.item.totalItemCost}`)
                 },
                 {
