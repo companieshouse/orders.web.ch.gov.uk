@@ -586,7 +586,17 @@ export const mockActiveLtdCertificateItemView: GovUkOrderItemSummaryView = {
                     classes: "govuk-!-width-two-thirds",
                     text: "£15"
                 }
-            }
+            },
+            {
+                key: {
+                classes: "govuk-!-width-one-third",
+                    text: "Quantity"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                        text: "1"
+                    }
+                }
         ]
     },
     backLinkUrl: `/orders/${ORDER_ID}`
@@ -705,8 +715,19 @@ export const mockAdministratedLtdCertificateItemView: GovUkOrderItemSummaryView 
                 value: {
                     classes: "govuk-!-width-two-thirds",
                     text: "£15"
+                },
+                
+            },
+            {
+                key: {
+                classes: "govuk-!-width-one-third",
+                    text: "Quantity"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                        text: "1"
+                    }
                 }
-            }
         ]
     },
     backLinkUrl: `/orders/${ORDER_ID}`
@@ -826,7 +847,17 @@ export const mockLiquidatedLtdCertificateItemView: GovUkOrderItemSummaryView = {
                     classes: "govuk-!-width-two-thirds",
                     text: "£15"
                 }
-            }
+            },
+            {
+                key: {
+                classes: "govuk-!-width-one-third",
+                    text: "Quantity"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                        text: "1"
+                    }
+                }
         ]
     },
     backLinkUrl: `/orders/${ORDER_ID}`
@@ -896,7 +927,17 @@ export const mockDissolvedLtdCertificateItemView: GovUkOrderItemSummaryView = {
                     classes: "govuk-!-width-two-thirds",
                     text: "£15"
                 }
-            }
+            },
+            {
+                key: {
+                classes: "govuk-!-width-one-third",
+                    text: "Quantity"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                        text: "1"
+                    }
+                }
         ]
     },
     backLinkUrl: `/orders/${ORDER_ID}`
@@ -1006,7 +1047,18 @@ export const mockActiveLLPCertificateItemView: GovUkOrderItemSummaryView = {
                     classes: "govuk-!-width-two-thirds",
                     text: "£15"
                 }
+            },
+            {
+            key: {
+            classes: "govuk-!-width-one-third",
+                text: "Quantity"
+            },
+            value: {
+                classes: "govuk-!-width-two-thirds",
+                    text: "1"
+                }
             }
+            
         ]
     },
     backLinkUrl: `/orders/${ORDER_ID}`
@@ -1116,7 +1168,17 @@ export const mockAdministratedLLPCertificateItemView: GovUkOrderItemSummaryView 
                     classes: "govuk-!-width-two-thirds",
                     text: "£15"
                 }
-            }
+            },
+            {
+                key: {
+                classes: "govuk-!-width-one-third",
+                    text: "Quantity"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                        text: "1"
+                    }
+                }
         ]
     },
     backLinkUrl: `/orders/${ORDER_ID}`
@@ -1226,7 +1288,17 @@ export const mockLiquidatedLLPCertificateItemView: GovUkOrderItemSummaryView = {
                     classes: "govuk-!-width-two-thirds",
                     text: "£15"
                 }
-            }
+            },
+            {
+                key: {
+                classes: "govuk-!-width-one-third",
+                    text: "Quantity"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                        text: "1"
+                    }
+                }
         ]
     },
     backLinkUrl: `/orders/${ORDER_ID}`
@@ -1296,7 +1368,17 @@ export const mockDissolvedLLPCertificateItemView: GovUkOrderItemSummaryView = {
                     classes: "govuk-!-width-two-thirds",
                     text: "£15"
                 }
-            }
+            },
+            {
+                key: {
+                classes: "govuk-!-width-one-third",
+                    text: "Quantity"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                        text: "1"
+                    }
+                }
         ]
     },
     backLinkUrl: `/orders/${ORDER_ID}`
@@ -1416,7 +1498,17 @@ export const mockActiveLPCertificateItemView: GovUkOrderItemSummaryView = {
                     classes: "govuk-!-width-two-thirds",
                     text: "£15"
                 }
-            }
+            },
+            {
+                key: {
+                classes: "govuk-!-width-one-third",
+                    text: "Quantity"
+                },
+                value: {
+                    classes: "govuk-!-width-two-thirds",
+                        text: "1"
+                    }
+                }
         ]
     },
     backLinkUrl: `/orders/${ORDER_ID}`

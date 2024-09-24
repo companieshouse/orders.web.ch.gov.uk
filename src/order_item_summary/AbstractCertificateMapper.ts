@@ -21,6 +21,7 @@ export abstract class AbstractCertificateMapper implements OrderItemMapper {
         this.mapCertificateDetails();
         this.mapDeliveryDetails();
         this.mapFee();
+        this.mapQuantity();
         this.data.backLinkUrl = `/orders/${this.mapperRequest.orderId}`;
     }
 
@@ -78,4 +79,7 @@ export abstract class AbstractCertificateMapper implements OrderItemMapper {
         this.addText("Fee", `£${this.mapperRequest.item.totalItemCost}`);
     }
 
+    private mapQuantity(): void {
+        this.addText("Quantity", `${this.mapperRequest.item.quantity}`);
+    }
 }
