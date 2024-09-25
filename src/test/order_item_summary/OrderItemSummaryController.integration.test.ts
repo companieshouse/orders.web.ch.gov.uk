@@ -150,7 +150,7 @@ describe("OrderItemSummaryController", () => {
             // then
             expect(response.status).to.equal(200);
             expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
-            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(12);
             expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
             expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
             expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
@@ -173,6 +173,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+            expect($($("#item-details-list .govuk-summary-list__key")[11]).text()).to.contain("Quantity");
+            expect($($("#item-details-list .govuk-summary-list__value")[11]).text()).to.contain("1");
             expect(getBasketStub).to.have.been.called;
             expect(response.text).to.contain( "Basket (1)" )
         });
@@ -212,7 +214,7 @@ describe("OrderItemSummaryController", () => {
             // then
             expect(response.status).to.equal(200);
             expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
-            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(12);
             expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
             expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
             expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
@@ -235,6 +237,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Yes");
             expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+            expect($($("#item-details-list .govuk-summary-list__key")[11]).text()).to.contain("Quantity");
+            expect($($("#item-details-list .govuk-summary-list__value")[11]).text()).to.contain("1");
             expect(getBasketStub).to.have.been.called;
             expect(response.text).to.contain( "Basket (1)" )
         });
@@ -283,7 +287,7 @@ describe("OrderItemSummaryController", () => {
             // then
             expect(response.status).to.equal(200);
             expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
-            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(12);
             expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
             expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
             expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
@@ -314,6 +318,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+            expect($($("#item-details-list .govuk-summary-list__key")[11]).text()).to.contain("Quantity");
+            expect($($("#item-details-list .govuk-summary-list__value")[11]).text()).to.contain("1");
             expect(getBasketStub).to.have.been.called;
             expect(response.text).to.contain( "Basket (1)" )
         });
@@ -342,7 +348,7 @@ describe("OrderItemSummaryController", () => {
             // then
             expect(response.status).to.equal(200);
             expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
-            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(6);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(7);
             expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
             expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
             expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
@@ -355,6 +361,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("£15");
+            expect($($("#item-details-list .govuk-summary-list__key")[6]).text()).to.contain("Quantity");
+            expect($($("#item-details-list .govuk-summary-list__value")[6]).text()).to.contain("1");
             expect(getBasketStub).to.have.been.called;
             expect(response.text).to.contain( "Basket (1)" )
         });
@@ -398,7 +406,7 @@ describe("OrderItemSummaryController", () => {
             // then
             expect(response.status).to.equal(200);
             expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
-            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(10);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
             expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
             expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
             expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
@@ -419,6 +427,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("£15");
+            expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Quantity");
+            expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("1");
             expect(getBasketStub).to.have.been.called;
             expect(response.text).to.contain( "Basket (1)" )
         });
@@ -459,7 +469,7 @@ describe("OrderItemSummaryController", () => {
             // then
             expect(response.status).to.equal(200);
             expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
-            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(10);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
             expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
             expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
             expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
@@ -480,6 +490,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("No");
             expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("£15");
+            expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Quantity");
+            expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("1");
             expect(getBasketStub).to.have.been.called;
             expect(response.text).to.contain( "Basket (1)" )
         });
@@ -528,7 +540,7 @@ describe("OrderItemSummaryController", () => {
             // then
             expect(response.status).to.equal(200);
             expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
-            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(10);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
             expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
             expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
             expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
@@ -557,6 +569,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[8]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[9]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("£15");
+            expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Quantity");
+            expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("1");
             expect(getBasketStub).to.have.been.called;
             expect(response.text).to.contain( "Basket (1)" )
         });
@@ -586,7 +600,7 @@ describe("OrderItemSummaryController", () => {
             // then
             expect(response.status).to.equal(200);
             expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
-            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(6);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(7);
             expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
             expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
             expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
@@ -599,6 +613,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[4]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[5]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[5]).text()).to.contain("£15");
+            expect($($("#item-details-list .govuk-summary-list__key")[6]).text()).to.contain("Quantity");
+            expect($($("#item-details-list .govuk-summary-list__value")[6]).text()).to.contain("1");
             expect(getBasketStub).to.have.been.called;
             expect(response.text).to.contain( "Basket (1)" )
         });
@@ -637,7 +653,7 @@ describe("OrderItemSummaryController", () => {
             // then
             expect(response.status).to.equal(200);
             expect($("#item-reference").text()).to.contain(CERTIFICATE_ID);
-            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(11);
+            expect($("#item-details-list .govuk-summary-list__row").length).to.equal(12);
             expect($($("#item-details-list .govuk-summary-list__key")[0]).text()).to.contain("Company name");
             expect($($("#item-details-list .govuk-summary-list__value")[0]).text()).to.contain("Company Name");
             expect($($("#item-details-list .govuk-summary-list__key")[1]).text()).to.contain("Company number");
@@ -660,6 +676,8 @@ describe("OrderItemSummaryController", () => {
             expect($($("#item-details-list .govuk-summary-list__value")[9]).text()).to.contain("Email only available for express dispatch");
             expect($($("#item-details-list .govuk-summary-list__key")[10]).text()).to.contain("Fee");
             expect($($("#item-details-list .govuk-summary-list__value")[10]).text()).to.contain("£15");
+            expect($($("#item-details-list .govuk-summary-list__key")[11]).text()).to.contain("Quantity");
+            expect($($("#item-details-list .govuk-summary-list__value")[11]).text()).to.contain("1");
             expect(getBasketStub).to.have.been.called;
             expect(response.text).to.contain( "Basket (1)" )
         });
