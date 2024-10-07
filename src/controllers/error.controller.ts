@@ -6,6 +6,7 @@ import { APPLICATION_NAME, CHS_URL } from "../config/config";
 import * as templatePaths from "../model/template.paths";
 import { PageHeader } from "../model/PageHeader";
 import { mapPageHeader } from "../utils/page.header.utils";
+import { CsrfError } from '@companieshouse/web-security-node';
 
 const logger = createLogger(APPLICATION_NAME);
 const serviceName = "Find and update company information";
@@ -24,4 +25,20 @@ const errorHandler = (err: unknown, req: Request, res: Response, next: NextFunct
     res.status(500).render(templatePaths.ERROR, { errorMessage: errorName, ...pageHeader, serviceName, serviceUrl });
 };
 
-export default [notFoundHandler, errorHandler];
+const csrfErrorHandler = (err: CsrfError | Error, req: Request, res: Response, next: NextFunction) => {
+    // Handle non-CSRF Errors immediately
+    if (!(err instanceof CsrfError)) {
+      return next(err);
+    }
+
+    console.log("CSRF ERROR BEING HANDLED");
+    const pageHeader: PageHeader = mapPageHeader(req);
+    return res.status(403).render(templatePaths.ERROR, {
+        errorMessage: err,
+        ...pageHeader,
+        serviceName,
+        serviceUrl
+    });
+};
+
+export default [csrfErrorHandler, notFoundHandler, errorHandler];
