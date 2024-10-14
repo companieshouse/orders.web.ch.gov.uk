@@ -7,7 +7,7 @@ import { ItemOptions as MissingImageDeliveryItemOptions } from "@companieshouse/
 import { BasketDetailsViewModel } from "./BasketDetailsViewModel";
 
 export class ItemVisitor {
-    constructor(private viewModel: BasketDetailsViewModel) {
+    constructor(private viewModel: BasketDetailsViewModel, private csrfToken: string) {
     }
 
     visit (item: VisitableItem) {
@@ -45,6 +45,7 @@ export class ItemVisitor {
                     html: ItemVisitor.makeCellResponsive(
                         null,
                         `<form action="/basket/remove/${item.item.id}" method="post">
+                            <input type="hidden" name="_csrf" value="${this.csrfToken}">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"

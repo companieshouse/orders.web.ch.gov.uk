@@ -57,6 +57,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         if (basketResource.enrolled) {
             logger.debug(`User [${userId}] is enrolled; rendering basket page...`);
+            const csrfToken = req.session?.data.csrf_token ?? "";
             res.render(BASKET, {
                 ...new BasketItemsMapper().mapBasketItems(basketResource),
                 templateName: VIEW_BASKET_MATOMO_EVENT_CATEGORY,
