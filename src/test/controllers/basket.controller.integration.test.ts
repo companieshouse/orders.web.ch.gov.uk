@@ -9,6 +9,7 @@ import createError from "http-errors";
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
+import { getAppWithMockedCsrf } from '../__mocks__/csrf.mocks';
 import { BASKET_ITEM_LIMIT } from "../../config/config";
 import { ADD_ANOTHER_DOCUMENT_PATH, BASKET as BASKET_URL } from "../../model/page.urls";
 import cheerio from "cheerio";
@@ -28,7 +29,7 @@ describe("basket.controller.integration", () => {
 
         nock(MOCK_PAYMENT_URL).get("/?summary=false").reply(200, {});
 
-        testApp = require("../../app").default;
+        testApp = getAppWithMockedCsrf(sandbox);
         done();
     });
 

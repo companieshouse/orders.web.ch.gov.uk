@@ -6,6 +6,7 @@ import {
 } from "../__mocks__/order.mocks";
 import ioredis from "ioredis";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
+import { getAppWithMockedCsrf } from '../__mocks__/csrf.mocks';
 import * as apiClient from "../../client/api.client";
 import chai from "chai";
 import cheerio from "cheerio";
@@ -21,7 +22,7 @@ describe("OrderSummaryController", () => {
     beforeEach((done) => {
         sandbox.stub(ioredis.prototype, "connect").resolves();
         sandbox.stub(ioredis.prototype, "get").resolves(signedInSession);
-        testApp = require("../../../src/app").default;
+        testApp = getAppWithMockedCsrf(sandbox);
         done();
     });
 
