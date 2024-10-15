@@ -2,6 +2,7 @@ import ioredis from "ioredis";
 import sinon from "sinon";
 import * as apiClient from "../../client/api.client";
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
+import { getAppWithMockedCsrf } from '../__mocks__/csrf.mocks';
 import {
     CERTIFICATE_ID,
     CERTIFIED_COPY_ID,
@@ -26,7 +27,7 @@ describe("OrderItemSummaryController", () => {
     beforeEach((done) => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
-        testApp = require("../../../src/app").default;
+        testApp = getAppWithMockedCsrf(sandbox);
         done();
     });
 
