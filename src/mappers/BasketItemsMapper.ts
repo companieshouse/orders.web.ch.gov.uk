@@ -6,9 +6,8 @@ import { MapUtil } from "../service/MapUtil";
 
 export class BasketItemsMapper {
 
-    public mapBasketItems(basketResource: Basket): BasketDetailsViewModel {
+    public mapBasketItems(basketResource: Basket, csrfToken: string): BasketDetailsViewModel {
         const viewModel = new BasketDetailsViewModel();
-        const csrfToken = "testvalue";
 
         if (!basketResource.items) {
             return viewModel;
