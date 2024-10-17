@@ -197,7 +197,6 @@ describe("basket.controller.integration", () => {
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
             .end((err, resp) => {
                 if (err) return done(err);
-                console.log(resp.text);
                 chai.expect(resp.text).to.contain(`Basket (${BASKET_ITEM_LIMIT})`);
                 chai.expect(resp.text).to.contain("Your basket is full");
                 chai.expect(resp.text).to.contain(`You cannot add more than ${BASKET_ITEM_LIMIT} items to your order.`);

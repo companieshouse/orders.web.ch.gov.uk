@@ -8,7 +8,6 @@ export const getAppWithMockedCsrf = (sandbox: sinon.SinonSandbox) => {
         CsrfProtectionMiddleware: sandbox.stub().callsFake((csrfOptions) => {
             // Return a no-op middleware
             return (req, res, next) => {
-                console.log('No-op CSRF middleware executed');
                 next();
             };
         })
