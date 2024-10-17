@@ -1,6 +1,5 @@
 import sinon from "sinon";
 import chai from "chai";
-// import { dataEmpty } from "../../__mocks__/session.mocks";
 import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
 import * as headers from '../../../src/utils/page.header.utils';
 import { CHS_URL } from "../../../src/config/config";
@@ -8,7 +7,6 @@ import * as templatePaths from "../../../src/model/template.paths";
 
 const errorHandlers = require('../../../src/controllers/error.controller').default;
 const csrfErrorHandler = errorHandlers[0];
-
 
 import { CsrfError } from '@companieshouse/web-security-node';
 

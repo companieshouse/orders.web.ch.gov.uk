@@ -15,9 +15,7 @@ export const getAppWithMockedCsrf = (sandbox: sinon.SinonSandbox) => {
     };
 
     // Return the app with the stubbed WebSecurity module using proxyquire
-    const app = proxyquire("../../../src/app", {
+    return proxyquire("../../../src/app", {
         "@companieshouse/web-security-node": stubbedWebSecurity
     }).default;
-
-    return app;
 };
