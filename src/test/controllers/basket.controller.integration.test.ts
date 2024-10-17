@@ -135,6 +135,7 @@ describe("basket.controller.integration", () => {
 
     it("renders basket with CSRF hidden input of correct value if missing from session", (done) => {
         //override so the session contains a 'csrf_token' value
+        sandbox.restore();
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSessionWithCsrf));
         const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
             enrolled: true,
