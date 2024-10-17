@@ -7,7 +7,7 @@ import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import createError from "http-errors";
 import * as apiClient from "../../client/api.client";
-import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
+import { SIGNED_IN_COOKIE, signedInSession, signedInSessionWithCsrf, CSRF_TOKEN } from "../__mocks__/redis.mocks";
 import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
 import { getAppWithMockedCsrf } from '../__mocks__/csrf.mocks';
 import { BASKET_ITEM_LIMIT } from "../../config/config";
@@ -103,6 +103,68 @@ describe("basket.controller.integration", () => {
             });
     });
 
+    it("renders basket with CSRF hidden input of a empty string value if missing from session", (done) => {
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: [
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem
+            ],
+            deliveryDetails : {
+                addressLine1 : "Silverstone",
+                addressLine2 : "Towcester",
+                country : "England",
+                forename : "Lewis",
+                surname : "Hamilton",
+                locality : "Northamponshire",
+                postal_code : "NN12 8TN",
+                region : "South"
+            },
+        } as any));
+        chai.request(testApp)
+            .get("/basket")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain("<input type=\"hidden\" name=\"_csrf\" value=\"\">");
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
+    it("renders basket with CSRF hidden input of correct value if missing from session", (done) => {
+        //override so the session contains a 'csrf_token' value
+        sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSessionWithCsrf));
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: [
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem
+            ],
+            deliveryDetails : {
+                addressLine1 : "Silverstone",
+                addressLine2 : "Towcester",
+                country : "England",
+                forename : "Lewis",
+                surname : "Hamilton",
+                locality : "Northamponshire",
+                postal_code : "NN12 8TN",
+                region : "South"
+            },
+        } as any));
+        chai.request(testApp)
+            .get("/basket")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain(`<input type="hidden" name="_csrf" value="${CSRF_TOKEN}">`);
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
     it ("renders basket details  and warning message if user is enrolled for multi-item baskets and items at the limit", (done) => {
         const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
             enrolled: true,
@@ -134,6 +196,7 @@ describe("basket.controller.integration", () => {
             .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
             .end((err, resp) => {
                 if (err) return done(err);
+                console.log(resp.text);
                 chai.expect(resp.text).to.contain(`Basket (${BASKET_ITEM_LIMIT})`);
                 chai.expect(resp.text).to.contain("Your basket is full");
                 chai.expect(resp.text).to.contain(`You cannot add more than ${BASKET_ITEM_LIMIT} items to your order.`);
