@@ -46,7 +46,7 @@ const generateMockRequest = (emailAddress: string, isSignedIn: number):Request =
                     email: emailAddress
                 },
                 signed_in: isSignedIn,
-                access_token: {access_token:"F00DFACE"}
+                access_token: {access_token:"F00DFACE"},
             }
         }
     );

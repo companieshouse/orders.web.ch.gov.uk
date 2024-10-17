@@ -1,6 +1,7 @@
 import chai from "chai";
 import sinon from "sinon";
 import ioredis from "ioredis";
+import { getAppWithMockedCsrf } from '../__mocks__/csrf.mocks';
 
 import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
 
@@ -12,7 +13,7 @@ describe("index.integration", () => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
 
-        testApp = require("../../app").default;
+        testApp = getAppWithMockedCsrf(sandbox);
         done();
     });
 

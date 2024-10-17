@@ -6,6 +6,7 @@ import actuator from "express-actuator";
 import Redis from "ioredis";
 import { SessionStore, SessionMiddleware, CookieConfig } from "@companieshouse/node-session-handler";
 import { createLoggerMiddleware } from "@companieshouse/structured-logging-node";
+import { CsrfProtectionMiddleware } from "@companieshouse/web-security-node";
 
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
@@ -55,7 +56,8 @@ const viewPath = path.join(__dirname, "views");
 const env = nunjucks.configure([
     viewPath,
     "node_modules/govuk-frontend/",
-    "node_modules/govuk-frontend/components"
+    "node_modules/govuk-frontend/components",
+    "node_modules/@companieshouse"
 ], {
     autoescape: true,
     express: app
@@ -65,6 +67,15 @@ const cookieConfig: CookieConfig = { cookieName: "__SID", cookieSecret: COOKIE_S
 const sessionStore = new SessionStore(new Redis(`redis://${CACHE_SERVER}`));
 
 const PROTECTED_PATHS = [pageUrls.BASKET_REMOVE, pageUrls.BASKET, pageUrls.ORDER_ITEM_SUMMARY, pageUrls.ORDER_SUMMARY, pageUrls.ORDERS, pageUrls.DELIVERY_DETAILS];
+
+app.use(SessionMiddleware(cookieConfig, sessionStore));
+const csrfProtectionMiddleware = CsrfProtectionMiddleware({
+    sessionStore,
+    enabled: true,
+    sessionCookieName: "__SID"
+  });
+
+app.use(csrfProtectionMiddleware);
 app.use(PROTECTED_PATHS, createLoggerMiddleware(APPLICATION_NAME));
 app.use(PROTECTED_PATHS, SessionMiddleware(cookieConfig, sessionStore));
 app.use(PROTECTED_PATHS, authMiddleware);

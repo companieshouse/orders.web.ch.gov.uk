@@ -6,7 +6,7 @@ import { MapUtil } from "../service/MapUtil";
 
 export class BasketItemsMapper {
 
-    public mapBasketItems(basketResource: Basket): BasketDetailsViewModel {
+    public mapBasketItems(basketResource: Basket, csrfToken: string): BasketDetailsViewModel {
         const viewModel = new BasketDetailsViewModel();
 
         if (!basketResource.items) {
@@ -15,7 +15,7 @@ export class BasketItemsMapper {
 
         viewModel.deliveryDetailsTable = MapUtil.getDeliveryDetailsTable(basketResource.deliveryDetails);
 
-        const itemVisitor = new ItemVisitor(viewModel);
+        const itemVisitor = new ItemVisitor(viewModel, csrfToken);
 
         for (const item of basketResource.items) {
             const visitableItem = new VisitableItem(item);
