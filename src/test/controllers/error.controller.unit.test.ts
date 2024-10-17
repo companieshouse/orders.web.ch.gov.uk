@@ -42,6 +42,7 @@ describe('csrfErrorHandler', function() {
 
     it('should handle CSRF errors by rendering the error page with a 403 status', function() {
         const csrfError = new CsrfError('CSRF Token Invalid');
+        const serviceName = "Find and update company information";
 
         // Mock the function mapPageHeader used in your handler
         const pageHeader = { someHeaderData: 'header' };
@@ -63,6 +64,7 @@ describe('csrfErrorHandler', function() {
         chai.expect(res.render).to.have.been.calledOnceWith(templatePaths.ERROR, {
             errorMessage: csrfError,
             ...pageHeader,
+            serviceName,
             serviceUrl
         });
 

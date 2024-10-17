@@ -31,7 +31,6 @@ const csrfErrorHandler = (err: CsrfError | Error, req: Request, res: Response, n
       return next(err);
     }
 
-    console.log("CSRF ERROR BEING HANDLED");
     const pageHeader: PageHeader = mapPageHeader(req);
     return res.status(403).render(templatePaths.ERROR, {
         errorMessage: err,
