@@ -10,6 +10,8 @@ import {
 } from "../__mocks__/order.mocks";
 
 describe("BasketItemsMapper", () => {
+    const csrfToken = "TestToken123";
+
     describe("mapBasketItems", () => {
         it("Returns an empty view model if basket has no items", () => {
             // given
@@ -21,7 +23,7 @@ describe("BasketItemsMapper", () => {
             } as Basket;
 
             // when
-            const actual = mapper.mapBasketItems(basket);
+            const actual = mapper.mapBasketItems(basket, csrfToken);
 
             // then
             expect(actual.certificates).to.be.empty;
@@ -49,7 +51,7 @@ describe("BasketItemsMapper", () => {
             } as Basket;
 
             // when
-            const actual = mapper.mapBasketItems(basket);
+            const actual = mapper.mapBasketItems(basket, csrfToken);
 
             // then
             expect(actual.certificates).to.deep.equal([[
@@ -115,6 +117,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/${mockCertificateItem.id}" method="post">
+                                <input type="hidden" name="_csrf" value="${csrfToken}">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
@@ -185,6 +188,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/${mockCertificateItem.id}" method="post">
+                                <input type="hidden" name="_csrf" value="${csrfToken}">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
@@ -255,6 +259,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/${mockCertificateItem.id}" method="post">
+                                <input type="hidden" name="_csrf" value="${csrfToken}">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
@@ -326,6 +331,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/${mockCertifiedCopyItem.id}" method="post">
+                                <input type="hidden" name="_csrf" value="${csrfToken}">
                                 <input type="submit"
                                        class="removeItem"
                                        data-event-id="remove-item"
@@ -388,6 +394,7 @@ describe("BasketItemsMapper", () => {
                 },
                 {
                     html: `<span class="responsive-table__cell" aria-hidden="false"><form action="/basket/remove/${mockMissingImageDeliveryItem.id}" method="post">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
                             <input type="submit"
                                    class="removeItem"
                                    data-event-id="remove-item"
@@ -435,7 +442,7 @@ describe("BasketItemsMapper", () => {
             } as Basket;
 
             // when
-            const execution = () => mapper.mapBasketItems(basket);
+            const execution = () => mapper.mapBasketItems(basket, csrfToken);
 
             // then
             expect(execution).to.throw("Unknown item type: [item]");

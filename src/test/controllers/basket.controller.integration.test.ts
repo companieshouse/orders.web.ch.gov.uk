@@ -7,8 +7,9 @@ import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import createError from "http-errors";
 import * as apiClient from "../../client/api.client";
-import { SIGNED_IN_COOKIE, signedInSession } from "../__mocks__/redis.mocks";
+import { SIGNED_IN_COOKIE, signedInSession, signedInSessionWithCsrf, CSRF_TOKEN } from "../__mocks__/redis.mocks";
 import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
+import { getAppWithMockedCsrf } from '../__mocks__/csrf.mocks';
 import { BASKET_ITEM_LIMIT } from "../../config/config";
 import { ADD_ANOTHER_DOCUMENT_PATH, BASKET as BASKET_URL } from "../../model/page.urls";
 import cheerio from "cheerio";
@@ -28,7 +29,7 @@ describe("basket.controller.integration", () => {
 
         nock(MOCK_PAYMENT_URL).get("/?summary=false").reply(200, {});
 
-        testApp = require("../../app").default;
+        testApp = getAppWithMockedCsrf(sandbox);
         done();
     });
 
@@ -97,6 +98,69 @@ describe("basket.controller.integration", () => {
                 chai.expect(resp.text).to.contain("Certified documents");
                 chai.expect(resp.text).to.contain("Certified certificates");
                 chai.expect(resp.text).to.contain("Continue to payment");
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
+    it("renders basket with CSRF hidden input of a empty string value if missing from session", (done) => {
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: [
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem
+            ],
+            deliveryDetails : {
+                addressLine1 : "Silverstone",
+                addressLine2 : "Towcester",
+                country : "England",
+                forename : "Lewis",
+                surname : "Hamilton",
+                locality : "Northamponshire",
+                postal_code : "NN12 8TN",
+                region : "South"
+            },
+        } as any));
+        chai.request(testApp)
+            .get("/basket")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain("<input type=\"hidden\" name=\"_csrf\" value=\"\">");
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
+    it("renders basket with CSRF hidden input of correct value if missing from session", (done) => {
+        //override so the session contains a 'csrf_token' value
+        sandbox.restore();
+        sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSessionWithCsrf));
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: [
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem
+            ],
+            deliveryDetails : {
+                addressLine1 : "Silverstone",
+                addressLine2 : "Towcester",
+                country : "England",
+                forename : "Lewis",
+                surname : "Hamilton",
+                locality : "Northamponshire",
+                postal_code : "NN12 8TN",
+                region : "South"
+            },
+        } as any));
+        chai.request(testApp)
+            .get("/basket")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain(`<input type="hidden" name="_csrf" value="${CSRF_TOKEN}">`);
                 chai.expect(getBasketStub).to.have.been.called;
                 done();
             });
