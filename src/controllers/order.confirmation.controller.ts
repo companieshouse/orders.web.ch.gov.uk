@@ -8,7 +8,7 @@ import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/check
 import { createLogger } from "@companieshouse/structured-logging-node";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
-import { getCheckout, getBasket, getBasketLinks } from "../client/api.client";
+import { getCheckout, getBasket, getBasketLinks, validatePaymentSession, checkoutBasket, getPaymentStatus } from "../client/api.client";
 import { APPLICATION_NAME, RETRY_CHECKOUT_NUMBER, RETRY_CHECKOUT_DELAY, CHS_URL } from "../config/config";
 import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { ConfirmationTemplateFactory, DefaultConfirmationTemplateFactory } from "./ConfirmationTemplateFactory";
@@ -16,6 +16,8 @@ import { InternalServerError } from "http-errors";
 import { getWhitelistedReturnToURL } from "../utils/request.util";
 import { BasketLink, getBasketLink } from "../utils/basket.util";
 import { mapPageHeader } from "../utils/page.header.utils";
+import { PaymentDetails } from "order_summary/OrderSummary";
+import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -33,8 +35,9 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     try {
         const orderId = req.params.orderId;
         const status = req.query.status;
-        const ref = req.query.ref;
+        const ref = req.query.ref as string;
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
+        const refreshToken = signInInfo?.[SignInInfoKeys.RefreshToken]?.[SignInInfoKeys.RefreshToken]!;
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
         const itemType = req.query.itemType;
@@ -63,6 +66,10 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             }
         }
 
+        logger.info("Query with paid at: " +  JSON.stringify(req.query));
+        logger.info("State " +  JSON.stringify(req.query.state));
+    
+
         const checkout = (await getCheckout(accessToken, orderId)).resource as Checkout;
 
         const originalUrl = req.originalUrl;
@@ -85,29 +92,39 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);
 
-        // A race condition exists with the payment, therefore it is sometimes required to retry
-        if (checkout.totalOrderCost !== "0" &&
-            (checkout?.paidAt === undefined || checkout?.paymentReference === undefined)) {
-            logger.info(`paid_at or payment_reference returned undefined paid_at=${checkout.paidAt}, payment_reference=${checkout.paymentReference} order_id=${orderId} - retrying get checkout`);
-            const result = await retryGetCheckout(accessToken, orderId);
-            if (result.success) {
-                checkout.paidAt = result.data?.paidAt;
-                checkout.paymentReference = result.data?.paymentReference;
-            } else {
-                throw new InternalServerError("Error polling checkout " + orderId + " for updated payment info");
-            }
-        }
+        logger.info(`Validating payment using Payments API for ref=${checkout.reference}`);
+        const paymentStatus = await getPaymentStatus(accessToken, orderId, refreshToken);
 
+
+        const resource: any = paymentStatus.resource;  
+        const paidAt = resource?.paidAt ?? resource?.completedAt;
+        const paymentReference = resource?.paymentReference
+        const amount = resource?.items?.[0]?.amount;
+
+        if (paymentStatus.resource?.status !== 'paid') {
+            logger.error(`Payment validation failed for order ${orderId}, status: ${paymentStatus.resource?.status}`);
+            throw new InternalServerError("Error getting " + orderId + " from updated payment api");
+        }
         const basket: Basket = await getBasket(accessToken);
         const basketLink: BasketLink = await getBasketLink(req, basket);
 
-        const mappedItem = factory.getMapper(basketLinks.data).map(checkout);
+        const updatedCheckout = {
+            ...checkout,
+            totalOrderCost: amount,
+            paymentReference,
+            paidAt: paidAt
+        };
+        
+        const mappedItem = factory.getMapper(basketLinks.data).map(updatedCheckout);
+
         res.render(mappedItem.templateName, { ...mappedItem, ...basketLink, ...pageHeader, serviceName, serviceUrl });
+
     } catch (err) {
-        console.log(err);
+        logger.error(`Error rendering order confirmation page: ${err}`);
         next(err);
     }
 };
+
 
 export const getRedirectUrl = (item: BasketItem | undefined, itemId: string | undefined):string => {
     if (item?.kind === "item#certificate") {
