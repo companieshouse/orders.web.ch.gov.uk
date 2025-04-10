@@ -142,7 +142,34 @@ describe("api.client", () => {
             };
             sandbox.stub(PaymentService.prototype, "getPayment").returns(Promise.resolve(failure(paymentServiceResponse)));
 
-            return chai.expect(getPaymentStatus(O_AUTH_TOKEN, "q4nn5UxZiZxVG2e")).to.be.rejected;
+            return chai.expect(getPaymentStatus(O_AUTH_TOKEN, "q4nn5UxZiZxVG2e")).to.be.rejectedWith(InternalServerError);
+        });
+        it("should throw a error for 401", async () => {
+            const paymentServiceResponse: ApiErrorResponse = {
+                httpStatusCode: 401,
+                errors: [{ error: "error" }]
+            };
+            sandbox.stub(PaymentService.prototype, "getPayment").returns(Promise.resolve(failure(paymentServiceResponse)));
+        
+            await chai.expect(getPaymentStatus(O_AUTH_TOKEN, "q4nn5UxZiZxVG2e")).to.be.rejectedWith('[{"error":"error"}]');
+        });
+        it("should throw a error for 429", async () => {
+            const paymentServiceResponse: ApiErrorResponse = {
+                httpStatusCode: 429,
+                errors: [{ error: "error" }]
+            };
+            sandbox.stub(PaymentService.prototype, "getPayment").returns(Promise.resolve(failure(paymentServiceResponse)));
+        
+            await chai.expect(getPaymentStatus(O_AUTH_TOKEN, "q4nn5UxZiZxVG2e")).to.be.rejectedWith('[{"error":"error"}]');
+        });
+        it("should reject if payment resource is undefined", async () => {
+            const paymentServiceResponse: ApiResponse<Payment> = {
+                httpStatusCode: 200,
+                resource: undefined
+            };
+            sandbox.stub(PaymentService.prototype, "getPayment").returns(Promise.resolve(success(paymentServiceResponse)));
+        
+            await chai.expect(getPaymentStatus(O_AUTH_TOKEN, "q4nn5UxZiZxVG2e")).to.be.rejectedWith("Payment resource is undefined");
         });
     });
 

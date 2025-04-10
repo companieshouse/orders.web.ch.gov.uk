@@ -744,6 +744,100 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect(getOrderStub).to.have.been.called;
         chai.expect(getBasketLinksStub).to.have.been.called;
     });
+    it("should throw InternalServerError if query param reference and payment api refeernce do not match", (done) => {
+        sandbox.stub(Session.prototype, "getExtraData")
+        .withArgs("paymentId")
+        .returns("q4nn5UxZiZxVG2e");
+        
+       
+        const wrongRef = "orderable_item_WRONG-REF";
+        const correctRef = "orderable_item_CORRECT-REF";
+
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockMissingImageDeliveryCheckoutResponse
+        }
+
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+        getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            data: {
+                enrolled: false
+            }
+        } as BasketLinks));
+
+        getBasketStub = sandbox.stub(apiClient, "getBasket")
+        .returns(Promise.resolve({ enrolled: true }));
+      
+        const mismatchedPayment: Payment = {
+          ...mockPaymentResponse,
+          reference: correctRef,
+          status: "paid"
+        };
+      
+        const certificatePaymentResponse: ApiResponse<Payment> = {
+          httpStatusCode: 200,
+          resource: mismatchedPayment
+        };
+      
+        sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(certificatePaymentResponse));
+      
+        chai.request(testApp)
+          .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${wrongRef}&state=1234&status=paid&itemType=missing-image-delivery`)
+          .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+          .end((err, res) => {
+           
+            expect(res).to.have.status(500);
+            done();
+          });
+        });
+
+
+    it("should throw InternalServerError if query param status and payment api status do not match", (done) => {
+        sandbox.stub(Session.prototype, "getExtraData")
+        .withArgs("paymentId")
+        .returns("q4nn5UxZiZxVG2e");
+        
+        const queryParamstatus = "paid";
+        const apiStatus = "failed";
+
+      
+        const mismatchedPayment: Payment = {
+          ...mockPaymentResponse,
+          status: apiStatus
+        };
+      
+        const certificatePaymentResponse: ApiResponse<Payment> = {
+          httpStatusCode: 200,
+          resource: mismatchedPayment
+        };
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockMissingImageDeliveryCheckoutResponse
+        }
+
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+        getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            data: {
+                enrolled: false
+            }
+        } as BasketLinks));
+
+        getBasketStub = sandbox.stub(apiClient, "getBasket")
+        .returns(Promise.resolve({ enrolled: true }));
+      
+      
+        sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(certificatePaymentResponse));
+      
+        chai.request(testApp)
+          .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=${queryParamstatus}&itemType=missing-image-delivery`)
+          .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+          .end((err, res) => {
+           
+            expect(res).to.have.status(500);
+            done();
+          });
+        });
+
 
     it("redirects and applies the itemType query param if user disenrolled", async () => {
         const checkoutResponse: ApiResponse<Checkout> = {
