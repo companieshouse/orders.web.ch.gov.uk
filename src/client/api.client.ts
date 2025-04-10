@@ -86,15 +86,11 @@ export const createPayment = async (oAuth: string, paymentUrl: string, checkoutI
     }
 };
 
-
 export const getPaymentStatus = async (oAuth: string, checkoutId: string): Promise<ApiResponse<Payment>> => {
     const api = createApiClient(undefined, oAuth, API_URL);
     let resource = `${PAYMENTS_API_URL}/payments/${checkoutId}`;
 
     const response: ApiResult<ApiResponse<Payment>>  = await api.payment.getPayment(resource);
-    logger.info("Response in API client: " + JSON.stringify(response.value));
-
-
     if (response.isFailure()) {
         const errorResponse = response.value;
         logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);
@@ -104,21 +100,17 @@ export const getPaymentStatus = async (oAuth: string, checkoutId: string): Promi
             throw createError("Unknown Error");
         }
     }
-    
     const paymentResource = response.value?.resource;
     if (!paymentResource) {
         return Promise.reject(new Error("Payment resource is undefined"));
     }
-
+    logger.info(`Get payment, status_code=${response.value.httpStatusCode}`);
     return response.value
 };
-
-
 
 export const getCheckout = async (oAuth: string, checkoutId: string): Promise<ApiResponse<Checkout>> => {
     const api = createApiClient(undefined, oAuth, API_URL);
     const checkoutResult: ApiResult<ApiResponse<Checkout>> = await api.checkout.getCheckout(checkoutId);
-    
     if (checkoutResult.isFailure()) {
         const errorResponse = checkoutResult.value;
         logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);

@@ -375,7 +375,7 @@ export const mockPaymentResponseReferenceMapped: Payment = {
     amount: "15",
     availablePaymentMethods: [ "credit-card"],
     companyNumber: "00000000",
-    completedAt: "2020-05-15T08:41:05.798Z",
+    completedAt: "2019-12-16T09:16:17.791Z",
     createdAt: "2019-12-16T09:16:17.791Z",
     createdBy: {
         email: "demo@test.com",

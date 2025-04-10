@@ -21,7 +21,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.orderDetails.referenceNumberAriaLabel).equals("ORD hyphen 123456 hyphen 123456");
             expect(actual.paymentDetails.amount).equals("£3");
             expect(actual.paymentDetails.paymentReference).equals("q4nn5UxZiZxVG2e");
-            expect(actual.paymentDetails.orderedAt).equals("15 May 2020 - 09:41:05");
+            expect(actual.paymentDetails.orderedAt).equals("16 December 2019 - 09:16:17");
             expect(actual.hasMissingImageDeliveryItems).is.true;
             expect(actual.hasExpressDeliveryItems).is.false;
             expect(actual.hasStandardDeliveryItems).is.false;
@@ -49,7 +49,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.orderDetails.referenceNumberAriaLabel).equals("ORD hyphen 123456 hyphen 123456");
             expect(actual.paymentDetails.amount).equals("£15");
             expect(actual.paymentDetails.paymentReference).equals("q4nn5UxZiZxVG2e");
-            expect(actual.paymentDetails.orderedAt).equals("15 May 2020 - 09:41:05");
+            expect(actual.paymentDetails.orderedAt).equals("16 December 2019 - 09:16:17");
             expect(actual.hasMissingImageDeliveryItems).is.false;
             expect(actual.hasExpressDeliveryItems).is.true;
             expect(actual.hasStandardDeliveryItems).is.false;
@@ -78,7 +78,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.orderDetails.referenceNumberAriaLabel).equals("ORD hyphen 123456 hyphen 123456");
             expect(actual.paymentDetails.amount).equals("£30");
             expect(actual.paymentDetails.paymentReference).equals("q4nn5UxZiZxVG2e");
-            expect(actual.paymentDetails.orderedAt).equals("15 May 2020 - 09:41:05");
+            expect(actual.paymentDetails.orderedAt).equals("16 December 2019 - 09:16:17");
             expect(actual.hasMissingImageDeliveryItems).is.false;
             expect(actual.hasExpressDeliveryItems).is.true;
             expect(actual.hasStandardDeliveryItems).is.false;
@@ -98,7 +98,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.orderDetails.referenceNumberAriaLabel).equals("ORD hyphen 123456 hyphen 123456");
             expect(actual.paymentDetails.amount).equals("£15");
             expect(actual.paymentDetails.paymentReference).equals("q4nn5UxZiZxVG2e");
-            expect(actual.paymentDetails.orderedAt).equals("15 May 2020 - 09:41:05");
+            expect(actual.paymentDetails.orderedAt).equals("16 December 2019 - 09:16:17");
             expect(actual.hasMissingImageDeliveryItems).is.false;
             expect(actual.hasExpressDeliveryItems).is.false;
             expect(actual.hasStandardDeliveryItems).is.true;
@@ -118,7 +118,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.orderDetails.referenceNumberAriaLabel).equals("ORD hyphen 123456 hyphen 123456");
             expect(actual.paymentDetails.amount).equals("£30");
             expect(actual.paymentDetails.paymentReference).equals("q4nn5UxZiZxVG2e");
-            expect(actual.paymentDetails.orderedAt).equals("15 May 2020 - 09:41:05");
+            expect(actual.paymentDetails.orderedAt).equals("16 December 2019 - 09:16:17");
             expect(actual.hasMissingImageDeliveryItems).is.false;
             expect(actual.hasExpressDeliveryItems).is.false;
             expect(actual.hasStandardDeliveryItems).is.true;
@@ -145,7 +145,7 @@ describe("OrderSummaryTemplateMapper", () => {
             expect(actual.orderDetails.referenceNumberAriaLabel).equals("ORD hyphen 123456 hyphen 123456");
             expect(actual.paymentDetails.amount).equals("£15");
             expect(actual.paymentDetails.paymentReference).equals("q4nn5UxZiZxVG2e");
-            expect(actual.paymentDetails.orderedAt).equals("15 May 2020 - 09:41:05");
+            expect(actual.paymentDetails.orderedAt).equals("16 December 2019 - 09:16:17");
             expect(actual.hasMissingImageDeliveryItems).is.true;
             expect(actual.hasExpressDeliveryItems).is.true;
             expect(actual.hasStandardDeliveryItems).is.true;
