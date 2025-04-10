@@ -18,6 +18,7 @@ import {
     CACHE_SERVER,
     APPLICATION_NAME,
     CHS_URL,
+    PAYMENTS_API_URL,
     DELIVERY_DETAILS_WEB_URL,
     BASKET_WEB_URL,
     ORDERS_CONFIRMATION_WEB_URL
@@ -99,6 +100,7 @@ env.addGlobal("CDN_URL", process.env.CDN_HOST);
 env.addGlobal("PIWIK_URL", PIWIK_URL);
 env.addGlobal("PIWIK_SITE_ID", PIWIK_SITE_ID);
 env.addGlobal("CHS_URL", CHS_URL);
+env.addGlobal("PAYMENT_URL", PAYMENTS_API_URL);
 env.addGlobal("DELIVERY_DETAILS_WEB_URL", DELIVERY_DETAILS_WEB_URL);
 env.addGlobal("ERROR_SUMMARY_TITLE", ERROR_SUMMARY_TITLE);
 env.addGlobal("ACCOUNT_URL", process.env.ACCOUNT_URL);

@@ -114,6 +114,10 @@ const proceedToPayment = async (req: Request, res: Response, next: NextFunction)
         const paymentUrl = checkoutApiResponse?.headers?.[paymentRequired];
         logger.info(`Payment is required, checkout_id=${checkoutId}, user_id=${userId}`);
         const paymentResponse = await createPayment(accessToken, paymentUrl, checkoutApiResponse.resource?.reference!);
+        // Split self link to retrieve paymentID for payment reference later
+        const selfLink = paymentResponse?.resource?.links?.self ?? "";
+        const paymentId = selfLink.split("/").pop() as string;
+        req.session?.setExtraData("paymentId", paymentId);
 
         const paymentRedirectUrl = paymentResponse.resource?.links.journey!;
         logger.info(`Payment session created, redirecting to ${paymentRedirectUrl}, reference=${paymentResponse.resource?.reference}, amount=${paymentResponse.resource?.amount}, user_id=${userId}`);

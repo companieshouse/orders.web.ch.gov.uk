@@ -13,15 +13,12 @@ import { createLogger } from "@companieshouse/structured-logging-node";
 import { v4 as uuidv4 } from "uuid";
 import createError, { InternalServerError } from "http-errors";
 
-import { API_URL, APPLICATION_NAME, CHS_URL } from "../config/config";
+import { API_URL, APPLICATION_NAME, CHS_URL, PAYMENTS_API_URL } from "../config/config";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
 import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
-import { RefreshTokenService } from "service/RefreshToken";
-import { PaymentStatus } from "model/PaymentStatus";
 
 
 const logger = createLogger(APPLICATION_NAME);
-var refreshTokenService: RefreshTokenService; 
 
 export const getBasket = async (oAuth: string): Promise<Basket> => {
     const api = createApiClient(undefined, oAuth, API_URL);
@@ -89,27 +86,10 @@ export const createPayment = async (oAuth: string, paymentUrl: string, checkoutI
     }
 };
 
-export const validatePaymentSession = async (oAuth: string, checkoutId: string) => {
-        const redirectUri = CHS_URL + replaceOrderId(ORDER_COMPLETE, checkoutId);
-        let resource = `${API_URL}/basket/checkouts/${checkoutId}/payment`;
-        const api = createApiClient(undefined, oAuth, API_URL);
 
-    
-   
-        const paymentResult = await api.payment.getPayment(resource);
-        // const paymentResourceUri = `${API_URL}/transactions/${transactionId}/${PAYMENT}`;
-        // Check if the SDK call was successful
-        console.log("Payment Result:", paymentResult);
-};
-
-//Then the payment details required for that render to be successful are validated directly with the payments API using the query parameters contained 
-// in the payments API redirect back to any confirmation page
-//And the payment details required for that render 
-// to be successful are no longer validated with the order record in the orders.checkout collection
-
-export const getPaymentStatus = async (oAuth: string, checkoutId: string, refreshToken: string): Promise<ApiResponse<Payment>> => {
+export const getPaymentStatus = async (oAuth: string, checkoutId: string): Promise<ApiResponse<Payment>> => {
     const api = createApiClient(undefined, oAuth, API_URL);
-    let resource = `${API_URL}/basket/checkouts/${checkoutId}/payment`;
+    let resource = `${PAYMENTS_API_URL}/payments/${checkoutId}`;
 
     const response: ApiResult<ApiResponse<Payment>>  = await api.payment.getPayment(resource);
     logger.info("Response in API client: " + JSON.stringify(response.value));
@@ -117,18 +97,12 @@ export const getPaymentStatus = async (oAuth: string, checkoutId: string, refres
 
     if (response.isFailure()) {
         const errorResponse = response.value;
-        if (errorResponse?.httpStatusCode === 401 || errorResponse?.httpStatusCode === 403) {
-            logger.info(`Payment API get payment status request failed with: ${errorResponse.httpStatusCode} - Refreshing access token`);
-            const newAccessToken: string = await refreshTokenService.refresh(oAuth, refreshToken);
-            if (newAccessToken) {
-                logger.info(`Access token successfully refreshed`);
-                return getPaymentStatus(newAccessToken, checkoutId, refreshToken);
-            }
+        logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);
+        if (errorResponse.httpStatusCode === 401 || errorResponse.httpStatusCode === 429) {
+            throw createError(errorResponse.httpStatusCode, JSON.stringify(errorResponse?.errors) || "Unknown Error");
+        } else {
+            throw createError("Unknown Error");
         }
-
-        return Promise.reject(
-            new Error(`Failed to verify payment status - status: ${errorResponse?.httpStatusCode}, error: ${errorResponse?.errors}`)
-        );
     }
     
     const paymentResource = response.value?.resource;
@@ -136,7 +110,7 @@ export const getPaymentStatus = async (oAuth: string, checkoutId: string, refres
         return Promise.reject(new Error("Payment resource is undefined"));
     }
 
-    return response.value;
+    return response.value
 };
 
 
@@ -144,7 +118,7 @@ export const getPaymentStatus = async (oAuth: string, checkoutId: string, refres
 export const getCheckout = async (oAuth: string, checkoutId: string): Promise<ApiResponse<Checkout>> => {
     const api = createApiClient(undefined, oAuth, API_URL);
     const checkoutResult: ApiResult<ApiResponse<Checkout>> = await api.checkout.getCheckout(checkoutId);
-
+    
     if (checkoutResult.isFailure()) {
         const errorResponse = checkoutResult.value;
         logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);

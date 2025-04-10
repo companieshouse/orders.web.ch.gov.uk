@@ -4,6 +4,7 @@ import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/check
 import { CompanyType } from "../../model/CompanyType";
 import { GovUkOrderItemSummaryView } from "../../order_item_summary/GovUkOrderItemSummaryView";
 import { GovUkOrderCertifiedCopyItemSummaryView } from "../../order_item_summary/GovUkOrderCertifiedCopyItemSummaryView";
+import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment/types";
 
 export const CERTIFICATE_ID = "CRT-123456-123456";
 export const CERTIFIED_COPY_ID = "CCD-123456-123456";
@@ -132,7 +133,7 @@ export const mockOrderResponse: Order = {
 
 export const mockCertificateCheckoutResponse: Checkout = {
     paidAt: "2019-12-16T09:16:17.791Z",
-    status: "pending",
+    status: "paid",
     checkedOutBy: {
         id: "123456",
         email: "email@examlpe.come"
@@ -162,7 +163,7 @@ export const mockCertificateCheckoutResponse: Checkout = {
 
 export const mockDissolvedCertificateCheckoutResponse: Checkout = {
     paidAt: "2019-12-16T09:16:17.791Z",
-    status: "pending",
+    status: "paid",
     checkedOutBy: {
         id: "123456",
         email: "email@examlpe.come"
@@ -253,7 +254,7 @@ export const mockCertifiedCopyItem: Item = {
 
 export const mockCertifiedCopyCheckoutResponse: Checkout = {
     paidAt: "2019-12-16T09:16:17.791Z",
-    status: "pending",
+    status: "paid",
     checkedOutBy: {
         id: "123456",
         email: "email@examlpe.come"
@@ -343,6 +344,57 @@ export const mockMissingImageDeliveryCheckoutResponse: Checkout = {
         payment: `"/basket/checkouts/${ORDER_ID}/payment"`
     }
 };
+
+
+export const mockPaymentResponse: Payment = {
+    amount: "15",
+    availablePaymentMethods: [ "credit-card"],
+    companyNumber: "00000000",
+    completedAt: "2019-12-16T09:16:17.791Z",
+    createdAt: "2019-12-16T09:16:17.791Z",
+    createdBy: {
+        email: "demo@test.com",
+        forename: "John",
+        id: "123456",
+        surname: "Smith",
+    },
+    description: "certificate for company 00000000",
+    etag: "abcdefg123456",
+    kind: "payment-session#payment-session",
+    links: {
+        journey: "paymenturl/payments/q4nn5UxZiZxVG2e/pay",
+        resource: "localurl/basket/checkouts/ORD-123456-789/payment",
+        self: "payments/q4nn5UxZiZxVG2e",
+    },
+    paymentMethod: "credit-card",
+    reference: "orderable_item_ORD-123456-123456",
+    status: "paid"
+}
+
+export const mockPaymentResponseReferenceMapped: Payment = {
+    amount: "15",
+    availablePaymentMethods: [ "credit-card"],
+    companyNumber: "00000000",
+    completedAt: "2020-05-15T08:41:05.798Z",
+    createdAt: "2019-12-16T09:16:17.791Z",
+    createdBy: {
+        email: "demo@test.com",
+        forename: "John",
+        id: "123456",
+        surname: "Smith",
+    },
+    description: "certificate for company 00000000",
+    etag: "abcdefg123456",
+    kind: "payment-session#payment-session",
+    links: {
+        journey: "paymenturl/payments/q4nn5UxZiZxVG2e/pay",
+        resource: "localurl/basket/checkouts/ORD-123456-789/payment",
+        self: "payments/q4nn5UxZiZxVG2e",
+    },
+    paymentMethod: "credit-card",
+    reference: "q4nn5UxZiZxVG2e",
+    status: "paid"
+}
 
 export const mockMidOrderItemView: GovUkOrderItemSummaryView = {
     orderId: "ORD-123123-123123",

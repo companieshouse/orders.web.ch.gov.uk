@@ -11,6 +11,7 @@ chai.use(chaiAsPromised);
 // (global as any)['expect'] = chai.expect;
 
 process.env.API_URL = "http://testapi.co";
+process.env.PAYMENTS_API_URL = "http://testpaymentapi.co";
 process.env.COOKIE_SECRET = "Xy6onkjQWF0TkRn0hfdqUw==";
 process.env.COOKIE_DOMAIN = "cookie domain";
 process.env.CACHE_SERVER = "test";

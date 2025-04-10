@@ -435,6 +435,7 @@ describe("basket.controller.integration", () => {
         verifyServiceLinkRenderedCorrectly($);
         verifyUserNavBarRenderedWithoutBasketLink(resp.text);
     });
+      
 });
 
 const verifyServiceLinkRenderedCorrectly = ($: cheerio.Root) => {

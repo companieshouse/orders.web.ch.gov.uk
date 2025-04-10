@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { Session } from "@companieshouse/node-session-handler";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
 import { Item as CheckoutItem, Item as BasketItem } from "@companieshouse/api-sdk-node/dist/services/order/order";
@@ -8,36 +7,26 @@ import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/check
 import { createLogger } from "@companieshouse/structured-logging-node";
 import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
 
-import { getCheckout, getBasket, getBasketLinks, validatePaymentSession, checkoutBasket, getPaymentStatus } from "../client/api.client";
-import { APPLICATION_NAME, RETRY_CHECKOUT_NUMBER, RETRY_CHECKOUT_DELAY, CHS_URL } from "../config/config";
+import { getCheckout, getBasket, getBasketLinks, getPaymentStatus } from "../client/api.client";
+import { APPLICATION_NAME, CHS_URL } from "../config/config";
 import { Basket } from "@companieshouse/api-sdk-node/dist/services/order/basket";
 import { ConfirmationTemplateFactory, DefaultConfirmationTemplateFactory } from "./ConfirmationTemplateFactory";
 import { InternalServerError } from "http-errors";
 import { getWhitelistedReturnToURL } from "../utils/request.util";
 import { BasketLink, getBasketLink } from "../utils/basket.util";
 import { mapPageHeader } from "../utils/page.header.utils";
-import { PaymentDetails } from "order_summary/OrderSummary";
-import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
+import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 
 const logger = createLogger(APPLICATION_NAME);
 
 const factory: ConfirmationTemplateFactory = new DefaultConfirmationTemplateFactory();
 
-type CheckoutPollResult = {
-    success: boolean;
-    data?: {
-        paidAt?: string;
-        paymentReference?: string;
-    }
-};
-
 export const render = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const orderId = req.params.orderId;
         const status = req.query.status;
-        const ref = req.query.ref as string;
+        const queryRef= req.query.ref;
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
-        const refreshToken = signInInfo?.[SignInInfoKeys.RefreshToken]?.[SignInInfoKeys.RefreshToken]!;
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
         const itemType = req.query.itemType;
@@ -46,11 +35,10 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         const basketLinks = await getBasketLinks(accessToken);
         const pageHeader = mapPageHeader(req);
-
         if (basketLinks.data.enrolled) {
-            logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, user_id=${userId}`);
+            logger.info(`Order confirmation, order_id=${orderId}, ref=${queryRef}, status=${status}, user_id=${userId}`);
         } else {
-            logger.info(`Order confirmation, order_id=${orderId}, ref=${ref}, status=${status}, itemType=${itemType}, user_id=${userId}`);
+            logger.info(`Order confirmation, order_id=${orderId}, ref=${queryRef}, status=${status}, itemType=${itemType}, user_id=${userId}`);
         }
 
         if (status === "cancelled" || status === "failed") {
@@ -65,11 +53,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
                 return res.redirect(redirectUrl);
             }
         }
-
-        logger.info("Query with paid at: " +  JSON.stringify(req.query));
-        logger.info("State " +  JSON.stringify(req.query.state));
-    
-
         const checkout = (await getCheckout(accessToken, orderId)).resource as Checkout;
 
         const originalUrl = req.originalUrl;
@@ -80,7 +63,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             return res.redirect(redirectUrl);
         };
 
-        // Required to capture order type in matomo
+        // Required to capture order type in matomo (item type is not a query param)
         if (!basketLinks.data.enrolled && (itemType === undefined || itemType === "")) {
             const itemTypes = getItemTypeUrlParam(checkout?.items?.[0]);
             return redirectWithItemTypes(itemTypes);
@@ -92,30 +75,34 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);
 
-        logger.info(`Validating payment using Payments API for ref=${checkout.reference}`);
-        const paymentStatus = await getPaymentStatus(accessToken, orderId, refreshToken);
+        const paymentRef = req.session?.getExtraData("paymentId") as string;
+        
+        logger.info(`Validating payment using Payments API for ref=${paymentRef}`);
+        const paymentResponse = await getPaymentStatus(accessToken, paymentRef);
+        
+        const resource = paymentResponse.resource as Payment;  
+        const reference = paymentResponse.resource?.reference;
+        const paymentStatus = paymentResponse.resource?.status;
 
-
-        const resource: any = paymentStatus.resource;  
-        const paidAt = resource?.paidAt ?? resource?.completedAt;
-        const paymentReference = resource?.paymentReference
-        const amount = resource?.items?.[0]?.amount;
-
-        if (paymentStatus.resource?.status !== 'paid') {
-            logger.error(`Payment validation failed for order ${orderId}, status: ${paymentStatus.resource?.status}`);
-            throw new InternalServerError("Error getting " + orderId + " from updated payment api");
+        if (queryRef !== reference){
+            logger.error(`Payment validation failed for ${queryRef} and ${queryRef}`);
+            throw new InternalServerError("Payment References do not match");
+        }
+  
+        if (paymentStatus !== status) {
+            logger.error(`Payment validation failed for ${queryRef} and ${queryRef}`);
+            throw new InternalServerError("Payment statuses from API does not match");
         }
         const basket: Basket = await getBasket(accessToken);
         const basketLink: BasketLink = await getBasketLink(req, basket);
 
-        const updatedCheckout = {
-            ...checkout,
-            totalOrderCost: amount,
-            paymentReference,
-            paidAt: paidAt
-        };
+        //update the Payment response with the payment reference from the session(from CreatePayment in basket controler)
+        const updatedPayment: Payment = {
+            ...resource,
+            reference: paymentRef
+          };
         
-        const mappedItem = factory.getMapper(basketLinks.data).map(updatedCheckout);
+        const mappedItem = factory.getMapper(basketLinks.data).map(checkout,updatedPayment);
 
         res.render(mappedItem.templateName, { ...mappedItem, ...basketLink, ...pageHeader, serviceName, serviceUrl });
 
@@ -189,42 +176,4 @@ export const getItemTypesUrlParam = (items: CheckoutItem[]): string => {
 
   // Convert the Set to an array, sort it, and join the elements with commas
   return `itemTypes=${Array.from(uniqueItemTypes).sort((a, b) => a - b).join(',')}`;
-};
-
-export const retryGetCheckout = async (accessToken, orderId: string) => {
-    return new Promise<CheckoutPollResult>((resolve) => {
-        let retries = 1;
-        const checkoutInterval = setInterval(
-            async () => {
-                let retryCheckout;
-                try {
-                    retryCheckout = (await getCheckout(accessToken, orderId)).resource as Checkout;
-                } catch (error) {
-                    logger.error(`Failed to poll checkout resource for order_id=${orderId} with error: ${error.message}`);
-                    resolve({ success: false });
-                    clearInterval(checkoutInterval);
-                    return;
-                }
-
-                let paidAt = retryCheckout.paidAt;
-                let paymentReference = retryCheckout.paymentReference;
-
-                if(paidAt === undefined || paymentReference === undefined) {
-                    logger.info(`Retry attempt ${retries} failed to return paid_at or payment_reference for order_id=${orderId}`);
-                    retries++;
-                } else {
-                    logger.info(`paid_at and payment_reference returned successfully on retry attempt ${retries},
-                        order_id=${orderId} paid_at=${paidAt}, payment_reference=${paymentReference}`);
-                    resolve({ success: true, data: { paidAt: paidAt, paymentReference: paymentReference } });
-                    clearInterval(checkoutInterval);
-                }
-                if(retries >= parseInt(RETRY_CHECKOUT_NUMBER)) {
-                    logger.error(`paid_at or payment_reference returned undefined after ${retries} retries,
-                        order_id=${orderId} paid_at=${paidAt}, payment_reference=${paymentReference}`);
-                    resolve({ success: false });
-                    clearInterval(checkoutInterval);
-                }
-            }
-        , parseInt(RETRY_CHECKOUT_DELAY));
-    });
 };

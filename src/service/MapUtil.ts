@@ -10,6 +10,7 @@ import { APPLICATION_NAME, DISPATCH_DAYS } from "../config/config";
 import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/checkout";
 import { mapDate } from "../utils/date.util";
 import { OrderDetails, PaymentDetails } from "../controllers/ConfirmationTemplateMapper";
+import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment/types";
 
 const escape = require("escape-html");
 const logger = createLogger(APPLICATION_NAME);
@@ -234,13 +235,13 @@ export abstract class MapUtil {
         ];
     };
 
-    static getPaymentDetails = (checkout: Checkout): PaymentDetails => {
+    static getPaymentDetails = (checkout: Checkout, payment: Payment): PaymentDetails => {
         return {
             amount: "£" + checkout?.totalOrderCost,
-            paymentReference: checkout.paymentReference || "",
-            orderedAt: checkout.paidAt ? mapDate(checkout.paidAt) : ""
+            paymentReference: payment.reference || "",
+            orderedAt: payment.completedAt ? mapDate(payment.completedAt) : ""
         };
-    }
+      };
 
     static getOrderDetails = (checkout: Checkout): OrderDetails => {
         return {

@@ -4,7 +4,7 @@ import { Item } from "@companieshouse/api-sdk-node/dist/services/order/order/typ
 import { MapUtil } from "../service/MapUtil";
 import { ConfirmationTemplateMapper } from "./ConfirmationTemplateMapper";
 import { ItemOptionsDeliveryTimescaleConfigurable } from "@companieshouse/api-sdk-node/dist/services/order/types";
-
+import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 export const PAGE_TITLE = "Order received - GOV.UK";
 export const PANEL_TITLE = "Order received";
 
@@ -13,15 +13,14 @@ type OrderStatus = {
     hasExpressDeliveryItems: boolean,
     hasStandardDeliveryItems: boolean
 };
-
 export class OrderSummaryTemplateMapper implements ConfirmationTemplateMapper {
-    map (checkout: Checkout): Record<string, any> {
+    map (checkout: Checkout, payment: Payment): Record<string, any> {
         const orderStatus = this.buildOrderStatus(checkout.items);
         const view = {
             pageTitleText: PAGE_TITLE,
             titleText: PANEL_TITLE,
             orderDetails: MapUtil.getOrderDetails(checkout),
-            paymentDetails: MapUtil.getPaymentDetails(checkout),
+            paymentDetails: MapUtil.getPaymentDetails(checkout, payment),
             ...this.buildOrderStatus(checkout.items),
             templateName: ORDER_COMPLETE_ABBREVIATED
         };

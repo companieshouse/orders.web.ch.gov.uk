@@ -16,6 +16,7 @@ import {
     createPayment,
     getBasketLinks,
     getOrder, getOrderItem,
+    getPaymentStatus,
     patchBasket,
     removeBasketItem
 } from "../../client/api.client";
@@ -120,6 +121,31 @@ describe("api.client", () => {
             return chai.expect(createPayment(O_AUTH_TOKEN, "http://payment-url", "1234")).to.be.rejected;
         });
     });
+    describe("getPayment", () => {
+        it("should return a Payment object with headers if call is successful", async () => {
+            const paymentServiceResponse: ApiResponse<Payment> = {
+                httpStatusCode: 200
+            };
+            paymentServiceResponse.resource = { reference: "orderable_item_ORD-123456-123456" } as Payment;
+            sandbox.stub(PaymentService.prototype, "getPayment").returns(Promise.resolve(success(paymentServiceResponse)));
+
+            const apiResponse: ApiResponse<Payment> = await getPaymentStatus(O_AUTH_TOKEN, "q4nn5UxZiZxVG2e");
+
+            chai.expect(apiResponse.headers?.httpStatusCode).to.equal(paymentServiceResponse.headers?.httpStatusCode);
+            chai.expect(apiResponse.resource?.reference).to.equal(paymentServiceResponse.resource.reference);
+        });
+
+        it("should throw an error if call is unsuccessful", () => {
+            const paymentServiceResponse: ApiErrorResponse = {
+                httpStatusCode: 404,
+                errors: [{ error: "error" }]
+            };
+            sandbox.stub(PaymentService.prototype, "getPayment").returns(Promise.resolve(failure(paymentServiceResponse)));
+
+            return chai.expect(getPaymentStatus(O_AUTH_TOKEN, "q4nn5UxZiZxVG2e")).to.be.rejected;
+        });
+    });
+
     describe("patchBasket", () => {
         it("returns the Basket details following PATCH basket", async () => {
             sandbox.stub(BasketService.prototype, "patchBasket").returns(Promise.resolve(dummyBasketSDKResponse));

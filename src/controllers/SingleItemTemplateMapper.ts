@@ -9,16 +9,17 @@ import {
     MID_PAGE_TITLE
 } from "./ConfirmationTemplateMapper";
 import { MapUtil } from "../service/MapUtil";
+import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 
 export class SingleItemTemplateMapper implements ConfirmationTemplateMapper {
-    map (checkout: Checkout): Record<string, any> {
+    map (checkout: Checkout, payment: Payment): Record<string, any> {
         const item = checkout.items[0];
         const mappedItem = mapItem(item, checkout?.deliveryDetails);
         return {
             ...mappedItem,
             companyNumber: item.companyNumber,
             orderDetails: MapUtil.getOrderDetails(checkout),
-            paymentDetails: MapUtil.getPaymentDetails(checkout),
+            paymentDetails: MapUtil.getPaymentDetails(checkout,payment),
             itemKind: item.kind,
             piwikLink: this.getPiwikURL(item),
             totalItemsCost: `£${item?.totalItemCost}`,
