@@ -14,6 +14,7 @@ import { BASKET_ITEM_LIMIT } from "../../config/config";
 import { ADD_ANOTHER_DOCUMENT_PATH, BASKET as BASKET_URL } from "../../model/page.urls";
 import cheerio from "cheerio";
 import { verifyUserNavBarRenderedWithoutBasketLink } from "../utils/page.header.utils.test";
+import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -162,6 +163,42 @@ describe("basket.controller.integration", () => {
                 if (err) return done(err);
                 chai.expect(resp.text).to.contain(`<input type="hidden" name="_csrf" value="${CSRF_TOKEN}">`);
                 chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
+    it("should store paymentID in session after successful payment creation", (done) => {
+        const paymentId = "qf24hf53j32j";
+    
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            headers: {
+                "X-Payment-Required": MOCK_PAYMENT_URL + "/" + paymentId
+            }
+        };
+        checkoutResponse.resource = { reference: "1234" } as Checkout;
+
+        const checkoutPayment: ApiResponse<Payment> = {
+            httpStatusCode: 200
+        };
+        checkoutPayment.resource = { links: { journey: MOCK_PAYMENT_URL , self: MOCK_PAYMENT_URL + "/" + paymentId} } as Payment;
+        const setExtraDataStub = sandbox.stub(Session.prototype, "setExtraData");
+
+        checkoutBasketStub = sandbox.stub(apiClient, "checkoutBasket").returns(Promise.resolve(checkoutResponse));
+        createPaymentStub = sandbox.stub(apiClient, "createPayment").returns(Promise.resolve(checkoutPayment));
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: false
+        }));
+        chai.request(testApp)
+            .get("/basket")
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp).to.redirectTo(MOCK_PAYMENT_URL + "/?summary=false");
+                chai.expect(checkoutBasketStub).to.have.been.called;
+                chai.expect(createPaymentStub).to.have.been.called;
+                chai.expect(getBasketStub).to.have.been.called;
+                chai.expect(setExtraDataStub).to.have.been.calledWith("paymentId", paymentId);
                 done();
             });
     });
@@ -441,3 +478,7 @@ const verifyServiceLinkRenderedCorrectly = ($: cheerio.Root) => {
     chai.expect($(".govuk-header__content").text()).to.contain("Find and update company information");
     chai.expect($(".govuk-header__content").children().attr("href")).to.equal("http://chsurl.co");
 };
+function done(err: any) {
+    throw new Error("Function not implemented.");
+}
+

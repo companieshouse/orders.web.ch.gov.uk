@@ -77,32 +77,20 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         const paymentRef = req.session?.getExtraData("paymentId") as string;
         
-        logger.info(`Validating payment using Payments API for ref=${paymentRef}`);
-        const paymentResponse = await getPaymentStatus(accessToken, paymentRef);
+        const resource = await getPaymentDetails(paymentRef, status , queryRef ,accessToken);
         
-        const resource = paymentResponse.resource as Payment;  
-        const reference = paymentResponse.resource?.reference;
-        const paymentStatus = paymentResponse.resource?.status;
-
-        if (queryRef !== reference){
-            logger.error(`Payment validation failed for ${queryRef} and ${queryRef}`);
-            throw new InternalServerError("Payment References do not match");
-        }
-  
-        if (paymentStatus !== status) {
-            logger.error(`Payment validation failed for ${queryRef} and ${queryRef}`);
-            throw new InternalServerError("Payment statuses from API does not match");
-        }
         const basket: Basket = await getBasket(accessToken);
         const basketLink: BasketLink = await getBasketLink(req, basket);
 
-        //update the Payment response with the payment reference from the session(from CreatePayment in basket controler)
+        /*update the Payment response with the reference from the session (from CreatePayment in basket controller)
+        and paymentReference from API response. 
+        */ 
         const updatedPayment: Payment = {
             ...resource,
             reference: paymentRef
           };
         
-        const mappedItem = factory.getMapper(basketLinks.data).map(checkout,updatedPayment);
+        const mappedItem = factory.getMapper(basketLinks.data).map(checkout, updatedPayment);
 
         res.render(mappedItem.templateName, { ...mappedItem, ...basketLink, ...pageHeader, serviceName, serviceUrl });
 
@@ -110,6 +98,28 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         logger.error(`Error rendering order confirmation page: ${err}`);
         next(err);
     }
+};
+
+export const getPaymentDetails = async (paymentRef: string, status: any, queryRef: any, accessToken: string) =>{
+    logger.info(`Validating payment using Payments API for ref=${paymentRef}`);
+    const paymentResponse = await getPaymentStatus(accessToken, paymentRef);
+    
+    const resource = paymentResponse.resource as Payment;  
+    const reference = paymentResponse.resource?.reference;
+    const paymentStatus = paymentResponse.resource?.status;
+
+    // Compare 'reference' from paymentAPI response with queryParam reference
+    if (queryRef !== reference){
+        logger.error(`Payment validation failed for ${queryRef} and ${queryRef}`);
+        throw new InternalServerError("Payment References do not match");
+    }
+
+    // Compare status from paymentAPI response with queryParam status
+    if (paymentStatus !== status) {
+        logger.error(`Payment validation failed for ${queryRef} and ${queryRef}`);
+        throw new InternalServerError("Payment statuses from API does not match");
+    }
+    return resource;
 };
 
 
