@@ -1,4 +1,4 @@
-import chai from "chai";
+import chai, { expect } from "chai";
 import sinon from "sinon";
 import ioredis from "ioredis";
 import { Basket, BasketLinks } from "@companieshouse/api-sdk-node/dist/services/order/basket";
@@ -14,6 +14,7 @@ import {
     mockDissolvedCertificateCheckoutResponse,
     mockMissingImageDeliveryCheckoutResponse,
     mockMissingImageDeliveryItem,
+    mockPaymentResponse,
     ORDER_ID
 } from "../__mocks__/order.mocks";
 import { MapUtil } from "../../service/MapUtil";
@@ -21,12 +22,16 @@ import { Checkout } from "@companieshouse/api-sdk-node/dist/services/order/check
 import { CompanyType } from "../../model/CompanyType";
 import { DobType } from "../../model/DobType";
 import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
+import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment/types";
+import { Session } from "@companieshouse/node-session-handler";
+import  *  as getWhitelistedReturnToURL from "../../utils/request.util";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
 let getOrderStub;
 let getBasketLinksStub;
 let getBasketStub;
+let getPaymentStub;
 
 const ORDER_ID_ARIA_LABEL = "ORD hyphen 123456 hyphen 123456";
 
@@ -62,6 +67,10 @@ describe("order.confirmation.controller.integration", () => {
 
     describe("Certificate order confirmation page integration tests", () => {
         it("Renders order summary page if the user is enrolled and missing image delivery requested", (done) => {
+            sandbox.stub(Session.prototype, "getExtraData")
+            .withArgs("paymentId")
+            .returns("q4nn5UxZiZxVG2e");
+  
             const certificateCheckoutResponse = {
                 ...mockMissingImageDeliveryCheckoutResponse
             } as Checkout;
@@ -70,6 +79,22 @@ describe("order.confirmation.controller.integration", () => {
                 httpStatusCode: 200,
                 resource: certificateCheckoutResponse
             }
+            const certificatePaymentResponse: ApiResponse<Payment> = {
+                httpStatusCode: 200,
+                resource: mockPaymentResponse,
+            }
+            getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+                certificatePaymentResponse,
+            ));
+
+
+            const whitelistedUrlStub = sandbox.stub(getWhitelistedReturnToURL, "getWhitelistedReturnToURL");
+
+            // stops the test from removing the status and state query params
+            whitelistedUrlStub
+            .withArgs(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+            .returns(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`);
+
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
             getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
@@ -97,17 +122,20 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect($("#hasStandardDeliveryItems").length).equals(0);
                     chai.expect($("#deliveryAddressValue").length).equals(0);
                     chai.expect($("#paymentAmountValue").text()).to.equal("£3");
-                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockMissingImageDeliveryCheckoutResponse.paymentReference);
-                    chai.expect($("#paymentTimeValue").text()).to.equal("07 October 2020 - 11:09:46");
-
+                    chai.expect($("#paymentReferenceValue").text()).to.equal("q4nn5UxZiZxVG2e");
+                    chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
+                    chai.expect(getPaymentStub).to.have.been.called;
                     chai.expect(getOrderStub).to.have.been.called;
                     chai.expect(getBasketLinksStub).to.have.been.called;
                     chai.expect(resp.text).to.contain("Order received");
-
+                    sandbox.restore();
                     done();
                 });
         });
         it("Renders order summary page if the user is enrolled and standard delivery requested", (done) => {
+            sandbox.stub(Session.prototype, "getExtraData")
+            .withArgs("paymentId")
+            .returns("q4nn5UxZiZxVG2e");
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse
             } as Checkout;
@@ -116,6 +144,13 @@ describe("order.confirmation.controller.integration", () => {
                 httpStatusCode: 200,
                 resource: certificateCheckoutResponse
             }
+            const certificatePaymentResponse: ApiResponse<Payment> = {
+                httpStatusCode: 200,
+                resource: mockPaymentResponse,
+            }
+            getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+                certificatePaymentResponse,
+            ));
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
             getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
@@ -125,6 +160,13 @@ describe("order.confirmation.controller.integration", () => {
             } as BasketLinks));
             getBasketStub = sandbox.stub(apiClient, "getBasket")
             .returns(Promise.resolve({ enrolled: true }));
+            
+            const whitelistedUrlStub = sandbox.stub(getWhitelistedReturnToURL, "getWhitelistedReturnToURL");
+
+            // stops the test from removing the status and state query params
+            whitelistedUrlStub
+            .withArgs(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+            .returns(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`);
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -142,9 +184,9 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect($("#hasStandardDeliveryItems").length).equals(1);
                     chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                     chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
+                    chai.expect($("#paymentReferenceValue").text()).to.equal("q4nn5UxZiZxVG2e");
                     chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
-
+                    chai.expect(getPaymentStub).to.have.been.called;
                     chai.expect(getOrderStub).to.have.been.called;
                     chai.expect(getBasketLinksStub).to.have.been.called;
                     chai.expect(resp.text).to.contain("Order received");
@@ -152,6 +194,9 @@ describe("order.confirmation.controller.integration", () => {
                 });
         });
         it("Renders order summary page if the user is enrolled and express delivery requested", (done) => {
+            sandbox.stub(Session.prototype, "getExtraData")
+            .withArgs("paymentId")
+            .returns("q4nn5UxZiZxVG2e");
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse,
                 items: [
@@ -170,6 +215,14 @@ describe("order.confirmation.controller.integration", () => {
                 resource: certificateCheckoutResponse
             }
 
+            const certificatePaymentResponse: ApiResponse<Payment> = {
+                httpStatusCode: 200,
+                resource: mockPaymentResponse,
+            }
+            getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+                certificatePaymentResponse,
+            ));
+
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
             getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
                 data: {
@@ -178,6 +231,14 @@ describe("order.confirmation.controller.integration", () => {
             } as BasketLinks));
             getBasketStub = sandbox.stub(apiClient, "getBasket")
             .returns(Promise.resolve({ enrolled: true }));
+
+            const whitelistedUrlStub = sandbox.stub(getWhitelistedReturnToURL, "getWhitelistedReturnToURL");
+
+            // stops the test from removing the status and state query params
+            whitelistedUrlStub
+            .withArgs(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+            .returns(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`);
+
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -195,9 +256,9 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect($("#hasStandardDeliveryItems").length).equals(0);
                     chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                     chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
+                    chai.expect($("#paymentReferenceValue").text()).to.equal("q4nn5UxZiZxVG2e");
                     chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
-
+                    chai.expect(getPaymentStub).to.have.been.called;
                     chai.expect(getOrderStub).to.have.been.called;
                     chai.expect(getBasketLinksStub).to.have.been.called;
                     chai.expect(resp.text).to.contain("Order received");
@@ -205,6 +266,9 @@ describe("order.confirmation.controller.integration", () => {
                 });
         });
         it("Renders order summary page if the user is enrolled, items with express and standard delivery requested and missing image delivery requested", (done) => {
+            sandbox.stub(Session.prototype, "getExtraData")
+            .withArgs("paymentId")
+            .returns("q4nn5UxZiZxVG2e");
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse,
                 items: [
@@ -228,6 +292,13 @@ describe("order.confirmation.controller.integration", () => {
                 httpStatusCode: 200,
                 resource: certificateCheckoutResponse
             }
+            const certificatePaymentResponse: ApiResponse<Payment> = {
+                httpStatusCode: 200,
+                resource: mockPaymentResponse,
+            }
+            getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+                certificatePaymentResponse,
+            ));
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
             getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
@@ -237,6 +308,13 @@ describe("order.confirmation.controller.integration", () => {
             } as BasketLinks));
             getBasketStub = sandbox.stub(apiClient, "getBasket")
             .returns(Promise.resolve({ enrolled: true }));
+
+            const whitelistedUrlStub = sandbox.stub(getWhitelistedReturnToURL, "getWhitelistedReturnToURL");
+
+            // stops the test from removing the status and state query params
+            whitelistedUrlStub
+            .withArgs(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
+            .returns(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`);
 
             chai.request(testApp)
                 .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid`)
@@ -254,9 +332,9 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect($("#hasStandardDeliveryItems").length).equals(1);
                     chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                     chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
+                    chai.expect($("#paymentReferenceValue").text()).to.equal("q4nn5UxZiZxVG2e");
                     chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
-
+                    chai.expect(getPaymentStub).to.have.been.called;
                     chai.expect(getOrderStub).to.have.been.called;
                     chai.expect(getBasketLinksStub).to.have.been.called;
                     chai.expect(resp.text).to.contain("Order received");
@@ -264,6 +342,10 @@ describe("order.confirmation.controller.integration", () => {
                 });
         });
         it("Correctly renders order confirmation page on for a limited company certificate order", (done) => {
+            sandbox.stub(Session.prototype, "getExtraData")
+            .withArgs("paymentId")
+            .returns("q4nn5UxZiZxVG2e");
+      
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse
             } as Checkout;
@@ -272,13 +354,20 @@ describe("order.confirmation.controller.integration", () => {
                 httpStatusCode: 200,
                 resource: certificateCheckoutResponse
             }
-
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
             getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
                 data: {
                     enrolled: false
                 }
             } as BasketLinks));
+
+            const certificatePaymentResponse: ApiResponse<Payment> = {
+                httpStatusCode: 200,
+                resource: mockPaymentResponse,
+            }
+            getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+                certificatePaymentResponse,
+            ));
             getBasketStub = sandbox.stub(apiClient, "getBasket")
             .returns(Promise.resolve({ enrolled: true }));
 
@@ -300,20 +389,24 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect($("#deliveryMethodValue").text()).to.equal("Standard (aim to send out within 10 working days)");
                     chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                     chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
+                    chai.expect($("#paymentReferenceValue").text()).to.equal("q4nn5UxZiZxVG2e");
                     chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
                     chai.expect($("#registeredOfficeAddress").text().trim()).to.equal("Current address and the one previous");
                     chai.expect($("#currentCompanyDirectors").html()).to.equal("Yes");
                     chai.expect($("#currentCompanySecretaries").html()).to.equal("Yes");
-
+                    chai.expect(getPaymentStub).to.have.been.called;
                     chai.expect(getOrderStub).to.have.been.called;
                     chai.expect(getBasketLinksStub).to.have.been.called;
+                    chai.expect(getPaymentStub).to.have.been.called;
                     chai.expect(resp.text).to.not.contain("Your document details");
                     done();
                 });
         });
 
         it("Correctly renders order confirmation page on for a LLP company certificate order", (done) => {
+            sandbox.stub(Session.prototype, "getExtraData")
+            .withArgs("paymentId")
+            .returns("q4nn5UxZiZxVG2e");
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse,
                 items: [{
@@ -352,6 +445,13 @@ describe("order.confirmation.controller.integration", () => {
                 httpStatusCode: 200,
                 resource: certificateCheckoutResponse
             }
+            const certificatePaymentResponse: ApiResponse<Payment> = {
+                httpStatusCode: 200,
+                resource: mockPaymentResponse,
+            }
+            getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+                certificatePaymentResponse,
+            ));
 
             getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
             getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
@@ -381,11 +481,12 @@ describe("order.confirmation.controller.integration", () => {
                     chai.expect($("#emailCopyRequiredValue").text()).to.equal("Email only available for express dispatch");
                     chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                     chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                    chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
+                    chai.expect($("#paymentReferenceValue").text()).to.equal("q4nn5UxZiZxVG2e");
                     chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
                     chai.expect($("#registeredOfficeAddress").text().trim()).to.equal("Current address and the one previous");
                     chai.expect($("#currentDesignatedMembersNames").html()).to.equal("Including designated members':<br><br>Correspondence address<br>Appointment date<br>Country of residence<br>Date of birth (month and year)<br>");
                     chai.expect($("#currentMembersNames").html()).to.equal("Including members':<br><br>Correspondence address<br>Appointment date<br>Country of residence<br>Date of birth (month and year)<br>");
+                    chai.expect(getPaymentStub).to.have.been.called;
                     chai.expect(getOrderStub).to.have.been.called;
                     chai.expect(getBasketLinksStub).to.have.been.called;
                     chai.expect(resp.text).to.not.contain("Your document details");
@@ -396,6 +497,9 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("Correctly renders order confirmation page on for a LP company certificate order", (done) => {
+        sandbox.stub(Session.prototype, "getExtraData")
+        .withArgs("paymentId")
+        .returns("q4nn5UxZiZxVG2e");
         const certificateCheckoutResponse = {
             ...mockCertificateCheckoutResponse,
             items: [{
@@ -428,6 +532,14 @@ describe("order.confirmation.controller.integration", () => {
             resource: certificateCheckoutResponse
         }
 
+        const certificatePaymentResponse: ApiResponse<Payment> = {
+            httpStatusCode: 200,
+            resource: mockPaymentResponse,
+        }
+        getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+            certificatePaymentResponse,
+        ));
+
         getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
         getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
             data: {
@@ -456,12 +568,13 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#emailCopyRequiredValue").text()).to.equal("Email only available for express dispatch");
                 chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertificateCheckoutResponse.paymentReference);
+                chai.expect($("#paymentReferenceValue").text()).to.equal("q4nn5UxZiZxVG2e");
                 chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
                 chai.expect($("#principalPlaceOfBusiness").text().trim()).to.equal("Current address and the one previous");
                 chai.expect($("#generalPartners").html()).to.equal("Yes");
                 chai.expect($("#limitedPartners").html()).to.equal("Yes");
                 chai.expect($("#generalNatureOfBusiness").html()).to.equal("Yes");
+                chai.expect(getPaymentStub).to.have.been.called;
                 chai.expect(getOrderStub).to.have.been.called;
                 chai.expect(getBasketLinksStub).to.have.been.called;
                 chai.expect(resp.text).to.not.contain("Your document details");
@@ -470,6 +583,9 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a dissolved certificate order", (done) => {
+        sandbox.stub(Session.prototype, "getExtraData")
+        .withArgs("paymentId")
+        .returns("q4nn5UxZiZxVG2e");
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,
             resource: mockDissolvedCertificateCheckoutResponse
@@ -483,6 +599,14 @@ describe("order.confirmation.controller.integration", () => {
         } as BasketLinks));
         getBasketStub = sandbox.stub(apiClient, "getBasket")
         .returns(Promise.resolve({ enrolled: true }));
+
+        const certificatePaymentResponse: ApiResponse<Payment> = {
+            httpStatusCode: 200,
+            resource: mockPaymentResponse,
+        }
+        getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+            certificatePaymentResponse,
+        ));
 
         chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certificate`)
@@ -502,8 +626,9 @@ describe("order.confirmation.controller.integration", () => {
                 chai.expect($("#deliveryMethodValue").text()).to.equal("Standard (aim to send out within 10 working days)");
                 chai.expect($("#deliveryAddressValue").html()).to.equal(MapUtil.mapToHtml(["forename surname", "address line 1", "address line 2", "locality", "region", "postal code", "country"]));
                 chai.expect($("#paymentAmountValue").text()).to.equal("£15");
-                chai.expect($("#paymentReferenceValue").text()).to.equal(mockDissolvedCertificateCheckoutResponse.paymentReference);
+                chai.expect($("#paymentReferenceValue").text()).to.equal("q4nn5UxZiZxVG2e");
                 chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
+                chai.expect(getPaymentStub).to.have.been.called;
                 chai.expect(getOrderStub).to.have.been.called;
                 chai.expect(getBasketLinksStub).to.have.been.called;
                 chai.expect(resp.text).to.not.contain("Your document details");
@@ -512,6 +637,9 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a certified copy order", async () => {
+        sandbox.stub(Session.prototype, "getExtraData")
+        .withArgs("paymentId")
+        .returns("q4nn5UxZiZxVG2e");
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,
             resource: mockCertifiedCopyCheckoutResponse
@@ -525,6 +653,14 @@ describe("order.confirmation.controller.integration", () => {
         } as BasketLinks));
         getBasketStub = sandbox.stub(apiClient, "getBasket")
         .returns(Promise.resolve({ enrolled: true }));
+
+        const certificatePaymentResponse: ApiResponse<Payment> = {
+            httpStatusCode: 200,
+            resource: mockPaymentResponse,
+        }
+        getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+            certificatePaymentResponse,
+        ));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=certified-copy`)
@@ -549,15 +685,20 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect($("#filingHistoryDescriptionValue2").text().trim()).to.equal("Group of companies' accounts made up to 31 August 2008");
         chai.expect($("#filingHistoryFeeValue2").text().trim()).to.equal("£15");
         chai.expect($("#paymentAmountValue").text()).to.equal("£30");
-        chai.expect($("#paymentReferenceValue").text()).to.equal(mockCertifiedCopyCheckoutResponse.paymentReference);
+        chai.expect($("#paymentReferenceValue").text()).to.equal("q4nn5UxZiZxVG2e");
         chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
         chai.expect(resp.text).to.not.contain("certificateTypeValue");
         chai.expect(resp.text).to.not.contain("includedOnCertificateValue");
+        chai.expect(getPaymentStub).to.have.been.called;
         chai.expect(getOrderStub).to.have.been.called;
         chai.expect(getBasketLinksStub).to.have.been.called;
     });
 
     it("renders get order page on successful get checkout call for a missing image delivery order", async () => {
+        sandbox.stub(Session.prototype, "getExtraData")
+        .withArgs("paymentId")
+        .returns("q4nn5UxZiZxVG2e");
+        
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,
             resource: mockMissingImageDeliveryCheckoutResponse
@@ -570,6 +711,14 @@ describe("order.confirmation.controller.integration", () => {
         } as BasketLinks));
         getBasketStub = sandbox.stub(apiClient, "getBasket")
         .returns(Promise.resolve({ enrolled: true }));
+
+        const certificatePaymentResponse: ApiResponse<Payment> = {
+            httpStatusCode: 200,
+            resource: mockPaymentResponse,
+        }
+        getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+            certificatePaymentResponse,
+        ));
 
         const resp = await chai.request(testApp)
             .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=missing-image-delivery`)
@@ -588,12 +737,107 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect($("#filingHistoryDescriptionValue").text().trim()).to.equal("Appointment of Mr Richard John Harris as a director");
         chai.expect($("#paymentAmountValue").text()).to.equal("£3");
         chai.expect($("#paymentReferenceValue").text()).to.equal(mockMissingImageDeliveryCheckoutResponse.paymentReference);
-        chai.expect($("#paymentTimeValue").text()).to.equal("07 October 2020 - 11:09:46");
+        chai.expect($("#paymentTimeValue").text()).to.equal("16 December 2019 - 09:16:17");
         chai.expect(resp.text).to.not.contain("certificateTypeValue");
         chai.expect(resp.text).to.not.contain("includedOnCertificateValue");
+        chai.expect(getPaymentStub).to.have.been.called;
         chai.expect(getOrderStub).to.have.been.called;
         chai.expect(getBasketLinksStub).to.have.been.called;
     });
+    it("should throw InternalServerError if query param reference and payment api refeernce do not match", (done) => {
+        sandbox.stub(Session.prototype, "getExtraData")
+        .withArgs("paymentId")
+        .returns("q4nn5UxZiZxVG2e");
+        
+       
+        const wrongRef = "orderable_item_WRONG-REF";
+        const correctRef = "orderable_item_CORRECT-REF";
+
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockMissingImageDeliveryCheckoutResponse
+        }
+
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+        getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            data: {
+                enrolled: false
+            }
+        } as BasketLinks));
+
+        getBasketStub = sandbox.stub(apiClient, "getBasket")
+        .returns(Promise.resolve({ enrolled: true }));
+      
+        const mismatchedPayment: Payment = {
+          ...mockPaymentResponse,
+          reference: correctRef,
+          status: "paid"
+        };
+      
+        const certificatePaymentResponse: ApiResponse<Payment> = {
+          httpStatusCode: 200,
+          resource: mismatchedPayment
+        };
+      
+        sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(certificatePaymentResponse));
+      
+        chai.request(testApp)
+          .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${wrongRef}&state=1234&status=paid&itemType=missing-image-delivery`)
+          .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+          .end((err, res) => {
+           
+            expect(res).to.have.status(500);
+            done();
+          });
+        });
+
+
+    it("should throw InternalServerError if query param status and payment api status do not match", (done) => {
+        sandbox.stub(Session.prototype, "getExtraData")
+        .withArgs("paymentId")
+        .returns("q4nn5UxZiZxVG2e");
+        
+        const queryParamstatus = "paid";
+        const apiStatus = "failed";
+
+      
+        const mismatchedPayment: Payment = {
+          ...mockPaymentResponse,
+          status: apiStatus
+        };
+      
+        const certificatePaymentResponse: ApiResponse<Payment> = {
+          httpStatusCode: 200,
+          resource: mismatchedPayment
+        };
+        const checkoutResponse: ApiResponse<Checkout> = {
+            httpStatusCode: 200,
+            resource: mockMissingImageDeliveryCheckoutResponse
+        }
+
+        getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+        getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+            data: {
+                enrolled: false
+            }
+        } as BasketLinks));
+
+        getBasketStub = sandbox.stub(apiClient, "getBasket")
+        .returns(Promise.resolve({ enrolled: true }));
+      
+      
+        sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(certificatePaymentResponse));
+      
+        chai.request(testApp)
+          .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=${queryParamstatus}&itemType=missing-image-delivery`)
+          .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+          .end((err, res) => {
+           
+            expect(res).to.have.status(500);
+            done();
+          });
+        });
+
 
     it("redirects and applies the itemType query param if user disenrolled", async () => {
         const checkoutResponse: ApiResponse<Checkout> = {
@@ -749,7 +993,62 @@ describe("order.confirmation.controller.integration", () => {
             .redirects(0);
         chai.expect(resp.text).to.include(`/orderable/dissolved-certificates/${dissolvedCertificatebasketCancelledFailedResponse.items?.[0].id}/check-details`);
     });
-});
+
+    it("should throw InternalServerError if query param reference and payment api refeernce do not match", (done) => {
+        const wrongRef = "orderable_item_WRONG-REF";
+        const correctRef = "orderable_item_CORRECT-REF";
+      
+        const mismatchedPayment: Payment = {
+          ...mockPaymentResponse,
+          reference: correctRef,
+          status: "paid"
+        };
+      
+        const certificatePaymentResponse: ApiResponse<Payment> = {
+          httpStatusCode: 200,
+          resource: mismatchedPayment
+        };
+      
+        sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(certificatePaymentResponse));
+      
+        chai.request(testApp)
+          .get(`/orders/${ORDER_ID}/confirmation?ref=${wrongRef}&status=paid&itemType=certificate`)
+          .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+          .end((err, res) => {
+           
+            expect(res).to.have.status(500);
+            done();
+          });
+      });
+
+
+    it("should throw InternalServerError if query param status and payment api status do not match", (done) => {
+        const queryParamstatus = "paid";
+        const apiStatus = "failed";
+      
+        const mismatchedPayment: Payment = {
+          ...mockPaymentResponse,
+          status: apiStatus
+        };
+      
+        const certificatePaymentResponse: ApiResponse<Payment> = {
+          httpStatusCode: 200,
+          resource: mismatchedPayment
+        };
+      
+        sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(certificatePaymentResponse));
+      
+        chai.request(testApp)
+          .get(`/orders/${ORDER_ID}/confirmation?ref=${queryParamstatus}&status=paid&itemType=certificate`)
+          .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+          .end((err, res) => {
+           
+            expect(res).to.have.status(500);
+            done();
+          });
+      });
+    });
+      
 
 const verifyServiceLinkRenderedCorrectly = ($: cheerio.Root) => {
     chai.expect($(".govuk-header__content").text()).to.contain("Find and update company information");

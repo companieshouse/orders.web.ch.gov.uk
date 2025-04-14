@@ -13,9 +13,10 @@ import { createLogger } from "@companieshouse/structured-logging-node";
 import { v4 as uuidv4 } from "uuid";
 import createError, { InternalServerError } from "http-errors";
 
-import { API_URL, APPLICATION_NAME, CHS_URL } from "../config/config";
+import { API_URL, APPLICATION_NAME, CHS_URL, PAYMENTS_API_URL } from "../config/config";
 import { ORDER_COMPLETE, replaceOrderId } from "../model/page.urls";
 import { Item, Order } from "@companieshouse/api-sdk-node/dist/services/order/order/types";
+
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -85,10 +86,31 @@ export const createPayment = async (oAuth: string, paymentUrl: string, checkoutI
     }
 };
 
+export const getPaymentStatus = async (oAuth: string, checkoutId: string): Promise<ApiResponse<Payment>> => {
+    const api = createApiClient(undefined, oAuth, API_URL);
+    let resource = `${PAYMENTS_API_URL}/payments/${checkoutId}`;
+
+    const response: ApiResult<ApiResponse<Payment>>  = await api.payment.getPayment(resource);
+    if (response.isFailure()) {
+        const errorResponse = response.value;
+        logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);
+        if (errorResponse.httpStatusCode === 401 || errorResponse.httpStatusCode === 429) {
+            throw createError(errorResponse.httpStatusCode, JSON.stringify(errorResponse?.errors) || "Unknown Error");
+        } else {
+            throw createError("Unknown Error");
+        }
+    }
+    const paymentResource = response.value?.resource;
+    if (!paymentResource) {
+        return Promise.reject(new Error("Payment resource is undefined"));
+    }
+    logger.info(`Get payment, status_code=${response.value.httpStatusCode}`);
+    return response.value
+};
+
 export const getCheckout = async (oAuth: string, checkoutId: string): Promise<ApiResponse<Checkout>> => {
     const api = createApiClient(undefined, oAuth, API_URL);
     const checkoutResult: ApiResult<ApiResponse<Checkout>> = await api.checkout.getCheckout(checkoutId);
-
     if (checkoutResult.isFailure()) {
         const errorResponse = checkoutResult.value;
         logger.error(`${errorResponse?.httpStatusCode} - ${JSON.stringify(errorResponse?.errors)}`);

@@ -1,7 +1,8 @@
 import {
     mockCertificateCheckoutResponse,
     mockCertifiedCopyCheckoutResponse,
-    mockMissingImageDeliveryCheckoutResponse
+    mockMissingImageDeliveryCheckoutResponse,
+    mockPaymentResponseReferenceMapped
 } from "../__mocks__/order.mocks";
 import {
     CERTIFICATE_PAGE_TITLE,
@@ -18,7 +19,7 @@ describe("SingleItemTemplateMapper", () => {
             const mapper = new SingleItemTemplateMapper();
 
             // when
-            const actual: any = mapper.map(mockCertificateCheckoutResponse);
+            const actual: any = mapper.map(mockCertificateCheckoutResponse,mockPaymentResponseReferenceMapped);
 
             // then
             expect(actual.serviceName).equals("Order a certificate");
@@ -26,7 +27,7 @@ describe("SingleItemTemplateMapper", () => {
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
             expect(actual.orderDetails.referenceNumberAriaLabel).equals("ORD hyphen 123456 hyphen 123456");
             expect(actual.paymentDetails.amount).equals("£15");
-            expect(actual.paymentDetails.paymentReference).equals("1234567");
+            expect(actual.paymentDetails.paymentReference).equals("q4nn5UxZiZxVG2e");
             expect(actual.paymentDetails.orderedAt).equals("16 December 2019 - 09:16:17");
             expect(actual.itemKind).equals("item#certificate");
             expect(actual.piwikLink).equals("certificates");
@@ -39,7 +40,7 @@ describe("SingleItemTemplateMapper", () => {
             const mapper = new SingleItemTemplateMapper();
 
             // when
-            const actual: any = mapper.map(mockCertifiedCopyCheckoutResponse);
+            const actual: any = mapper.map(mockCertifiedCopyCheckoutResponse,mockPaymentResponseReferenceMapped);
 
             // then
             expect(actual.serviceName).equals("Order a certified document");
@@ -47,7 +48,7 @@ describe("SingleItemTemplateMapper", () => {
             expect(actual.orderDetails.referenceNumber).equals("ORD-123456-123456");
             expect(actual.orderDetails.referenceNumberAriaLabel).equals("ORD hyphen 123456 hyphen 123456");
             expect(actual.paymentDetails.amount).equals("£30");
-            expect(actual.paymentDetails.paymentReference).equals("1234567");
+            expect(actual.paymentDetails.paymentReference).equals("q4nn5UxZiZxVG2e");
             expect(actual.paymentDetails.orderedAt).equals("16 December 2019 - 09:16:17");
             expect(actual.itemKind).equals("item#certified-copy");
             expect(actual.piwikLink).equals("certified-copies");
@@ -60,7 +61,7 @@ describe("SingleItemTemplateMapper", () => {
             const mapper = new SingleItemTemplateMapper();
 
             // when
-            const actual: any = mapper.map(mockMissingImageDeliveryCheckoutResponse);
+            const actual: any = mapper.map(mockMissingImageDeliveryCheckoutResponse,mockPaymentResponseReferenceMapped);
 
             // then
             expect(actual.serviceName).equals("Request a document");
@@ -69,7 +70,7 @@ describe("SingleItemTemplateMapper", () => {
             expect(actual.orderDetails.referenceNumberAriaLabel).equals("ORD hyphen 123456 hyphen 123456");
             expect(actual.paymentDetails.amount).equals("£3");
             expect(actual.paymentDetails.paymentReference).equals("q4nn5UxZiZxVG2e");
-            expect(actual.paymentDetails.orderedAt).equals("07 October 2020 - 11:09:46");
+            expect(actual.paymentDetails.orderedAt).equals("16 December 2019 - 09:16:17");
             expect(actual.itemKind).equals("item#missing-image-delivery");
             expect(actual.piwikLink).is.empty;
             expect(actual.totalItemsCost).equals("£3");
