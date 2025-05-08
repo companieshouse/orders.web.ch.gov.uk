@@ -26,8 +26,7 @@ import {
 import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
 import { ERROR_SUMMARY_TITLE } from "./model/error.messages";
-import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
-import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
+import { initialiseRedisClient } from "./utils/redisMethods";
 
 const app = express();
 
@@ -66,6 +65,7 @@ const env = nunjucks.configure([
 
 const cookieConfig: CookieConfig = { cookieName: "__SID", cookieSecret: COOKIE_SECRET, cookieDomain: COOKIE_DOMAIN };
 const sessionStore = new SessionStore(new Redis(`redis://${CACHE_SERVER}`));
+initialiseRedisClient(sessionStore);
 
 const PROTECTED_PATHS = [pageUrls.BASKET_REMOVE, pageUrls.BASKET, pageUrls.ORDER_ITEM_SUMMARY, pageUrls.ORDER_SUMMARY, pageUrls.ORDERS, pageUrls.DELIVERY_DETAILS];
 

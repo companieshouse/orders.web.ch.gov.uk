@@ -17,6 +17,7 @@ import { BasketLink, getBasketLimit, getBasketLink } from "../utils/basket.util"
 import { BasketLimit, BasketLimitState } from "../model/BasketLimit";
 import { mapPageHeader } from "../utils/page.header.utils";
 import { PageHeader } from "../model/PageHeader";
+import { setKey } from "../utils/redisMethods";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -117,7 +118,10 @@ const proceedToPayment = async (req: Request, res: Response, next: NextFunction)
         // Split self link to retrieve paymentID for payment reference later
         const selfLink = paymentResponse?.resource?.links?.self ?? "";
         const paymentId = selfLink.split("/").pop() as string;
-        req.session?.setExtraData("paymentId", paymentId);
+
+        await setKey(userId!, paymentId, 3600);
+
+        logger.info(`Stored paymentId=${paymentId} for userId=${userId}`);
 
         const paymentRedirectUrl = paymentResponse.resource?.links.journey!;
         logger.info(`Payment session created, redirecting to ${paymentRedirectUrl}, reference=${paymentResponse.resource?.reference}, amount=${paymentResponse.resource?.amount}, user_id=${userId}`);

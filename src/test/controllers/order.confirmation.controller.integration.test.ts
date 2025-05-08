@@ -25,6 +25,7 @@ import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment/types";
 import { Session } from "@companieshouse/node-session-handler";
 import  *  as getWhitelistedReturnToURL from "../../utils/request.util";
+import * as redisUtils from "../../utils/redisMethods"; // Adjust the path as needed
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -32,6 +33,7 @@ let getOrderStub;
 let getBasketLinksStub;
 let getBasketStub;
 let getPaymentStub;
+let getKeyStub;
 
 const ORDER_ID_ARIA_LABEL = "ORD hyphen 123456 hyphen 123456";
 
@@ -55,7 +57,7 @@ describe("order.confirmation.controller.integration", () => {
     beforeEach(done => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
-
+  
         testApp = getAppWithMockedCsrf(sandbox);
         done();
     });
@@ -63,13 +65,13 @@ describe("order.confirmation.controller.integration", () => {
     afterEach(() => {
         sandbox.reset();
         sandbox.restore();
+        sinon.restore();
     });
 
     describe("Certificate order confirmation page integration tests", () => {
         it("Renders order summary page if the user is enrolled and missing image delivery requested", (done) => {
-            sandbox.stub(Session.prototype, "getExtraData")
-            .withArgs("paymentId")
-            .returns("q4nn5UxZiZxVG2e");
+            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub.resolves('q4nn5UxZiZxVG2e');
   
             const certificateCheckoutResponse = {
                 ...mockMissingImageDeliveryCheckoutResponse
@@ -132,10 +134,11 @@ describe("order.confirmation.controller.integration", () => {
                     done();
                 });
         });
+
         it("Renders order summary page if the user is enrolled and standard delivery requested", (done) => {
-            sandbox.stub(Session.prototype, "getExtraData")
-            .withArgs("paymentId")
-            .returns("q4nn5UxZiZxVG2e");
+            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub.resolves('q4nn5UxZiZxVG2e');
+
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse
             } as Checkout;
@@ -194,9 +197,9 @@ describe("order.confirmation.controller.integration", () => {
                 });
         });
         it("Renders order summary page if the user is enrolled and express delivery requested", (done) => {
-            sandbox.stub(Session.prototype, "getExtraData")
-            .withArgs("paymentId")
-            .returns("q4nn5UxZiZxVG2e");
+            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub.resolves('q4nn5UxZiZxVG2e');
+
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse,
                 items: [
@@ -266,9 +269,9 @@ describe("order.confirmation.controller.integration", () => {
                 });
         });
         it("Renders order summary page if the user is enrolled, items with express and standard delivery requested and missing image delivery requested", (done) => {
-            sandbox.stub(Session.prototype, "getExtraData")
-            .withArgs("paymentId")
-            .returns("q4nn5UxZiZxVG2e");
+            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub.resolves('q4nn5UxZiZxVG2e');
+
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse,
                 items: [
@@ -342,9 +345,8 @@ describe("order.confirmation.controller.integration", () => {
                 });
         });
         it("Correctly renders order confirmation page on for a limited company certificate order", (done) => {
-            sandbox.stub(Session.prototype, "getExtraData")
-            .withArgs("paymentId")
-            .returns("q4nn5UxZiZxVG2e");
+            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub.resolves('q4nn5UxZiZxVG2e');
       
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse
@@ -404,9 +406,9 @@ describe("order.confirmation.controller.integration", () => {
         });
 
         it("Correctly renders order confirmation page on for a LLP company certificate order", (done) => {
-            sandbox.stub(Session.prototype, "getExtraData")
-            .withArgs("paymentId")
-            .returns("q4nn5UxZiZxVG2e");
+            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub.resolves('q4nn5UxZiZxVG2e');
+
             const certificateCheckoutResponse = {
                 ...mockCertificateCheckoutResponse,
                 items: [{
@@ -497,9 +499,9 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("Correctly renders order confirmation page on for a LP company certificate order", (done) => {
-        sandbox.stub(Session.prototype, "getExtraData")
-        .withArgs("paymentId")
-        .returns("q4nn5UxZiZxVG2e");
+        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub.resolves('q4nn5UxZiZxVG2e');
+        
         const certificateCheckoutResponse = {
             ...mockCertificateCheckoutResponse,
             items: [{
@@ -583,9 +585,9 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a dissolved certificate order", (done) => {
-        sandbox.stub(Session.prototype, "getExtraData")
-        .withArgs("paymentId")
-        .returns("q4nn5UxZiZxVG2e");
+        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub.resolves('q4nn5UxZiZxVG2e');
+        
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,
             resource: mockDissolvedCertificateCheckoutResponse
@@ -637,9 +639,8 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a certified copy order", async () => {
-        sandbox.stub(Session.prototype, "getExtraData")
-        .withArgs("paymentId")
-        .returns("q4nn5UxZiZxVG2e");
+        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+        getKeyStub.resolves('q4nn5UxZiZxVG2e');
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,
             resource: mockCertifiedCopyCheckoutResponse
@@ -695,9 +696,8 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a missing image delivery order", async () => {
-        sandbox.stub(Session.prototype, "getExtraData")
-        .withArgs("paymentId")
-        .returns("q4nn5UxZiZxVG2e");
+        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+        getKeyStub.resolves('q4nn5UxZiZxVG2e');
         
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,
@@ -745,9 +745,8 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect(getBasketLinksStub).to.have.been.called;
     });
     it("should throw InternalServerError if query param reference and payment api refeernce do not match", (done) => {
-        sandbox.stub(Session.prototype, "getExtraData")
-        .withArgs("paymentId")
-        .returns("q4nn5UxZiZxVG2e");
+        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub.resolves('q4nn5UxZiZxVG2e');
         
        
         const wrongRef = "orderable_item_WRONG-REF";
@@ -793,10 +792,8 @@ describe("order.confirmation.controller.integration", () => {
 
 
     it("should throw InternalServerError if query param status and payment api status do not match", (done) => {
-        sandbox.stub(Session.prototype, "getExtraData")
-        .withArgs("paymentId")
-        .returns("q4nn5UxZiZxVG2e");
-        
+        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub.resolves('q4nn5UxZiZxVG2e');
         const queryParamstatus = "paid";
         const apiStatus = "failed";
 
@@ -837,6 +834,41 @@ describe("order.confirmation.controller.integration", () => {
             done();
           });
         });
+
+        it("should throw InternalServerError if payment reference not present in Redis", (done) => {
+            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+                getKeyStub.resolves('');
+    
+                const checkoutResponse: ApiResponse<Checkout> = {
+                    httpStatusCode: 200,
+                    resource: mockMissingImageDeliveryCheckoutResponse
+                }
+                getOrderStub = sandbox.stub(apiClient, "getCheckout").returns(Promise.resolve(checkoutResponse));
+                getBasketLinksStub = sandbox.stub(apiClient, "getBasketLinks").returns(Promise.resolve({
+                    data: {
+                        enrolled: false
+                    }
+                } as BasketLinks));
+                getBasketStub = sandbox.stub(apiClient, "getBasket")
+                .returns(Promise.resolve({ enrolled: true }));
+        
+                const certificatePaymentResponse: ApiResponse<Payment> = {
+                    httpStatusCode: 200,
+                    resource: mockPaymentResponse,
+                }
+                getPaymentStub = sandbox.stub(apiClient, "getPaymentStatus").returns(Promise.resolve(
+                    certificatePaymentResponse,
+                ));
+                
+                chai.request(testApp)
+                .get(`/orders/${ORDER_ID}/confirmation?ref=orderable_item_${ORDER_ID}&state=1234&status=paid&itemType=missing-image-delivery`)
+                .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+                .end((err, res) => {
+                 
+                  expect(res).to.have.status(500);
+                  done();
+                });
+              });
 
 
     it("redirects and applies the itemType query param if user disenrolled", async () => {

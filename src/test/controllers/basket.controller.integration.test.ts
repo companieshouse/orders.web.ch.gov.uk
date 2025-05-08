@@ -14,10 +14,10 @@ import { BASKET_ITEM_LIMIT } from "../../config/config";
 import { ADD_ANOTHER_DOCUMENT_PATH, BASKET as BASKET_URL } from "../../model/page.urls";
 import cheerio from "cheerio";
 import { verifyUserNavBarRenderedWithoutBasketLink } from "../utils/page.header.utils.test";
-import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
+import * as redisUtils from "../../utils/redisMethods"; // Adjust the path as needed
 
 const sandbox = sinon.createSandbox();
-let testApp = null;
+let testApp:any ;
 let checkoutBasketStub;
 let createPaymentStub;
 
@@ -27,7 +27,7 @@ describe("basket.controller.integration", () => {
     beforeEach(done => {
         sandbox.stub(ioredis.prototype, "connect").returns(Promise.resolve());
         sandbox.stub(ioredis.prototype, "get").returns(Promise.resolve(signedInSession));
-
+        sinon.stub(redisUtils, 'setKey').resolves();
         nock(MOCK_PAYMENT_URL).get("/?summary=false").reply(200, {});
 
         testApp = getAppWithMockedCsrf(sandbox);
@@ -37,6 +37,7 @@ describe("basket.controller.integration", () => {
     afterEach(() => {
         sandbox.reset();
         sandbox.restore();
+        sinon.restore();
     });
 
     it("redirects to payment page with summary as false if user is disenrolled from multi-item baskets", (done) => {
@@ -167,9 +168,9 @@ describe("basket.controller.integration", () => {
             });
     });
 
-    it("should store paymentID in session after successful payment creation", (done) => {
+    it("should store paymentID in Redis after successful payment creation", (done) => {
+        sinon.restore();
         const paymentId = "qf24hf53j32j";
-    
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,
             headers: {
@@ -177,13 +178,11 @@ describe("basket.controller.integration", () => {
             }
         };
         checkoutResponse.resource = { reference: "1234" } as Checkout;
-
         const checkoutPayment: ApiResponse<Payment> = {
             httpStatusCode: 200
         };
         checkoutPayment.resource = { links: { journey: MOCK_PAYMENT_URL , self: MOCK_PAYMENT_URL + "/" + paymentId} } as Payment;
-        const setExtraDataStub = sandbox.stub(Session.prototype, "setExtraData");
-
+        const setKeyStub = sandbox.stub(redisUtils, "setKey").resolves();
         checkoutBasketStub = sandbox.stub(apiClient, "checkoutBasket").returns(Promise.resolve(checkoutResponse));
         createPaymentStub = sandbox.stub(apiClient, "createPayment").returns(Promise.resolve(checkoutPayment));
         const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
@@ -198,10 +197,14 @@ describe("basket.controller.integration", () => {
                 chai.expect(checkoutBasketStub).to.have.been.called;
                 chai.expect(createPaymentStub).to.have.been.called;
                 chai.expect(getBasketStub).to.have.been.called;
-                chai.expect(setExtraDataStub).to.have.been.calledWith("paymentId", paymentId);
+                chai.expect(setKeyStub).to.have.been.called;
+                sinon.assert.calledWith(setKeyStub, "1234", "qf24hf53j32j", 3600);
                 done();
+                sandbox.restore();
+                sinon.restore();
             });
     });
+    
 
     it ("renders basket details  and warning message if user is enrolled for multi-item baskets and items at the limit", (done) => {
         const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
