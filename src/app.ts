@@ -26,8 +26,7 @@ import {
 import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
 import { ERROR_SUMMARY_TITLE } from "./model/error.messages";
-import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
-import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
+import { initialiseRedisClient } from "./utils/redis.methods";
 
 const app = express();
 
@@ -66,6 +65,7 @@ const env = nunjucks.configure([
 
 const cookieConfig: CookieConfig = { cookieName: "__SID", cookieSecret: COOKIE_SECRET, cookieDomain: COOKIE_DOMAIN };
 const sessionStore = new SessionStore(new Redis(`redis://${CACHE_SERVER}`));
+initialiseRedisClient(sessionStore);
 
 const PROTECTED_PATHS = [pageUrls.BASKET_REMOVE, pageUrls.BASKET, pageUrls.ORDER_ITEM_SUMMARY, pageUrls.ORDER_SUMMARY, pageUrls.ORDERS, pageUrls.DELIVERY_DETAILS];
 
@@ -86,7 +86,7 @@ app.use((req, res, next) => {
         env.addGlobal("FEEDBACK_SOURCE", DELIVERY_DETAILS_WEB_URL);
     } else if (req.path.includes("/basket")) {
         env.addGlobal("FEEDBACK_SOURCE", BASKET_WEB_URL);
-    }else if (req.path.includes("/confirmation")) {
+    } else if (req.path.includes("/confirmation")) {
         env.addGlobal("FEEDBACK_SOURCE", ORDERS_CONFIRMATION_WEB_URL);
     }
     next();

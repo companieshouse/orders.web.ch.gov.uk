@@ -22,7 +22,8 @@ export const signedInSessionData = {
             token_type: "Bearer"
         },
         user_profile: {
-            email: "test@testemail.com"
+            email: "test@testemail.com",
+            id: "1234"
         },
         signed_in: 1
     }

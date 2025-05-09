@@ -16,6 +16,7 @@ import { getWhitelistedReturnToURL } from "../utils/request.util";
 import { BasketLink, getBasketLink } from "../utils/basket.util";
 import { mapPageHeader } from "../utils/page.header.utils";
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
+import { getKey } from "../utils/redis.methods";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -25,7 +26,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     try {
         const orderId = req.params.orderId;
         const status = req.query.status;
-        const queryRef= req.query.ref;
+        const queryRef = req.query.ref;
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
@@ -75,21 +76,25 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
 
         logger.info(`Checkout retrieved checkout_id=${checkout.reference}, user_id=${userId}`);
 
-        const paymentRef = req.session?.getExtraData("paymentId") as string;
-        
-        const resource = await getPaymentDetails(paymentRef, status , queryRef ,accessToken);
-        
+        const paymentRef = await getKey(userId!);
+        if (!paymentRef) {
+            logger.info(`Payment reference expired or not found for userId=${userId}`);
+            throw new InternalServerError("Payment reference expired or not found");
+        }
+        logger.info(`Retrieved payment reference: ${paymentRef} for userId=${userId}`);
+
+        const resource = await getPaymentDetails(paymentRef, status, queryRef, accessToken);
+
         const basket: Basket = await getBasket(accessToken);
         const basketLink: BasketLink = await getBasketLink(req, basket);
 
         /*update the Payment response with the reference from the session (from CreatePayment in basket controller)
         and paymentReference from API response. 
-        */ 
+        */
         const updatedPayment: Payment = {
             ...resource,
             reference: paymentRef
-          };
-        
+        };
         const mappedItem = factory.getMapper(basketLinks.data).map(checkout, updatedPayment);
 
         res.render(mappedItem.templateName, { ...mappedItem, ...basketLink, ...pageHeader, serviceName, serviceUrl });
@@ -100,23 +105,23 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-export const getPaymentDetails = async (paymentRef: string, status: any, queryRef: any, accessToken: string) =>{
+export const getPaymentDetails = async (paymentRef: string, status: any, queryRef: any, accessToken: string) => {
     logger.info(`Validating payment using Payments API for ref=${paymentRef}`);
     const paymentResponse = await getPaymentStatus(accessToken, paymentRef);
-    
+
     const resource = paymentResponse.resource as Payment;  
     const reference = paymentResponse.resource?.reference;
     const paymentStatus = paymentResponse.resource?.status;
 
     // Compare 'reference' from paymentAPI response with queryParam reference
-    if (queryRef !== reference){
-        logger.error(`Payment validation failed for ${queryRef} and ${queryRef}`);
+    if (queryRef !== reference) {
+        logger.error(`Payment references validation failed references: ${queryRef} and ${reference} do not match`);
         throw new InternalServerError("Payment References do not match");
     }
 
     // Compare status from paymentAPI response with queryParam status
     if (paymentStatus !== status) {
-        logger.error(`Payment validation failed for ${queryRef} and ${queryRef}`);
+        logger.error(`Payment status validation failed statues: ${paymentStatus} and ${status} do not match}`);
         throw new InternalServerError("Payment statuses from API does not match");
     }
     return resource;
@@ -161,7 +166,7 @@ export const getItemTypesUrlParam = (items: CheckoutItem[]): string => {
         'item#certified-copy': 2,
         'item#missing-image-delivery': 3,
         'item#dissolution': 4
-      };
+    };
 
     // Create a Set to store unique item type numbers
     const uniqueItemTypes = new Set<number>();
@@ -184,6 +189,6 @@ export const getItemTypesUrlParam = (items: CheckoutItem[]): string => {
         }
     });
 
-  // Convert the Set to an array, sort it, and join the elements with commas
-  return `itemTypes=${Array.from(uniqueItemTypes).sort((a, b) => a - b).join(',')}`;
+    // Convert the Set to an array, sort it, and join the elements with commas
+    return `itemTypes=${Array.from(uniqueItemTypes).sort((a, b) => a - b).join(',')}`;
 };
