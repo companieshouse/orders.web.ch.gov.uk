@@ -23,9 +23,8 @@ import { CompanyType } from "../../model/CompanyType";
 import { DobType } from "../../model/DobType";
 import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment/types";
-import { Session } from "@companieshouse/node-session-handler";
 import  *  as getWhitelistedReturnToURL from "../../utils/request.util";
-import * as redisUtils from "../../utils/redisMethods"; // Adjust the path as needed
+import * as redisUtils from "../../utils/redis.methods";
 
 const sandbox = sinon.createSandbox();
 let testApp = null;
@@ -70,7 +69,7 @@ describe("order.confirmation.controller.integration", () => {
 
     describe("Certificate order confirmation page integration tests", () => {
         it("Renders order summary page if the user is enrolled and missing image delivery requested", (done) => {
-            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub = sinon.stub(redisUtils, 'getKey');
             getKeyStub.resolves('q4nn5UxZiZxVG2e');
   
             const certificateCheckoutResponse = {
@@ -136,7 +135,7 @@ describe("order.confirmation.controller.integration", () => {
         });
 
         it("Renders order summary page if the user is enrolled and standard delivery requested", (done) => {
-            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub = sinon.stub(redisUtils, 'getKey');
             getKeyStub.resolves('q4nn5UxZiZxVG2e');
 
             const certificateCheckoutResponse = {
@@ -197,7 +196,7 @@ describe("order.confirmation.controller.integration", () => {
                 });
         });
         it("Renders order summary page if the user is enrolled and express delivery requested", (done) => {
-            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub = sinon.stub(redisUtils, 'getKey');
             getKeyStub.resolves('q4nn5UxZiZxVG2e');
 
             const certificateCheckoutResponse = {
@@ -269,7 +268,7 @@ describe("order.confirmation.controller.integration", () => {
                 });
         });
         it("Renders order summary page if the user is enrolled, items with express and standard delivery requested and missing image delivery requested", (done) => {
-            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub = sinon.stub(redisUtils, 'getKey');
             getKeyStub.resolves('q4nn5UxZiZxVG2e');
 
             const certificateCheckoutResponse = {
@@ -345,7 +344,7 @@ describe("order.confirmation.controller.integration", () => {
                 });
         });
         it("Correctly renders order confirmation page on for a limited company certificate order", (done) => {
-            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub = sinon.stub(redisUtils, 'getKey');
             getKeyStub.resolves('q4nn5UxZiZxVG2e');
       
             const certificateCheckoutResponse = {
@@ -406,7 +405,7 @@ describe("order.confirmation.controller.integration", () => {
         });
 
         it("Correctly renders order confirmation page on for a LLP company certificate order", (done) => {
-            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub = sinon.stub(redisUtils, 'getKey');
             getKeyStub.resolves('q4nn5UxZiZxVG2e');
 
             const certificateCheckoutResponse = {
@@ -499,7 +498,7 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("Correctly renders order confirmation page on for a LP company certificate order", (done) => {
-        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+        getKeyStub = sinon.stub(redisUtils, 'getKey');
             getKeyStub.resolves('q4nn5UxZiZxVG2e');
         
         const certificateCheckoutResponse = {
@@ -585,7 +584,7 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a dissolved certificate order", (done) => {
-        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+        getKeyStub = sinon.stub(redisUtils, 'getKey');
             getKeyStub.resolves('q4nn5UxZiZxVG2e');
         
         const checkoutResponse: ApiResponse<Checkout> = {
@@ -639,7 +638,7 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a certified copy order", async () => {
-        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+        getKeyStub = sinon.stub(redisUtils, 'getKey');
         getKeyStub.resolves('q4nn5UxZiZxVG2e');
         const checkoutResponse: ApiResponse<Checkout> = {
             httpStatusCode: 200,
@@ -696,7 +695,7 @@ describe("order.confirmation.controller.integration", () => {
     });
 
     it("renders get order page on successful get checkout call for a missing image delivery order", async () => {
-        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+        getKeyStub = sinon.stub(redisUtils, 'getKey');
         getKeyStub.resolves('q4nn5UxZiZxVG2e');
         
         const checkoutResponse: ApiResponse<Checkout> = {
@@ -745,7 +744,7 @@ describe("order.confirmation.controller.integration", () => {
         chai.expect(getBasketLinksStub).to.have.been.called;
     });
     it("should throw InternalServerError if query param reference and payment api refeernce do not match", (done) => {
-        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+        getKeyStub = sinon.stub(redisUtils, 'getKey');
             getKeyStub.resolves('q4nn5UxZiZxVG2e');
         
        
@@ -792,7 +791,7 @@ describe("order.confirmation.controller.integration", () => {
 
 
     it("should throw InternalServerError if query param status and payment api status do not match", (done) => {
-        const getKeyStub = sinon.stub(redisUtils, 'getKey');
+        getKeyStub = sinon.stub(redisUtils, 'getKey');
             getKeyStub.resolves('q4nn5UxZiZxVG2e');
         const queryParamstatus = "paid";
         const apiStatus = "failed";
@@ -836,7 +835,7 @@ describe("order.confirmation.controller.integration", () => {
         });
 
         it("should throw InternalServerError if payment reference not present in Redis", (done) => {
-            const getKeyStub = sinon.stub(redisUtils, 'getKey');
+            getKeyStub = sinon.stub(redisUtils, 'getKey');
                 getKeyStub.resolves('');
     
                 const checkoutResponse: ApiResponse<Checkout> = {

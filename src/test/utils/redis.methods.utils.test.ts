@@ -3,7 +3,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 
-import { initialiseRedisClient, setKey, getKey, deleteKey } from "../../utils/redisMethods";
+import { initialiseRedisClient, setKey, getKey, deleteKey } from "../../utils/redis.methods";
 
 describe("Redis Utils", () => {
     let sandbox: sinon.SinonSandbox;
@@ -41,7 +41,7 @@ describe("Redis Utils", () => {
         });
 
         it("should throw error if sessionStore is not initialised", async () => {
-            initialiseRedisClient(null as any); 
+            initialiseRedisClient(null as any);
 
             await expect(setKey("a", "b")).to.be.rejectedWith("SessionStore is not initialised");
         });
@@ -55,7 +55,7 @@ describe("Redis Utils", () => {
         });
 
         it("should throw error if sessionStore not initialised", async () => {
-            initialiseRedisClient(null as any); 
+            initialiseRedisClient(null as any);
             await expect(getKey("a")).to.be.rejectedWith("SessionStore is not initialised");
         });
     });
@@ -67,7 +67,7 @@ describe("Redis Utils", () => {
         });
 
         it("should throw error if sessionStore isnt initialised", async () => {
-            initialiseRedisClient(null as any); 
+            initialiseRedisClient(null as any);
             await expect(deleteKey("a")).to.be.rejectedWith("SessionStore is not initialised");
         });
     });

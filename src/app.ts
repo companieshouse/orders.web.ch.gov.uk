@@ -26,7 +26,7 @@ import {
 import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
 import { ERROR_SUMMARY_TITLE } from "./model/error.messages";
-import { initialiseRedisClient } from "./utils/redisMethods";
+import { initialiseRedisClient } from "./utils/redis.methods";
 
 const app = express();
 
@@ -86,7 +86,7 @@ app.use((req, res, next) => {
         env.addGlobal("FEEDBACK_SOURCE", DELIVERY_DETAILS_WEB_URL);
     } else if (req.path.includes("/basket")) {
         env.addGlobal("FEEDBACK_SOURCE", BASKET_WEB_URL);
-    }else if (req.path.includes("/confirmation")) {
+    } else if (req.path.includes("/confirmation")) {
         env.addGlobal("FEEDBACK_SOURCE", ORDERS_CONFIRMATION_WEB_URL);
     }
     next();

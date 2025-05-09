@@ -17,7 +17,7 @@ import { BasketLink, getBasketLimit, getBasketLink } from "../utils/basket.util"
 import { BasketLimit, BasketLimitState } from "../model/BasketLimit";
 import { mapPageHeader } from "../utils/page.header.utils";
 import { PageHeader } from "../model/PageHeader";
-import { setKey } from "../utils/redisMethods";
+import { setKey } from "../utils/redis.methods";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -40,7 +40,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
         const continueToPaymentPath = `${BASKET_URL}${CONTINUE_TO_PAYMENT_PATH}`;
         const continueToPaymentUrl = `${CHS_URL}${continueToPaymentPath}`;
         const pageHeader = mapPageHeader(req);
-        
+
         if (req.url === addAnotherDocumentPath) {
             logger.debug(`Add another button clicked, req.url = ${req.url}`);
             if (displayBasketLimitError(req, res, basketLimit)) {
@@ -119,6 +119,7 @@ const proceedToPayment = async (req: Request, res: Response, next: NextFunction)
         const selfLink = paymentResponse?.resource?.links?.self ?? "";
         const paymentId = selfLink.split("/").pop() as string;
 
+        // set the paymentId as a key in redis with expiry of 1 hour
         await setKey(userId!, paymentId, 3600);
 
         logger.info(`Stored paymentId=${paymentId} for userId=${userId}`);

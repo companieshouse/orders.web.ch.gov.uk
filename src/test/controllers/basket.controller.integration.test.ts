@@ -14,10 +14,10 @@ import { BASKET_ITEM_LIMIT } from "../../config/config";
 import { ADD_ANOTHER_DOCUMENT_PATH, BASKET as BASKET_URL } from "../../model/page.urls";
 import cheerio from "cheerio";
 import { verifyUserNavBarRenderedWithoutBasketLink } from "../utils/page.header.utils.test";
-import * as redisUtils from "../../utils/redisMethods"; // Adjust the path as needed
+import * as redisUtils from "../../utils/redis.methods";
 
 const sandbox = sinon.createSandbox();
-let testApp:any ;
+let testApp = null;
 let checkoutBasketStub;
 let createPaymentStub;
 

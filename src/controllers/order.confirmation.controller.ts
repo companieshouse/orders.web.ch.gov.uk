@@ -16,7 +16,7 @@ import { getWhitelistedReturnToURL } from "../utils/request.util";
 import { BasketLink, getBasketLink } from "../utils/basket.util";
 import { mapPageHeader } from "../utils/page.header.utils";
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
-import { getKey } from "../utils/redisMethods";
+import { getKey } from "../utils/redis.methods";
 
 const logger = createLogger(APPLICATION_NAME);
 
@@ -26,7 +26,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     try {
         const orderId = req.params.orderId;
         const status = req.query.status;
-        const queryRef= req.query.ref;
+        const queryRef = req.query.ref;
         const signInInfo = req.session?.data[SessionKey.SignInInfo];
         const accessToken = signInInfo?.[SignInInfoKeys.AccessToken]?.[SignInInfoKeys.AccessToken]!;
         const userId = signInInfo?.[SignInInfoKeys.UserProfile]?.[UserProfileKeys.UserId];
@@ -81,7 +81,6 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
             logger.info(`Payment reference expired or not found for userId=${userId}`);
             throw new InternalServerError("Payment reference expired or not found");
         }
-   
         logger.info(`Retrieved payment reference: ${paymentRef} for userId=${userId}`);
 
         const resource = await getPaymentDetails(paymentRef, status, queryRef, accessToken);
@@ -106,7 +105,7 @@ export const render = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-export const getPaymentDetails = async (paymentRef: string, status: any, queryRef: any, accessToken: string) =>{
+export const getPaymentDetails = async (paymentRef: string, status: any, queryRef: any, accessToken: string) => {
     logger.info(`Validating payment using Payments API for ref=${paymentRef}`);
     const paymentResponse = await getPaymentStatus(accessToken, paymentRef);
 
