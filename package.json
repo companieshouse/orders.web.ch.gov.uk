@@ -93,6 +93,9 @@
     "chokidar": "3.5.3",
     "glob-stream": "8.0.0",
     "semver": "7.5.4",
-    "simple-update-notifier": "2.0.0"
+    "simple-update-notifier": "2.0.0",
+    "cookies": "1.0.2",
+    "braces": "3.0.3",
+    "path-to-regexp": "0.1.12"
   }
 }
