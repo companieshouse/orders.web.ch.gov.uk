@@ -44,7 +44,7 @@ security-check:
 
 .PHONY: sonar
 sonar: test
-	npm run analyse-code
+	npm run sonarqube
 
 .PHONY: package
 package: build
