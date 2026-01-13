@@ -38,6 +38,10 @@ test-unit:
 lint:
 	npm i lint
 	
+.PHONY: dependency-check
+dependency-check:
+	npm audit
+
 .PHONY: security-check
 security-check:
 	npm audit
