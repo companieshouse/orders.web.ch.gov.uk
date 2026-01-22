@@ -10,18 +10,26 @@
 {% endblock %}
 
 {% block content %}
-  {% if basketLimitState == "display-limit-error" %}
-    {{ govukErrorSummary({
-      titleText: "There is a problem",
-      errorList: [
-        {
-          text: "Your basket is full. To add more to your order, you'll need to remove some items first.",
-          href: "/basket/add-another-document"
-        }
-      ]
-    }) }}
-  {% elseif basketLimitState == "below-limit" %}
-  {% else %}
+  {% if CONFIGURABLE_BANNER_ENABLED
+      and CONFIGURABLE_BANNER_TITLE
+      and CONFIGURABLE_BANNER_TEXT
+      and CONFIGURABLE_BANNER_OTHER_TEXT
+  %}
+    {% set html %}
+      <p class="govuk-notification-banner__heading">
+        {{ CONFIGURABLE_BANNER_TITLE }}
+      </p>
+      <p class="govuk-body">
+        {{ CONFIGURABLE_BANNER_TEXT | safe }}
+        <br>
+        {{ CONFIGURABLE_BANNER_OTHER_TEXT }}
+      </p>
+    {% endset %}
+
+    {{ govukNotificationBanner({ html: html }) }}
+
+  {% elseif basketLimitState != "below-limit" %}
+    {# Basket full banner only shown when fee banner is OFF #}
     {% set html %}
       <p class="govuk-notification-banner__heading">
         Your basket is full
@@ -31,8 +39,19 @@
         To add more, you'll need to remove some items first.
       </p>
     {% endset %}
-    {{ govukNotificationBanner({
-      html: html
+
+    {{ govukNotificationBanner({ html: html }) }}
+  {% endif %}
+
+  {% if basketLimitState == "display-limit-error" %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: "Your basket is full. To add more to your order, you'll need to remove some items first.",
+          href: "/basket/add-another-document"
+        }
+      ]
     }) }}
   {% endif %}
 
