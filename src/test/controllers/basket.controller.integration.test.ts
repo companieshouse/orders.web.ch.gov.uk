@@ -7,6 +7,7 @@ import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import createError from "http-errors";
 import * as apiClient from "../../client/api.client";
+import * as config from "../../config/config";
 import { SIGNED_IN_COOKIE, signedInSession, signedInSessionWithCsrf, CSRF_TOKEN } from "../__mocks__/redis.mocks";
 import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
 import { getAppWithMockedCsrf } from '../__mocks__/csrf.mocks';
@@ -206,7 +207,8 @@ describe("basket.controller.integration", () => {
     });
     
 
-    it ("renders basket details  and warning message if user is enrolled for multi-item baskets and items at the limit", (done) => {
+    it ("renders basket details  and warning message if user is enrolled for multi-item baskets and items at the limit with configurable banner disabled", (done) => {
+
         const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
             enrolled: true,
             items: [
@@ -241,6 +243,57 @@ describe("basket.controller.integration", () => {
                 chai.expect(resp.text).to.contain("Your basket is full");
                 chai.expect(resp.text).to.contain(`You cannot add more than ${BASKET_ITEM_LIMIT} items to your order.`);
                 chai.expect(resp.text).to.contain("To add more, you'll need to remove some items first.");
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
+    it ("renders basket details  and fee banner if user is enrolled for multi-item baskets and items at the limit with configurable banner enabled", (done) => {
+        sandbox.stub(config, "CONFIGURABLE_BANNER_ENABLED").value(true);
+        sandbox.stub(config, "CONFIGURABLE_BANNER_TITLE").value(
+        "From 1st February 2026, some of our fees will be changing"
+        );
+        sandbox.stub(config, "CONFIGURABLE_BANNER_TEXT").value(
+        "We've published a full list of Companies House fees that are changing from 1 February 2026."
+        );
+        sandbox.stub(config, "CONFIGURABLE_BANNER_OTHER_TEXT").value(
+        "Any item(s) in your basket paid for from this date will be charged at the new price."
+        );
+        testApp = getAppWithMockedCsrf(sandbox);
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: [
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem
+            ],
+            deliveryDetails : {
+                addressLine1 : "Silverstone",
+                addressLine2 : "Towcester",
+                country : "England",
+                forename : "Lewis",
+                surname : "Hamilton",
+                locality : "Northamponshire",
+                postal_code : "NN12 8TN",
+                region : "South"
+            },
+        } as any));
+        chai.request(testApp)
+            .get(`${BASKET_URL}`)
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain("From 1st February 2026, some of our fees will be changing");
+                chai.expect(resp.text).to.contain("We've published a full list of Companies House fees that are changing from 1 February 2026.");
+                chai.expect(resp.text).to.contain("target=\"_blank\"");
+                chai.expect(resp.text).to.not.contain("Your basket is full");
                 chai.expect(getBasketStub).to.have.been.called;
                 done();
             });
