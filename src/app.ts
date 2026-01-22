@@ -7,7 +7,7 @@ import Redis from "ioredis";
 import { SessionStore, SessionMiddleware, CookieConfig } from "@companieshouse/node-session-handler";
 import { createLoggerMiddleware } from "@companieshouse/structured-logging-node";
 import { CsrfProtectionMiddleware } from "@companieshouse/web-security-node";
-
+import { parseHtmlLinks } from "./utils/parse-html-links";
 import authMiddleware from "./middleware/auth.middleware";
 import router from "./routers";
 import {
@@ -21,7 +21,11 @@ import {
     PAYMENTS_API_URL,
     DELIVERY_DETAILS_WEB_URL,
     BASKET_WEB_URL,
-    ORDERS_CONFIRMATION_WEB_URL
+    ORDERS_CONFIRMATION_WEB_URL,
+    CONFIGURABLE_BANNER_TITLE,
+    CONFIGURABLE_BANNER_TEXT,
+    CONFIGURABLE_BANNER_OTHER_TEXT,
+    CONFIGURABLE_BANNER_ENABLED
 } from "./config/config";
 import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
@@ -111,6 +115,10 @@ env.addGlobal("CSS_URL", "/orders-assets/static/app.css");
 env.addGlobal("FOOTER", "/orders-assets/static/footer.css");
 env.addGlobal("RESPONSIVE_TABLE", "/orders-assets/static/responsive-table.css");
 env.addGlobal("MOBILE_MENU", "/orders-assets/static/js/mobile-menu.js");
+env.addGlobal("CONFIGURABLE_BANNER_TITLE", CONFIGURABLE_BANNER_TITLE);
+env.addGlobal("CONFIGURABLE_BANNER_TEXT", parseHtmlLinks(CONFIGURABLE_BANNER_TEXT));
+env.addGlobal("CONFIGURABLE_BANNER_OTHER_TEXT", CONFIGURABLE_BANNER_OTHER_TEXT);
+env.addGlobal("CONFIGURABLE_BANNER_ENABLED", CONFIGURABLE_BANNER_ENABLED);
 
 // apply our default router to /
 app.use("/", router);
