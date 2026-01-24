@@ -4,6 +4,7 @@ import proxyquire from 'proxyquire';
 // Function to return the stubbed WebSecurity module
 export const getAppWithMockedCsrf = (sandbox: sinon.SinonSandbox) => {
     // Ensure modules that read environment variables are reloaded so tests can change process.env per test
+    /* istanbul ignore next */
     try {
         const appPath = require.resolve("../../src/app");
         const configPath = require.resolve("../../src/config/config");
