@@ -7,7 +7,6 @@ import { ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource
 import { Payment } from "@companieshouse/api-sdk-node/dist/services/payment";
 import createError from "http-errors";
 import * as apiClient from "../../client/api.client";
-import * as config from "../../config/config";
 import { SIGNED_IN_COOKIE, signedInSession, signedInSessionWithCsrf, CSRF_TOKEN } from "../__mocks__/redis.mocks";
 import { mockCertificateItem, mockCertifiedCopyItem, mockMissingImageDeliveryItem } from "../__mocks__/order.mocks";
 import { getAppWithMockedCsrf } from '../__mocks__/csrf.mocks';
@@ -249,17 +248,18 @@ describe("basket.controller.integration", () => {
     });
 
     it ("renders basket details  and fee banner if user is enrolled for multi-item baskets and items at the limit with configurable banner enabled", (done) => {
-        sandbox.stub(config, "CONFIGURABLE_BANNER_ENABLED").value(true);
-        sandbox.stub(config, "CONFIGURABLE_BANNER_TITLE").value(
-        "From 1st February 2026, some of our fees will be changing"
-        );
-        sandbox.stub(config, "CONFIGURABLE_BANNER_TEXT").value(
-        "We've published a full list of Companies House fees that are changing from 1 February 2026."
-        );
-        sandbox.stub(config, "CONFIGURABLE_BANNER_OTHER_TEXT").value(
-        "Any item(s) in your basket paid for from this date will be charged at the new price."
-        );
-        testApp = getAppWithMockedCsrf(sandbox);
+        process.env.CONFIGURABLE_BANNER_ENABLED = "true";
+        process.env.CONFIGURABLE_BANNER_TITLE =
+            "From 1st February 2026, some of our fees will be changing";
+        process.env.CONFIGURABLE_BANNER_TEXT =
+            "We've published a full list of Companies House fees that are changing from 1 February 2026.";
+        process.env.CONFIGURABLE_BANNER_OTHER_TEXT =
+            "Any item(s) in your basket paid for from this date will be charged at the new price.";
+        
+        delete require.cache[require.resolve("../../config/config")];
+        delete require.cache[require.resolve("../../app")];
+
+        const testApp = getAppWithMockedCsrf(sandbox);
         const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
             enrolled: true,
             items: [
