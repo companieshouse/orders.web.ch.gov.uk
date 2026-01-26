@@ -10,6 +10,19 @@
 {% endblock %}
 
 {% block content %}
+{% if basketLimitState == "display-limit-error" %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: "Your basket is full. To add more to your order, you'll need to remove some items first.",
+          href: "/basket/add-another-document"
+        }
+      ]
+    }) }}
+    {% else %}
+
+  {# Banner selection: configurable banner supersedes full basket banner #}
   {% if CONFIGURABLE_BANNER_ENABLED
       and CONFIGURABLE_BANNER_TITLE
       and CONFIGURABLE_BANNER_TEXT
@@ -43,16 +56,7 @@
     {{ govukNotificationBanner({ html: html }) }}
   {% endif %}
 
-  {% if basketLimitState == "display-limit-error" %}
-    {{ govukErrorSummary({
-      titleText: "There is a problem",
-      errorList: [
-        {
-          text: "Your basket is full. To add more to your order, you'll need to remove some items first.",
-          href: "/basket/add-another-document"
-        }
-      ]
-    }) }}
+  
   {% endif %}
 
   <div class="govuk-grid-row">
