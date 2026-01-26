@@ -343,6 +343,62 @@ describe("basket.controller.integration", () => {
             });
     });
 
+    it ("renders basket details, error message  when add another document button is clicked if user is enrolled for multi-item baskets and items over the limit and configurable banner is enabled", (done) => {
+        process.env.CONFIGURABLE_BANNER_ENABLED = "true";
+        process.env.CONFIGURABLE_BANNER_TITLE =
+            "From 1st February 2026, some of our fees will be changing";
+        process.env.CONFIGURABLE_BANNER_TEXT =
+            "We've published a full list of Companies House fees that are changing from 1 February 2026.";
+        process.env.CONFIGURABLE_BANNER_OTHER_TEXT =
+            "Any item(s) in your basket paid for from this date will be charged at the new price.";
+        
+        delete require.cache[require.resolve("../../config/config")];
+        delete require.cache[require.resolve("../../app")];
+        const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
+            enrolled: true,
+            items: [
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem,
+                mockCertifiedCopyItem,
+                mockMissingImageDeliveryItem,
+                mockCertificateItem,
+                mockCertificateItem
+
+            ],
+            deliveryDetails : {
+                addressLine1 : "Silverstone",
+                addressLine2 : "Towcester",
+                country : "England",
+                forename : "Lewis",
+                surname : "Hamilton",
+                locality : "Northamponshire",
+                postal_code : "NN12 8TN",
+                region : "South"
+            },
+        } as any));
+
+        const url : string = `${BASKET_URL}${ADD_ANOTHER_DOCUMENT_PATH}`;
+        chai.request(testApp)
+            .get(url)
+            .set("Cookie", [`__SID=${SIGNED_IN_COOKIE}`])
+            .end((err, resp) => {
+                if (err) return done(err);
+                chai.expect(resp.text).to.contain(`Basket (${BASKET_ITEM_LIMIT + 1})`);
+                chai.expect(resp.text).to.contain("Add another document");
+                chai.expect(resp.text).to.contain("There is a problem");
+                chai.expect(resp.text).to.contain(`Your basket is full. To add more to your order, you&#39;ll need to remove some items first.`);
+                chai.expect(resp.text).to.not.contain("From 1st February 2026, some of our fees will be changing");
+                chai.expect(resp.text).to.not.contain("We've published a full list of Companies House fees that are changing from 1 February 2026.");
+                chai.expect(getBasketStub).to.have.been.called;
+                done();
+            });
+    });
+
     it("renders empty basket if user is enrolled for multi-item baskets and their basket is empty", (done) => {
         const getBasketStub = sandbox.stub(apiClient, "getBasket").returns(Promise.resolve({
             enrolled: true,
