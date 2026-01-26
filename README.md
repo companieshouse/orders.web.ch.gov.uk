@@ -91,7 +91,7 @@ It is controlled by four environment variables:
 - **CONFIGURABLE_BANNER_TITLE** - The banner heading (rendered as an H3 with class `govuk-notification-banner__heading`).
 - **CONFIGURABLE_BANNER_TEXT** - The banner body. Use Markdown style links: `[text](https://example.com)`.
 
-- **CONFIGURABLE_BANNER_OTHER_TEXT** - The banner body.`[text]`.
+- **CONFIGURABLE_BANNER_OTHER_TEXT** - The banner body text shown a line below the CONFIGURABLE_BANNER_TEXT.`[text]`.
 
 **Please note that all four variables must be set for the banner to be displayed.**
 
