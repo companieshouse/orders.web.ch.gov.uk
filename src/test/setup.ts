@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 import chai from "chai";
 import sinonChai from "sinon-chai";
 import chaiAsPromised from "chai-as-promised";
@@ -27,6 +28,7 @@ process.env.ACCOUNT_URL = "http://account.co";
 process.env.CHS_MONITOR_GUI_URL = "http://follow.co";
 process.env.BASKET_ITEM_LIMIT = "10";
 
-
-
-
+process.env.CONFIGURABLE_BANNER_ENABLED = 'false';
+process.env.CONFIGURABLE_BANNER_TITLE = "This is a banner title for testing";
+process.env.CONFIGURABLE_BANNER_TEXT = "This is some banner text for testing.";
+process.env.CONFIGURABLE_BANNER_OTHER_TEXT = "This is some other banner text for testing.";

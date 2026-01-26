@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-  {% if basketLimitState == "display-limit-error" %}
+{% if basketLimitState == "display-limit-error" %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
       errorList: [
@@ -20,8 +20,29 @@
         }
       ]
     }) }}
-  {% elseif basketLimitState == "below-limit" %}
-  {% else %}
+    {% else %}
+
+  {# Banner selection: configurable banner supersedes full basket banner #}
+  {% if CONFIGURABLE_BANNER_ENABLED
+      and CONFIGURABLE_BANNER_TITLE
+      and CONFIGURABLE_BANNER_TEXT
+      and CONFIGURABLE_BANNER_OTHER_TEXT
+  %}
+    {% set html %}
+      <p class="govuk-notification-banner__heading">
+        {{ CONFIGURABLE_BANNER_TITLE }}
+      </p>
+      <p class="govuk-body">
+        {{ CONFIGURABLE_BANNER_TEXT | safe }}
+        <br>
+        {{ CONFIGURABLE_BANNER_OTHER_TEXT }}
+      </p>
+    {% endset %}
+
+    {{ govukNotificationBanner({ html: html }) }}
+
+  {% elseif basketLimitState != "below-limit" %}
+    {# Basket full banner only shown when fee banner is OFF #}
     {% set html %}
       <p class="govuk-notification-banner__heading">
         Your basket is full
@@ -31,9 +52,11 @@
         To add more, you'll need to remove some items first.
       </p>
     {% endset %}
-    {{ govukNotificationBanner({
-      html: html
-    }) }}
+
+    {{ govukNotificationBanner({ html: html }) }}
+  {% endif %}
+
+  
   {% endif %}
 
   <div class="govuk-grid-row">

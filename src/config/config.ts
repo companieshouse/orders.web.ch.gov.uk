@@ -1,7 +1,7 @@
 import { ItemMapperFactoryConfig } from "../service/ItemMapperFactoryConfig";
 
 const getEnvironmentValue = (key: string, defaultValue?: any): string => {
-    const isMandatory: boolean = !defaultValue;
+    const isMandatory: boolean = typeof defaultValue === "undefined";
     const value: string = process.env[key] || "";
 
     if (!value && isMandatory) {
@@ -66,3 +66,11 @@ export const BASKET_ITEM_LIMIT = Number(getEnvironmentValue("BASKET_ITEM_LIMIT")
 export const DELIVERY_DETAILS_WEB_URL = `${CHS_URL}/delivery-details`;
 
 export const ORDERS_CONFIRMATION_WEB_URL = `${CHS_URL}/order-confirmation`;
+
+export const CONFIGURABLE_BANNER_TITLE = getEnvironmentValue("CONFIGURABLE_BANNER_TITLE", "");
+
+export const CONFIGURABLE_BANNER_TEXT = getEnvironmentValue("CONFIGURABLE_BANNER_TEXT", "");
+
+export const CONFIGURABLE_BANNER_OTHER_TEXT = getEnvironmentValue("CONFIGURABLE_BANNER_OTHER_TEXT", "");
+
+export const CONFIGURABLE_BANNER_ENABLED = getEnvironmentValue("CONFIGURABLE_BANNER_ENABLED", "false") === "true";
