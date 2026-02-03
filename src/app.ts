@@ -31,6 +31,7 @@ import * as pageUrls from "./model/page.urls";
 import errorHandlers from "./controllers/error.controller";
 import { ERROR_SUMMARY_TITLE } from "./model/error.messages";
 import { initialiseRedisClient } from "./utils/redis.methods";
+import { getGOVUKFrontendVersion } from "@companieshouse/ch-node-utils";
 
 const app = express();
 
@@ -123,6 +124,9 @@ env.addGlobal("CONFIGURABLE_BANNER_TITLE", CONFIGURABLE_BANNER_TITLE);
 env.addGlobal("CONFIGURABLE_BANNER_TEXT", parseHtmlLinks(CONFIGURABLE_BANNER_TEXT));
 env.addGlobal("CONFIGURABLE_BANNER_OTHER_TEXT", CONFIGURABLE_BANNER_OTHER_TEXT);
 env.addGlobal("CONFIGURABLE_BANNER_ENABLED", CONFIGURABLE_BANNER_ENABLED);
+env.addGlobal("cdnHost", "https://example.cloudfront.net");
+env.addGlobal("govukFrontendVersion", getGOVUKFrontendVersion());
+env.addGlobal("govukRebrand", true);
 
 // apply our default router to /
 app.use("/", router);
