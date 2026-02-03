@@ -4,7 +4,7 @@ sass.compiler = require('sass');
 // copies the fonts and images from the govuk-frontend package to the dist directory
 gulp.task("govuk-frontend-copy", function() {
   return gulp.src([
-    "./node_modules/govuk-frontend/govuk/assets/**/*"
+    "./node_modules/govuk-frontend/dist/govuk/assets/**/*"
   ]).pipe(gulp.dest("./dist/static"));
 });
 // compiles the sass down to css
