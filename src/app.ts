@@ -96,7 +96,11 @@ app.use((req, res, next) => {
     next();
 });
 
-app.set("views", viewPath);
+app.set("views", [
+  viewPath,
+  "node_modules/govuk-frontend/dist",
+  "node_modules/@companieshouse"
+]);
 app.set("view engine", "html");
 
 // add global variables to all templates
