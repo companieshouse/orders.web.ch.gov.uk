@@ -2,7 +2,8 @@
 @import "variables";
 
 // the govuk frontend
-@import "../node_modules/govuk-frontend/dist/govuk/all";
+// @import "../node_modules/govuk-frontend/dist/govuk/all";
+@import "../node_modules/govuk-frontend/dist/govuk/base";
 
 .removeItem {
     background: none !important;
@@ -369,4 +370,16 @@ pre[class*="language-"] {
 
 .override-width {
     width: 22.3333% !important;
+}
+
+/* GOV.UK Footer overrides */
+/* Remove the OGL licencing section */
+.app-footer {
+    .govuk-footer__licence-logo,
+    .govuk-footer__licence-description {
+        display: none;
+    }
+    .govuk-footer__meta-custom {
+        margin-bottom: 0;
+    }
 }

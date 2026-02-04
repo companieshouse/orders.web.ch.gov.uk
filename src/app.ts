@@ -124,7 +124,8 @@ env.addGlobal("CONFIGURABLE_BANNER_TITLE", CONFIGURABLE_BANNER_TITLE);
 env.addGlobal("CONFIGURABLE_BANNER_TEXT", parseHtmlLinks(CONFIGURABLE_BANNER_TEXT));
 env.addGlobal("CONFIGURABLE_BANNER_OTHER_TEXT", CONFIGURABLE_BANNER_OTHER_TEXT);
 env.addGlobal("CONFIGURABLE_BANNER_ENABLED", CONFIGURABLE_BANNER_ENABLED);
-env.addGlobal("cdnHost", "https://example.cloudfront.net");
+// env.addGlobal("cdnHost", "https://example.cloudfront.net");
+env.addGlobal("cdnHost", "//" + process.env.CDN_HOST);
 env.addGlobal("govukFrontendVersion", getGOVUKFrontendVersion());
 env.addGlobal("govukRebrand", true);
 
