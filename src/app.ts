@@ -60,7 +60,7 @@ const viewPath = path.join(__dirname, "views");
 // set up the template engine
 const env = nunjucks.configure([
     viewPath,
-    "node_modules/govuk-frontend/",
+    "node_modules/govuk-frontend/dist/",
     "node_modules/govuk-frontend/components",
     "node_modules/@companieshouse"
 ], {
@@ -97,11 +97,13 @@ app.use((req, res, next) => {
     next();
 });
 
-app.set("views", [
-  viewPath,
-  "node_modules/govuk-frontend/dist",
-  "node_modules/@companieshouse"
-]);
+// app.set("views", [
+//   viewPath,
+//   "node_modules/govuk-frontend/dist",
+//   "node_modules/@companieshouse"
+// ]);
+
+app.set("views", viewPath);
 app.set("view engine", "html");
 
 // add global variables to all templates
