@@ -9,6 +9,9 @@
     serviceName: "Order - " + orderDetails.orderId,
     serviceUrl: orderDetails.backLinkUrl
   }) }}
+  <div class="govuk-width-container">
+    {% include "components/user-nav-bar.html" %}
+  </div>
 {% endblock %}
 
 {% block pageTitle %}
