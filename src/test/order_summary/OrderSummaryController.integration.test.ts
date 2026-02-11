@@ -172,6 +172,6 @@ describe("OrderSummaryController", () => {
 });
 
 const verifyServiceLinkRenderedCorrectly = ($: cheerio.Root) => {
-    chai.expect($(".govuk-header__content").text()).to.contain("Find and update company information");
-    chai.expect($(".govuk-header__content").children().attr("href")).to.equal("http://chsurl.co");
+    chai.expect($(".govuk-service-navigation__service-name").text()).to.contain("Find and update company information");
+    chai.expect($(".govuk-header__logo").children().attr("href")).to.equal("http://gov.uk/");
 };

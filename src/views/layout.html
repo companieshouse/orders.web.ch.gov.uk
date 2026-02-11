@@ -1,23 +1,25 @@
-{% extends "components/template.njk" %}
+{% extends "ch-node-utils/templates/layouts/template.njk" %}
 
-{% from "./components/footer/macro.njk"               import chFooter %}
-{% from "govuk/components/header/macro.njk"           import govukHeader %}
-{% from "govuk/components/back-link/macro.njk"        import govukBackLink %}
-{% from "govuk/components/panel/macro.njk"            import govukPanel %}
-{% from "govuk/components/summary-list/macro.njk"     import govukSummaryList %}
-{% from "govuk/components/inset-text/macro.njk"       import govukInsetText %}
-{% from "govuk/components/table/macro.njk"            import govukTable %}
-{% from "web-security-node/components/csrf-token-input/macro.njk" import csrfTokenInput %}
+{% from "govuk/components/header/macro.njk"                         import govukHeader %}
+{% from "govuk/components/footer/macro.njk"                         import govukFooter %}
+{% from "govuk/components/back-link/macro.njk"                      import govukBackLink %}
+{% from "govuk/components/panel/macro.njk"                          import govukPanel %}
+{% from "govuk/components/summary-list/macro.njk"                   import govukSummaryList %}
+{% from "govuk/components/inset-text/macro.njk"                     import govukInsetText %}
+{% from "govuk/components/table/macro.njk"                          import govukTable %}
+{% from "govuk/components/service-navigation/macro.njk"             import govukServiceNavigation %}
+{% from "web-security-node/components/csrf-token-input/macro.njk"   import csrfTokenInput %}
 
 {% block head %}
+{{ super () }}
 <meta name="format-detection" content="telephone=no">
 <!--[if !IE 8]><!-->
 <link rel="stylesheet" type="text/css" media="all" href="{{ CSS_URL }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ FOOTER }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ RESPONSIVE_TABLE }}" />
 <!--<![endif]-->
-<link rel="SHORTCUT ICON" href="//{{CDN_URL}}/images/govuk-frontend/v3.5.0/images/favicon.ico" />
-<link rel="icon" href="//{{CDN_URL}}/images/govuk-frontend/v3.5.0/images/favicon.ico" type="image/x-icon" />
+<link rel="SHORTCUT ICON" href="//{{CDN_URL}}/images/govuk-frontend/v5.14.0/rebrand/favicon.ico" />
+<link rel="icon" href="//{{CDN_URL}}/images/govuk-frontend/v5.14.0/rebrand/favicon.ico" type="image/png" />
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"
           integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
@@ -43,15 +45,19 @@
 {% block header %}
   {% include "includes/cookie-banner.html" %}
   {{ govukHeader({
-    homepageUrl: "http://gov.uk/",
+    homepageUrl: "http://gov.uk/"
+  }) }}
+  {{ govukServiceNavigation({
     serviceName: serviceName,
     serviceUrl: serviceUrl
   }) }}
+  <div class="govuk-width-container">
+    {% include "components/user-nav-bar.html" %}
+  </div>
 {% endblock %}
 
 {% block footer %}
-    {{ chFooter({
-      classes: "ch",
+    {{ govukFooter({
       meta: {
         items: [
           {
@@ -63,20 +69,23 @@
           },
           {
             href: "https://beta.companieshouse.gov.uk/help/cookies",
-            text: "Cookies"
+            text: "Cookies",
+            attributes: { target: "_blank" }
           },
           {
             href: "https://www.gov.uk/find-contact-details-companies-house",
-            target: "_blank",
-            text: "Contact us"
+            text: "Contact us",
+            attributes: { target: "_blank" }
           },
           {
             href: "/help/accessibility-statement",
-            text: "Accessibility statement"
+            text: "Accessibility statement",
+            attributes: { target: "_blank" }
           },
           {
             href: "https://developer.companieshouse.gov.uk/api/docs/",
-            text: "Developers"
+            text: "Developers",
+            attributes: { target: "_blank" }
           }
         ]
       }
@@ -84,6 +93,7 @@
 {% endblock %}
 
 {% block bodyEnd %}
+  {{ super () }}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
     <script src="//{{CDN_URL}}/javascripts/app/piwik-enable.js"></script>
     <script src="//{{CDN_URL}}/javascripts/app/cookie-consent/cookie-consent-1.0.0.js"></script>
