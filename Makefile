@@ -65,6 +65,6 @@ endif
 	cp ./start.sh $(tmpdir)
 	cp ./routes.yaml $(tmpdir)
 	cd $(tmpdir) && npm i --production
-	rm $(tmpdir)/package.json $(tmpdir)/package-lock.json
+	rm $(tmpdir)/package-lock.json
 	cd $(tmpdir) && zip -r ../$(artifact_name)-$(version).zip .
 	rm -rf $(tmpdir)
