@@ -28,7 +28,7 @@
     "@companieshouse/web-security-node": "^4.4.14",
     "cookie-parser": "1.4.7",
     "escape-html": "1.0.3",
-    "express": "^4.22.1",
+    "express": "^4.22.3",
     "express-actuator": "^1.8.4",
     "express-validator": "^7.0.1",
     "govuk-frontend": "5.14.0",
@@ -57,8 +57,8 @@
     "@types/sinon": "9.0.0",
     "@types/sinon-chai": "3.2.4",
     "@types/uuid": "7.0.3",
-    "@typescript-eslint/eslint-plugin": "8.46.1",
-    "@typescript-eslint/parser": "8.46.1",
+    "@typescript-eslint/eslint-plugin": "8.72.2",
+    "@typescript-eslint/parser": "8.72.2",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "chai-http": "^4.4.0",
@@ -78,7 +78,7 @@
     "sass": "^1.64.2",
     "sinon": "9.0.2",
     "sinon-chai": "3.5.0",
-    "sonarqube-scanner": "^3.5.0",
+    "sonarqube-scanner": "^5.1.0",
     "ts-node": "8.10.1",
     "typescript": "~5.1.6"
   },
@@ -96,7 +96,7 @@
   "overrides": {
     "chokidar": "3.5.3",
     "glob-stream": "8.0.0",
-    "semver": "7.5.4",
+    "semver": "^7.8.6",
     "simple-update-notifier": "2.0.0",
     "braces": "3.0.3",
     "path-to-regexp": "0.1.13",
@@ -104,6 +104,9 @@
     "@istanbuljs/load-nyc-config": "1.1.0",
     "js-yaml": "^4.2.0",
     "serialize-javascript": "^7.0.5",
-    "uuid": "11.1.1"
+    "uuid": "11.1.1",
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.8"
+    }
   }
 }
